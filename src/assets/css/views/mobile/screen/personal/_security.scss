@@ -1,0 +1,50 @@
+.screen-personal-m.security {
+  > .body-bar {
+    .change-password-box {
+    }
+
+    .note {
+      background-color: var(--bg-card-color);
+      > div {
+        text-align: center;
+        padding: 25px;
+        .icon {
+          height: 100px;
+          width: 100px;
+          margin: 12px auto;
+          &.qrcode {
+            background-color: #fff;
+            canvas {
+              margin-top: 5px;
+            }
+          }
+        }
+        .content {
+          display: inline-block;
+          > div {
+            display: block;
+          }
+          .key {
+            margin-top: 12px;
+            > span {
+              font-size: 20px;
+              margin: auto;
+              background: var(--bg-head-color);
+              line-height: 2;
+              display: inline-block;
+              padding: 0 25px;
+              border: 1px solid var(--border-color);
+            }
+          }
+          .input {
+            margin-top: 12px;
+            > input {
+              text-align: center;
+              font-size: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

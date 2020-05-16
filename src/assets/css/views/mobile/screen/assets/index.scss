@@ -1,0 +1,30 @@
+@import "currency";
+@import "deposit";
+@import "withdrawal";
+
+.screen-assets-m {
+  font-size: 14px;
+  > .body-bar {
+    > * {
+      margin-bottom: 8px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    > .action {
+      display: flex;
+      position: absolute;
+      width: 100%;
+      bottom: 10px;
+      > button {
+        flex: 1;
+        margin-left: 10px;
+        height: 35px;
+        &:last-child {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}

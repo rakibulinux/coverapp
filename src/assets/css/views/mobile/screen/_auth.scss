@@ -1,0 +1,25 @@
+.screen-auth-m {
+  .body-bar {
+    > * {
+      margin-bottom: 12px;
+    }
+    [class*="-box"],
+    [class^="-box"] {
+      .logo {
+        height: 125px;
+        background-image: url("~@/assets/img/logo.png");
+        background-repeat: no-repeat;
+        background-size: 125px;
+        background-position: center;
+        margin-bottom: 24px;
+      }
+      .note {
+        text-align: center;
+        font-size: 14px;
+        > * {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}

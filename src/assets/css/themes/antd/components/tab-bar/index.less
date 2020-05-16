@@ -1,0 +1,30 @@
+@import "../../themes/default";
+@import "../../mixins/index";
+
+@tab-bar-prefix-cls: ~"@{ant-prefix}-layout-tab-bar";
+
+.@{tab-bar-prefix-cls} {
+  .reset-component;
+  position: fixed;
+  height: 50px;
+  width: 100%;
+  bottom: 0;
+  background-color: var(--bg-head-color);
+  display: flex;
+  .item {
+    flex: 1;
+    text-align: center;
+    margin: auto;
+    color: @text-color;
+    .icon {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .text {
+      font-size: 12px;
+    }
+    &.ant-menu-item-active {
+      color: @selected-color;
+    }
+  }
+}

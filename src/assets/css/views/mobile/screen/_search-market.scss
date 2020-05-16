@@ -1,0 +1,59 @@
+.search-market {
+  .head-bar {
+    background-color: $bg-head-color;
+    width: 100%;
+    position: relative;
+    i,
+    .cancel {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    i {
+      color: $mobile-icon-color;
+      font-size: 18px;
+      left: 12px;
+    }
+    input {
+      width: 100%;
+      border: 0;
+      line-height: 40px;
+      padding: 0 70px 0 40px;
+      caret-color: $blue-color;
+      font-size: 14px;
+      color: $input-color;
+      &::placeholder {
+        color: $mobile-placeholder-color;
+      }
+    }
+    .cancel {
+      font-size: 16px;
+      right: 12px;
+    }
+  }
+  .body-bar {
+    background-color: $bg-color;
+    position: relative;
+    height: 100%;
+    dt {
+      font-size: 11px;
+    }
+    dd {
+      font-size: 13px;
+      p {
+        line-height: 35px;
+        height: 35px;
+        span.last {
+          .chance {
+            font-size: 11px;
+            margin-left: 8px;
+          }
+        }
+        span.favorite-action i {
+          font-size: 22px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

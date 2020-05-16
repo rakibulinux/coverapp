@@ -1,0 +1,42 @@
+.orderbook {
+  .asks p {
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(250, 82, 82, 0.15)),
+      to(rgba(250, 82, 82, 0.15))
+    );
+    background-image: -o-linear-gradient(
+      rgba(250, 82, 82, 0.15),
+      rgba(250, 82, 82, 0.15)
+    );
+    background-image: linear-gradient(
+      rgba(250, 82, 82, 0.15),
+      rgba(250, 82, 82, 0.15)
+    );
+    background-position: 0;
+    background-size: 0 0;
+    background-repeat: no-repeat;
+  }
+  .bids p {
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(18, 184, 134, 0.15)),
+      to(rgba(18, 184, 134, 0.15))
+    );
+    background-image: -o-linear-gradient(
+      rgba(18, 184, 134, 0.15),
+      rgba(18, 184, 134, 0.15)
+    );
+    background-image: linear-gradient(
+      rgba(18, 184, 134, 0.15),
+      rgba(18, 184, 134, 0.15)
+    );
+    background-position: 0;
+    background-size: 0 0;
+    background-repeat: no-repeat;
+  }
+}

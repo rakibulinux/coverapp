@@ -1,0 +1,100 @@
+.page-market-m {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50px;
+  z-index: 1;
+  > .head-bar {
+    font-size: 16px;
+    background-color: $bg-head-color;
+    .head {
+      position: relative;
+      .title {
+        text-align: center;
+        line-height: 40px;
+      }
+      i {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+      }
+    }
+    .action-menu {
+      position: relative;
+    }
+  }
+  > .body-bar {
+    background-color: $bg-card-color;
+    position: relative;
+    height: 100%;
+    .cube-tab-panels {
+      position: absolute;
+      width: 100%;
+      height: calc(100% - 98px);
+      overflow-y: auto;
+      .cube-tab-panels-group {
+        height: 100%;
+      }
+    }
+    dt {
+      position: relative;
+      font-size: 12px;
+      color: $color-gray;
+    }
+    dd {
+      position: relative;
+      height: auto;
+      p {
+        font-size: 18px;
+        border-bottom: 1px solid $border-color;
+        line-height: 62px;
+        height: 62px;
+        &:last-child {
+          border: 0;
+        }
+        span.pair {
+          margin: auto;
+          > div {
+            line-height: normal;
+          }
+          .name {
+            span + span {
+              margin-left: 4px;
+              color: $color-gray;
+              font-size: 13px;
+            }
+          }
+          .vol {
+            color: $color-gray;
+            font-size: 13px;
+          }
+        }
+        span.last {
+          margin: auto;
+          > div {
+            line-height: normal;
+          }
+          .fait {
+            color: $color-gray;
+            font-size: 13px;
+          }
+        }
+        span.rate {
+          line-height: 62px;
+          > div {
+            display: inline-block;
+            border-radius: 2px;
+            text-align: center;
+            width: 82px;
+            height: 32px;
+            line-height: 32px;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
+}

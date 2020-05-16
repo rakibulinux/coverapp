@@ -1,0 +1,32 @@
+.action-bar {
+  background-color: $bg-head-color;
+  position: relative;
+  height: 40px;
+  .left-action,
+  .center-action,
+  .right-action {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    i {
+      font-size: 22px;
+    }
+  }
+  &.transparent {
+    background-color: transparent;
+  }
+  .left-action {
+    left: 8px;
+  }
+  .center-action {
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+  .right-action {
+    right: 8px;
+  }
+  .loading i {
+    color: var(--blue-color);
+  }
+}

@@ -1,0 +1,14 @@
+.screen-assets-m.withdrawal {
+  > .body-bar {
+    .withdraw-box {
+      margin: 12px;
+      position: relative;
+    }
+
+    > .action {
+      > button {
+        background-color: var(--blue-color);
+      }
+    }
+  }
+}

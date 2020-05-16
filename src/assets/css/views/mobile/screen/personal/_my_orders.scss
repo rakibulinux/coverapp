@@ -1,0 +1,157 @@
+.screen-personal-m.my-orders {
+  .body-bar {
+    .order-setting {
+      height: 35px;
+      width: 100%;
+      background-color: var(--bg-card-color);
+      margin-bottom: 0;
+      display: flex;
+      > * {
+        margin: auto;
+        flex: 1;
+        padding: 0 12px;
+      }
+      .choose-market {
+        height: 100%;
+        display: flex;
+        .choose-completer,
+        .choose-picker {
+          height: 100%;
+          flex: 1;
+          .text-selected {
+            line-height: 35px;
+          }
+        }
+      }
+      .cancel-all {
+        text-align: right;
+        button {
+          padding: 0px 8px;
+          color: $blue-color;
+          border: 1px solid $blue-color;
+          line-height: 12px;
+          height: 16px;
+          font-size: 10px;
+        }
+      }
+    }
+    .order-list {
+      position: relative;
+      height: calc(100% - 35px);
+      padding: 0 12px;
+      font-size: 12px;
+      overflow: auto;
+      .order-row {
+        padding: 4px 0;
+        > p {
+          display: flex;
+          width: 100%;
+          padding: 2px 0;
+          white-space: nowrap;
+          > span {
+            flex: 1;
+            &.flex {
+              display: flex;
+            }
+          }
+          .info-market {
+            font-size: 14px;
+          }
+          .date {
+            color: var(--disabled-color);
+            font-size: 10px;
+            margin: auto;
+          }
+          .filled {
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            position: relative;
+
+            .donut-chart-hole {
+              fill: transparent;
+            }
+
+            .donut-chart-ring {
+              stroke: $disabled-color;
+            }
+
+            .donut-chart-segment {
+              transform-origin: center;
+            }
+
+            .donut-chart-percent {
+              font-size: 10px;
+              font-weight: bold;
+            }
+
+            .donut-chart-text {
+              font-family: Arial, Helvetica, sans-serif;
+            }
+          }
+          .amount-price {
+            height: 35px;
+            line-height: (35px / 2);
+            margin-left: 6px;
+            > div {
+              display: flex;
+              .label {
+                color: var(--disabled-color);
+                width: 60px;
+              }
+              .info {
+                span + span {
+                  margin-left: 2px;
+                }
+                .total-amount {
+                  font-size: 10px;
+                  color: var(--disabled-color);
+                }
+              }
+            }
+          }
+          .action {
+            height: 35px;
+            line-height: 35px;
+            button {
+              vertical-align: bottom;
+              padding: 0px 8px;
+              color: $blue-color;
+              border: 1px solid $blue-color;
+              line-height: 12px;
+              height: 16px;
+              font-size: 10px;
+            }
+          }
+        }
+
+        &.sell {
+          > p {
+            .filled {
+              .donut-chart-segment {
+                stroke: $down-color;
+              }
+              .donut-chart-text {
+                fill: $down-color;
+              }
+            }
+          }
+        }
+
+        &.buy {
+          > p {
+            .filled {
+              .donut-chart-segment {
+                stroke: $up-color;
+              }
+              .donut-chart-text {
+                fill: $up-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

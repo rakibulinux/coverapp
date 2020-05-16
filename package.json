@@ -1,0 +1,73 @@
+{
+  "name": "coverapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@epegzz/sass-vars-loader": "^6.0.0",
+    "@fortawesome/free-brands-svg-icons": "^5.13.0",
+    "@fortawesome/free-regular-svg-icons": "^5.13.0",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@zsmartex/z-apiclient": "^1.0.2",
+    "@zsmartex/z-eventbus": "^1.0.2",
+    "@zsmartex/z-helpers": "^1.1.9",
+    "@zsmartex/z-store": "^2.0.3",
+    "accessible-nprogress": "^2.0.1",
+    "ant-design-vue": "^1.5.4",
+    "axios": "^0.19.2",
+    "core-js": "^3.6.4",
+    "cube-ui": "^1.12.38",
+    "phone": "^2.4.10",
+    "qr.js": "^0.0.0",
+    "register-service-worker": "^1.7.1",
+    "swiper": "^5.3.8",
+    "v-click-outside-x": "^4.1.0",
+    "vue": "^2.6.11",
+    "vue-awesome-swiper": "^4.1.1",
+    "vue-class-component": "^7.2.3",
+    "vue-i18n": "^8.17.4",
+    "vue-property-decorator": "^8.4.2",
+    "vue-recaptcha": "^1.3.0",
+    "vue-router": "^3.1.6",
+    "vuex": "^3.1.3"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.3.0",
+    "@vue/cli-plugin-pwa": "~4.3.0",
+    "@vue/cli-plugin-router": "~4.3.0",
+    "@vue/cli-plugin-typescript": "~4.3.0",
+    "@vue/cli-plugin-vuex": "~4.3.0",
+    "@vue/cli-service": "~4.3.0",
+    "@vue/preload-webpack-plugin": "^1.1.1",
+    "compression-webpack-plugin": "^3.1.0",
+    "hard-source-webpack-plugin": "^0.13.1",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
+    "lint-staged": "^9.5.0",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^8.0.2",
+    "speed-measure-webpack-plugin": "^1.3.3",
+    "terser-webpack-plugin": "^3.0.0",
+    "typescript": "~3.8.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack-bundle-analyzer": "^3.7.0",
+    "webpack-transform-modules-plugin": "^0.4.4"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  }
+}

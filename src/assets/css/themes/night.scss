@@ -1,0 +1,114 @@
+.night {
+  dt {
+    color: $color-gray;
+  }
+  .ant-layout-header {
+    background: $bg-card-color;
+  }
+  .page-exchange {
+    .input-entry {
+      border-color: $border-color;
+    }
+    input {
+      color: $input-color;
+    }
+    .ticker-info {
+      background: $bg-card-color;
+      .ticker-status {
+        color: $color-gray;
+      }
+      .market-list {
+        &.selected,
+        &:hover {
+          background-color: $selected-bg-color;
+        }
+        .ticker-name {
+          color: $value-color;
+          i {
+            color: $icon-color;
+            background-color: $selected-bg-color;
+          }
+        }
+        #market_list {
+          border-color: $border-color;
+          .sorter {
+            i {
+              color: $sort-color;
+              &.active {
+                color: $icon-color;
+              }
+            }
+          }
+          .name {
+            color: $value-color;
+          }
+          p.selected,
+          p:hover {
+            background-color: $row-hover-bg-color;
+          }
+          .input-box {
+            border-color: $border-color;
+            input {
+              background-color: $bg-card-color;
+            }
+            i {
+              color: $color-gray;
+            }
+            ::-webkit-input-placeholder {
+              color: $input-placeholder-color;
+            }
+          }
+        }
+      }
+      .high,
+      .low,
+      .volume {
+        .value {
+          color: $value-color;
+        }
+      }
+    }
+    .change_theme {
+      border-color: $border-color;
+      i {
+        color: $icon-color;
+      }
+    }
+  }
+  .orderbook {
+    .ticker-book {
+      border-color: $border-color;
+    }
+    .change_book {
+      border-color: $border-color;
+      &:hover,
+      &.active {
+        border-color: $selected-border-color;
+      }
+    }
+    .price_usd {
+      color: $color-gray;
+    }
+  }
+  #asks_entry,
+  #bids_entry {
+    .total {
+      color: $value-color;
+    }
+    .chance-box {
+      button {
+        border-color: $border-color !important;
+      }
+    }
+  }
+  .switch {
+    border-color: $border-color;
+    button {
+      color: $color-gray;
+      &.selected {
+        background-color: $selected-bg-color;
+        color: $selected-color !important;
+      }
+    }
+  }
+}

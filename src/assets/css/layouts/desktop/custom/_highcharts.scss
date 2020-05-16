@@ -1,0 +1,65 @@
+.highcharts-xaxis .highcharts-tick {
+  stroke-width: 1px;
+  stroke: $color-gray;
+}
+
+.night {
+  g.highcharts-grid.highcharts-yaxis-grid path,
+  .highcharts-plot-background,
+  .highcharts-axis-line {
+    stroke: transparent;
+    &:first-child {
+      stroke: $color-gray;
+    }
+  }
+  g.highcharts-axis-labels text {
+    color: $color-gray !important;
+    fill: $color-gray !important;
+  }
+}
+
+.light {
+  g.highcharts-grid.highcharts-yaxis-grid path,
+  .highcharts-plot-background,
+  .highcharts-axis-line {
+    stroke: transparent;
+    &:first-child {
+      stroke: $color-gray;
+    }
+  }
+  g.highcharts-axis-labels text {
+    color: $color-gray !important;
+    fill: $color-gray !important;
+  }
+}
+
+.highcharts-label.highcharts-tooltip-box.highcharts-color-none {
+  left: 15px !important;
+  top: 55px !important;
+}
+
+.night {
+  .highcharts-label.highcharts-tooltip.highcharts-color-undefined span {
+    color: $color-gray !important;
+  }
+}
+.light {
+  .highcharts-label.highcharts-tooltip.highcharts-color-undefined span {
+    color: #000 !important;
+  }
+}
+
+.highcharts-legend-item.highcharts-area-series.highcharts-color-undefined {
+  text {
+    color: $color-gray !important;
+    fill: $color-gray !important;
+    &:hover {
+      color: $white-color !important;
+      fill: $white-color !important;
+    }
+  }
+  &.highcharts-legend-item-hidden text {
+    color: $disabled-color !important;
+    fill: $disabled-color !important;
+  }
+}
