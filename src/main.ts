@@ -1,6 +1,5 @@
 import App from "@/App.vue";
 import "@/assets/css/default.scss";
-import "@/assets/css/themes/antd";
 import { i18n, initProgress } from "@/plugins";
 import router from "@/router";
 import store from "@/store";
@@ -19,5 +18,5 @@ new Vue({
   store,
   i18n,
   router,
-  render: h => h(App)
-}).$mount("body");;
+  render: (h) => h(App),
+}).$mount("body");

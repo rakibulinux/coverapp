@@ -3,24 +3,18 @@
     <div class="auth-box">
       <div>
         <h3 class="title">Forgot Password</h3>
-        <form @submit.prevent="ForgotPassword">
+        <form @submit.prevent="forgot_password">
           <auth-input
             v-model="email"
             name="email"
-            :class-name="{ ierror: validEmail(email), g: email }"
-            :label-class="{ berror: validEmail(email) }"
             placeholder="Email"
-            :label-need="true"
-            :enable-vaild="validEmail(email)"
-            :error-text="translation('email')"
+            :placeholder-need="true"
+            :error="email_error"
           />
           <button
             type="submit"
-            :disabled="
-              validEmail(email, true) ||
-                !captcha_response ||
-                (sended && wait != 0)
-            "
+            :loading="loading"
+            :disabled="button_disabled"
           >
             <span>Forgot Password</span>
             <span v-if="sended && wait != 0">({{ wait }})</span>
@@ -32,52 +26,72 @@
 </template>
 
 <script>
+import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
-import AuthInput from "@/components/desktop/AuthInput.vue";
-import Helpers from "./helpers";
 import { setTimeout, setInterval } from "timers";
 
-export default {
-  mixins: [Helpers],
-  data: () => ({
-    sended: false,
-    email: "",
-    captcha_response: "",
-    loading: false,
-    wait: 0,
-    WaitInterval: null
-  }),
-  methods: {
-    async ForgotPassword() {
-      const { email, captcha_response } = this;
+@Component({
+  components: {
+    "auth-input": () => import("@/components/desktop/auth-input.vue"),
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
+  }
+})
+export default class App extends Vue {
+  loading = false;
+  sended = false;
+  email = "";
+  captcha_response = "";
+  loading = false;
+  wait = 0;
+  WaitInterval = null;
 
-      this.loading = true;
-      try {
-        await new ApiClient("auth").post(
-          "/identity/users/password/generate_code",
-          {
-            email,
-            captcha_response
-          }
-        );
-        helpers.runNotice(
-          "success",
-          "Password reset link has been sent to your email"
-        );
-        this.sended = true;
-        this.wait = 60;
-        setTimeout(() => {
-          clearInterval(this.WaitInterval);
-          this.sended = false;
-          this.wait = 0;
-        }, 60000);
-        this.WaitInterval = setInterval(() => {
-          this.wait--;
-        }, 1000);
-      } catch (error) {
-        return error;
-      }
+  get email_error() {
+
+  }
+
+  get button_disabled() {
+    const role_1 = !this.email_error;
+    const role_2 = !this.sended && this.wait !== 0;
+    const allow = role_1 && role_2
+
+    return !allow;
+  }
+
+  async forgot_password() {
+    const { email, captcha_response } = this;
+
+    this.loading = true;
+    try {
+      await new ApiClient("auth").post(
+        "/identity/users/password/generate_code",
+        {
+          email,
+          captcha_response,
+        }
+      );
+      this.loading = false;
+      this.set_wait_interval();
+      helpers.runNotice(
+        "success",
+        "Password reset link has been sent to your email"
+      );
+    } catch (error) {
+      this.loading = false;
+      return error;
     }
   }
-};
+
+  set_wait_interval() {
+    this.sended = true;
+    this.wait = 60;
+    setTimeout(() => {
+      clearInterval(this.WaitInterval);
+      this.sended = false;
+      this.wait = 0;
+    }, 60000);
+    this.WaitInterval = setInterval(() => {
+      this.wait--;
+    }, 1000);
+  }
+}
 </script>

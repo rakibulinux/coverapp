@@ -35,7 +35,7 @@
         background-color: $selected-bg-color;
       }
     }
-    &.all-bids {
+    &.bids-type {
       .asks {
         height: 0;
       }
@@ -43,7 +43,7 @@
         height: calc(100% - 40px);
       }
     }
-    &.all-asks {
+    &.asks-type {
       .bids {
         height: 0;
       }

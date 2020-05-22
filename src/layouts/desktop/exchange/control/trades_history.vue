@@ -1,48 +1,59 @@
 <template>
-  <div id="trades_history" class="ex_table">
-    <dt>
-      <span class="text-left date" v-text="$t('table.date')" />
-      <!--<span class="text-left type" v-text="$t('table.type')" />-->
-      <span class="text-left side" v-text="$t('table.side')" />
-      <span class="text-center price">
-        {{ $t("table.price") }} ({{ isBid }})
+  <z-table :columns="COLUMN" :data="orders_data" :hover="false" :border="false">
+    <template slot="side" slot-scope="{ item, column }">
+      <span :class="['side', `text-${column.algin}`, getTrend(item.side)]">
+        {{ item.side }}
       </span>
-      <span class="text-right amount">
-        {{ $t("table.amount") }} ({{ isAsk }})
+    </template>
+    <template slot="price" slot-scope="{ item, column }">
+      <span :class="['price', `text-${column.algin}`]">
+        {{ getPrice(item.price) }}
       </span>
-      <span class="text-right total">
-        {{ $t("table.total") }} ({{ isBid }})
+    </template>
+    <template slot="amount" slot-scope="{ item, column }">
+      <span :class="['amount', `text-${column.algin}`]">
+        {{ getAmount(item.amount) }}
       </span>
-    </dt>
-    <modal-exchange
-      v-if="!$store.getters['user/isLoggedIn']"
-      background="transparent"
-    />
-    <dd v-else-if="mine_control.max > 0" class="all">
-      <p v-for="data in mine_control.data" :key="data.id">
-        <span class="text-left date" v-text="getDate(data.created_at)" />
-        <!--<span class="text-left type" v-text="'limit'" />-->
-        <span
-          class="text-left side"
-          :class="getTrend(data.side)"
-          v-text="data.side"
-        />
-        <span class="text-center price" v-text="getPrice(data.price)" />
-        <span class="text-right amount" v-text="getAmount(data.amount)" />
-        <span class="text-right amount" v-text="getTotal(data.total)" />
-      </p>
-    </dd>
-    <modal-empty v-else :content="$t('orders.transaction.empty')" />
-    <a-spin v-if="isLoading" size="large">
-      <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
-    </a-spin>
-  </div>
+    </template>
+    <template slot="total" slot-scope="{ item, column }">
+      <span :class="['total', `text-${column.algin}`]">
+        {{ getTotal(item.price * item.amount) }}
+      </span>
+    </template>
+  </z-table>
 </template>
 
 <script>
-import Helpers from "./helpers";
+import { Component, Mixins } from "vue-property-decorator";
+import MineControlMixin from "./mixin";
 
-export default {
-  mixins: [Helpers]
-};
+export default class TradesHistory extends Mixins(MineControlMixin) {
+  COLUMN = [
+    { title: "Date", key: "created_at", algin: "left" },
+    { title: "Side", key: "side", algin: "left", scopedSlots: true },
+    { title: "Price", key: "price", algin: "center", scopedSlots: true },
+    {
+      title: `Amount (${this.isAsk})`,
+      key: "amount",
+      algin: "right",
+      scopedSlots: true,
+    },
+    {
+      title: `Total (${this.isBid})`,
+      key: "total",
+      algin: "right",
+      scopedSlots: true,
+    }
+  ];
+
+  get orders_data() {
+    const data = this.mine_control_data.trades_history.data;
+
+    return data.map(order => {
+      order.created_at = this.getDate(order.created_at);
+
+      return order;
+    });
+  }
+}
 </script>

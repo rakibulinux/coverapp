@@ -61,9 +61,9 @@
       </ul>
     </div>
     <div class="bottom-footer">
-      &copy; 2019
-      <a :href="copyright.link" target="_blank" v-text="copyright.name" />. All
-      rights reserved.
+      &copy; 2019-2020
+      <a :href="copyright.link" target="_blank" v-text="copyright.name" />.
+      All rights reserved.
     </div>
   </div>
 </template>
@@ -80,8 +80,8 @@ export default class App extends Vue {
   };
 
   public copyright = {
-    name: "Nguyễn Hữu Hà",
-    link: "https://fb.com/huuhait",
+    name: "ZSmart",
+    link: "https://www.zsmart.tech/",
   };
 }
 </script>

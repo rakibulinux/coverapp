@@ -8,10 +8,10 @@
         />
         <div class="address-form">
           <input type="text" :value="depositAddress" readonly />
-          <a @click="copyAddress()" v-text="$t('assets.deposit.copy')" />
+          <a @click="copy_address" v-text="$t('assets.deposit.copy')" />
           <a
-            v-click-outside:mousedown.capture="showQRCode"
-            v-click-outside.capture="showQRCode"
+            v-click-outside:mousedown.capture="show_qr_code"
+            v-click-outside.capture="show_qr_code"
             @click="qrcode_show = true"
           >
             <span v-text="$t('assets.deposit.qr_code')" />
@@ -27,59 +27,54 @@
         </div>
       </div>
       <a
-        v-if="currencyObj.type === 'coin'"
+        v-if="currency.type === 'coin'"
         class="block-address"
-        :href="
-          currencyObj.explorer_address.replace('#{address}', depositAddress)
-        "
+        :href="currency.explorer_address.replace('#{address}', depositAddress)"
         target="_blank"
-        >
+      >
         Block Browser
       </a>
     </div>
     <div class="assets-note">
       <h3 v-text="$t('assets.instructions')" />
-      <i18n
+      <fix-i18n
         tag="p"
         class="desc"
         path="assets.deposit.note"
         :places="{
-          currency: currencyObj.id.toUpperCase(),
-          min_deposit_amount: currencyObj.min_deposit_amount,
-          min_confirmations: currencyObj.min_confirmations
+          currency: currency.id.toUpperCase(),
+          min_deposit_amount: currency.min_deposit_amount,
+          min_confirmations: currency.min_confirmations
         }"
       >
         <br />
-      </i18n>
+      </fix-i18n>
+
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
-import qrcode from "@/components/desktop/qrcode";
 
-export default {
+@Component({
   components: {
-    qrcode
+    qrcode: () => import("@/components/desktop/qrcode"),
   },
-  props: {
-    depositAddress: String,
-    currencyObj: {
-      type: Object,
-      required: true
-    }
-  },
-  data: () => ({
-    qrcode_show: false
-  }),
-  methods: {
-    copyAddress() {
-      helpers.copyText(this.depositAddress);
-    },
-    showQRCode() {
-      this.qrcode_show = false;
-    }
+})
+export default class DepositBox extends Vue {
+  @Prop() public readonly depositAddress!: string;
+  @Prop() public readonly currency!: ZTypes.Currency;
+
+  public qrcode_show = false;
+
+  public copy_address() {
+    helpers.copyText(this.depositAddress);
   }
-};
+
+  public show_qr_code() {
+    this.qrcode_show = false;
+  }
+}
 </script>

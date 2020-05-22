@@ -1,33 +1,29 @@
 <template>
   <a-modal
-    v-model="modal.enabled"
+    v-model="modal_enabled"
     wrap-class-name="totp-modal"
     :footer="null"
     :width="400"
-    @cancel="onChangeShow"
-    @ok="onChangeShow"
+    @cancel="onMaskClick"
   >
     <div>
-      <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
+      <img src="@/assets/img/Google_Authenticator.png" class="logo-modal" />
       <div class="title">
-        Update ApiKey
+        OTP Code
       </div>
       <div class="desc">
         Enter the authentication code from the app below.
       </div>
-      <form @submit.prevent="sendData">
+      <form @submit.prevent="submit">
         <auth-input
-          ref="totp_code"
           v-model="totp_code"
           name="totp_code"
-          :value="totp_code"
-          :class-name="{ g: totp_code }"
           placeholder="2FA Code"
-          :label-need="true"
+          :placeholder-need="true"
           maxlength="6"
           type="number"
         />
-        <button type="submit" :disabled="valid2FA || !loading">
+        <button type="submit" :disabled="!valid2FA || !loading">
           <a-icon v-if="loading" type="loading" style="font-size: 24px" spin />
           {{ $t("auth.confirm") }}
         </button>
@@ -36,60 +32,46 @@
   </a-modal>
 </template>
 
-<script>
-import AuthInput from "@/components/desktop/AuthInput.vue";
+<script lang="ts">
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
-    "auth-input": AuthInput
+    "auth-input": () => import("@/components/desktop/auth-input.vue"),
   },
-  props: {
-    payload: {
-      type: Object,
-      required: false,
-      default: () => ({})
-    },
-    loading: Boolean
-  },
-  data: () => ({
-    sentData: false,
-    totp_code: "",
-    modal: {
-      enabled: false
-    }
-  }),
-  computed: {
-    valid2FA() {
-      return !(this.totp_code.length === 6);
-    }
-  },
-  watch: {
-    totp_code() {
-      if (this.totp_code.length === 6) {
-        this.sendData();
-      }
-    }
-  },
-  methods: {
-    render() {
-      this.modal.enabled = true;
-    },
-    remove() {
-      this.modal.enabled = false;
-    },
-    sendData() {
-      this.sentData = true;
-      this.$emit("onSubmit", this.payload, this.totp_code);
-    },
-    onChangeShow() {
-      this.resetInput();
-      if (!this.sentData) this.$emit("onFailed");
-    },
-    resetInput() {
-      this.totp_code = "";
-      this.$refs.totp_code.clear();
-      this.sentData = false;
+})
+export default class App extends Vue {
+
+  private get valid2FA() {
+    return this.totp_code.length === 6;
+  }
+
+  public modal_enabled = false;
+  @Prop() private readonly payload!: any;
+  @Prop() private readonly loading!: boolean;
+  private totp_code = "";
+
+  public create() {
+    this.modal_enabled = true;
+  }
+
+  public delete() {
+    this.modal_enabled = false;
+  }
+
+  private submit() {
+    this.$emit("submit", this.totp_code);
+  }
+
+  private onMaskClick() {
+    this.$emit("close");
+  }
+
+  @Watch("totp_code")
+  private onTotpChanged(totp_code: string) {
+    if (totp_code.length === 6) {
+      this.submit();
     }
   }
-};
+}
 </script>

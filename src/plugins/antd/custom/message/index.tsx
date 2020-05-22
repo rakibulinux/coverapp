@@ -1,5 +1,5 @@
 import Icon from "ant-design-vue/es/icon";
-import Notification from "ant-design-vue/es/vc-notification";
+import Notification from "ant-design-vue/lib/vc-notification";
 
 let defaultDuration = 3;
 let defaultTop;
@@ -21,9 +21,9 @@ function getMessageInstance(callback) {
       transitionName,
       style: { top: defaultTop }, // 覆盖原来的样式
       getContainer,
-      maxCount
+      maxCount,
     },
-    instance => {
+    (instance) => {
       if (messageInstance) {
         callback(messageInstance);
         return;
@@ -44,50 +44,52 @@ function notice(args) {
     success: "check-circle",
     error: "close-circle",
     warning: "exclamation-circle",
-    loading: "loading"
+    loading: "loading",
   }[args.type];
 
-  const target = key++;
-  const closePromise = new Promise(resolve => {
+  const target = args.key || key++;
+  const closePromise = new Promise((resolve) => {
     const callback = () => {
       if (typeof args.onClose === "function") {
         args.onClose();
       }
       return resolve(true);
     };
-    getMessageInstance(instance => {
+    getMessageInstance((instance) => {
       instance.notice({
         key: target,
         duration,
         style: {},
-        content: h => (
-          <div
-            class={`${prefixCls}-custom-content${
-              args.type ? ` ${prefixCls}-${args.type}` : ""
-            }`}
-          >
-            {args.icon ? (
-              typeof args.icon === "function" ? (
-                args.icon(h)
+        content: (h) => {
+          return (
+            <div
+              class={`${prefixCls}-custom-content${
+                args.type ? ` ${prefixCls}-${args.type}` : ""
+              }`}
+            >
+              {args.icon ? (
+                typeof args.icon === "function" ? (
+                  args.icon(h)
+                ) : (
+                  args.icon
+                )
+              ) : iconType ? (
+                <Icon
+                  type={iconType}
+                  theme={iconType === "loading" ? "outlined" : "filled"}
+                />
               ) : (
-                args.icon
-              )
-            ) : iconType ? (
-              <Icon
-                type={iconType}
-                theme={iconType === "loading" ? "outlined" : "filled"}
-              />
-            ) : (
-              ""
-            )}
-            <span>
-              {typeof args.content === "function"
-                ? args.content(h)
-                : args.content}
-            </span>
-          </div>
-        ),
-        onClose: callback
+                ""
+              )}
+              <span>
+                {typeof args.content === "function"
+                  ? args.content(h)
+                  : args.content}
+              </span>
+            </div>
+          );
+        },
+        onClose: callback,
       });
     });
   });
@@ -105,6 +107,13 @@ function notice(args) {
 // type ConfigDuration = number | (() => void);
 // export type ConfigOnClose = () => void;
 
+function isArgsProps(content) {
+  return (
+    Object.prototype.toString.call(content) === "[object Object]" &&
+    !!content.content
+  );
+}
+
 // export interface ConfigOptions {
 //   top?: number;
 //   duration?: number;
@@ -113,19 +122,22 @@ function notice(args) {
 //   transitionName?: string;
 // }
 
-interface Api {
-  open: Function;
-  config: Function;
-  destroy: Function;
-
-  loading?: Function;
-  error?: Function;
-  success?:Function;
-  warn?: Function;
-  warning?: Function;
+interface Message {
+  success?: (args: any) => void;
+  info?: (args: any) => void;
+  warning?: (args: any) => void;
+  warn?: (args: any) => void;
+  error?: (args: any) => void;
+  open: (args: any) => {
+    (): void;
+    promise: Promise<unknown>;
+    then(filled: any, rejected: any): Promise<unknown>;
+  };
+  config(options: any): void;
+  destroy(): void;
 }
 
-const api: Api = {
+const api: Message = {
   open: notice,
   config(options) {
     if (options.top !== undefined) {
@@ -155,16 +167,19 @@ const api: Api = {
       messageInstance.destroy();
       messageInstance = null;
     }
-  }
+  },
 };
 
-["success", "info", "warning", "error", "loading"].forEach(type => {
+["success", "info", "warning", "error", "loading"].forEach((type) => {
   api[type] = (content, duration, onClose) => {
+    if (isArgsProps(content)) {
+      return api.open({ ...content, type });
+    }
     if (typeof duration === "function") {
       onClose = duration;
       duration = undefined;
     }
-    return api.open({ content, duration: duration, type, onClose });
+    return api.open({ content, duration, type, onClose });
   };
 });
 

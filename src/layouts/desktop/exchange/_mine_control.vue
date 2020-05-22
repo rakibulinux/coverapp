@@ -1,13 +1,14 @@
 <template>
-  <a-card
+  <z-card
     id="mine_control"
     :bordered="false"
     :tab-list="tabList"
     :active-tab-key="type_control"
     @tabChange="onTabChange"
+    class="page-trade-mine-control"
   >
     <div slot="extra" class="extra-action cancel-all">
-      <a-button type="primary">
+      <a-button @click="cancel_all_order" type="primary">
         Cancel All
       </a-button>
     </div>
@@ -23,80 +24,93 @@
       v-if="type_control === 'trades_history'"
       :type_control="type_control"
     />
-  </a-card>
+  </z-card>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
-import OpenOrders from "./control/open_orders.vue";
-import OrdersHistory from "./control/orders_history.vue";
-import TradesHistory from "./control/trades_history.vue";
 
-export default {
+@Component({
   components: {
-    "open-orders": OpenOrders,
-    "orders-history": OrdersHistory,
-    "trades-history": TradesHistory
+    "open-orders": () => import("./control/open_orders.vue"),
+    "orders-history": () => import("./control/orders_history.vue"),
+    "trades-history": () => import("./control/trades_history.vue"),
   },
-  data: () => ({
-    tabList: [
-      {
-        key: "open_orders",
-        tab: "Open Orders"
-      },
-      {
-        key: "orders_history",
-        tab: "History Orders"
-      },
-      {
-        key: "trades_history",
-        tab: "History Trades"
-      }
-    ]
-  }),
-  computed: {
-    market: () => helpers.isMarket(),
-    type_control: {
-      get() {
-        return this.$store.state.exchange.mine_control.type;
-      },
+})
+export default class MineControl extends Vue {
+  public tabList = [
+    {
+      key: "open_orders",
+      tab: "Open Orders",
+    },
+    {
+      key: "orders_history",
+      tab: "History Orders",
+    },
+    {
+      key: "trades_history",
+      tab: "History Trades",
+    },
+  ];
 
-      set(val) {
-        return (this.$store.state.exchange.mine_control.type = val);
-      }
-    }
-  },
-  watch: {
-    isMarket() {
-      this.getData();
-    }
-  },
-  mounted() {
-    if (this.$store.state.exchange.mine_control.market === this.market) return;
-    if (helpers.isAuth()) this.getData();
-  },
-  methods: {
-    getData() {
-      this.$store.dispatch("exchange/getOpenOrders", {
-        state: "wait",
-        market: helpers.isMarket(),
-        size: 100
-      });
-      this.$store.dispatch("exchange/getOrdersHistory", {
-        market: helpers.isMarket(),
-        size: 100
-      });
-      this.$store.dispatch("exchange/getTradesHistory", {
-        market: helpers.isMarket(),
-        size: 100
-      });
-    },
-    onTabChange(type) {
-      this.type_control = type;
-      this.$store.commit("exchange/SET_MINE_CONTROL_TYPE", type);
-    },
-    translation: (message, data = {}) =>
-      helpers.translation("exchange." + message, data)
+  get market() {
+    return helpers.isMarket();
   }
-};
+
+  get type_control() {
+    return store.state.exchange.mine_control.type;
+  }
+
+  set type_control(value) {
+    store.state.exchange.mine_control.type = value;
+  }
+
+  public mounted() {
+    if (this.$store.state.exchange.mine_control.market === this.market) { return; }
+    if (helpers.isAuth()) { this.getData(); }
+  }
+
+  public getData() {
+    this.$store.dispatch("exchange/getOpenOrders", {
+      state: "wait",
+      market: helpers.isMarket(),
+      size: 100,
+    });
+    this.$store.dispatch("exchange/getOrdersHistory", {
+      market: helpers.isMarket(),
+      size: 100,
+    });
+    this.$store.dispatch("exchange/getTradesHistory", {
+      market: helpers.isMarket(),
+      size: 100,
+    });
+  }
+
+  public cancel_all_order() {
+    this.$store.dispatch("exchange/CANCEL_ALL_ORDER", {
+      market: helpers.isMarket(),
+    });
+  }
+
+  public onTabChange(type) {
+    this.type_control = type; // FIXME change it to SET_MINE_CONTROL_TYPE in vuex
+    store.commit("exchange/SET_MINE_CONTROL_TYPE", type);
+  }
+
+  public translation(message, data = {}) {
+    return helpers.translation("exchange." + message, data);
+  }
+}
 </script>
+
+<style lang="less">
+.page-trade-mine-control {
+  .z-table {
+    &-row {
+      line-height: 20px;
+    }
+  }
+}
+</style>

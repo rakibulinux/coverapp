@@ -43,12 +43,12 @@
       <deposit-box
         v-if="type === 'deposit'"
         :deposit-address="deposit_address || 'ERROR'"
-        :currency-obj="getCurrency"
+        :currency="getCurrency"
       />
       <withdraw-box
         v-else-if="type === 'withdraw'"
-        :balance="getAvailable(currency)"
-        :currency-obj="getCurrency"
+        :available="balance.getAvailable()"
+        :currency="getCurrency"
       />
       <a-spin v-if="loading" size="large">
         <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import _deposit from "@/layouts/desktop/assets/_deposit.vue";
@@ -72,7 +73,7 @@ export default {
     currency: String
   },
   data: () => ({
-    type: null,
+    type: "deposit",
     showBox: false,
     loading: false,
     deposit_address: null
@@ -80,14 +81,13 @@ export default {
   computed: {
     MARKET() {
       const { currency } = this;
-      const TICKER = this.$store.getters["public/getAllMarkets"];
+      const TICKER = store.getters["public/getAllMarkets"];
       return TICKER.filter(ticker => {
         if (ticker.base_unit === currency) return ticker;
       });
     },
     getCurrency() {
-      const { currency } = this;
-      return new helpers.Currency(currency).get();
+      return new helpers.Currency(this.currency).get();
     },
     getCurrencyName() {
       return this.getCurrency.name;
@@ -122,19 +122,21 @@ export default {
       this.type = type;
       this.showBox = true;
       if (type === "deposit" && this.deposit_address === null) {
-        this.$nextTick(() => this.getDepositAddress());
+        this.getDepositAddress();
       }
     },
-    getDepositAddress() {
+    async getDepositAddress() {
       const { currency } = this;
       this.loading = true;
-      new ApiClient("trade")
-        .get("account/deposit_address/" + currency)
-        .then(({ data }) => {
-          this.loading = false;
-          this.deposit_address = data.address;
-        })
-        .catch(() => (this.loading = false));
+
+      try {
+        const { data } = await new ApiClient("trade").get("account/deposit_address/" + this.currency)
+        this.deposit_address = data.address;
+        this.loading = false;
+      } catch (error) {
+        this.loading = false;
+        return error;
+      }
     },
     changeMarket($market) {
       const marketArray = $market.split("/");

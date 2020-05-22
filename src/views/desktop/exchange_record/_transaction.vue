@@ -1,9 +1,8 @@
 <template>
   <div class="order-main">
     <div class="order-head" v-text="$t('orders.transaction.title')" />
-    <div class="order-body">
+   <div class="order-body">
       <div class="select">
-        <!---->
         <div class="form-row">
           <label class="form-label">{{ $t("table.market") }}:</label>
           <div class="form-control">
@@ -14,7 +13,6 @@
             </a-select>
           </div>
         </div>
-        <!---->
         <div class="form-row">
           <label class="form-label">{{ $t("table.type") }}:</label>
           <div class="form-control">
@@ -25,7 +23,6 @@
             </a-select>
           </div>
         </div>
-        <!---->
         <div class="form-row">
           <label class="form-label">{{ $t("table.date") }}:</label>
           <div class="form-control datepicker">
@@ -41,7 +38,6 @@
             </a-range-picker>
           </div>
         </div>
-        <!---->
         <div class="form-row">
           <div class="form-control">
             <button type="submit" @click="getData()">
@@ -49,9 +45,7 @@
             </button>
           </div>
         </div>
-        <!---->
       </div>
-      <!---->
       <div class="table-content">
         <dt>
           <span v-text="$t('table.date')" />
@@ -89,7 +83,6 @@
           </a-spin>
         </dd>
       </div>
-      <!---->
       <a-pagination
         v-model="array.page"
         size="small"

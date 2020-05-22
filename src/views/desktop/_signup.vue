@@ -7,114 +7,116 @@
         </h3>
         <form autocomplete="off" @submit.prevent="register">
           <auth-input
-            ref="email"
             v-model="email"
             name="email"
-            :class-name="{ ierror: !validEmail && email != '', g: email }"
-            :label-class="{ berror: !validEmail && email != '' }"
-            :placeholder="$t('placeholder.email')"
-            :label-need="true"
-            :enable-vaild="!validEmail && email != ''"
-            :error-text="translation('email')"
+            placeholder="Email"
+            :placeholder-need="true"
+            :error="email_error"
           />
           <auth-input
-            ref="password"
             v-model="password"
             name="password"
             type="password"
-            :class-name="{
-              ierror: !validPassword && password != '',
-              g: password
-            }"
-            :label-class="{ berror: !validPassword && password != '' }"
-            :placeholder="$t('placeholder.password')"
-            :label-need="true"
-            :enable-vaild="!validPassword && password != ''"
-            :error-text="translation('password')"
+            placeholder="Passsord"
+            :placeholder-need="true"
+            :error="password_error"
           />
           <auth-input
-            ref="confirm_password"
             v-model="confirm_password"
             name="confirm_password"
             type="password"
-            :class-name="{
-              ierror: !validConfirmPassword && confirm_password != '',
-              g: confirm_password
-            }"
-            :label-class="{
-              berror: !validConfirmPassword && confirm_password != ''
-            }"
-            :placeholder="$t('placeholder.repassword')"
-            :label-need="true"
-            :enable-vaild="!validConfirmPassword && confirm_password != ''"
-            :error-text="translation('repassword')"
+            placeholder="Confirm passsord"
+            :placeholder-need="true"
+            :error="confirm_password_error"
           />
           <auth-input
-            ref="refid"
             v-model="refid"
-            name="referral-uid"
-            :class-name="{ ierror: validRefid(), g: refid }"
-            :label-class="{ berror: validRefid() }"
-            :placeholder="$t('placeholder.refid')"
-            :enable-vaild="validRefid()"
-            :error-text="translation('refid')"
+            name="refid"
+            placeholder="Referral UID"
+            :error="refid_error"
           />
-          <button type="submit" :disabled="buttonDisabled">
+          <auth-button type="submit" :loading="loading" :disabled="buttonDisabled" >
             {{ $t("auth.register") }}
-          </button>
+          </auth-button>
         </form>
       </div>
     </div>
   </z-content>
 </template>
 
-<script>
-import AuthInput from "@/components/desktop/AuthInput.vue";
-import Helpers from "./helpers";
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import * as helpers from "@zsmartex/z-helpers";
 
-export default {
+@Component({
   components: {
-    "auth-input": AuthInput
+    "auth-input": () => import("@/components/desktop/auth-input.vue"),
+    "auth-button": () => import("@/components/desktop/auth-button.vue"),
   },
-  mixins: [Helpers],
-  data: () => ({
-    email: "",
-    password: "",
-    confirm_password: "",
-    refid: "",
-    captcha_response: "",
-    loading: false
-  }),
-  computed: {
-    buttonDisabled() {
-      const { validEmail, validPassword, validConfirmPassword } = this;
-      let allow = true;
+})
+export default class App extends Vue {
+  public loading = false;
+  public email = "";
+  public password = "";
+  public confirm_password = "";
+  public refid = "";
+  public captcha_response = "";
 
-      allow = validEmail && validPassword && validConfirmPassword;
+  get buttonDisabled() {
+    const { email, password, confirm_password, captcha_response } = this;
+    const { email_error, password_error, confirm_password_error, refid_error } = this;
 
-      return !allow;
-    }
-  },
-  methods: {
-    async register() {
-      const { email, password, refid, captcha_response } = this;
+    const rule_1 = (email.length || password.length || confirm_password.length  || captcha_response.length);
+    const rule_2 = (!email_error && !password_error && !confirm_password_error && !refid_error);
+    let allow = rule_1 && rule_2;
+    allow = allow && !this.loading;
 
-      this.loading = true;
-      await this.$store.dispatch("user/REGISTER", {
-        email,
-        password,
-        refid,
-        captcha_response
-      });
-      this.loading = false;
-      this.resetInput();
-    },
-    resetInput() {
-      this.$refs.email.clear();
-      this.$refs.password.clear();
-      this.$refs.confirm_password.clear();
-      this.$refs.refid.clear();
-    }
+    return !allow;
   }
-};
+
+  get email_error() {
+    const { email } = this;
+    if (!email.length) { return false; }
+
+    if (!helpers.validEmail(email)) { return "Incorrect email address. Please enter again."; }
+  }
+
+  get password_error() {
+    const { password } = this;
+    if (!password.length) { return false; }
+
+    if (!helpers.validPassword(password)) { return "Incorrect email address. Please enter again."; }
+  }
+
+  get confirm_password_error() {
+    const { password, confirm_password } = this;
+    if (!confirm_password.length) { return false; }
+
+    if (confirm_password !== password) { return "Incorrect email address. Please enter again."; }
+  }
+
+  get refid_error() {
+    const { refid } = this;
+    if (!refid.length) { return false; }
+
+    if (/^ID\w{10}$/g.test(refid)) { return "Incorrect email address. Please enter again."; }
+  }
+
+  public async register() {
+    const { email, password, refid, captcha_response } = this;
+
+    this.loading = true;
+    await this.$store.dispatch("user/REGISTER", {
+      email,
+      password,
+      refid,
+      captcha_response,
+    });
+    this.loading = false;
+  }
+}
 </script>
+
+<style lang="less">
+@import "~@/assets/css/views/desktop/auth";
+</style>

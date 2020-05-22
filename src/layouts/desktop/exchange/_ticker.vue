@@ -4,7 +4,7 @@
     <div class="ticker-status">
       <div class="price">
         <span class="now-price" :class="getLastTrend" v-text="getLastPrice" />
-        <span>≈ {{ getPrice_USD }} USD</span>
+        <span>≈ {{ getPrice_USD.toFixed(2) }} USD</span>
       </div>
       <dl class="change">
         <dt v-text="translation('status.change')" />
@@ -92,7 +92,7 @@ export default class App extends Vue {
   }
 
   public translation(message, data = {}) {
-    helpers.translation("exchange." + message, data);
+    return helpers.translation("exchange." + message, data);
   }
 }
 </script>

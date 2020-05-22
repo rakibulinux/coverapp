@@ -58,9 +58,8 @@
     <modal-api ref="api" @changeModal="onClick" />
     <modal-totp
       ref="totp"
-      :payload="payload_modal"
-      @onSubmit="onSubmitTotp"
-      @onFailed="modalClose"
+      @submit="onSubmitTotp"
+      @close="modalClose"
     />
   </div>
 </template>

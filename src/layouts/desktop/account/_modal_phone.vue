@@ -1,11 +1,9 @@
 <template>
   <a-modal
-    v-model="modal.enabled"
+    v-model="modal_enabled"
     wrap-class-name="phone-modal"
     :footer="null"
     :width="400"
-    @cancel="onChangeShow"
-    @ok="onChangeShow"
   >
     <button
       v-show="step > 1"
@@ -30,25 +28,18 @@
       <form v-if="$store.state.user.phone" @submit.prevent="sendCode">
         <div class="phone-number">
           <auth-input
-            ref="phone_number"
             v-model="phone_number"
             name="phone_number"
             prefix="+"
-            :class-name="{ g: true }"
             placeholder="Phone number"
-            :label-need="true"
-            :value="$store.state.user.phone.number"
+            :placeholder-need="true"
+            :error="phone_number_error"
+            type="number"
           />
         </div>
-        <button type="submit" :disabled="!phone_number">
-          <a-icon
-            v-if="modal.loading_button"
-            type="loading"
-            style="font-size: 24px"
-            spin
-          />
+        <auth-button type="submit" :loading="loading" :disabled="button_disabled">
           Send Code
-        </button>
+        </auth-button>
       </form>
     </div>
     <div v-else>
@@ -62,98 +53,110 @@
       </div>
       <form @submit.prevent="verifyCode">
         <auth-input
-          ref="verification_code"
           v-model="verification_code"
           name="verification_code"
-          :class-name="{ g: verification_code }"
           placeholder="Verification code"
+          :placeholder-need="true"
+          type="number"
           maxlength="5"
-          :label-need="true"
         />
-        <button
-          type="submit"
-          :disabled="
-            !(otp_code.length === 6) || !(verification_code.length === 5)
-          "
-        >
-          <a-icon
-            v-if="modal.loading_button"
-            type="loading"
-            style="font-size: 24px"
-            spin
-          />
+        <auth-button type="submit" :disabled="button_disabled">
           Confirm
-        </button>
+        </auth-button>
       </form>
     </div>
   </a-modal>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Mixins } from "vue-property-decorator";
+import store from "@/store";
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
-import AuthInput from "@/components/desktop/AuthInput.vue";
 import Helpers from "./helpers";
+import phone from "phone";
 
-export default {
+@Component({
   components: {
-    "auth-input": AuthInput
+    "auth-input": () => import("@/components/desktop/auth-input.vue"),
+    "auth-button": () => import("@/components/desktop/auth-button.vue"),
   },
-  mixins: [Helpers],
-  data: () => ({
-    step: 1,
-    phone_number: "",
-    verification_code: ""
-  }),
-  mounted() {
-    this.phone_number = this.$store.state.user.phone.number;
-  },
-  methods: {
-    resetInput() {
-      this.phone_number = "";
-      this.resetStep();
-      if (!this.$store.state.user.otp) return;
-    },
-    onChangeShow() {
-      if (!this.modal.enabled) {
-        this.resetInput();
-        this.step = 1;
-      }
-    },
-    async sendCode() {
-      this.modal.loading_button = true;
-      const { phone_number } = this;
-      try {
-        await new ApiClient("auth").post(
-          `resource/phones${
-            this.$store.state.user.phone.number &&
-            this.$store.state.user.phone.number === phone_number
-              ? "/send_code"
-              : ""
-          }`,
-          { phone_number: "+" + phone_number }
-        );
-        this.step++;
-        helpers.runNotice("success", "Code was sent successfully");
-        this.modal.loading_button = false;
-      } catch (error) {
-        this.modal.loading_button = false;
-        return error;
-      }
-    },
-    async verifyCode() {
-      this.modal.loading_button = true;
-      const { phone_number, verification_code } = this;
-      let payload = { phone_number, verification_code };
-      if (this.$store.state.user.otp) payload["otp_code"] = this.otp_code;
-      try {
-        await new ApiClient("auth").post("resource/phones/verify", payload);
-        helpers.runNotice("success", "Phone was verified successfully");
-        this.modal.loading_button = false;
-      } catch (error) {
-        this.modal.loading_button = false;
-        return error;
-      }
+})
+export default class App extends Mixins(Helpers) {
+  public step: number;
+  public phone_number = "";
+  public verification_code = "";
+
+  get phone_number_error() {
+    const { phone_number } = this;
+    if (!phone_number.length) { return false; }
+
+    if (!phone("+" + phone_number).length) {
+      return "Phone error";
     }
   }
-};
+
+  get button_disabled() {
+    if (this.step === 1) {
+      const { phone_number } = this;
+      const { phone_number_error } = this;
+
+      const rule_1 = (phone_number.length);
+      const rule_2 = (!phone_number_error);
+      const allow = rule_1 && rule_2;
+
+      return !allow;
+    } else {
+      const { verification_code } = this;
+
+      const rule_1 = (verification_code.length === 5);
+      const allow = rule_1;
+
+      return !allow;
+    }
+  }
+
+  public onCreate() {
+    this.step = 1;
+    this.phone_number = store.state.user.phone.number || "";
+    this.verification_code = "";
+  }
+
+  public async sendCode() {
+    this.loading = true;
+    const { phone_number } = this;
+    try {
+      await new ApiClient("auth").post(
+        `resource/phones${
+          this.$store.state.user.phone.number &&
+          this.$store.state.user.phone.number === phone_number
+            ? "/send_code"
+            : ""
+        }`,
+        { phone_number: "+" + phone_number },
+      );
+      this.step++;
+      helpers.runNotice("success", "Code was sent successfully");
+      this.loading = false;
+    } catch (error) {
+      this.loading = false;
+      return error;
+    }
+  }
+
+  public async verifyCode() {
+    this.loading = true;
+    const { phone_number, verification_code } = this;
+    const payload = { phone_number, verification_code };
+    // if (this.$store.state.user.otp) payload["otp_code"] = this.otp_code;
+    try {
+      await new ApiClient("auth").post("resource/phones/verify", payload);
+      helpers.runNotice("success", "Phone was verified successfully");
+      this.loading = false;
+    } catch (error) {
+      this.loading = false;
+      return error;
+    }
+  }
+}
 </script>

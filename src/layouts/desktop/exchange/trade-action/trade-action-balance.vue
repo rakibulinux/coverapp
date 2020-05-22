@@ -1,9 +1,14 @@
 <template>
-  <span v-if="!isAuth" class="balance" v-text="$t('table.available')" />
-  <span v-else class="balance">
-    {{ $t("table.available") }}: {{ balance() }}
-    {{ currency }}
-  </span>
+  <div class="trade-action-balance">
+    <span>
+      {{ $t("table.available") }}: {{ balance() }}
+      {{ currency.toUpperCase() }}
+    </span>
+
+    <router-link class="trade-action-balance-action" to="/assets/balance">
+      Deposit
+    </router-link>
+  </div>
 </template>
 
 <script>
@@ -30,7 +35,7 @@ export default {
   },
   methods: {
     balance() {
-      return new helpers.Balance(this.currency).getAvailable();
+      return (new helpers.Balance(this.currency).getAvailable() || "0");
     }
   }
 };

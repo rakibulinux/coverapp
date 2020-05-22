@@ -14,26 +14,24 @@ import DataFeed from "@/library/DataFeed";
 import config from "@/config";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 import night_theme from "@/assets/css/tradingview/night";
 import { cssjson, charting_library as TradingView } from "@/assets/js";
-import _loading_page from "@/layouts/loading-page.vue";
 
 @Component({
   components: {
-    "loading-page": _loading_page,
+    "loading-page": () => import("@/layouts/loading-page.vue"),
   },
 })
-export default class App extends Vue {
-  @Prop() public showing!: boolean;
-
+export default class TradingViewChart extends Vue {
   public loading = false;
+  public isAsk = helpers.isAskSymbol();
+  public isBid = helpers.isBidSymbol();
+  public symbol = [this.isAsk, this.isBid].join("/").toUpperCase();
   public widgetOptions = {
     debug: false,
-    symbol: `${helpers
-      .isAskSymbol()
-      .toUpperCase()}/${helpers.isBidSymbol().toUpperCase()}`,
-    datafeed: new DataFeed(this.$store),
+    symbol: this.symbol,
+    datafeed: new DataFeed(store),
     interval: localStorage.getItem("tradingview.resolution") || "15",
     container_id: "tv_chart_container",
     library_path: "/charting_library/",
@@ -119,7 +117,9 @@ export default class App extends Vue {
     ];
 
     this.tvWidget.onChartReady(() => {
-      if (!this.tvWidget) { return; }
+      if (!this.tvWidget) {
+        return;
+      }
 
       this.headerReady(buttons);
       this.createStudy();

@@ -7,7 +7,7 @@ const nameEX = "NameEX";
 
 export default {
   nameEX,
-  default_market: () => {
+  "default_market": () => {
     const base_unit = "ETH";
     const quote_unit = "USDT";
     return base_unit + "_" + quote_unit;
@@ -17,55 +17,55 @@ export default {
   list_bid1: ["BTC", "ZAR", "USD"],
   list_bid2: ["ETH", "USDT"],
   */
-  feature_markets: ["ETH/USDT", "ZIPT/ETH", "ETH/USDT", "ZIPT/ETH", "TST/ETH"],
-  list_bid1: ["ETH", "BTC", "USDT"],
-  list_bid2: ["ZIPT", "TST"],
-  default_selected_market: "ETH",
-  topMarket: "BTC",
-  messages: {
-    en: en,
-    vn: vn
+  "feature_markets": ["ETH/USDT", "ZIPT/ETH", "ETH/USDT", "ZIPT/ETH", "TST/ETH"],
+  "list_bid1": ["ETH", "BTC", "USDT"],
+  "list_bid2": ["ZIPT", "TST"],
+  "default_selected_market": "ETH",
+  "topMarket": "BTC",
+  "messages": {
+    en,
+    vn,
   },
-  banners: [
+  "banners": [
     [
       { img: example_img, link: "/#" },
       { img: example_img, link: "/#" },
       { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" }
+      { img: example_img, link: "/#" },
     ],
     [
       { img: example_img, link: "/#" },
       { img: example_img, link: "/#" },
       { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" }
+      { img: example_img, link: "/#" },
     ],
     [
       { img: example_img, link: "/#" },
       { img: example_img, link: "/#" },
       { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" }
+      { img: example_img, link: "/#" },
     ],
     [
       { img: example_img, link: "/#" },
       { img: example_img, link: "/#" },
       { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" }
-    ]
+      { img: example_img, link: "/#" },
+    ],
   ],
-  api: {
+  "api": {
     url: "/api/v2/",
     ws: {
       public: getUrl(true) + "/api/v2/websocket/public",
       private:
         getUrl(true) +
-        "/api/v2/websocket/private?stream=order&stream=trade&stream=balance"
-    }
+        "/api/v2/websocket/private?stream=order&stream=trade&stream=balance",
+    },
   },
-  recaptcha: {
-    sitekey: "6LcrA5wUAAAAABY8KW-beaUOjShGC_U2va3kJEJt"
+  "recaptcha": {
+    sitekey: "6LcrA5wUAAAAABY8KW-beaUOjShGC_U2va3kJEJt",
   },
-  timeZone: "UTC",
-  SESSION_KEY: "ALLOW-ALL", // For use on exchange
+  "timeZone": "UTC",
+  "SESSION_KEY": "ALLOW-ALL", // For use on exchange
   /** 404 **/
   "titlePage.404": `404`,
   /**  public **/
@@ -86,5 +86,5 @@ export default {
   "titlePage.account.security": `Account Security - ${nameEX}`,
   "titlePage.account.kyc": `Account KYC - ${nameEX}`,
   "titlePage.account.history": `Login History - ${nameEX}`,
-  "titlePage.account.api": `Account Api Keys - ${nameEX}`
+  "titlePage.account.api": `Account Api Keys - ${nameEX}`,
 };

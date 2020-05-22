@@ -13,7 +13,7 @@
         <order-book />
         <market-trades />
       </div>
-      <order-entry />
+      <trade-action />
     </div>
   </z-content>
 </template>
@@ -23,12 +23,10 @@ import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import config from "@/config";
 import _ticker from "@/layouts/desktop/exchange/_ticker.vue";
-import _market_list from "@/layouts/desktop/exchange/_market_list.vue";
 import _main_chart from "@/layouts/desktop/exchange/_main_chart.vue";
 import _mine_control from "@/layouts/desktop/exchange/_mine_control.vue";
 import _order_book from "@/layouts/desktop/exchange/_order_book.vue";
 import _market_trades from "@/layouts/desktop/exchange/_market_trades.vue";
-import _order_entry from "@/layouts/desktop/exchange/_order_entry.vue";
 
 const RESOLUTION_STREAM = {
   "1": "1m",
@@ -43,16 +41,15 @@ const RESOLUTION_STREAM = {
 export default {
   name: "Exchange",
   components: {
-    "market-list": _market_list,
+    "market-list": () => import("@/layouts/desktop/exchange/market-list"),
     "ticker-status": _ticker,
     "main-chart": _main_chart,
     "mine-control": _mine_control,
     "order-book": _order_book,
     "market-trades": _market_trades,
-    "order-entry": _order_entry
+    "trade-action": () => import("@/layouts/desktop/exchange/trade-action")
   },
   data: () => ({
-    checked: false,
     identifier: 0
   }),
   beforeCreate() {
@@ -83,7 +80,7 @@ export default {
       );
 
       [
-        "ob-inc",
+        "depth",
         "trades",
         "kline-" + RESOLUTION_STREAM[tradingview_resolution]
       ].forEach(channel => {
@@ -98,7 +95,7 @@ export default {
       this.setTitle();
 
       [
-        "ob-inc",
+        "depth",
         "trades",
         "kline-" + RESOLUTION_STREAM[tradingview_resolution]
       ].forEach(channel => {
@@ -115,3 +112,7 @@ export default {
   }
 };
 </script>
+
+<style lang="less">
+@import "~@/assets/css/views/desktop/exchange";
+</style>

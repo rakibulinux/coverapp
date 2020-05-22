@@ -1,26 +1,16 @@
 <template>
-  <a-card
+  <z-card
     :bordered="false"
     class="orderbook ant-card-wider-padding ant-card-padding-transition"
   >
     <div slot="title" class="ch">
       <div
-        :class="{ change_book: true, active: whShow === 'all-asks' }"
-        @click="changeShow('all-asks')"
+        v-for="(item, key) in type_list"
+        :key="key"
+        :class="{ change_book: true, active: type === key }"
+        @click="change_type(key)"
       >
-        <img src="@/assets/img/book_asks.svg" />
-      </div>
-      <div
-        :class="{ change_book: true, active: whShow === 'normal' }"
-        @click="changeShow('normal')"
-      >
-        <img src="@/assets/img/book_avg.svg" />
-      </div>
-      <div
-        :class="{ change_book: true, active: whShow === 'all-bids' }"
-        @click="changeShow('all-bids')"
-      >
-        <img src="@/assets/img/book_bids.svg" />
+        <img :src="item" />
       </div>
     </div>
     <div class="ex_table">
@@ -29,7 +19,7 @@
         <span class="text-right">{{ $t("table.amount") }} ({{ isAsk }})</span>
         <span class="text-right">{{ $t("table.sum") }} ({{ isBid }})</span>
       </dt>
-      <dd :class="whShow">
+      <dd :class="type + '-type'">
         <div class="depth asks">
           <a-spin v-if="loading" size="large">
             <a-icon
@@ -61,50 +51,77 @@
         </div>
       </dd>
     </div>
-  </a-card>
+  </z-card>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
-import orderbook from "./orderbook";
+import book_asks_svg from "@/assets/img/book_asks.svg";
+import book_avg_svg from "@/assets/img/book_avg.svg";
+import book_bids_svg from "@/assets/img/book_bids.svg";
 
-export default {
-  name: "OrderBook",
+@Component({
   components: {
-    "depth-book": orderbook
+    "depth-book": () => import("./orderbook/_depth.vue"),
   },
-  data: () => ({
-    loading: false,
-    whShow: "normal"
-  }),
-  computed: {
-    market: () => helpers.isMarket(),
-    isBid: () => helpers.isBidSymbol().toUpperCase(),
-    isAsk: () => helpers.isAskSymbol().toUpperCase()
-  },
-  mounted() {
-    this.get_depth();
-  },
-  methods: {
-    async get_depth() {
-      this.loading = true;
-      this.$store.dispatch("exchange/getMarketDepth");
-      this.loading = false;
-    },
-    getLastTrend: () =>
-      helpers.getMarketPriceChange() >= 0 ? "text-up" : "text-down",
-    getLastPrice: () => helpers.getMarketLastPrice(),
-    getPrice_USD: () => helpers.getMarketLastUSD(),
-    getChange() {
-      const ticker = this.$store.getters["public/getAllTickers"][
-        helpers.isMarket()
-      ];
-      if (ticker) return ticker.price_change_percent;
-      else return "-.--%";
-    },
-    changeShow(wh) {
-      this.whShow = wh;
-    }
+})
+export default class App extends Vue {
+  public loading = false;
+  public type = "normal";
+
+  public type_list = {
+    asks: book_asks_svg,
+    default: book_avg_svg,
+    bids: book_bids_svg,
+  };
+
+  get market() {
+    return helpers.isMarket();
   }
-};
+
+  get isBid() {
+    return helpers.isBidSymbol().toUpperCase();
+  }
+
+  get isAsk() {
+    return helpers.isAskSymbol().toUpperCase();
+  }
+
+
+  public mounted() {
+    this.get_depth();
+  }
+
+  public async get_depth() {
+    this.loading = true;
+    this.$store.dispatch("exchange/getMarketDepth");
+    this.loading = false;
+  }
+
+  public getLastTrend() {
+    return helpers.getMarketPriceChange() >= 0 ? "text-up" : "text-down";
+  }
+
+  public getLastPrice() {
+    return helpers.getMarketLastPrice();
+  }
+
+  public getPrice_USD() {
+    return helpers.getMarketLastUSD();
+  }
+
+  public getChange() {
+    const ticker = this.$store.getters["public/getAllTickers"][
+      helpers.isMarket()
+    ];
+    if (ticker) { return ticker.price_change_percent; }
+
+    return "-.--%";
+  }
+
+  public change_type(type) {
+    this.type = type;
+  }
+}
 </script>

@@ -89,12 +89,12 @@ export default {
         price: order.key,
         amount: amount
       };
-      ZSmartModel.emit("onBookClick", payload);
+      ZSmartModel.emit("book-click", payload);
     },
-    getPrice: price => (price * 1).toFixed(helpers.pricePrecision()),
-    getAmount: amount => (amount * 1).toFixed(helpers.amountPrecision()),
+    getPrice: price => Number(price).toFixed(helpers.pricePrecision()),
+    getAmount: amount => Number(amount).toFixed(helpers.amountPrecision()),
     getVolume: (price, amount) =>
-      (price * amount).toFixed(helpers.totalPrecision())
+      Number(price * amount).toFixed(helpers.totalPrecision())
   }
 };
 </script>

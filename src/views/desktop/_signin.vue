@@ -7,139 +7,136 @@
           <auth-input
             v-model="email"
             name="email"
-            :class-name="{ ierror: !validEmail && email != '', g: email }"
-            :label-class="{ berror: !validEmail && email != '' }"
-            :placeholder="$t('placeholder.email')"
-            :label-need="true"
-            :enable-vaild="!validEmail && email != ''"
-            :error-text="translation('email')"
+            placeholder="Email"
+            :placeholder-need="true"
+            :error="email_error"
           />
           <auth-input
             v-model="password"
             name="password"
             type="password"
-            :class-name="{ g: password }"
-            :placeholder="$t('placeholder.password')"
-            :label-need="true"
+            placeholder="Password"
+            :placeholder-need="true"
+            :error="password_error"
           />
-          <button type="submit" :disabled="buttonDisabled">
-            <a-icon
-              v-if="loading"
-              type="loading"
-              style="font-size: 24px"
-              spin
-            />
+          <auth-button type="submit" :disabled="button_disabled">
             {{ $t("auth.login") }}
-          </button>
+          </auth-button>
           <div>
             <router-link to="forgotpassword" class="forgot">
               Forgot Password?
             </router-link>
-            <i18n path="auth.no_account" tag="div" class="text-right signup">
+            <div  class="text-right signup">
+              {{ $t('auth.no_account') }}
               <router-link to="signup" v-text="$t('auth.to_sign_up')" />
-            </i18n>
+            </div>
           </div>
         </form>
       </div>
     </div>
     <modal-totp
-      ref="totp"
-      :payload="payload_modal"
-      @onSubmit="onSubmitTotp"
-      @onFailed="modalClose"
+      ref="modal-totp"
+      @submit="onSubmitTotp"
     />
   </z-content>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Watch } from "vue-property-decorator";
 import store from "@/store";
-import _modal_totp from "@/layouts/desktop/modal/_modal_totp";
-import AuthInput from "@/components/desktop/AuthInput";
-import Helpers from "./helpers";
+import * as helpers from "@zsmartex/z-helpers";
+import ModalTotp from "@/layouts/desktop/modal/_modal_totp.vue";
 
-export default {
+@Component({
   components: {
-    "auth-input": AuthInput,
-    "modal-totp": _modal_totp
+    "auth-input": () => import("@/components/desktop/auth-input.vue"),
+    "auth-button": () => import("@/components/desktop/auth-button.vue"),
+    "modal-totp": ModalTotp,
   },
-  mixins: [Helpers],
-  data: () => ({
-    loading: false,
-    email: "",
-    password: "",
-    otp_code: "",
-    captcha_response: "",
-    payload_modal: {}
-  }),
-  computed: {
-    buttonDisabled() {
-      const { validEmail, password } = this;
-      let allow = true;
+})
+export default class App extends Vue {
+  public $refs!: {
+    "modal-totp": ModalTotp,
+  };
+  public loading = false;
+  public email = "";
+  public password = "";
+  public otp_code = "";
+  public captcha_response = "";
+  public payload_modal = {};
 
-      allow = validEmail && password;
+  get button_disabled() {
+    const { email_error, password_error } = this;
 
-      return !allow;
-    },
-    need2fa: {
-      get() {
-        return this.$store.state.user.need2fa;
-      },
+    return (email_error || password_error || !this.email.length || !this.password.length);
+  }
 
-      set(value) {
-        return (this.$store.state.user.need2fa = value);
-      }
-    }
-  },
-  watch: {
-    need2fa() {
-      if (this.need2fa) this.openTotp();
-    }
-  },
-  mounted() {},
-  methods: {
-    async callLogin() {
-      const { email, password, otp_code, captcha_response } = this;
+  get need2fa() {
+    return this.$store.state.user.need2fa;
+  }
 
-      this.loading = true;
-      const payload = {
-        email,
-        password,
-        otp_code,
-        captcha_response
-      }
-      await store.dispatch("user/LOGIN", { payload });
-      this.loading = false;
-    },
-    login() {
-      if (this.need2fa) {
-        if (this.otp_code.length >= 6) this.callLogin();
-      } else {
-        this.callLogin();
-      }
-    },
-    modalClose() {
-      this.need2fa = false;
-      this.payload_modal = {};
-    },
-    onSubmitTotp(payload, totp_code) {
-      this.otp_code = totp_code;
-      this.login();
-    },
-    openTotp() {
-      const modal = "totp";
-      this.payload_modal = {
-        email: this.email,
-        password: this.password,
-        modal
-      };
+  set need2fa(value) {
+    store.state.user.need2fa = value;
+  }
 
-      this.openModal(modal);
-    },
-    openModal(modal) {
-      this.$nextTick(() => {
-        this.$refs[modal].render();
-      });
+  get email_error() {
+    const { email } = this;
+    if (!email.length) { return false; }
+
+    if (!helpers.validEmail(email)) { return "Incorrect email address. Please enter again."; }
+  }
+
+  get password_error() {
+    const { password } = this;
+    if (!password.length) { return false; }
+
+    if (!helpers.validPassword(password)) { return "Incorrect password. Please enter again."; }
+  }
+
+  public async callLogin() {
+    const { email, password, otp_code, captcha_response } = this;
+
+    this.loading = true;
+    const payload = {
+      email,
+      password,
+      otp_code,
+      captcha_response,
+    };
+    await store.dispatch("user/LOGIN", { payload });
+    this.loading = false;
+  }
+
+  public login() {
+    if (this.need2fa) {
+      if (this.otp_code.length >= 6) { this.callLogin(); }
+    } else {
+      this.callLogin();
     }
   }
-};
+
+  public modalClose() {
+    this.need2fa = false;
+  }
+
+  public onSubmitTotp(totp_code) {
+    this.otp_code = totp_code;
+    this.login();
+  }
+
+  public openTotp() {
+    this.$refs["modal-totp"].create();
+  }
+
+  @Watch("need2fa")
+  public onNeed2FAChange(need2fa: boolean) {
+    if (need2fa) {
+      this.openTotp();
+    }
+  }
+}
 </script>
+
+<style lang="less">
+@import "~@/assets/css/views/desktop/auth";
+</style>

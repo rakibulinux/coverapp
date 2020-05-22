@@ -1,5 +1,5 @@
 export default {
-  getContext2D(element) {
+  getContext2D(element: HTMLCanvasElement) {
     if (element) {
       return element.getContext("2d");
     }
@@ -26,10 +26,10 @@ export default {
   },
   toThousand(num = 0) {
     if (typeof num === "undefined") {
-      return 0;
+      return "0";
     }
-    return (num || 0).toString().replace(/\d+/, function(n) {
-      let len = n.length;
+    return (num || 0).toString().replace(/\d+/, (n) => {
+      const len = n.length;
       if (len % 3 === 0) {
         return n.replace(/(\d{3})/g, ",$1").slice(1);
       } else {
@@ -38,5 +38,5 @@ export default {
         );
       }
     });
-  }
+  },
 };

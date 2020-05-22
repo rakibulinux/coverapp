@@ -1,46 +1,39 @@
 <template>
   <a-modal
-    v-model="modal.enabled"
+    v-model="modal_enabled"
     wrap-class-name="api-modal"
     :footer="null"
     :width="400"
-    @cancel="onChangeShow"
-    @ok="onChangeShow"
   >
     <need-security
-      v-if="!$store.state.user.otp"
-      @closeModal="closeModal"
+      v-if="!otp_enabled"
+      @closeModal="this.delete"
       @changeModal="changeModal"
     />
     <div v-else-if="step === 1">
-      <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
+      <img src="@/assets/img/Google_Authenticator.png" class="logo-modal" />
       <div class="title">
         Create ApiKey
       </div>
       <div class="desc">
         Enter the authentication code from the app below.
       </div>
-      <form @submit.prevent="createApi_Keys">
+      <form @submit.prevent="create_api_key">
         <auth-input
-          ref="totp_code"
-          v-model="totp_code"
-          name="totp_code"
-          :value="totp_code"
-          :class-name="{ g: totp_code }"
+          v-model="otp_code"
+          name="otp_code"
           placeholder="2FA Code"
-          :label-need="true"
+          :placeholder-need="true"
           maxlength="6"
           type="number"
         />
-        <button type="submit" :disabled="!(totp_code.length === 6)">
-          <a-icon
-            v-if="modal.loading_button"
-            type="loading"
-            style="font-size: 24px"
-            spin
-          />
+        <auth-button
+          type="submit"
+          :loading="loading"
+          :disabled="!(otp_code.length === 6)"
+        >
           {{ $t("auth.confirm") }}
-        </button>
+        </auth-button>
       </form>
     </div>
     <div v-else>
@@ -52,27 +45,21 @@
           once lost. Please store it properly.
         </p>
       </div>
-      <form @submit.prevent="remove">
+      <form @submit.prevent="this.delete">
         <auth-input
-          ref="access_key"
           name="access_key"
           :value="value.kid"
-          :class-name="{ g: value.kid }"
           placeholder="Access Key"
-          maxlength="6"
-          type="number"
-          :label-need="true"
-          :copy="true"
+          :placeholder-need="true"
+          :disabled="true"
         />
         <auth-input
-          ref="secret_key"
-          name="secret_key"
           :value="value.secret.data.value"
-          :class-name="{ g: value.secret.data.value }"
-          placeholder="Secret Key"
+          name="secret_key"
           type="number"
-          :label-need="true"
-          :copy="true"
+          placeholder="Secret Key"
+          :placeholder-need="true"
+          :disabled="true"
         />
         <button type="submit" v-text="$t('auth.confirm')" />
       </form>
@@ -81,55 +68,53 @@
 </template>
 
 <script>
-import AuthInput from "@/components/desktop/AuthInput.vue";
+import store from "@/store";
+import { Component, Mixins } from "vue-property-decorator";
 import Helpers from "./helpers";
 
-export default {
+@Component({
   components: {
-    "auth-input": AuthInput
+    "auth-input": () => import("@/components/desktop/auth-input.vue"),
   },
-  mixins: [Helpers],
-  data: () => ({
-    totp_code: "",
-    step: 1,
-    value: {
-      kid: "55",
-      secret: {
-        data: {
-          value: ""
+})
+export default class App extends Mixins(Helpers) {
+  otp_code = "";
+  step = 1;
+  value = {
+    kid: "",
+    secret: {
+      data: {
+        value: "",
+      },
+    },
+  };
+
+  get otp_enabled() {
+    return store.state.user.otp;
+  }
+
+  onCreate() {
+    otp_code = "";
+    step = 1;
+  }
+
+  async create_api_key() {
+    this.loading = true;
+    try {
+      const { kid, secret } = await this.$store.dispatch(
+        "user/CREATE_API_KEYS",
+        {
+          algorithm: "HS256",
+          totp_code: this.otp_code,
         }
-      }
-    }
-  }),
-  methods: {
-    resetInput() {
-      this.secret_key = this.access_key = this.totp_code = "";
-      this.resetStep();
-    },
-    async createApi_Keys() {
-      this.modal.loading_button = true;
-      const algorithm = "HS256";
-      const { totp_code } = this;
-      try {
-        const { kid, secret } = await this.$store.dispatch(
-          "user/CREATE_API_KEYS",
-          {
-            algorithm,
-            totp_code
-          }
-        ); // {"kid":"334cff30a7d5e171","algorithm":"HS256","scope":[],"state":"active","secret":"b698e0027d182311099ea42637bd890e","created_at":"2019-07-15T16:11:36Z","updated_at":"2019-07-15T16:11:36Z"}
-        this.resetInput();
-        this.modal.loading_button = false;
-        this.value = { kid, secret };
-        this.step++;
-      } catch (error) {
-        this.modal.loading_button = false;
-        return error;
-      }
-    },
-    onChangeShow() {
-      this.resetInput();
+      );
+      this.loading = false;
+      this.value = { kid, secret };
+      this.step++;
+    } catch (error) {
+      this.loading = false;
+      return error;
     }
   }
-};
+}
 </script>

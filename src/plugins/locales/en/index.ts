@@ -9,7 +9,7 @@ export default {
     error: "Error",
     warning: "Warning",
     success: "Success",
-    info: "Info"
+    info: "Info",
   },
   header: {
     login: "Log In",
@@ -24,82 +24,82 @@ export default {
       kyc_account_verification: "KYC Account verification",
       login_history: "Login History",
       api: "API",
-      logout: "Logout"
-    }
+      logout: "Logout",
+    },
   },
   auth: {
     login: "Log In",
     register: "Sign Up",
     confirm: "Confirm",
     forgot_password: "Forgot Password",
-    no_account: "No account? {0}",
+    no_account: "No account?",
     to_sign_up: "To sign up!",
     input_error: {
       email: "Incorrect email address. Please enter again.",
       password:
         "At least 8 characters, must include UPPER CASE letters and numbers.",
       repassword: "The two passwords are different. Please re-enter.",
-      refid: "Please enter correct referral ID"
-    }
+      refid: "Please enter correct referral ID",
+    },
   },
   history: {
     succeed: "success",
     failed: "failure",
-    login: "Login"
+    login: "Login",
   },
-  //Form placeholder
+  // Form placeholder
   placeholder: {
-    email: "Email",
-    password: "Password",
-    repassword: "Replace Password",
-    refid: "Referral uid",
-    "2fa_code": "2FA Code"
+    "email": "Email",
+    "password": "Password",
+    "repassword": "Replace Password",
+    "refid": "Referral uid",
+    "2fa_code": "2FA Code",
   },
-  //Header table
+  // Header table
   table: {
-    status: "Status",
-    name: "Name",
-    date: "Date",
-    time: "Time",
-    pair: "Pair",
-    coin: "Coin",
-    currency: "Currency",
-    infomation: "Infomation",
-    last_price: "Last Price",
-    price: "Price",
-    market: "Market",
-    change: "Change",
-    volume: "Volume",
-    sum: "Sum",
-    amount: "Amount",
-    total: "Total",
-    executed: "Executed",
-    unexecuted: "Unexecuted",
-    avg_price: "Average Price",
-    side: "Side",
-    type: "Type",
-    filled: "Filled%",
+    "status": "Status",
+    "name": "Name",
+    "date": "Date",
+    "time": "Time",
+    "pair": "Pair",
+    "coin": "Coin",
+    "currency": "Currency",
+    "infomation": "Infomation",
+    "last_price": "Last Price",
+    "price": "Price",
+    "market": "Market",
+    "change": "Change",
+    "volume": "Volume",
+    "sum": "Sum",
+    "amount": "Amount",
+    "total": "Total",
+    "executed": "Executed",
+    "unexecuted": "Unexecuted",
+    "avg_price": "Average Price",
+    "side": "Side",
+    "type": "Type",
+    "filled": "Filled%",
     "24h_change": "24h Change",
     "24h_high": "24h High",
     "24h_low": "24h Low",
     "24h_volume": "24h Volume",
-    ip_address: "IP Address",
-    action: "Action",
-    available: "Available",
-    locked: "Locked",
-    btc_val: "BTC Valuation",
-    search: "Search",
-    kid: "Kid",
-    created: "Created"
+    "ip_address": "IP Address",
+    "action": "Action",
+    "available": "Available",
+    "locked": "Locked",
+    "btc_val": "BTC Valuation",
+    "search": "Search",
+    "kid": "Kid",
+    "created": "Created",
   },
   action: {
     deposit: "Deposit",
     withdrawal: "Withdrawal",
-    exchange: "Exchange"
+    exchange: "Exchange",
   },
   market_list: {
     favorite: "Favorite",
-    market: "{market} Market"
+    market: "{market} Market",
   },
   exchange: {
     card_head: {
@@ -108,21 +108,21 @@ export default {
       open_orders: "Open Orders",
       history_orders: "History Orders",
       history_trades: "History Trades",
-      limit_order: "Limit Order"
+      limit_order: "Limit Order",
     },
     status: {
-      change: "Change",
-      high: "High",
-      low: "Low",
-      "24h_volume": "24h Volume"
+      "change": "Change",
+      "high": "High",
+      "low": "Low",
+      "24h_volume": "24h Volume",
     },
     entry: {
       price: "PRICE",
       amount: "AMOUNT",
       total: "Total",
       sell: "Sell {currency}",
-      buy: "Buy {currency}"
-    }
+      buy: "Buy {currency}",
+    },
   },
   assets: {
     address: "Address",
@@ -140,7 +140,7 @@ export default {
         • {min_confirmations} network confirmations are required to deposit, send only {currency} to this address.Sending any other currency to this address may result in the loss of your deposit.
         {0}
         • Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.
-      `
+      `,
     },
     withdraw: {
       amount: "Amount",
@@ -154,30 +154,30 @@ export default {
         {0}
         • Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.
       `,
-      submit: "Withdraw"
+      submit: "Withdraw",
     },
     history: {
       state: {
         completed: "Completed",
         processing: "Processing ({confirmations}/{min_confirmations})",
-        failed: "Failed"
-      }
-    }
+        failed: "Failed",
+      },
+    },
   },
   orders: {
     open: {
       title: "Open Orders",
-      empty: "You don't have any open order"
+      empty: "You don't have any open order",
     },
     history: {
       title: "Order History",
-      empty: "You don't have any order"
+      empty: "You don't have any order",
     },
     transaction: {
       title: "Trade History",
-      empty: "You don't have any trade"
+      empty: "You don't have any trade",
     },
-    empty_second: "Go to the Trade tab and make your order!"
+    empty_second: "Go to the Trade tab and make your order!",
   },
   usercenter: {
     account_information: {
@@ -186,9 +186,9 @@ export default {
         email: {
           name: "Email",
           desc:
-            "Used to withdraw, retrieve passwords, modify security settings and other operations."
-        }
-      }
+            "Used to withdraw, retrieve passwords, modify security settings and other operations.",
+        },
+      },
     },
     account_security: {
       title: "Account Security",
@@ -196,23 +196,23 @@ export default {
         psw: {
           name: "Login Password",
           desc: `Used for account login.`,
-          action: "Change password"
+          action: "Change password",
         },
         otp: {
           name: "Google Authenticator",
           desc: `Recommended to be used for withdrawal & password & security settings modifications.`,
-          action: "Setting"
-        }
-      }
+          action: "Setting",
+        },
+      },
     },
     login_history: {
-      title: "Login History"
+      title: "Login History",
     },
     api: {
-      title: "API"
-    }
+      title: "API",
+    },
   },
   ...backend,
   message,
-  modal
+  modal,
 };
