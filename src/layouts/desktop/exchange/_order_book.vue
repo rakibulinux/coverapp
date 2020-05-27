@@ -63,8 +63,8 @@ import book_bids_svg from "@/assets/img/book_bids.svg";
 
 @Component({
   components: {
-    "depth-book": () => import("./orderbook/_depth.vue"),
-  },
+    "depth-book": () => import("./orderbook/_depth.vue")
+  }
 })
 export default class App extends Vue {
   public loading = false;
@@ -73,7 +73,7 @@ export default class App extends Vue {
   public type_list = {
     asks: book_asks_svg,
     default: book_avg_svg,
-    bids: book_bids_svg,
+    bids: book_bids_svg
   };
 
   get market() {
@@ -87,7 +87,6 @@ export default class App extends Vue {
   get isAsk() {
     return helpers.isAskSymbol().toUpperCase();
   }
-
 
   public mounted() {
     this.get_depth();
@@ -115,7 +114,9 @@ export default class App extends Vue {
     const ticker = this.$store.getters["public/getAllTickers"][
       helpers.isMarket()
     ];
-    if (ticker) { return ticker.price_change_percent; }
+    if (ticker) {
+      return ticker.price_change_percent;
+    }
 
     return "-.--%";
   }

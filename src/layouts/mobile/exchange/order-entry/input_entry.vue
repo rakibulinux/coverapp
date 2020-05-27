@@ -26,7 +26,7 @@
 <script>
 export default {
   props: {
-    value: String | Number,
+    value: [String, Number],
     type: String,
     isFocus: Boolean,
     changeFocus: Function,

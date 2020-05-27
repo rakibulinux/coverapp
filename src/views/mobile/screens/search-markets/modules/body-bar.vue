@@ -42,7 +42,7 @@
 import ZSmartModel from "@zsmartex/z-eventbus";
 export default {
   props: {
-    value: String | Number,
+    value: [String, Number],
     findTickers: Function,
     getTrend: Function,
     percentToNumber: Function,

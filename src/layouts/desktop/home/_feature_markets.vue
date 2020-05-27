@@ -45,7 +45,6 @@ export default {
     pricePrecision: () => helpers.pricePrecision(),
     totalPrecision: () => helpers.totalPrecision()
   },
-  mounted() {},
   methods: {
     getPrice(value) {
       const { pricePrecision } = this;

@@ -36,23 +36,23 @@ import * as helpers from "@zsmartex/z-helpers";
   components: {
     "open-orders": () => import("./control/open_orders.vue"),
     "orders-history": () => import("./control/orders_history.vue"),
-    "trades-history": () => import("./control/trades_history.vue"),
-  },
+    "trades-history": () => import("./control/trades_history.vue")
+  }
 })
 export default class MineControl extends Vue {
   public tabList = [
     {
       key: "open_orders",
-      tab: "Open Orders",
+      tab: "Open Orders"
     },
     {
       key: "orders_history",
-      tab: "History Orders",
+      tab: "History Orders"
     },
     {
       key: "trades_history",
-      tab: "History Trades",
-    },
+      tab: "History Trades"
+    }
   ];
 
   get market() {
@@ -68,34 +68,37 @@ export default class MineControl extends Vue {
   }
 
   public mounted() {
-    if (this.$store.state.exchange.mine_control.market === this.market) { return; }
-    if (helpers.isAuth()) { this.getData(); }
+    if (this.$store.state.exchange.mine_control.market === this.market) {
+      return;
+    }
+    if (helpers.isAuth()) {
+      this.getData();
+    }
   }
 
   public getData() {
     this.$store.dispatch("exchange/getOpenOrders", {
       state: "wait",
       market: helpers.isMarket(),
-      size: 100,
+      size: 100
     });
     this.$store.dispatch("exchange/getOrdersHistory", {
       market: helpers.isMarket(),
-      size: 100,
+      size: 100
     });
     this.$store.dispatch("exchange/getTradesHistory", {
       market: helpers.isMarket(),
-      size: 100,
+      size: 100
     });
   }
 
   public cancel_all_order() {
     this.$store.dispatch("exchange/CANCEL_ALL_ORDER", {
-      market: helpers.isMarket(),
+      market: helpers.isMarket()
     });
   }
 
   public onTabChange(type) {
-    this.type_control = type; // FIXME change it to SET_MINE_CONTROL_TYPE in vuex
     store.commit("exchange/SET_MINE_CONTROL_TYPE", type);
   }
 

@@ -1,20 +1,37 @@
 <template>
-  <z-card
-    class="page-trade-trades"
-    :bordered="false"
-    title="Market trades"
-  >
-    <z-table :loading="loading" :columns="COLUMN" :data="trade_data" :border="false">
+  <z-card class="page-trade-trades" :bordered="false" title="Market trades">
+    <z-table
+      :loading="loading"
+      :columns="COLUMN"
+      :data="trade_data"
+      :border="false"
+    >
       <template slot="price" slot-scope="{ column, item }">
-        <span :class="['price', `text-${column.algin}`, getTrendType(item.taker_type)]">
+        <span
+          :class="[
+            'price',
+            `text-${column.algin}`,
+            getTrendType(item.taker_type)
+          ]"
+        >
           {{ getPrice(item.price) }}
+        </span>
+      </template>
+      <template slot="amount" slot-scope="{ column, item }">
+        <span :class="['amount', `text-${column.algin}`]">
+          {{ getAmount(item.amount) }}
+        </span>
+      </template>
+      <template slot="created_at" slot-scope="{ column, item }">
+        <span :class="['time', `text-${column.algin}`]">
+          {{ getDate(item.created_at) }}
         </span>
       </template>
     </z-table>
   </z-card>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 
@@ -23,8 +40,6 @@ export default class MarketTrades extends Vue {
   loading = false;
   isBid = helpers.isBidSymbol().toUpperCase();
   isAsk = helpers.isAskSymbol().toUpperCase();
-  pricePrecision = helpers.pricePrecision();
-  amountPrecision = helpers.amountPrecision();
 
   COLUMN = [
     {
@@ -36,25 +51,29 @@ export default class MarketTrades extends Vue {
     {
       title: `Amount (${this.isAsk})`,
       key: "amount",
-      algin: "right"
+      algin: "right",
+      scopedSlots: true
     },
     {
       title: "Time",
       key: "created_at",
       class_name: "time",
-      algin: "right"
-    },
+      algin: "right",
+      scopedSlots: true
+    }
   ];
 
   get trade_data() {
-    const { trades } = this.$store.state.exchange
-    return trades.map(trade => {
-      trade.price = this.getPrice(trade.price);
-      trade.amount = this.getAmount(trade.amount);
-      trade.created_at = this.fixTime(trade.created_at);
+    const { trades } = this.$store.state.exchange;
+    return trades;
+  }
 
-      return trade;
-    });
+  get price_precision() {
+    return helpers.pricePrecision();
+  }
+
+  get amount_precision() {
+    return helpers.amountPrecision();
   }
 
   mounted() {
@@ -71,20 +90,16 @@ export default class MarketTrades extends Vue {
     return helpers.trendType(taker_type);
   }
 
-  getPrice(price) {
-    const { pricePrecision } = this;
-
-    return Number(price).toFixed(pricePrecision);
+  getPrice(price: string) {
+    return Number(price).toFixed(this.price_precision);
   }
 
-  getAmount(amount) {
-    const { amountPrecision } = this;
-
-    return Number(amount).toFixed(amountPrecision);
+  getAmount(amount: string) {
+    return Number(amount).toFixed(this.amount_precision);
   }
 
-  fixTime(created_at) {
-    const date = new Date(created_at);
+  getDate(created_at: number) {
+    const date = new Date(created_at * 1000);
     return (
       ("00" + date.getHours()).slice(-2) +
       ":" +

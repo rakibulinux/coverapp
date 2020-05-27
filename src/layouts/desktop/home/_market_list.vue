@@ -122,7 +122,7 @@ export default {
   }),
   computed: {
     list_bid() {
-      return [...config.list_bid1, ...config.list_bid2]
+      return [...config.list_bid1, ...config.list_bid2];
     },
     pricePrecision: () => helpers.pricePrecision(),
     totalPrecision: () => helpers.totalPrecision(),
@@ -162,7 +162,7 @@ export default {
     },
     getNameCurrencies(currency) {
       const currencies = this.$store.getters["public/getAllCurrencies"];
-      for (var i in currencies) {
+      for (const i in currencies) {
         if (currencies[i].id === currency) {
           return currencies[i].name;
         }

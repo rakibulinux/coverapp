@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
+import * as helpers from "@zsmartex/z-helpers";
 import totp_panel from "@/views/mobile/screens/totp";
 import Helpers from "../helpers";
 

@@ -44,16 +44,16 @@
     background: @component-background;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
 
-    &.@{notification-prefix-cls}-info {
+    &-info {
       border-color: @info-color;
     }
-    &.@{notification-prefix-cls}-success {
+    &-success {
       border-color: @success-color;
     }
-    &.@{notification-prefix-cls}-error {
+    &-error {
       border-color: @error-color;
     }
-    &.@{notification-prefix-cls}-warning {
+    &-warning {
       border-color: @warning-color;
     }
 
@@ -96,31 +96,6 @@
       font-size: @font-size-base;
     }
 
-    // Icon & color style in different selector level
-    // https://github.com/ant-design/ant-design/issues/16503
-    // https://github.com/ant-design/ant-design/issues/15512
-    &-icon {
-      position: absolute;
-      margin-left: 4px;
-      font-size: 24px;
-      line-height: 24px;
-    }
-
-    .@{iconfont-css-prefix}&-icon {
-      &-success {
-        color: @success-color;
-      }
-      &-info {
-        color: @info-color;
-      }
-      &-warning {
-        color: @warning-color;
-      }
-      &-error {
-        color: @error-color;
-      }
-    }
-
     &-close {
       position: absolute;
       right: 16px;
@@ -132,11 +107,6 @@
       &:hover {
         color: var(--text-dropdown-color);
       }
-    }
-
-    &-btn {
-      float: right;
-      margin-top: 16px;
     }
   }
 

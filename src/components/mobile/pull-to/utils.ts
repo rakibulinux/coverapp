@@ -7,27 +7,30 @@ export function throttle(fn, delay, mustRunDelay = 0) {
     typeof performance === "object" ? performance : Date;
   let timer = null;
   let tStart;
-  return function() {
+  return function(...args) {
     const tCurr = timestampProvider.now();
     if (timer != null) clearTimeout(timer);
     if (!tStart) {
       tStart = tCurr;
     }
     if (mustRunDelay !== 0 && tCurr - tStart >= mustRunDelay) {
-      fn.apply(this, arguments);
+      fn.apply(this, args);
       tStart = tCurr;
     } else {
-      const context = this;
-      const args = [...arguments];
-      timer = setTimeout(function() {
+      timer = setTimeout(() => {
         timer = null;
-        return fn.apply(context, args);
+        return fn.apply(this, args);
       }, delay);
     }
   };
 }
 
 export const PASSIVE_OPTS = (function() {
+  /* istanbul ignore next */
+  function noop() {
+    return;
+  }
+
   let value = false;
   try {
     window.addEventListener("test", noop, {
@@ -42,9 +45,6 @@ export const PASSIVE_OPTS = (function() {
     value = false;
   }
   return value && { passive: true };
-
-  /* istanbul ignore next */
-  function noop() {}
 })();
 
 export function create(prototype, properties) {

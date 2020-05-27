@@ -16,7 +16,7 @@ export default class Model {
       throw new Error("Datafeed is not defined");
     }
     if (((this._options = extend(options, opts)), opts.preset)) {
-      var p = presets[opts.preset];
+      const p = presets[opts.preset];
       if (p) {
         if (void 0 !== this._options.disabled_features) {
           this._options.disabled_features = this._options.disabled_features.concat(
@@ -54,9 +54,8 @@ export default class Model {
     }
   }
   headerReady() {
-    var t = this;
-    return this._innerWindowLoaded.then(function() {
-      return t._innerWindow().headerReady();
+    return this._innerWindowLoaded.then(() => {
+      return this._innerWindow().headerReady();
     });
   }
   onGrayedObjectClicked(isBgroundImg) {
@@ -209,10 +208,9 @@ export default class Model {
     }
   }
   _create() {
-    var _this = this;
-    var html = this._render();
+    const html = this._render();
     /** @type {(Element|null)} */
-    var e = document.getElementById(this._options.container_id);
+    const e = document.getElementById(this._options.container_id);
     if (null === e) {
       throw new Error(
         "There is no such element - #" + this._options.container_id
@@ -222,7 +220,7 @@ export default class Model {
     /** @type {(Element|null)} */
     this._iFrame = e.querySelector("#" + this._id);
     /** @type {(Element|null)} */
-    var img = this._iFrame;
+    const img = this._iFrame;
     if (this._options.autosize || this._options.fullscreen) {
       /** @type {string} */
       img.style.width = "100%";
@@ -238,34 +236,34 @@ export default class Model {
       /**
        * @return {undefined}
        */
-      var listener = function() {
+      const listener = function() {
         img.removeEventListener("load", listener, false);
         displayChangeFn();
       };
       img.addEventListener("load", listener, false);
     });
-    this._innerWindowLoaded.then(function() {
-      _this._innerWindow().widgetReady(function() {
+    this._innerWindowLoaded.then(() => {
+      this._innerWindow().widgetReady(() => {
         /** @type {boolean} */
-        _this._ready = true;
+        this._ready = true;
         /** @type {number} */
-        var i = 0;
-        var video = _this._readyHandlers;
+        let i = 0;
+        const video = this._readyHandlers;
         for (; i < video.length; i++) {
-          var v = video[i];
+          const v = video[i];
           try {
-            v.call(_this);
+            v.call(this);
           } catch (logValues) {
             console.error(logValues);
           }
         }
-        _this._innerWindow().initializationFinished();
+        this._innerWindow().initializationFinished();
       });
     });
   }
   _render() {
     /** @type {!Window} */
-    var _languages = window;
+    const _languages = window;
     _languages[this._id] = {
       datafeed: this._options.datafeed,
       customFormatters: this._options.customFormatters,
@@ -293,7 +291,7 @@ export default class Model {
       };
     }
     /** @type {string} */
-    var e =
+    const e =
       (this._options.library_path || "") +
       "static/" +
       encodeURIComponent(this._options.locale) +

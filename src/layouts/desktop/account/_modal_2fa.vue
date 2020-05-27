@@ -13,7 +13,7 @@
       @click="step--"
     >
       <span class="ant-modal-action-x">
-        <i class="ic-arrow-back"/>
+        <i class="ic-arrow-back" />
       </span>
     </button>
     <img src="@/assets/img/Google_Authenticator.png" class="logo-modal" />
@@ -66,7 +66,11 @@
           :placeholder-need="true"
           maxlength="6"
         />
-        <auth-button type="submit" :loading="loading" :disabled="button_disabled">
+        <auth-button
+          type="submit"
+          :loading="loading"
+          :disabled="button_disabled"
+        >
           {{ $t("auth.confirm") }}
         </auth-button>
       </form>
@@ -79,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Mixins } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import qrcode from "@/components/desktop/qrcode";
 import ApiClient from "@zsmartex/z-apiclient";
@@ -90,8 +94,8 @@ import store from "@/store";
   components: {
     qrcode,
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
-    "auth-button": () => import("@/components/desktop/auth-button.vue"),
-  },
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
+  }
 })
 export default class App extends Mixins(Helpers) {
   public loading = false;
@@ -100,7 +104,7 @@ export default class App extends Mixins(Helpers) {
   public password = "";
   public code = {
     secret: "",
-    url: "",
+    url: ""
   };
 
   get button_disabled() {
@@ -111,26 +115,30 @@ export default class App extends Mixins(Helpers) {
 
       return !allow;
     }
+
+    return false;
   }
 
   public onCreate() {
     this.step = 1;
     this.otp_code = "";
     this.password = "";
-    if (!this.code.secret) { this.getQRCode(); }
+    if (!this.code.secret) {
+      this.getQRCode();
+    }
   }
 
   public async getQRCode() {
     try {
       const { data } = await new ApiClient("auth").post(
-        "resource/otp/generate_qrcode",
+        "resource/otp/generate_qrcode"
       );
       let url = data.data.url;
       url = helpers.removeURLParam(url, "algorithm");
       url = helpers.removeURLParam(url, "digits");
       this.code = {
         secret: helpers.getURLParam(url, "secret"),
-        url,
+        url
       };
     } catch (error) {
       return error;
@@ -143,10 +151,11 @@ export default class App extends Mixins(Helpers) {
     try {
       await new ApiClient("auth").post("resource/otp/enable", {
         password,
-        otp_code,
+        otp_code
       });
       store.commit("user/ENABLE_OTP");
       this.loading = false;
+      this.delete();
     } catch (error) {
       this.loading = false;
       return error;

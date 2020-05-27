@@ -1,19 +1,19 @@
 import colors from "@/colors";
 
 export default canvas => {
-  var ctx = canvas.getContext("2d"),
-    w = (canvas.width = document.querySelector(".preview").offsetWidth),
-    h = (canvas.height = document.querySelector(".preview").offsetHeight),
-    hue = 217,
-    stars = [],
-    count = 0,
-    maxStars = 500;
+  const ctx = canvas.getContext("2d");
+  const w = (canvas.width = document.querySelector(".preview").offsetWidth);
+  const h = (canvas.height = document.querySelector(".preview").offsetHeight);
+  const hue = 217;
+  const stars = [];
+  let count = 0;
+  const maxStars = 500;
 
-  var canvas2 = document.createElement("canvas"),
+  const canvas2 = document.createElement("canvas"),
     ctx2 = canvas2.getContext("2d");
   canvas2.width = 100;
   canvas2.height = 100;
-  var half = canvas2.width / 2,
+  const half = canvas2.width / 2,
     gradient2 = ctx2.createRadialGradient(half, half, 0, half, half, half);
   gradient2.addColorStop(0.025, "#fff");
   gradient2.addColorStop(0.1, "hsl(" + hue + ", 61%, 33%)");
@@ -32,7 +32,7 @@ export default canvas => {
     }
 
     if (min > max) {
-      var hold = max;
+      const hold = max;
       max = min;
       min = hold;
     }
@@ -41,12 +41,12 @@ export default canvas => {
   }
 
   function maxOrbit(x, y) {
-    var max = Math.max(x, y),
+    const max = Math.max(x, y),
       diameter = Math.round(Math.sqrt(max * max + max * max));
     return diameter / 2;
   }
 
-  var Star = function() {
+  const Star = function() {
     this.orbitRadius = random(maxOrbit(w, h));
     this.radius = random(60, this.orbitRadius) / 12;
     this.orbitX = w / 2;
@@ -60,7 +60,7 @@ export default canvas => {
   };
 
   Star.prototype.draw = function() {
-    var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
+    const x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
       y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY,
       twinkle = random(10);
 
@@ -81,7 +81,7 @@ export default canvas => {
     this.timePassed += this.speed;
   };
 
-  for (var i = 0; i < maxStars; i++) {
+  for (let i = 0; i < maxStars; i++) {
     new Star();
   }
 
@@ -92,7 +92,7 @@ export default canvas => {
     ctx.fillRect(0, 0, w, h);
 
     ctx.globalCompositeOperation = "lighter";
-    for (var i = 1, l = stars.length; i < l; i++) {
+    for (let i = 1, l = stars.length; i < l; i++) {
       stars[i].draw();
     }
 

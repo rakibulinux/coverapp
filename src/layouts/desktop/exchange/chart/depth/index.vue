@@ -32,27 +32,27 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import colors from "@/colors";
 import utils from "./utlis";
-
-interface ValueMapKey {}
+import utlis from "./utlis";
 
 @Component
 export default class DepthChart extends Vue {
   @Prop() public readonly wrapHeight!: number;
   @Prop() public readonly wrapWidth!: number;
   @Prop({ default: "#17434e" }) public readonly buyFillColor!: string;
-  @Prop({ default: colors["up-color"] }) public readonly buyStrokeColor!: string;
+  @Prop({ default: colors["up-color"] }) readonly buyStrokeColor!: string;
   @Prop({ default: "#452e43" }) public readonly sellFillColor!: string;
-  @Prop({ default: colors["down-color"] }) public readonly sellStrokeColor!: string;
+  @Prop({ default: colors["down-color"] }) readonly sellStrokeColor!: string;
   @Prop({ default: 5 }) public readonly gap!: number;
   @Prop({ default: false }) public readonly jagged!: boolean;
   @Prop({ default: 30 }) public readonly paddingTop!: number;
 
   public $refs!: {
     chart: HTMLCanvasElement;
-    maskChart: HTMLCanvasElement;
+    chartMask: HTMLCanvasElement;
     xChart: HTMLCanvasElement;
     yChart: HTMLCanvasElement;
   };
+  public update_list = [];
 
   public chart!: HTMLCanvasElement;
   public context!: CanvasRenderingContext2D;
@@ -70,7 +70,7 @@ export default class DepthChart extends Vue {
   >();
   public mouseEvent = {
     offsetX: 0,
-    hover: false,
+    hover: false
   };
 
   get height() {
@@ -84,21 +84,21 @@ export default class DepthChart extends Vue {
   get chartStyles() {
     return {
       width: this.width + "px",
-      height: this.height + "px",
+      height: this.height + "px"
     };
   }
 
   get xStyles() {
     return {
       top: this.height + "px",
-      left: 0,
+      left: 0
     };
   }
 
   get yStyles() {
     return {
       top: 0,
-      left: this.width + "px",
+      left: this.width + "px"
     };
   }
 
@@ -109,17 +109,17 @@ export default class DepthChart extends Vue {
 
     for (const side of SIDE) {
       let total = 0;
-      depth.toArray(side).forEach((row) => {
+      depth.toArray(side).forEach(row => {
         const item = {
           price: null,
           volume: null,
-          total: null,
+          total: null
         };
 
         total = Number(total + row.data);
         item.price = row.key;
         item.volume = row.data;
-        item.total = Number(total.toFixed(4));
+        item.total = total.toFixedNumber(4);
 
         data[side === "bids" ? "buy" : "sell"].push(item);
       });
@@ -127,7 +127,7 @@ export default class DepthChart extends Vue {
 
     return {
       buy: data.buy,
-      sell: data.sell,
+      sell: data.sell
     };
   }
 
@@ -142,8 +142,9 @@ export default class DepthChart extends Vue {
   }
 
   public mounted() {
+    this.update_list.push(new Date());
     this.$nextTick(() => {
-      this._initChart();
+      this.loop_render();
     });
   }
 
@@ -151,8 +152,17 @@ export default class DepthChart extends Vue {
     this._resetChart();
   }
 
+  loop_render() {
+    this._initChart();
+    setTimeout(() => {
+      this.loop_render();
+    }, 250);
+  }
+
   public _initChart() {
-    if (!this.wrapHeight && !this.wrapWidth) { return; }
+    if (!this.update_list.length) return;
+    if (!this.wrapHeight || !this.wrapWidth) return;
+
     this.chart = this.$refs.chart;
     this.context = utils.getContext2D(this.chart);
     this.maskChart = this.$refs.chartMask;
@@ -165,9 +175,11 @@ export default class DepthChart extends Vue {
     this._drawChart(this.chartData);
   }
   public _resetChart() {
+    this.hasPaint = false;
     this.chart = this.maskChart = this.xChart = this.yChart = null;
   }
   public _drawChart(data) {
+    this.update_list = [];
     this.args = this._calcArgs(data, this.width, this.height);
 
     if (!this.isEmptyData) {
@@ -178,13 +190,14 @@ export default class DepthChart extends Vue {
       this.hasPaint = true;
     }
   }
+
   public _calcArgs(data, width, height) {
     if (!this.isEmptyData) {
       let maxAmount = 0;
       if (data.sell.length && data.buy.length) {
         maxAmount = Math.max(
           data.sell[data.sell.length - 1].total,
-          data.buy[data.buy.length - 1].total,
+          data.buy[data.buy.length - 1].total
         );
       } else if (data.sell.length) {
         maxAmount = data.sell[data.sell.length - 1].total;
@@ -197,7 +210,7 @@ export default class DepthChart extends Vue {
       return {
         maxAmount,
         scaleH,
-        scaleW,
+        scaleW
       };
     }
 
@@ -209,131 +222,106 @@ export default class DepthChart extends Vue {
     }
 
     if (this.hasPaint) {
-      context.clearRect(0, 0, width, height);
+      utils.clearCanvas(context, this.chart);
     }
 
     context.fillStyle = "transparent";
     context.fillRect(0, 0, width, height);
 
-    const { maxAmount } = args;
-    const paddingTop = this.paddingTop;
-    const gap = this.gap;
-    const equalWidth = width / 2;
-
     let tempList = [];
-    let x = 0;
-    let y = 0;
-    let lastPoint = { x, y };
-    const buyLength = data.buy.length;
-    const sellLength = data.sell.length;
 
-    if (buyLength) {
-      const scaleW = equalWidth / (buyLength || 1);
-
-      context.beginPath();
-      context.fillStyle = this.buyFillColor;
-
-      for (const i in data.buy) {
-        const item = data.buy[i];
-
-        x = equalWidth - Number(i) * scaleW - gap;
-        y = height - (item.total / maxAmount) * (height - paddingTop);
-        if (Number(i) === 0 && x > 0) {
-          context.lineTo(x, height);
-        }
-
-        if (x <= 2) {
-          x = 2;
-        }
-
-        tempList.push({
-          x,
-          y,
-          value: item,
-          side: "buy",
-        });
-
-        if (this.jagged) {
-          context.lineTo(x, lastPoint.y);
-        }
-
-        context.lineTo(x, y);
-        context.stroke();
-        lastPoint = { x, y };
-      }
-
-      context.lineWidth = 4;
-      context.strokeStyle = this.buyStrokeColor;
-      context.lineTo(0, y);
-      context.lineTo(0, height);
-      context.lineTo(equalWidth - gap, height);
-      context.stroke();
-      context.fill();
-      context.closePath();
-    }
-
-    if (sellLength) {
-      const scaleW = equalWidth / (sellLength || 1);
-
-      context.beginPath();
-      context.fillStyle = this.sellFillColor;
-      context.moveTo(equalWidth + gap, height);
-
-      lastPoint = {
-        x: equalWidth + gap,
-        y: height,
-      };
-
-      for (const i in data.sell) {
-        const item = data.sell[i];
-
-        x = equalWidth + Number(i) * scaleW + gap;
-        y = height - (item.total / maxAmount) * (height - paddingTop);
-
-        if (x > width - 2) {
-          x = width - 2;
-        }
-
-        tempList.push({
-          x,
-          y,
-          value: item,
-          side: "sell",
-        });
-
-        if (this.jagged) {
-          context.lineTo(x, lastPoint.y);
-        }
-
-        context.lineTo(x, y);
-        lastPoint = { x, y };
-      }
-
-      context.lineWidth = 4;
-      context.strokeStyle = this.sellStrokeColor;
-      context.lineTo(width + gap, y);
-      context.lineTo(width + gap, height);
-      context.lineTo(equalWidth + gap, height);
-      context.stroke();
-      context.fill();
-      context.closePath();
-    }
+    this._drawChartBySide("buy", width, height, list => {
+      tempList.push(list);
+    });
+    this._drawChartBySide("sell", width, height, list => {
+      tempList.push(list);
+    });
 
     this.valueMap = new Map();
     tempList = tempList.sort((a, b) => a.x - b.x);
-    tempList.forEach((item) =>
-      this.valueMap.set([item.x, item.y, item.side], item.value),
+    tempList.forEach(item =>
+      this.valueMap.set([item.x, item.y, item.side], item.value)
     );
     if (this.mouseEvent.hover) {
       this.handleMouseMove({});
     }
   }
+
+  public _drawChartBySide(
+    side: "buy" | "sell",
+    chartWidth,
+    chartHeight,
+    callback?: Function
+  ) {
+    const context = this.context;
+    const { args, paddingTop, gap } = this;
+    const width = chartWidth / 2;
+    const height = chartHeight;
+    const chartData = this.chartData[side];
+
+    const scaleW = width / chartData.length;
+
+    context.beginPath();
+    context.fillStyle = this[`${side}FillColor`];
+    context.moveTo(width + gap, height);
+
+    let x = 0;
+    let y = 0;
+
+    let lastPoint = {
+      x: side === "buy" ? 0 : width + gap,
+      y: side === "buy" ? 0 : height
+    };
+
+    chartData.forEach((item, i) => {
+      if (side === "buy") {
+        x = width - Number(i) * scaleW - gap;
+      } else {
+        x = width + Number(i) * scaleW + gap;
+      }
+      y = height - (item.total / args.maxAmount) * (height - paddingTop);
+
+      if (side === "buy" && Number(i) === 0 && x > 0) {
+        context.lineTo(x, height);
+      }
+
+      if (side === "buy" && x <= 2) {
+        x = 2;
+      } else if (x > chartWidth - 2) {
+        x = chartWidth - 2;
+      }
+
+      if (this.jagged) {
+        context.lineTo(x, lastPoint.y);
+      }
+
+      context.lineTo(x, y);
+      lastPoint = { x, y };
+
+      callback({
+        x,
+        y,
+        value: item,
+        side
+      });
+    });
+
+    context.lineWidth = 4;
+    context.strokeStyle = this[`${side}StrokeColor`];
+    context.lineTo(side === "buy" ? 0 : chartWidth + gap, y);
+    context.lineTo(side === "buy" ? 0 : chartWidth + gap, height);
+    context.lineTo(side === "buy" ? width - gap : width + gap, height);
+    context.stroke();
+    context.fill();
+    context.closePath();
+  }
+
   public _drawXLine(data) {
     const context = this.xChartContext;
     const { width } = this;
 
     if (this.hasPaint) {
-      context.clearRect(0, 0, width, 100);
+      utlis.clearCanvas(context, this.xChart);
     }
 
     context.font = "12px Arial";
@@ -345,7 +333,7 @@ export default class DepthChart extends Vue {
     const equalWidth = width / 2;
     const step = width / 300;
 
-    ["buy", "sell"].forEach((type) => {
+    ["buy", "sell"].forEach(type => {
       this._xPagesFn(
         type === "buy" ? buyLength : sellLength,
         equalWidth,
@@ -353,7 +341,7 @@ export default class DepthChart extends Vue {
         context,
         data,
         type,
-        width,
+        width
       );
     });
     this._xBestPagesFn(equalWidth, context, data, width);
@@ -397,7 +385,7 @@ export default class DepthChart extends Vue {
           y: 1,
           height: 6,
           color: "#728bb9",
-          font: "13px Arial",
+          font: "13px Arial"
         };
         this.renderTick(context, x, y, text, "horizontal", tickConfig);
       }
@@ -412,14 +400,12 @@ export default class DepthChart extends Vue {
 
       if (data.buy.length && data.sell.length) {
         bestPrice = Number(
-          (data.buy[0].price + data.sell[0].price) / 2,
+          (data.buy[0].price + data.sell[0].price) / 2
         ).toFixedNumber(price_precision);
       } else if (data.buy.length) {
         bestPrice = Number(data.buy[0].price).toFixedNumber(price_precision);
       } else if (data.sell.length) {
-        bestPrice = Number(data.sell[0].price).toFixedNumber(
-          price_precision,
-        );
+        bestPrice = Number(data.sell[0].price).toFixedNumber(price_precision);
       }
 
       const text = bestPrice;
@@ -435,7 +421,7 @@ export default class DepthChart extends Vue {
         y: 1,
         height: 6,
         color: "#728bb9",
-        font: "13px Arial",
+        font: "13px Arial"
       };
       context.font = "13px Arial";
       this.renderTick(context, x, y, text, "horizontal", tickConfig);
@@ -449,7 +435,7 @@ export default class DepthChart extends Vue {
     const seg = maxAmount / 11;
 
     if (this.hasPaint) {
-      context.clearRect(0, 0, 60, this.wrapHeight);
+      utlis.clearCanvas(context, this.yChart);
     }
 
     context.font = "13px Arial";
@@ -463,7 +449,7 @@ export default class DepthChart extends Vue {
         y: y - 4,
         height: 6,
         color: "#728bb9",
-        font: "13px Arial",
+        font: "13px Arial"
       };
       this.renderTick(
         context,
@@ -471,7 +457,7 @@ export default class DepthChart extends Vue {
         y,
         utils.toPretty(seg * i),
         "vertical",
-        tickConfig,
+        tickConfig
       );
     }
 
@@ -613,7 +599,7 @@ export default class DepthChart extends Vue {
           heightOffset,
           4,
           true,
-          false,
+          false
         );
 
         maskContext.fillStyle = colorsDepth;
@@ -627,7 +613,7 @@ export default class DepthChart extends Vue {
         maskContext.fillText(
           utils.toThousand(result.price),
           textPos,
-          top + marginTop + 16,
+          top + marginTop + 16
         );
         maskContext.fillStyle = colors["text-default-color"];
         maskContext.fillText("Sum", textPos, top + marginTop + lineHeight + 24);
@@ -635,7 +621,7 @@ export default class DepthChart extends Vue {
         maskContext.fillText(
           utils.toThousand(result.total),
           textPos,
-          top + marginTop + lineHeight + 40,
+          top + marginTop + lineHeight + 40
         );
         maskContext.closePath();
         break;
@@ -646,7 +632,9 @@ export default class DepthChart extends Vue {
     const maskContext = this.maskContext;
     const width = this.width;
     const height = this.height;
-    maskContext.clearRect(0, 0, width, height);
+    if (this.hasPaint) {
+      maskContext.clearRect(0, 0, width, height);
+    }
     this.mouseEvent.hover = false;
     this.mouseEvent.offsetX = 0;
   }
@@ -673,8 +661,8 @@ export default class DepthChart extends Vue {
   @Watch("height")
   @Watch("width")
   @Watch("depth")
-  public onChartResizeOrChange(height) {
-    this._initChart();
+  public onChartResizeOrChange() {
+    this.update_list.push(new Date());
   }
 }
 </script>

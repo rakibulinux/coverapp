@@ -28,7 +28,6 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component
@@ -61,7 +60,7 @@ export default class App extends Vue {
   }
 
   public string_to_number(value: string) {
-    return value.replace(/[^0-9\.]/g, "");
+    return value.replace(/[^0-9.]/g, "");
   }
 
   public update_component() {
@@ -74,13 +73,15 @@ export default class App extends Vue {
     value = value
       .split(".")
       .filter((val, index) => index <= 1)
-      .map((val) => this.string_to_number(val))
+      .map(val => this.string_to_number(val))
       .join("."); // Remove all string
 
     value = value
       .split(".")
       .map((val, index) => {
-        if (!index) { return val; } // for index key is zero
+        if (!index) {
+          return val;
+        } // for index key is zero
 
         if (val.length > this.limitLengthAfterDot) {
           return val.substring(0, val.length - 1);

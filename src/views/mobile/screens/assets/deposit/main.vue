@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "../helpers";
 
@@ -47,7 +48,6 @@ export default {
     deposit_address: null
   }),
   computed: {},
-  mounted() {},
   methods: {
     copyAddress() {
       helpers.copyText(this.deposit_address);

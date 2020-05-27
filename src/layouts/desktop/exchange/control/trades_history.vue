@@ -1,5 +1,5 @@
 <template>
-  <z-table :columns="COLUMN" :data="orders_data" :hover="false" :border="false">
+  <z-table :columns="COLUMN" :data="trades_data" :hover="false" :border="false">
     <template slot="side" slot-scope="{ item, column }">
       <span :class="['side', `text-${column.algin}`, getTrend(item.side)]">
         {{ item.side }}
@@ -27,26 +27,29 @@
 import { Component, Mixins } from "vue-property-decorator";
 import MineControlMixin from "./mixin";
 
+@Component
 export default class TradesHistory extends Mixins(MineControlMixin) {
-  COLUMN = [
-    { title: "Date", key: "created_at", algin: "left" },
-    { title: "Side", key: "side", algin: "left", scopedSlots: true },
-    { title: "Price", key: "price", algin: "center", scopedSlots: true },
-    {
-      title: `Amount (${this.isAsk})`,
-      key: "amount",
-      algin: "right",
-      scopedSlots: true,
-    },
-    {
-      title: `Total (${this.isBid})`,
-      key: "total",
-      algin: "right",
-      scopedSlots: true,
-    }
-  ];
+  get COLUMN() {
+    return [
+      { title: "Date", key: "created_at", algin: "left" },
+      { title: "Side", key: "side", algin: "left", scopedSlots: true },
+      { title: "Price", key: "price", algin: "center", scopedSlots: true },
+      {
+        title: `Amount (${this.isAsk})`,
+        key: "amount",
+        algin: "right",
+        scopedSlots: true
+      },
+      {
+        title: `Total (${this.isBid})`,
+        key: "total",
+        algin: "right",
+        scopedSlots: true
+      }
+    ];
+  }
 
-  get orders_data() {
+  get trades_data() {
     const data = this.mine_control_data.trades_history.data;
 
     return data.map(order => {

@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "../helpers";
 import _history_row from "./modules/history-row";
@@ -74,7 +75,7 @@ export default {
     CURRENCY() {
       const currencies = new helpers.Currency().DATA;
 
-      let value = {
+      const value = {
         All: {
           name: "All",
           value: "All"
@@ -96,7 +97,6 @@ export default {
         : this.CURRENCY[this.currency].value.toUpperCase();
     }
   },
-  mounted() {},
   methods: {
     changeType(type) {
       this.type = type;

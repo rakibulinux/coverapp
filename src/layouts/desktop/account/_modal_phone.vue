@@ -37,7 +37,11 @@
             type="number"
           />
         </div>
-        <auth-button type="submit" :loading="loading" :disabled="button_disabled">
+        <auth-button
+          type="submit"
+          :loading="loading"
+          :disabled="button_disabled"
+        >
           Send Code
         </auth-button>
       </form>
@@ -79,8 +83,8 @@ import phone from "phone";
 @Component({
   components: {
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
-    "auth-button": () => import("@/components/desktop/auth-button.vue"),
-  },
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
+  }
 })
 export default class App extends Mixins(Helpers) {
   public step: number;
@@ -89,7 +93,9 @@ export default class App extends Mixins(Helpers) {
 
   get phone_number_error() {
     const { phone_number } = this;
-    if (!phone_number.length) { return false; }
+    if (!phone_number.length) {
+      return false;
+    }
 
     if (!phone("+" + phone_number).length) {
       return "Phone error";
@@ -101,15 +107,15 @@ export default class App extends Mixins(Helpers) {
       const { phone_number } = this;
       const { phone_number_error } = this;
 
-      const rule_1 = (phone_number.length);
-      const rule_2 = (!phone_number_error);
+      const rule_1 = phone_number.length;
+      const rule_2 = !phone_number_error;
       const allow = rule_1 && rule_2;
 
       return !allow;
     } else {
       const { verification_code } = this;
 
-      const rule_1 = (verification_code.length === 5);
+      const rule_1 = verification_code.length === 5;
       const allow = rule_1;
 
       return !allow;
@@ -133,7 +139,7 @@ export default class App extends Mixins(Helpers) {
             ? "/send_code"
             : ""
         }`,
-        { phone_number: "+" + phone_number },
+        { phone_number: "+" + phone_number }
       );
       this.step++;
       helpers.runNotice("success", "Code was sent successfully");
@@ -153,6 +159,7 @@ export default class App extends Mixins(Helpers) {
       await new ApiClient("auth").post("resource/phones/verify", payload);
       helpers.runNotice("success", "Phone was verified successfully");
       this.loading = false;
+      this.delete();
     } catch (error) {
       this.loading = false;
       return error;

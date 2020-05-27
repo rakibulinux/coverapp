@@ -11,11 +11,7 @@
             :placeholder-need="true"
             :error="email_error"
           />
-          <button
-            type="submit"
-            :loading="loading"
-            :disabled="button_disabled"
-          >
+          <button type="submit" :loading="loading" :disabled="button_disabled">
             <span>Forgot Password</span>
             <span v-if="sended && wait != 0">({{ wait }})</span>
           </button>
@@ -26,6 +22,7 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import { setTimeout, setInterval } from "timers";
@@ -46,13 +43,20 @@ export default class App extends Vue {
   WaitInterval = null;
 
   get email_error() {
+    const { email } = this;
+    if (!email.length) {
+      return false;
+    }
 
+    if (!helpers.validEmail(email)) {
+      return "Incorrect email address. Please enter again.";
+    }
   }
 
   get button_disabled() {
     const role_1 = !this.email_error;
     const role_2 = !this.sended && this.wait !== 0;
-    const allow = role_1 && role_2
+    const allow = role_1 && role_2;
 
     return !allow;
   }
@@ -66,7 +70,7 @@ export default class App extends Vue {
         "/identity/users/password/generate_code",
         {
           email,
-          captcha_response,
+          captcha_response
         }
       );
       this.loading = false;

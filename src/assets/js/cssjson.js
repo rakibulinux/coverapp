@@ -1,5 +1,23 @@
 export default function() {
-  var base = {};
+  const base = {};
+  const isValidStyleNode = function(node) {
+    return node instanceof HTMLStyleElement && node.sheet.cssRules.length > 0;
+  };
+
+  const timestamp = () => {
+    return Date.now() || +new Date();
+  };
+
+  const strAttr = function(name, value, depth) {
+    return "\t".repeat(depth) + name + ": " + value + ";\n";
+  };
+
+  const strNode = function(name, value, depth) {
+    let cssString = "\t".repeat(depth) + name + " {\n";
+    cssString += base.toCSS(value, depth + 1);
+    cssString += "\t".repeat(depth) + "}\n";
+    return cssString;
+  };
 
   base.init = function() {
     // String functions
@@ -13,27 +31,27 @@ export default function() {
   };
   base.init();
 
-  var selX = /([^\s\;\{\}][^\;\{\}]*)\{/g;
-  var endX = /\}/g;
-  var lineX = /([^\;\{\}]*)\;/g;
-  var commentX = /\/\*[\s\S]*?\*\//g;
-  var lineAttrX = /([^\:]+):([^\;]*);/;
+  const selX = /([^\s;{}][^;{}]*)\{/g;
+  const endX = /\}/g;
+  const lineX = /([^;{}]*);/g;
+  const commentX = /\/\*[\s\S]*?\*\//g;
+  const lineAttrX = /([^:]+):([^;]*);/;
 
   // This is used, a concatenation of all above. We use alternation to
   // capture.
-  var altX = /(\/\*[\s\S]*?\*\/)|([^\s\;\{\}][^\;\{\}]*(?=\{))|(\})|([^\;\{\}]+\;(?!\s*\*\/))/gim;
+  const altX = /(\/\*[\s\S]*?\*\/)|([^\s;{}][^{}]*(?=\{))|(\})|([^;{}]+;(?!\s*\*\/))/gim;
 
   // Capture groups
-  var capComment = 1;
-  var capSelector = 2;
-  var capEnd = 3;
-  var capAttr = 4;
+  const capComment = 1;
+  const capSelector = 2;
+  const capEnd = 3;
+  const capAttr = 4;
 
-  var isEmpty = function(x) {
+  const isEmpty = function(x) {
     return typeof x == "undefined" || x.length == 0 || x == null;
   };
 
-  var isCssJson = function(node) {
+  const isCssJson = function(node) {
     return !isEmpty(node) ? node.attributes && node.children : false;
   };
 
@@ -51,15 +69,15 @@ export default function() {
    *            split each comma separated list of selectors.
    */
   base.toJSON = function(cssString, args) {
-    var node = {
+    const node = {
       children: {},
       attributes: {}
     };
-    var match = null;
-    var count = 0;
+    let match = null;
+    let count = 0;
 
     if (typeof args == "undefined") {
-      var args = {
+      args = {
         ordered: false,
         comments: false,
         stripComments: false,
@@ -74,15 +92,15 @@ export default function() {
     while ((match = altX.exec(cssString)) != null) {
       if (!isEmpty(match[capComment]) && args.comments) {
         // Comment
-        var add = match[capComment].trim();
+        const add = match[capComment].trim();
         node[count++] = add;
       } else if (!isEmpty(match[capSelector])) {
         // New node, we recurse
-        var name = match[capSelector].trim();
+        const name = match[capSelector].trim();
         // This will return when we encounter a closing brace
-        var newNode = base.toJSON(cssString, args);
+        const newNode = base.toJSON(cssString, args);
         if (args.ordered) {
-          var obj = {};
+          const obj = {};
           obj["name"] = name;
           obj["value"] = newNode;
           // Since we must use key as index to keep order and not
@@ -91,15 +109,16 @@ export default function() {
           obj["type"] = "rule";
           node[count++] = obj;
         } else {
+          let bits;
           if (args.split) {
-            var bits = name.split(",");
+            bits = name.split(",");
           } else {
-            var bits = [name];
+            bits = [name];
           }
-          for (var i = 0; i < bits.length; i++) {
-            var sel = bits[i].trim();
+          for (let i = 0; i < bits.length; i++) {
+            const sel = bits[i].trim();
             if (sel in node.children) {
-              for (var att in newNode.attributes) {
+              for (const att in newNode.attributes) {
                 node.children[sel].attributes[att] = newNode.attributes[att];
               }
             } else {
@@ -111,21 +130,21 @@ export default function() {
         // Node has finished
         return node;
       } else if (!isEmpty(match[capAttr])) {
-        var line = match[capAttr].trim();
-        var attr = lineAttrX.exec(line);
+        const line = match[capAttr].trim();
+        const attr = lineAttrX.exec(line);
         if (attr) {
           // Attribute
-          var name = attr[1].trim();
-          var value = attr[2].trim();
+          const name = attr[1].trim();
+          const value = attr[2].trim();
           if (args.ordered) {
-            var obj = {};
+            const obj = {};
             obj["name"] = name;
             obj["value"] = value;
             obj["type"] = "attr";
             node[count++] = obj;
           } else {
             if (name in node.attributes) {
-              var currVal = node.attributes[name];
+              const currVal = node.attributes[name];
               if (!(currVal instanceof Array)) {
                 node.attributes[name] = [currVal];
               }
@@ -154,12 +173,12 @@ export default function() {
    *            Whether to add line breaks in the output.
    */
   base.toCSS = function(node, depth = 0, breaks = false) {
-    var cssString = "";
+    let cssString = "";
     if (node.attributes) {
-      for (let i in node.attributes) {
-        var att = node.attributes[i];
+      for (const i in node.attributes) {
+        const att = node.attributes[i];
         if (att instanceof Array) {
-          for (var j = 0; j < att.length; j++) {
+          for (let j = 0; j < att.length; j++) {
             cssString += strAttr(i, att[j], depth);
           }
         } else {
@@ -168,8 +187,8 @@ export default function() {
       }
     }
     if (node.children) {
-      var first = true;
-      for (let i in node.children) {
+      let first = true;
+      for (const i in node.children) {
         if (breaks && !first) {
           cssString += "\n";
         } else {
@@ -191,9 +210,9 @@ export default function() {
    * @return HTMLLinkElement
    */
   base.toHEAD = function(data, id, replace) {
-    var head = document.getElementsByTagName("head")[0];
-    var xnode = document.getElementById(id);
-    var _xnodeTest = xnode !== null && xnode instanceof HTMLStyleElement;
+    const head = document.getElementsByTagName("head")[0];
+    const xnode = document.getElementById(id);
+    const _xnodeTest = xnode !== null && xnode instanceof HTMLStyleElement;
 
     if (isEmpty(data) || !(head instanceof HTMLHeadElement)) return;
     if (_xnodeTest) {
@@ -205,13 +224,13 @@ export default function() {
       data = base.toCSS(data);
     }
 
-    var node = document.createElement("style");
+    let node = document.createElement("style");
     node.type = "text/css";
 
     if (!isEmpty(id)) {
       node.id = id;
     } else {
-      node.id = "cssjson_" + timestamp();
+      node.id = "cssjson_" + timestamp().toString();
     }
     if (node.styleSheet) {
       node.styleSheet.cssText = data;
@@ -243,24 +262,5 @@ export default function() {
   }
 
   // Helpers
-
-  var isValidStyleNode = function(node) {
-    return node instanceof HTMLStyleElement && node.sheet.cssRules.length > 0;
-  };
-
-  var timestamp = function() {
-    return Date.now() || +new Date();
-  };
-
-  var strAttr = function(name, value, depth) {
-    return "\t".repeat(depth) + name + ": " + value + ";\n";
-  };
-
-  var strNode = function(name, value, depth) {
-    var cssString = "\t".repeat(depth) + name + " {\n";
-    cssString += base.toCSS(value, depth + 1);
-    cssString += "\t".repeat(depth) + "}\n";
-    return cssString;
-  };
   return base;
 }

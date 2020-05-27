@@ -88,17 +88,18 @@
 
 <script>
 import * as helpers from "@zsmartex/z-helpers";
+import ApiClient from "@zsmartex/z-apiclient";
 import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
 import _modal_totp from "@/layouts/desktop/modal/_modal_totp";
 
 export default {
   components: {
     "modal-2fa": _modal_2fa,
-    "modal-totp": _modal_totp,
+    "modal-totp": _modal_totp
   },
   props: {
     available: String,
-    currency: Object,
+    currency: Object
   },
   computed: {
     button_disabled() {
@@ -107,18 +108,18 @@ export default {
       const available = Number(this.available);
 
       return !address || amount <= 0 || amount > available;
-    },
+    }
   },
   data: () => ({
     loading: false,
     address: "",
     amount: "",
-    otp_code: "",
+    otp_code: ""
   }),
   watch: {
     amount() {
       this.amount = helpers.inputOnlyNumber(this.amount, 8);
-    },
+    }
   },
   mounted() {
     if (!this.$store.state.user.otp)
@@ -160,7 +161,7 @@ export default {
     },
     closeModal(modal) {
       this.$refs[modal].delete();
-    },
-  },
+    }
+  }
 };
 </script>

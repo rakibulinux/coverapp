@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "../../helpers";
 
@@ -61,7 +62,7 @@ export default {
   }),
   computed: {
     buttonDisabled() {
-      var allow = true;
+      let allow = true;
       const {
         step,
         old_password,

@@ -8,7 +8,10 @@
         <p
           v-for="data in depthBids"
           :key="data[0]"
-          :style="{ backgroundSize:  ((data[1]) / maxSum['asks'] * 100).toFixed(0) + '% 100%' }"
+          :style="{
+            backgroundSize:
+              ((data[1] / maxSum['asks']) * 100).toFixed(0) + '% 100%'
+          }"
           class="bids"
         >
           <span class="text-left">{{ getAmount(data[1]) }}</span>
@@ -24,7 +27,10 @@
         <p
           v-for="data in depthAsks"
           :key="data[0]"
-          :style="{ backgroundSize:  ((data[1]) / maxSum['bids'] * 100).toFixed(0) + '% 100%' }"
+          :style="{
+            backgroundSize:
+              ((data[1] / maxSum['bids']) * 100).toFixed(0) + '% 100%'
+          }"
           class="asks"
         >
           <span class="text-left text-down">{{ getPrice(data[0]) }}</span>
@@ -49,19 +55,12 @@ export default {
     }
   }),
   computed: {
+    //FIXME: add support logic in to this method
     depthAsks() {
-      const side = "asks";
-      const { depth } = this.$store.state.exchange;
-      this.maxSum.asks = 0;
-      depth[side].map(e => (this.maxSum[side] += Number(e[1])));
-      return depth[side].reverse().slice(0, 15);
+      return [];
     },
     depthBids() {
-      const side = "bids";
-      const { depth } = this.$store.state.exchange;
-      this.maxSum.asks = 0;
-      depth[side].map(e => (this.maxSum[side] += Number(e[1])));
-      return depth[side].slice(0, 15);
+      return [];
     }
   }
 };

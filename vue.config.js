@@ -13,9 +13,9 @@ const smp = new SpeedMeasurePlugin();
 
 const isProduction = process.env.NODE_ENV === "production";
 
-let configWebPack = {
+const configWebPack = {
   publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     config.plugins.delete("prefetch");
   },
   css: {
@@ -39,11 +39,11 @@ let configWebPack = {
           "heading-color": "#fff",
           "disabled-color": "hsla(0,0%,100%,.35)",
           "item-active-bg": "hsla(0,0%,100%,.05)",
-          "item-hover-bg": "hsla(0,0%,100%,.05)",
+          "item-hover-bg": "hsla(0,0%,100%,.05)"
         },
-        javascriptEnabled: true,
-      },
-    },
+        javascriptEnabled: true
+      }
+    }
   },
   configureWebpack: smp.wrap({
     devtool:
@@ -51,17 +51,17 @@ let configWebPack = {
     performance: {
       hints: false,
       maxEntrypointSize: 512000,
-      maxAssetSize: 512000,
+      maxAssetSize: 512000
     },
     optimization: {
       minimizer: [],
       splitChunks: {
         chunks: "all",
-        name: "vendor",
-      },
+        name: "vendor"
+      }
     },
     resolve: {
-      extensions: ["*", ".js", ".ts", ".tsx", ".vue", ".json"],
+      extensions: ["*", ".js", ".ts", ".tsx", ".vue", ".json"]
     },
     module: {
       rules: [
@@ -70,25 +70,25 @@ let configWebPack = {
           use: [
             {
               loader: "sass-loader",
-              options: {},
+              options: {}
             },
             {
               loader: "@epegzz/sass-vars-loader",
               options: {
                 syntax: "scss",
-                files: [path.resolve(__dirname, "src/colors.ts")],
-              },
-            },
-          ],
-        },
-      ],
+                files: [path.resolve(__dirname, "src/colors.ts")]
+              }
+            }
+          ]
+        }
+      ]
     },
     plugins: [
       new TransformModulesPlugin(),
       new PreloadWebpackPlugin(),
-      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
       //new webpack.NormalModuleReplacementPlugin( /node_modules\/ant-design-vue\/lib\/style\/index\.less/, path.resolve(rootDir, 'src/myStylesReplacement.less') )
-    ],
+    ]
   }),
   productionSourceMap: false,
   devServer: {
@@ -97,14 +97,14 @@ let configWebPack = {
         target: "https://demo.zsmart.tech",
         secure: false,
         ws: true,
-        changeOrigin: true,
-      },
+        changeOrigin: true
+      }
     },
     host: "0.0.0.0",
     port: 3000,
     hot: true,
-    disableHostCheck: true,
-  },
+    disableHostCheck: true
+  }
 };
 
 if (isProduction) {
@@ -113,7 +113,7 @@ if (isProduction) {
       cache: true,
       parallel: true,
       sourceMap: false,
-      terserOptions: {},
+      terserOptions: {}
     })
   );
   configWebPack.configureWebpack.plugins.push(
@@ -127,8 +127,8 @@ if (isProduction) {
         // All caches together must be larger than `sizeThreshold` before any
         // caches will be deleted. Together they must be at least this
         // (default: 50 MB) big in bytes.
-        sizeThreshold: 1024 * 1024 * 1024,
-      },
+        sizeThreshold: 1024 * 1024 * 1024
+      }
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new BundleAnalyzerPlugin()

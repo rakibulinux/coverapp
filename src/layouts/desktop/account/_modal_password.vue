@@ -63,7 +63,11 @@
           maxlength="6"
           type="number"
         />
-        <auth-button type="submit" :loading="loading" :disabled="!(otp_code.length === 6)">
+        <auth-button
+          type="submit"
+          :loading="loading"
+          :disabled="!(otp_code.length === 6)"
+        >
           {{ $t("auth.confirm") }}
         </auth-button>
       </form>
@@ -80,8 +84,8 @@ import ApiClient from "@zsmartex/z-apiclient";
 @Component({
   components: {
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
-    "auth-button": () => import("@/components/desktop/auth-button.vue"),
-  },
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
+  }
 })
 export default class App extends Mixins(Helpers) {
   public old_password = "";
@@ -103,7 +107,9 @@ export default class App extends Mixins(Helpers) {
 
   public vaild_password() {
     const { step, old_password, new_password, confirm_password } = this;
-    if (!old_password || !new_password || !confirm_password) { return true; }
+    if (!old_password || !new_password || !confirm_password) {
+      return true;
+    }
     return (
       !old_password ||
       old_password === new_password ||
@@ -115,7 +121,7 @@ export default class App extends Mixins(Helpers) {
     this.loading = true;
     try {
       await new ApiClient("auth").post("resource/users/checkpassword", {
-        password: this.old_password,
+        password: this.old_password
       });
       this.step++;
       helpers.runNotice("warning", "U need enter otp code to continue");
@@ -134,7 +140,7 @@ export default class App extends Mixins(Helpers) {
         old_password,
         new_password,
         confirm_password,
-        otp_code,
+        otp_code
       });
       this.loading = false;
       this.delete();
@@ -144,6 +150,5 @@ export default class App extends Mixins(Helpers) {
       return error;
     }
   }
-
 }
 </script>

@@ -13,21 +13,21 @@ const supportedResolutions = [
   "60",
   "120",
   "240",
-  "D"
+  "D",
 ];
 
-let history = {};
+const history = {};
 
 const config = {
-  supported_resolutions: supportedResolutions
+  supported_resolutions: supportedResolutions,
 };
 
-const createChannelString = symbolInfo => {
-  var channel = symbolInfo.name.split(/[:/]/);
+const createChannelString = (symbolInfo) => {
+  const channel = symbolInfo.name.split(/[:/]/);
   return channel[0] + "/" + channel[1];
 };
 
-const checkStore = storeFake => {
+const checkStore = (storeFake) => {
   if (!storeReal) {
     store = storeFake;
   } else {
@@ -39,9 +39,13 @@ export default class DataFeeds {
   constructor(storeFake) {
     checkStore(storeFake);
   }
+
   onReady(cb) {
-    cb(config);
+    setTimeout(() => {
+      cb(config);
+    }, 0)
   }
+
   resolveSymbol(symbolName, onSymbolResolvedCallback) {
     const symbol_stub = {
       name: symbolName,
@@ -54,10 +58,13 @@ export default class DataFeeds {
       pricescale: Math.pow(10, helpers.pricePrecision()),
       has_intraday: true,
       intraday_multipliers: ["1", "5", "15", "30", "60", "240"],
-      supported_resolution: supportedResolutions
+      supported_resolution: supportedResolutions,
     };
-    onSymbolResolvedCallback(symbol_stub);
+    setTimeout(() => {
+      onSymbolResolvedCallback(symbol_stub);
+    }, 0);
   }
+
   async getBars(
     symbolInfo,
     resolution,
@@ -75,31 +82,33 @@ export default class DataFeeds {
       period: resolution,
       time_from: from,
       time_to: to,
-      limit: 2000
+      limit: 2000,
     };
     const url = "public/markets/" + helpers.isMarket() + "/k-line";
     try {
       const { data } = await new ApiClient("trade").get(url, payload);
-      const bars = data.map(el => ({
+      const bars = data.map((el) => ({
         time: el[0] * 1000,
         open: el[1],
         high: el[2],
         low: el[3],
         close: el[4],
-        volume: el[5]
+        volume: el[5],
       }));
 
       if (firstDataRequest) {
         history[symbolInfo.name] = { lastBar: bars[bars.length - 1] };
         ZSmartModel.emit("tradingview-ready");
       }
-      onDataCallback(bars, { noData: !!data.length });
+      const payload_callback = data.length ? undefined : { noData: true };
+      onDataCallback(bars, payload_callback);
     } catch (error) {
       onErrorCallback(error);
       ZSmartModel.emit("tradingview-error");
-      return error;   
+      return error;
     }
   }
+
   subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscribeUID) {
     const channelString = createChannelString(symbolInfo);
     const newSub = {
@@ -108,17 +117,19 @@ export default class DataFeeds {
       resolution,
       symbolInfo,
       lastBar: history[symbolInfo.name].lastBar,
-      listener: onRealtimeCallback
+      listener: onRealtimeCallback,
     };
     store.state.exchange.TradingView.stream = [];
     store.state.exchange.TradingView.stream.push(newSub);
   }
+
   unsubscribeBars(subscriberUID) {
     const { stream } = store.state.exchange.TradingView;
     const subIndex = stream.findIndex(e => e.uid === subscriberUID);
     if (subIndex === -1) return;
     stream.splice(subIndex, 1);
   }
+
   calculateHistoryDepth(resolution) {
     return resolution < 60
       ? { resolutionBack: "D", intervalBack: "1" }

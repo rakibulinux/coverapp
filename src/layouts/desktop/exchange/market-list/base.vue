@@ -7,7 +7,9 @@
     <div class="page-trade-pairs-tabs">
       <span
         class="page-trade-pairs-tab favorites"
-        :class="{ 'page-trade-pairs-tab-selected': tab_active_key === 'Favorites' }"
+        :class="{
+          'page-trade-pairs-tab-selected': tab_active_key === 'Favorites'
+        }"
         @click="change_tab('Favorites')"
       >
         <i class="ic-star" />
@@ -33,14 +35,26 @@
     >
       <template slot="base_unit" slot-scope="{ item, column }">
         <span :class="`currency text-${column.algin}`">
-          <span :class="['favorite', { 'favorite-selected': checkFavorite(item.id) }]" @click.stop="addOrRemoveFavorite(item.id)">
+          <span
+            :class="[
+              'favorite',
+              { 'favorite-selected': checkFavorite(item.id) }
+            ]"
+            @click.stop="addOrRemoveFavorite(item.id)"
+          >
             <i class="ic-star"></i>
           </span>
           <span>{{ item.base_unit.toUpperCase() }}</span>
         </span>
       </template>
       <template slot="price_change_percent" slot-scope="{ item, column }">
-        <span :class="['change', `text-${column.algin}`, `text-${getMarketPriceChange(item) >= 0 ? 'up' : 'down'}`]">
+        <span
+          :class="[
+            'change',
+            `text-${column.algin}`,
+            `text-${getMarketPriceChange(item) >= 0 ? 'up' : 'down'}`
+          ]"
+        >
           {{ item.price_change_percent }}
         </span>
       </template>
@@ -67,10 +81,10 @@ export default class MarketList extends Vue {
       name: "currency",
       sortBy: "base_unit",
       enabled: false,
-      class: "text-left",
+      class: "text-left"
     },
     { name: "price", sortBy: "last", enabled: true, class: "text-right" },
-    { name: "change", sortBy: "change", enabled: true, class: "text-right" },
+    { name: "change", sortBy: "change", enabled: true, class: "text-right" }
   ];
 
   public COLUMN = [
@@ -79,17 +93,23 @@ export default class MarketList extends Vue {
       key: "base_unit",
       class_name: "currency",
       algin: "left",
-      scopedSlots: true,
+      scopedSlots: true
     },
-    { title: "Price", key: "last", class_name: "price", algin: "right", sorter: true },
+    {
+      title: "Price",
+      key: "last",
+      class_name: "price",
+      algin: "right",
+      sorter: true
+    },
     {
       title: "Change",
       key: "price_change_percent",
       class_name: "change",
       algin: "right",
       scopedSlots: true,
-      sorter: true,
-    },
+      sorter: true
+    }
   ];
 
   public MARKET = [...config.list_bid1, ...config.list_bid2];
@@ -143,7 +163,7 @@ export default class MarketList extends Vue {
 
   public getNameCurrencies(name) {
     const { currencies } = this.$store.state.public;
-    for (let i in currencies) {
+    for (const i in currencies) {
       if (currencies[i].id === name.toLowerCase()) {
         return currencies[i].name;
       }
@@ -155,7 +175,9 @@ export default class MarketList extends Vue {
   }
 
   public on_table_click(item) {
-    if (this.market === item.id) { return; }
+    if (this.market === item.id) {
+      return;
+    }
 
     const market = item.name.split("/").join("_");
     store.commit("public/SYNC_EXCHANGE", market);
@@ -241,7 +263,7 @@ export default class MarketList extends Vue {
         display: inline-block;
         & + span {
           margin-left: 6px;
-         }
+        }
       }
     }
 

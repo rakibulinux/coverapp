@@ -1,5 +1,5 @@
 <template>
-  <button :type="type" :disabled="disabled">
+  <button :type="type" :disabled="disabled" @click="onSubmit">
     <span v-if="loading">
       <a-icon type="loading" style="font-size: 24px" spin />
       Loading
@@ -16,5 +16,9 @@ export default class App extends Vue {
   @Prop() public readonly loading!: boolean;
   @Prop() public readonly type!: string;
   @Prop() public readonly disabled!: boolean;
+
+  onSubmit($event) {
+    this.$emit("click", $event);
+  }
 }
 </script>

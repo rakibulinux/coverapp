@@ -1,8 +1,6 @@
 import ApiClient from "@zsmartex/z-apiclient";
 
 export default class DataFeed {
-  constructor() {}
-
   async fetchData(symbol, resolution) {
     const url = "public/markets/" + symbol + "/k-line";
     const payload = {

@@ -109,15 +109,8 @@ function getNotificationInstance(
   );
 }
 
-const typeToIcon = {
-  success: "check-circle-o",
-  info: "info-circle-o",
-  error: "close-circle-o",
-  warning: "exclamation-circle-o",
-};
-
 function notice(args) {
-  const { icon, type, description, message, btn } = args;
+  const { type, message } = args;
   const outerPrefixCls = args.prefixCls || "ant-notification";
   const prefixCls = `${outerPrefixCls}-notice`;
   const duration =
@@ -136,14 +129,7 @@ function notice(args) {
     (notification) => {
       notification.notice({
         content: (h) => (
-          <div class={`${prefixCls}-${type}`}>
-            <div class={`${prefixCls}-message`}>{message}</div>
-            {btn ? (
-              <span class={`${prefixCls}-btn`}>
-                {typeof btn === "function" ? btn(h) : btn}
-              </span>
-            ) : null}
-          </div>
+          <div class={`${prefixCls}-message`}>{message}</div>
         ),
         duration,
         closable: true,
@@ -151,7 +137,7 @@ function notice(args) {
         onClick: args.onClick,
         key: args.key,
         style: args.style || {},
-        class: args.class,
+        class: `${prefixCls}-${type}`,
       });
     }
   );

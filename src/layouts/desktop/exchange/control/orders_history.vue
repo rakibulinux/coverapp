@@ -43,27 +43,30 @@
 import { Component, Mixins } from "vue-property-decorator";
 import MineControlMixin from "./mixin";
 
+@Component
 export default class OrdersHistory extends Mixins(MineControlMixin) {
-  COLUMN = [
-    { title: "Date", key: "created_at", algin: "left" },
-    { title: "Type", key: "ord_type", algin: "left" },
-    { title: "Side", key: "side", algin: "left", scopedSlots: true },
-    { title: "Price", key: "price", algin: "center", scopedSlots: true },
-    {
-      title: `Amount (${this.isAsk})`,
-      key: "amount",
-      algin: "right",
-      scopedSlots: true,
-    },
-    { title: "Filled%", key: "filled", algin: "right", scopedSlots: true },
-    {
-      title: `Total (${this.isBid})`,
-      key: "total",
-      algin: "right",
-      scopedSlots: true,
-    },
-    { title: ``, key: "action", algin: "right", scopedSlots: true },
-  ];
+  get COLUMN() {
+    return [
+      { title: "Date", key: "created_at", algin: "left" },
+      { title: "Type", key: "ord_type", algin: "left" },
+      { title: "Side", key: "side", algin: "left", scopedSlots: true },
+      { title: "Price", key: "price", algin: "center", scopedSlots: true },
+      {
+        title: `Amount (${this.isAsk})`,
+        key: "amount",
+        algin: "right",
+        scopedSlots: true
+      },
+      { title: "Filled%", key: "filled", algin: "right", scopedSlots: true },
+      {
+        title: `Total (${this.isBid})`,
+        key: "total",
+        algin: "right",
+        scopedSlots: true
+      },
+      { title: ``, key: "action", algin: "right", scopedSlots: true }
+    ];
+  }
 
   get orders_data() {
     const data = this.mine_control_data.orders_history.data;

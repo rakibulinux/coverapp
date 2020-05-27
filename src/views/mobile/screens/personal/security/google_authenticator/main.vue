@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import qrcode from "@/components/desktop/qrcode";
 import Helpers from "../../helpers";
@@ -91,7 +92,7 @@ export default {
   computed: {
     title() {
       const { step } = this;
-      var title = "";
+      let title = "";
       if (step === 1) title = "Download and install";
       else if (step === 2) title = "Backup Key";
       else if (step === 3) title = "Enter 16-Digit key";
@@ -103,7 +104,7 @@ export default {
       else return "Submit";
     },
     buttonDisabled() {
-      var allow = true;
+      let allow = true;
       if (this.step === 3) {
         allow = this.confirm_code === this.code.secret;
       }

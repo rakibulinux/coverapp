@@ -59,6 +59,7 @@
 
 <script>
 import store from "@/store";
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import _deposit from "@/layouts/desktop/assets/_deposit.vue";
@@ -130,7 +131,9 @@ export default {
       this.loading = true;
 
       try {
-        const { data } = await new ApiClient("trade").get("account/deposit_address/" + this.currency)
+        const { data } = await new ApiClient("trade").get(
+          "account/deposit_address/" + this.currency
+        );
         this.deposit_address = data.address;
         this.loading = false;
       } catch (error) {

@@ -99,7 +99,6 @@ export default {
       return helpers.amountPrecision(this.market);
     }
   },
-  mounted() {},
   methods: {
     getTrend: taker_type => helpers.trendType(taker_type),
     capitalizeFirstLetter: string => helpers.capitalizeFirstLetter(string),

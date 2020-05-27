@@ -1,5 +1,5 @@
 function getY(max, height, diff, value) {
-  return parseFloat((height - (value * height / max) + diff).toFixed(2));
+  return parseFloat((height - (value * height) / max + diff).toFixed(2));
 }
 
 function removeChildren(svg) {
@@ -13,7 +13,7 @@ function defaultFetch(entry) {
 function buildElement(tag, attrs) {
   const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
 
-  for (let name in attrs) {
+  for (const name in attrs) {
     element.setAttribute(name, attrs[name]);
   }
 
@@ -29,9 +29,9 @@ export function sparkline(svg, entries, options) {
 
   options = options || {};
 
-  if (typeof(entries[0]) === "number") {
+  if (typeof entries[0] === "number") {
     entries = entries.map(entry => {
-      return {value: entry};
+      return { value: entry };
     });
   }
 
@@ -46,7 +46,8 @@ export function sparkline(svg, entries, options) {
 
   // Should we run in interactive mode? If yes, this will handle the
   // cursor and spot position when moving the mouse.
-  const interactive = ("interactive" in options) ? options.interactive : !!onmousemove;
+  const interactive =
+    "interactive" in options ? options.interactive : !!onmousemove;
 
   // Define how big should be the spot area.
   const spotRadius = options.spotRadius || 2;
@@ -76,7 +77,7 @@ export function sparkline(svg, entries, options) {
   const fullHeight = parseFloat(svg.attributes.height.value);
 
   // The rendering height accounts for stroke width and spot size.
-  const height = fullHeight - (strokeWidth * 2) - spotDiameter;
+  const height = fullHeight - strokeWidth * 2 - spotDiameter;
 
   // The maximum value. This is used to calculate the Y coord of
   // each sparkline datapoint.
@@ -104,11 +105,13 @@ export function sparkline(svg, entries, options) {
     const x = index * offset + spotDiameter;
     const y = getY(max, height, strokeWidth + spotRadius, value);
 
-    datapoints.push(Object.assign({}, entries[index], {
-      index: index,
-      x: x,
-      y: y
-    }));
+    datapoints.push(
+      Object.assign({}, entries[index], {
+        index: index,
+        x: x,
+        y: y
+      })
+    );
 
     pathCoords += ` L ${x} ${y}`;
   });
@@ -119,7 +122,7 @@ export function sparkline(svg, entries, options) {
     fill: "none"
   });
 
-  let fillCoords = `${pathCoords} V ${fullHeight} L ${spotDiameter} ${fullHeight} Z`;
+  const fillCoords = `${pathCoords} V ${fullHeight} L ${spotDiameter} ${fullHeight} Z`;
 
   const fill = buildElement("path", {
     class: "sparkline--fill",
@@ -157,7 +160,7 @@ export function sparkline(svg, entries, options) {
     width: svg.attributes.width.value,
     height: svg.attributes.height.value,
     style: "fill: transparent; stroke: transparent",
-    class: "sparkline--interaction-layer",
+    class: "sparkline--interaction-layer"
   });
   svg.appendChild(interactionLayer);
 
@@ -183,12 +186,13 @@ export function sparkline(svg, entries, options) {
       nextDataPoint = datapoints[lastItemIndex];
     }
 
-    let previousDataPoint = datapoints[datapoints.indexOf(nextDataPoint) - 1];
+    const previousDataPoint = datapoints[datapoints.indexOf(nextDataPoint) - 1];
     let currentDataPoint;
     let halfway;
 
     if (previousDataPoint) {
-      halfway = previousDataPoint.x + ((nextDataPoint.x - previousDataPoint.x) / 2);
+      halfway =
+        previousDataPoint.x + (nextDataPoint.x - previousDataPoint.x) / 2;
       currentDataPoint = mouseX >= halfway ? nextDataPoint : previousDataPoint;
     } else {
       currentDataPoint = nextDataPoint;

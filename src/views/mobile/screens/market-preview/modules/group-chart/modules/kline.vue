@@ -5,14 +5,13 @@
 <script>
 import ZSmartModel from "@zsmartex/z-eventbus";
 import DataFeed from "./datafeed";
-import { setTimeout } from "timers";
 
 export default {
   props: {
     market: Array,
     config: Object,
     tickerName: Function,
-    selectedTime: String | Number
+    selectedTime: [String, Number]
   },
   data: () => ({
     timeKey: {
@@ -54,7 +53,7 @@ export default {
       const resolution = this.timeKey[this.selectedTime];
       const coeff = resolution * 60;
       const rounded = Math.floor(payload.ts / coeff) * coeff * 1000;
-      let lastBar = this.widget.getLastBar();
+      const lastBar = this.widget.getLastBar();
       let _lastBar;
 
       if (rounded < lastBar.timestamp) return;
@@ -87,7 +86,7 @@ export default {
       const resolution = this.timeKey[this.selectedTime];
       const coeff = resolution * 60;
       const rounded = Math.floor(payload["time"] / coeff) * coeff * 1000;
-      let lastBar = this.widget.getLastBar();
+      const lastBar = this.widget.getLastBar();
       let _lastBar;
 
       if (rounded < lastBar.timestamp) return;

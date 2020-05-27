@@ -1,7 +1,7 @@
 <template>
   <div class="order-main">
     <div class="order-head" v-text="$t('orders.transaction.title')" />
-   <div class="order-body">
+    <div class="order-body">
       <div class="select">
         <div class="form-row">
           <label class="form-label">{{ $t("table.market") }}:</label>
@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 

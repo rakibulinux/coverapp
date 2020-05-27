@@ -45,15 +45,12 @@ export default {
     "sms-authenticator": _sms_authenticator
   },
   mixins: [Helpers],
-  data: () => ({
-
-  }),
+  data: () => ({}),
   computed: {
     user() {
       return this.$store.state.user;
     }
   },
-  mounted() {},
   methods: {
     openChangePassword() {
       this.openPanel("change-password");

@@ -1,9 +1,5 @@
 <template>
-  <z-card
-    id="main_chart"
-    title="Chart"
-    :bordered="false"
-  >
+  <z-card id="main_chart" title="Chart" :bordered="false">
     <div slot="extra" class="switch">
       <button
         :class="{ selected: whChart === 'tradingview' }"
@@ -21,33 +17,42 @@
     <trading-view-chart v-show="whChart === 'tradingview'" />
     <depth-chart
       v-show="whChart === 'depth'"
-      :wrap-height="wrapHeight"
-      :wrap-width="wrapWidth"
+      :wrap-height="wrapHeight()"
+      :wrap-width="wrapWidth()"
     />
   </z-card>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
     "trading-view-chart": () => import("./chart/_tradingview.vue"),
-    "depth-chart": () => import("./chart/depth")
+    "depth-chart": () => import("./chart/depth/index.vue")
   }
 })
 export default class MainChart extends Vue {
   whChart = "tradingview";
-  wrapHeight = 0;
-  wrapWidth = 0;
-  
+
   mounted() {
-    this.wrapHeight = this.$el.offsetHeight;
-    this.wrapWidth = this.$el.offsetWidth;
     window.addEventListener("resize", () => {
-      this.wrapHeight = this.$el.offsetHeight - 40;
-      this.wrapWidth = this.$el.offsetWidth;
+      this.$forceUpdate();
     });
   }
-};
+
+  wrapHeight() {
+    const element = this.$el as HTMLElement;
+
+    if (element) return element.offsetHeight - 40;
+    return 0;
+  }
+
+  wrapWidth() {
+    const element = this.$el as HTMLElement;
+
+    if (element) return element.offsetWidth;
+    return 0;
+  }
+}
 </script>

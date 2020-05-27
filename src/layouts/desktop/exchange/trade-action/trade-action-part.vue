@@ -30,11 +30,18 @@
     <div class="total">
       Total:
       <span class="value">
-        {{ (total || 0).toFixed(total_precision) }} {{ currency_by_side('buy').toUpperCase() }}
+        {{ (total || 0).toFixed(total_precision) }}
+        {{ currency_by_side("buy").toUpperCase() }}
       </span>
       ≈ ${{ convert_usdt_to_usd(total) }}
     </div>
-    <button :class="class_by_side('trade-action-button')" :disabled="button_disabled">{{ side.toUpperCase() }} {{ currency_by_side('sell').toUpperCase() }}</button>
+    <button
+      :class="class_by_side('trade-action-button')"
+      :disabled="button_disabled"
+      @click="place_order"
+    >
+      {{ side.toUpperCase() }} {{ currency_by_side("sell").toUpperCase() }}
+    </button>
   </div>
 </template>
 
@@ -47,32 +54,37 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 @Component({
   components: {
     "action-balance": () => import("./trade-action-balance.vue"),
-    "action-input": () => import("./trade-action-input.vue"),
-  },
+    "action-input": () => import("./trade-action-input.vue")
+  }
 })
 export default class App extends Vue {
   @Prop() public readonly side!: "buy" | "sell";
 
+  public loading = false;
   public price = "";
   public amount = "";
   public slider_percent = 0;
   public marks_slider = {
-    0: "c",
-    25: "c",
-    50: "c",
-    75: "c",
-    100: "c",
+    0: "",
+    25: "",
+    50: "",
+    75: "",
+    100: ""
   };
 
   get total() {
     const price = Number(this.price);
     const amount = Number(this.amount);
 
-    return (price * amount);
+    return price * amount;
   }
 
   get currency() {
     return this.side === "sell" ? helpers.isAskSymbol() : helpers.isBidSymbol();
+  }
+
+  get market() {
+    return helpers.isMarket();
   }
 
   get min_amount() {
@@ -96,14 +108,18 @@ export default class App extends Vue {
   }
 
   get price_error() {
-    if (!this.price.length) { return false; }
+    if (!this.price.length) {
+      return false;
+    }
     if (Number(this.price) < this.min_price) {
       return "Giá được đặt quá thấp";
     }
   }
 
   get amount_error() {
-    if (!this.amount.length) { return false; }
+    if (!this.amount.length) {
+      return false;
+    }
     if (Number(this.amount) < this.min_amount) {
       return "Số lượng được đặt quá thấp";
     }
@@ -121,11 +137,20 @@ export default class App extends Vue {
     const { amount, price } = this;
     const { price_error, amount_error } = this;
 
-    const rule_1 = (amount.length && price.length);
-    const rule_2 = (!price_error && !amount_error);
-    const allow = rule_1 && rule_2;
+    const rule_1 = amount.length && price.length;
+    const rule_2 = !price_error && !amount_error;
+    const allow = rule_1 && rule_2 && !this.loading;
 
     return !allow;
+  }
+
+  public mounted() {
+    ZSmartModel.on("depth-click", this.on_book_click);
+  }
+
+  public on_book_click(price: number, amount: number) {
+    this.price = price.toString();
+    this.amount = amount.toString();
   }
 
   public balance() {
@@ -143,14 +168,15 @@ export default class App extends Vue {
   }
 
   public convert_usdt_to_usd(number_usdt: number) {
-    const price = store.state.public.global_price.USDT.USD;
+    const price = store.state.public.global_price["USDT"]["USD"];
 
     return (number_usdt * price).toFixedNumber(2);
   }
 
   public get_best_price_by_side() {
-    const price: string = store.state.exchange.depth[this.side === "sell" ? "asks" : "bids"].orders[this.side === "sell" ? "minKey" : "maxKey"]();
-    return Number(price);
+    return store.state.exchange.depth[
+      this.side === "sell" ? "asks" : "bids"
+    ].orders[this.side === "sell" ? "minKey" : "maxKey"]();
   }
 
   public percent_to_amount(percent: number) {
@@ -160,14 +186,16 @@ export default class App extends Vue {
     }
 
     const balance = this.balance();
-    if (!balance) { return 0; }
+    if (!balance) {
+      return 0;
+    }
     const price = Number(this.price);
     if (this.side === "sell") {
-      this.amount = (balance * percent / 100).toString();
+      this.amount = ((balance * percent) / 100).toString();
     } else {
       const total_balance = balance / price;
 
-      this.amount = (total_balance * percent / 100).toString();
+      this.amount = ((total_balance * percent) / 100).toString();
     }
   }
 
@@ -175,19 +203,27 @@ export default class App extends Vue {
     let price = Number(this.price);
     const amount = Number(this.amount);
     const balance = this.balance();
-    if (!amount) { return; }
+    if (!amount) {
+      return;
+    }
 
     if (!price) {
       price = this.get_best_price_by_side();
-      if (default_price) { this.price = price.toString(); }
+      if (default_price) {
+        this.price = price.toString();
+      }
     }
 
     if (this.side === "sell") {
-      if (amount > balance) { this.amount = balance.toString(); }
+      if (amount > balance) {
+        this.amount = balance.toString();
+      }
     } else {
       const total_balance = balance / price;
 
-      if (amount > total_balance) { this.amount = total_balance.toString(); }
+      if (amount > total_balance) {
+        this.amount = total_balance.toString();
+      }
     }
   }
 
@@ -197,11 +233,13 @@ export default class App extends Vue {
     const balance = this.balance();
 
     if (this.side === "sell") {
-      this.slider_percent = Number(amount / balance * 100).toFixedNumber(0);
+      this.slider_percent = Number((amount / balance) * 100).toFixedNumber(0);
     } else {
       const total_balance = balance / price;
 
-      this.slider_percent = Number(amount / total_balance * 100).toFixedNumber(0);
+      this.slider_percent = Number(
+        (amount / total_balance) * 100
+      ).toFixedNumber(0);
     }
   }
 
@@ -209,10 +247,34 @@ export default class App extends Vue {
     this.percent_to_amount(slider_percent);
   }
 
+  public after_order_placed() {
+    helpers.runNotice("success", "Order has been placed");
+  }
+
+  public async place_order() {
+    this.loading = true;
+
+    try {
+      await store.dispatch("exchange/PlaceOrder", {
+        price: Number(this.price),
+        volume: Number(this.amount),
+        market: this.market,
+        side: this.side
+      });
+      this.after_order_placed();
+      this.loading = false;
+    } catch (error) {
+      this.loading = false;
+      return error;
+    }
+  }
+
   @Watch("price")
   public onPriceChange() {
     this.amount_with_balance(false);
-    if (this.side === "buy") { this.percent_with_amount(); }
+    if (this.side === "buy") {
+      this.percent_with_amount();
+    }
   }
 
   @Watch("amount")

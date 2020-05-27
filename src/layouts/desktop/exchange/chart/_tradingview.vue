@@ -20,8 +20,8 @@ import { cssjson, charting_library as TradingView } from "@/assets/js";
 
 @Component({
   components: {
-    "loading-page": () => import("@/layouts/loading-page.vue"),
-  },
+    "loading-page": () => import("@/layouts/loading-page.vue")
+  }
 })
 export default class TradingViewChart extends Vue {
   public loading = false;
@@ -57,7 +57,7 @@ export default class TradingViewChart extends Vue {
       "symbol_info",
       "timeframes_toolbar",
       "use_localstorage_for_settings",
-      "volume_force_overlay",
+      "volume_force_overlay"
     ],
     enabled_features: [
       "dont_show_boolean_study_arguments",
@@ -65,7 +65,7 @@ export default class TradingViewChart extends Vue {
       "move_logo_to_main_pane",
       "side_toolbar_in_fullscreen_mode",
       "keep_left_toolbar_visible_on_small_screens",
-      "disable_resolution_rebuild",
+      "disable_resolution_rebuild"
     ],
     charts_storage_url: "https://saveload.tradingview.com",
     charts_storage_api_version: "1.1",
@@ -75,9 +75,9 @@ export default class TradingViewChart extends Vue {
     fullscreen: false,
     autosize: true,
     studies_overrides: helpers.getStudiesOverrides(
-      this.$store.state.exchange.theme,
+      this.$store.state.exchange.theme
     ),
-    overrides: helpers.getOverrides(this.$store.state.exchange.theme),
+    overrides: helpers.getOverrides(this.$store.state.exchange.theme)
   };
   public studies = [];
   public tvWidget!: TradingView;
@@ -98,7 +98,7 @@ export default class TradingViewChart extends Vue {
 
   public iframe() {
     return (document.querySelector(
-      "#tv_chart_container iframe",
+      "#tv_chart_container iframe"
     ) as HTMLIFrameElement).contentWindow;
   }
 
@@ -113,7 +113,7 @@ export default class TradingViewChart extends Vue {
       { title: "30min", resolution: "30", chartType: 1 },
       { title: "1hour", resolution: "60", chartType: 1 },
       { title: "1day", resolution: "1D", chartType: 1 },
-      { title: "1week", resolution: "1W", chartType: 1 },
+      { title: "1week", resolution: "1W", chartType: 1 }
     ];
 
     this.tvWidget.onChartReady(() => {
@@ -184,30 +184,30 @@ export default class TradingViewChart extends Vue {
         name: "Moving Average",
         length: [5],
         data: {
-          "Plot.color": "rgb(132, 170, 213)",
-        },
+          "Plot.color": "rgb(132, 170, 213)"
+        }
       },
       {
         name: "Moving Average",
         length: [10],
         data: {
-          "Plot.color": "rgb(132, 170, 213)",
-        },
+          "Plot.color": "rgb(132, 170, 213)"
+        }
       },
       {
         name: "Moving Average",
         length: [30],
         data: {
-          "Plot.color": "rgb(85, 178, 99)",
-        },
+          "Plot.color": "rgb(85, 178, 99)"
+        }
       },
       {
         name: "Moving Average",
         length: [60],
         data: {
-          "Plot.color": "rgb(183, 36, 138)",
-        },
-      },
+          "Plot.color": "rgb(183, 36, 138)"
+        }
+      }
     ];
     for (const study of studies) {
       const id = this.tvWidget

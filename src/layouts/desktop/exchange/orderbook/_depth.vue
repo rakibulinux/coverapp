@@ -6,95 +6,95 @@
       class="order"
       :style="{
         backgroundSize:
-          ((getVolume(data.data, data.key) / maxTotal) * 100).toFixed(0) +
+          ((getVolume(data.key, data.data) / maxTotal) * 100).toFixed(0) +
           '% 100%'
       }"
+      @click="on_depth_clicked(data)"
     >
       <span
         :class="['text-left', trendType(side)]"
         v-text="getPrice(data.key)"
       />
       <span class="text-right" v-text="getAmount(data.data)" />
-      <span class="text-right" v-text="getVolume(data.data, data.key)" />
+      <span class="text-right" v-text="getVolume(data.key, data.data)" />
     </p>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import store from "@/store";
+import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 
-export default {
-  props: {
-    side: String
-  },
-  data: () => ({
-    whShow: "normal"
-  }),
-  computed: {
-    market: () => helpers.isMarket(),
-    isBid: () => helpers.isBidSymbol().toUpperCase(),
-    isAsk: () => helpers.isAskSymbol().toUpperCase(),
-    maxTotal() {
-      var total = 0;
-      this.depth().forEach(row => {
-        total += Number(row.key * row.data);
-      });
+@Component
+export default class MarketDepth extends Vue {
+  @Prop() readonly side!: "asks" | "bids";
 
-      return total;
-    },
-    style() {
-      return this.side === "bids"
-        ? "position: absolute;width: 100%;top: 0;"
-        : "position: absolute;width: 100%;bottom: 0;";
-    }
-  },
+  whShow = "normal";
+
+  market = helpers.isMarket();
+  isBid = helpers.isBidSymbol().toUpperCase();
+  isAsk = helpers.isAskSymbol().toUpperCase();
+
+  get maxTotal() {
+    let total = 0;
+    this.depth().forEach(row => {
+      total += Number(row.key * row.data);
+    });
+
+    return total;
+  }
+
+  get style() {
+    return this.side === "bids"
+      ? "position: absolute;width: 100%;top: 0;"
+      : "position: absolute;width: 100%;bottom: 0;";
+  }
+
   mounted() {
     ZSmartModel.on("update-depth", () => {
       this.$forceUpdate();
     });
-  },
+  }
+
   beforeDestroy() {
     ZSmartModel.remove("update-depth");
-  },
-  methods: {
-    depth() {
-      const orderbook = this.$store.state.exchange.depth;
-      return orderbook.toArray(this.side);
-    },
-    trendType: type => helpers.trendType(type),
-    findIndexOrder(depth, price) {
-      return depth.findIndex(row => row[0] == price);
-    },
-    onRowClicked(order) {
-      const { depth } = this;
-      const indexOrder = this.findIndexOrder(depth, order.key);
-      let amount = 0;
-      if (this.side === "bids") {
-        let index = 0;
-        while (index <= indexOrder) {
-          amount += depth[index].data;
-          index++;
-        }
-      } else {
-        if (depth.length - indexOrder > 1) {
-          let index = depth.length - 1;
-          while (index >= indexOrder) {
-            amount += depth[index].data;
-            index--;
-          }
-        } else amount = depth[indexOrder].data;
-      }
-      const payload = {
-        price: order.key,
-        amount: amount
-      };
-      ZSmartModel.emit("book-click", payload);
-    },
-    getPrice: price => Number(price).toFixed(helpers.pricePrecision()),
-    getAmount: amount => Number(amount).toFixed(helpers.amountPrecision()),
-    getVolume: (price, amount) =>
-      Number(price * amount).toFixed(helpers.totalPrecision())
   }
-};
+
+  depth() {
+    const orderbook = store.state.exchange.depth;
+    return orderbook.toArray(this.side);
+  }
+  trendType(type) {
+    return helpers.trendType(type);
+  }
+  on_depth_clicked(order: { key: number; data: number }) {
+    const price = order.key;
+    let orders_with_range: [number, number][];
+    const orders = store.state.exchange.depth[this.side].orders;
+    if (this.side === "bids") {
+      orders_with_range = orders.getRange(orders.minKey(), order.key, true);
+    } else {
+      orders_with_range = orders.getRange(order.key, orders.maxKey(), true);
+    }
+
+    ZSmartModel.emit(
+      "depth-click",
+      price,
+      orders_with_range
+        .map(order => order[1])
+        .reduce((previousValue, currentValue) => previousValue + currentValue)
+    );
+  }
+  getPrice(price: number) {
+    return price.toFixed(helpers.pricePrecision());
+  }
+  getAmount(amount: number) {
+    return amount.toFixed(helpers.amountPrecision());
+  }
+  getVolume(price: number, amount: number) {
+    return (price * amount).toFixed(helpers.totalPrecision());
+  }
+}
 </script>

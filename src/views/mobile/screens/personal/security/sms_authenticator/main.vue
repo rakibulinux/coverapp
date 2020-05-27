@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
 import phone from "phone"; //TODO: add support for vaile phone number
 import Helpers from "../../helpers";
 

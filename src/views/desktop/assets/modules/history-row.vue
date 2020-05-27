@@ -81,7 +81,7 @@ export default {
     },
     currencyArray(currency) {
       const currencies = this.$store.getters["public/getAllCurrencies"];
-      for (let i in currencies) {
+      for (const i in currencies) {
         if (currencies[i].id === currency) return currencies[i];
       }
     },

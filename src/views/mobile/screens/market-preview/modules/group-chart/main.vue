@@ -75,11 +75,11 @@
 import ZSmartModel from "@zsmartex/z-eventbus";
 import tabBar from "@/components/mobile/tab-bar.vue";
 import tab from "@/components/mobile/tab.vue";
-import kline from "./modules/kline";
+//import kline from "./modules/kline";
 
 export default {
   components: {
-    "kline-chart": kline,
+    //"kline-chart": kline,
     "tab-bar": tabBar,
     tab
   },

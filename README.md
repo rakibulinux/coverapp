@@ -1,4 +1,4 @@
-# coverapp
+# coverapp-fix
 
 ## Project setup
 ```

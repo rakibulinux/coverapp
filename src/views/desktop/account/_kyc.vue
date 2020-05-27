@@ -173,6 +173,7 @@
 </template>
 
 <script>
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import AutoComplete from "@/components/desktop/AutoComplete.vue";
@@ -211,8 +212,8 @@ export default {
       const fileName = $event.target.name;
       const file = $event.target.files;
       if (!file.length) return;
-      let formData = new FormData();
-      let reader = new FileReader();
+      const formData = new FormData();
+      const reader = new FileReader();
       //let imageURL = URL.createObjectURL(file[0]);
 
       if (type === "front") {

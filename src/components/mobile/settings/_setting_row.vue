@@ -28,7 +28,7 @@ export default {
       type: String,
       default: "arrow"
     },
-    iconClass: String | Object | Array
+    iconClass: [String, Object, Array]
   },
   data: () => ({
     ARROW: "arrow",

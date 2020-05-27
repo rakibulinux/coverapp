@@ -4,7 +4,7 @@
       v-if="isReady"
       :class="{
         night: this.$store.state.public.path === '/exchange',
-        'no-border': this.$store.state.public.path === '/exchange',
+        'no-border': this.$store.state.public.path === '/exchange'
       }"
     >
       <header-exchange v-if="!isMobile" />
@@ -28,6 +28,7 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 import colors from "@/colors";
+import fetchData from "@/mixins/fetchData";
 
 @Component({
   components: {
@@ -36,8 +37,8 @@ import colors from "@/colors";
     "tab-bar": () => import("@/layouts/mobile/_tab_bar.vue"),
     "loading-page": () => import("@/layouts/loading-page.vue"),
     "suggestion-2fa": () => import("@/layouts/mobile/suggestion-2fa.vue"),
-    "login-panel": () => import("@/views/mobile/screens/auth/login"),
-  },
+    "login-panel": () => import("@/views/mobile/screens/auth/login")
+  }
 })
 export default class App extends Vue {
   public $refs!: {
@@ -72,7 +73,8 @@ export default class App extends Vue {
     }
   }
 
-  public mounted() {
+  mounted() {
+    fetchData();
     const isMobileRouter = location.pathname.includes("/m");
     if (this.isMobile && !isMobileRouter) {
       this.$router.push("/m");

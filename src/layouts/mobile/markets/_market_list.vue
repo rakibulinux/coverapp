@@ -7,10 +7,7 @@
     </dt>
     <cube-tab-panels v-model="selected">
       <cube-tab-panel
-        v-for="item in [
-          'Favorites',
-          ...list_bid
-        ]"
+        v-for="item in ['Favorites', ...list_bid]"
         :key="item"
         :label="item"
       >
@@ -59,6 +56,7 @@
 </template>
 
 <script>
+import config from "@/config";
 import * as helpers from "@zsmartex/z-helpers";
 import PullTo from "@/components/mobile/pull-to";
 import { mapState } from "vuex";
@@ -79,7 +77,7 @@ export default {
   computed: {
     ...mapState("public", ["lastUpdate"]),
     list_bid() {
-      return [...config.list_bid1, ...config.list_bid2]
+      return [...config.list_bid1, ...config.list_bid2];
     }
   },
   methods: {

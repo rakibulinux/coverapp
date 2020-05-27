@@ -50,6 +50,7 @@
 </template>
 
 <script lang="ts">
+import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import Helpers from "../helpers";
 
@@ -59,9 +60,9 @@ import Helpers from "../helpers";
     "order-list": () => import("./modules/order-list.vue"),
     "choose-completer": () =>
       import("@/components/mobile/choose-completer.vue"),
-    "choose-picker": () => import("@/components/mobile/choose-picker.vue"),
+    "choose-picker": () => import("@/components/mobile/choose-picker.vue")
   },
-  mixins: [Helpers],
+  mixins: [Helpers]
 })
 export default class App extends Vue {
   public market = "All";
@@ -71,20 +72,20 @@ export default class App extends Vue {
   public STATE = {
     All: {
       name: "All",
-      value: "All",
+      value: "All"
     },
     wait: {
       name: "Waiting",
-      value: "wait",
+      value: "wait"
     },
     done: {
       name: "Filled",
-      value: "done",
+      value: "done"
     },
     cancel: {
       name: "Canceled",
-      value: "cancel",
-    },
+      value: "cancel"
+    }
   };
 
   get orders_history() {
@@ -95,11 +96,11 @@ export default class App extends Vue {
 
   get MARKET() {
     const value = { All: { name: "All", value: "All" } };
-    const MARKET = this.$store.getters["public/getAllMarkets"];
-    MARKET.forEach((market) => {
+    const MARKET = store.getters["public/getAllMarkets"];
+    MARKET.forEach(market => {
       value[market.id] = {
         name: market.name,
-        value: market.id,
+        value: market.id
       };
     });
     return value;
@@ -122,7 +123,10 @@ export default class App extends Vue {
     this.state = state;
     this.getData();
   }
-  public async cancelAllOrder() {}
+  public async cancelAllOrder() {
+    //TODO: add logic to cancel all orders
+    return;
+  }
   public async cancelOrder(id) {
     await this.$store.dispatch("exchange/CANCEL_ORDER", id);
   }
@@ -135,7 +139,7 @@ export default class App extends Vue {
       market,
       size,
       state,
-      page,
+      page
     });
   }
 }

@@ -26,18 +26,15 @@
             <router-link to="forgotpassword" class="forgot">
               Forgot Password?
             </router-link>
-            <div  class="text-right signup">
-              {{ $t('auth.no_account') }}
+            <div class="text-right signup">
+              {{ $t("auth.no_account") }}
               <router-link to="signup" v-text="$t('auth.to_sign_up')" />
             </div>
           </div>
         </form>
       </div>
     </div>
-    <modal-totp
-      ref="modal-totp"
-      @submit="onSubmitTotp"
-    />
+    <modal-totp ref="modal-totp" @submit="onSubmitTotp" />
   </z-content>
 </template>
 
@@ -51,12 +48,12 @@ import ModalTotp from "@/layouts/desktop/modal/_modal_totp.vue";
   components: {
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
     "auth-button": () => import("@/components/desktop/auth-button.vue"),
-    "modal-totp": ModalTotp,
-  },
+    "modal-totp": ModalTotp
+  }
 })
 export default class App extends Vue {
   public $refs!: {
-    "modal-totp": ModalTotp,
+    "modal-totp": ModalTotp;
   };
   public loading = false;
   public email = "";
@@ -68,7 +65,12 @@ export default class App extends Vue {
   get button_disabled() {
     const { email_error, password_error } = this;
 
-    return (email_error || password_error || !this.email.length || !this.password.length);
+    return (
+      email_error ||
+      password_error ||
+      !this.email.length ||
+      !this.password.length
+    );
   }
 
   get need2fa() {
@@ -81,16 +83,24 @@ export default class App extends Vue {
 
   get email_error() {
     const { email } = this;
-    if (!email.length) { return false; }
+    if (!email.length) {
+      return false;
+    }
 
-    if (!helpers.validEmail(email)) { return "Incorrect email address. Please enter again."; }
+    if (!helpers.validEmail(email)) {
+      return "Incorrect email address. Please enter again.";
+    }
   }
 
   get password_error() {
     const { password } = this;
-    if (!password.length) { return false; }
+    if (!password.length) {
+      return false;
+    }
 
-    if (!helpers.validPassword(password)) { return "Incorrect password. Please enter again."; }
+    if (!helpers.validPassword(password)) {
+      return "Incorrect password. Please enter again.";
+    }
   }
 
   public async callLogin() {
@@ -101,7 +111,7 @@ export default class App extends Vue {
       email,
       password,
       otp_code,
-      captcha_response,
+      captcha_response
     };
     await store.dispatch("user/LOGIN", { payload });
     this.loading = false;
@@ -109,7 +119,9 @@ export default class App extends Vue {
 
   public login() {
     if (this.need2fa) {
-      if (this.otp_code.length >= 6) { this.callLogin(); }
+      if (this.otp_code.length >= 6) {
+        this.callLogin();
+      }
     } else {
       this.callLogin();
     }

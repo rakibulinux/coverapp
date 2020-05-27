@@ -39,4 +39,10 @@ export default {
       }
     });
   },
+  clearCanvas(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    //const w = canvas.width;
+    //canvas.width = 1;
+    //canvas.width = w;
+  }
 };

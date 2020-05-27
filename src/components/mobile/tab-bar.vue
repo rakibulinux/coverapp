@@ -1,5 +1,5 @@
 <template>
-  <div class="cube-tab-bar" :class="{'cube-tab-bar_inline': inline}">
+  <div class="cube-tab-bar" :class="{ 'cube-tab-bar_inline': inline }">
     <slot />
     <div v-if="showSlider" ref="slider" class="cube-tab-bar-slider"></div>
   </div>
@@ -8,7 +8,6 @@
 <script>
 import { prefixStyle } from "cube-ui/src/common/helpers/dom";
 import { findIndex } from "cube-ui/src/common/helpers/util";
-import CubeTab from "./tab.vue";
 
 const EVENT_INPUT = "input";
 const EVENT_CHANGE = "change";
@@ -18,9 +17,7 @@ const TRANSFORM = prefixStyle("transform");
 const TRANSITION = prefixStyle("transition");
 
 export default {
-  components: {
-    CubeTab
-  },
+  components: {},
   props: {
     value: {
       type: [String, Number],
@@ -114,15 +111,16 @@ export default {
       }
     },
     _getSliderWidthAndIndex() {
-      let width = 0;
+      const width = 0;
       let index = 0;
       let left = 0;
       if (this.tabs.length > 0) {
         index = findIndex(this.tabs, tab => tab.value === this.value);
+        //TODO: add width to this
         if (this.sliderBig) {
-         width = $(this.tabs[index].$el).width();
+          //width = $(this.tabs[index].$el).width();
         } else {
-         width = $(this.tabs[index].$el.children[0]).width();
+          //width = $(this.tabs[index].$el.children[0]).width();
         }
         left = width / 4;
       }
@@ -133,7 +131,7 @@ export default {
       };
     },
     _getOffsetLeft(index) {
-      return $(this.tabs[index].$el.children[0]).offset().left || 0;
+      return; //$(this.tabs[index].$el.children[0]).offset().left || 0;
     },
     _resizeHandler() {
       clearTimeout(this._resizeTimer);

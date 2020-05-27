@@ -8,10 +8,7 @@
     </div>
     <tab-bar :value="selected" show-slider class="action-menu" @click="trigger">
       <tab
-        v-for="item in [
-          'Favorites',
-          ...list_bid
-        ]"
+        v-for="item in ['Favorites', ...list_bid]"
         :key="item"
         :name="item"
         :label="item"
@@ -23,6 +20,7 @@
 </template>
 
 <script>
+import config from "@/config";
 import tabBar from "@/components/mobile/tab-bar.vue";
 import tab from "@/components/mobile/tab.vue";
 
@@ -32,11 +30,11 @@ export default {
     tab
   },
   props: {
-    selected: String | Number
+    selected: [String, Number]
   },
   computed: {
     list_bid() {
-      return [...config.list_bid1, ...config.list_bid2]
+      return [...config.list_bid1, ...config.list_bid2];
     }
   },
   methods: {

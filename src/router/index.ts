@@ -9,7 +9,7 @@ import waitCheckedLogged from "./waitCheckedLogged";
 
 Vue.use(Router);
 
-let router = new Router({
+const router = new Router({
   mode: "history",
   base: "/",
   linkExactActiveClass: "ant-menu-item-active",

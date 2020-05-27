@@ -16,7 +16,7 @@ export default {
   }),
   computed: {
     getDepth() {
-      var depth = this.$store.state.exchange.depth;
+      const { depth } = this.$store.state.exchange;
       for (const side of this.SIDE) {
         if (depth[side].length > 6) {
           depth[side] =

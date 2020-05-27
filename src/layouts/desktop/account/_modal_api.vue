@@ -30,7 +30,7 @@
         <auth-button
           type="submit"
           :loading="loading"
-          :disabled="!(otp_code.length === 6)"
+          :disabled="disabled_button"
         >
           {{ $t("auth.confirm") }}
         </auth-button>
@@ -45,23 +45,25 @@
           once lost. Please store it properly.
         </p>
       </div>
-      <form @submit.prevent="this.delete">
+      <form @submit.prevent="closeModal">
         <auth-input
           name="access_key"
-          :value="value.kid"
+          :value="api_key"
           placeholder="Access Key"
           :placeholder-need="true"
           :disabled="true"
         />
         <auth-input
-          :value="value.secret.data.value"
+          :value="api_secret"
           name="secret_key"
           type="number"
           placeholder="Secret Key"
           :placeholder-need="true"
           :disabled="true"
         />
-        <button type="submit" v-text="$t('auth.confirm')" />
+        <auth-button type="submit">
+          {{ $t("auth.confirm") }}
+        </auth-button>
       </form>
     </div>
   </a-modal>
@@ -75,41 +77,42 @@ import Helpers from "./helpers";
 @Component({
   components: {
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
-  },
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
+  }
 })
 export default class App extends Mixins(Helpers) {
   otp_code = "";
   step = 1;
-  value = {
-    kid: "",
-    secret: {
-      data: {
-        value: "",
-      },
-    },
-  };
+  api_key = "";
+  api_secret = "";
+
+  get disabled_button() {
+    return !(this.otp_code.length === 6);
+  }
 
   get otp_enabled() {
     return store.state.user.otp;
   }
 
   onCreate() {
-    otp_code = "";
-    step = 1;
+    this.otp_code = "";
+    this.step = 1;
+  }
+
+  closeModal() {
+    this.delete();
   }
 
   async create_api_key() {
     this.loading = true;
     try {
-      const { kid, secret } = await this.$store.dispatch(
-        "user/CREATE_API_KEYS",
-        {
-          algorithm: "HS256",
-          totp_code: this.otp_code,
-        }
-      );
+      const { kid, secret } = await store.dispatch("user/CREATE_API_KEYS", {
+        algorithm: "HS256",
+        totp_code: this.otp_code
+      });
       this.loading = false;
-      this.value = { kid, secret };
+      this.api_key = kid;
+      this.api_secret = secret;
       this.step++;
     } catch (error) {
       this.loading = false;
