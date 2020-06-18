@@ -1,6 +1,9 @@
 import ZSmartStore from "@zsmartex/z-store";
 import Vue from "vue";
 import Vuex from "vuex";
+import modules from "./modules";
+
+(ZSmartStore as any).modules = Object.assign((ZSmartStore as any).modules, modules);
 
 Vue.use(Vuex);
 

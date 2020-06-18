@@ -7,26 +7,6 @@
   .ant-layout {
     font-size: 18px !important;
   }
-
-  .panel-move-enter,
-  .panel-move-leave-active {
-    transform: translate(0, 100%);
-  }
-
-  .panel-move-enter-active,
-  .panel-move-leave-active {
-    transition: transform 0.3s;
-  }
-
-  .panel-view {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 999;
-    background-color: #0e182b;
-  }
 }
 
 blockquote:after,

@@ -9,7 +9,7 @@
           <auth-input
             v-model="email"
             name="email"
-            placeholder="Email"
+            :placeholder="$t('input.placeholder.email')"
             :placeholder-need="true"
             :error="email_error"
           />
@@ -17,7 +17,7 @@
             v-model="password"
             name="password"
             type="password"
-            placeholder="Passsord"
+            :placeholder="$t('input.placeholder.password')"
             :placeholder-need="true"
             :error="password_error"
           />
@@ -25,17 +25,21 @@
             v-model="confirm_password"
             name="confirm_password"
             type="password"
-            placeholder="Confirm passsord"
+            :placeholder="$t('input.placeholder.confirm_password')"
             :placeholder-need="true"
             :error="confirm_password_error"
           />
           <auth-input
             v-model="refid"
             name="refid"
-            placeholder="Referral UID"
+            :placeholder="$t('input.placeholder.refid')"
             :error="refid_error"
           />
-          <auth-button type="submit" :loading="loading" :disabled="buttonDisabled" >
+          <auth-button
+            type="submit"
+            :loading="loading"
+            :disabled="buttonDisabled"
+          >
             {{ $t("auth.register") }}
           </auth-button>
         </form>
@@ -51,10 +55,10 @@ import * as helpers from "@zsmartex/z-helpers";
 @Component({
   components: {
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
-    "auth-button": () => import("@/components/desktop/auth-button.vue"),
-  },
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
+  }
 })
-export default class App extends Vue {
+export default class SignUp extends Vue {
   public loading = false;
   public email = "";
   public password = "";
@@ -64,10 +68,23 @@ export default class App extends Vue {
 
   get buttonDisabled() {
     const { email, password, confirm_password, captcha_response } = this;
-    const { email_error, password_error, confirm_password_error, refid_error } = this;
+    const {
+      email_error,
+      password_error,
+      confirm_password_error,
+      refid_error
+    } = this;
 
-    const rule_1 = (email.length || password.length || confirm_password.length  || captcha_response.length);
-    const rule_2 = (!email_error && !password_error && !confirm_password_error && !refid_error);
+    const rule_1 =
+      email.length ||
+      password.length ||
+      confirm_password.length ||
+      captcha_response.length;
+    const rule_2 =
+      !email_error &&
+      !password_error &&
+      !confirm_password_error &&
+      !refid_error;
     let allow = rule_1 && rule_2;
     allow = allow && !this.loading;
 
@@ -76,30 +93,46 @@ export default class App extends Vue {
 
   get email_error() {
     const { email } = this;
-    if (!email.length) { return false; }
+    if (!email.length) {
+      return false;
+    }
 
-    if (!helpers.validEmail(email)) { return "Incorrect email address. Please enter again."; }
+    if (!helpers.validEmail(email)) {
+      return this.$t("auth.input_error.email");
+    }
   }
 
   get password_error() {
     const { password } = this;
-    if (!password.length) { return false; }
+    if (!password.length) {
+      return false;
+    }
 
-    if (!helpers.validPassword(password)) { return "Incorrect email address. Please enter again."; }
+    if (!helpers.validPassword(password)) {
+      return this.$t("auth.input_error.password");
+    }
   }
 
   get confirm_password_error() {
     const { password, confirm_password } = this;
-    if (!confirm_password.length) { return false; }
+    if (!confirm_password.length) {
+      return false;
+    }
 
-    if (confirm_password !== password) { return "Incorrect email address. Please enter again."; }
+    if (confirm_password !== password) {
+      return this.$t("auth.input_error.confirm_password");
+    }
   }
 
   get refid_error() {
     const { refid } = this;
-    if (!refid.length) { return false; }
+    if (!refid.length) {
+      return false;
+    }
 
-    if (/^ID\w{10}$/g.test(refid)) { return "Incorrect email address. Please enter again."; }
+    if (/^ID\w{10}$/g.test(refid)) {
+      return this.$t("auth.input_error.refid");
+    }
   }
 
   public async register() {
@@ -110,7 +143,7 @@ export default class App extends Vue {
       email,
       password,
       refid,
-      captcha_response,
+      captcha_response
     });
     this.loading = false;
   }

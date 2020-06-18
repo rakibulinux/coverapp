@@ -1,52 +1,50 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-personal-m my-orders">
-      <head-bar :loading="isLoading" title="My Orders" @on-remove="remove()" />
-      <div class="body-bar">
-        <div class="order-setting">
-          <div class="choose-market">
-            <choose-completer
-              ref="market"
-              :data="MARKET"
-              :selected="MARKET[market].value"
-              :selected-text="getMarketSelected"
-              @on-change="changeMarket"
-            />
+  <panel-view v-if="isShowing" class="screen-personal-m my-orders">
+    <head-bar :loading="isLoading" title="My Orders" @on-remove="remove()" />
+    <div class="body-bar">
+      <div class="order-setting">
+        <div class="choose-market">
+          <choose-completer
+            ref="market"
+            :data="MARKET"
+            :selected="MARKET[market].value"
+            :selected-text="getMarketSelected"
+            @on-change="changeMarket"
+          />
 
-            <choose-picker
-              ref="state"
-              :data="STATE"
-              :selected="STATE[state].value"
-              :selected-text="getStateSelected"
-              @on-change="changeState"
-            />
-          </div>
-          <div class="cancel-all">
-            <button @click="cancelAllOrder">
-              Cancel All
-            </button>
-          </div>
+          <choose-picker
+            ref="state"
+            :data="STATE"
+            :selected="STATE[state].value"
+            :selected-text="getStateSelected"
+            @on-change="changeState"
+          />
         </div>
-        <order-list>
-          <order-row
-            v-for="(order, index) in orders_history.data"
-            :key="index"
-            :order="order"
-            :cancel-order="cancelOrder"
-          />
-          <a-pagination
-            v-if="orders_history.max > 25"
-            v-model="orders_history.page"
-            size="small"
-            class="text-right"
-            :page-size="size"
-            :total="orders_history.max"
-            @change="getData"
-          />
-        </order-list>
+        <div class="cancel-all">
+          <button @click="cancelAllOrder">
+            Cancel All
+          </button>
+        </div>
       </div>
-    </panel-view>
-  </transition>
+      <order-list>
+        <order-row
+          v-for="(order, index) in orders_history.data"
+          :key="index"
+          :order="order"
+          :cancel-order="cancelOrder"
+        />
+        <a-pagination
+          v-if="orders_history.max > 25"
+          v-model="orders_history.page"
+          size="small"
+          class="text-right"
+          :page-size="size"
+          :total="orders_history.max"
+          @change="getData"
+        />
+      </order-list>
+    </div>
+  </panel-view>
 </template>
 
 <script lang="ts">

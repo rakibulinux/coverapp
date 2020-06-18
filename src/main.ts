@@ -5,9 +5,11 @@ import router from "@/router";
 import store from "@/store";
 import * as vClickOutside from "v-click-outside-x";
 import Vue from "vue";
+import Vue2TouchEvents from "vue2-touch-events";
 import "./registerServiceWorker";
 import(/* webpackPreload: true */ "@/assets/css/loading.scss");
 
+Vue.use(Vue2TouchEvents);
 Vue.use(vClickOutside);
 
 Vue.config.productionTip = false;

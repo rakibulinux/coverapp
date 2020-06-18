@@ -47,19 +47,34 @@ import MineControlMixin from "./mixin";
 export default class OrdersHistory extends Mixins(MineControlMixin) {
   get COLUMN() {
     return [
-      { title: "Date", key: "created_at", algin: "left" },
-      { title: "Type", key: "ord_type", algin: "left" },
-      { title: "Side", key: "side", algin: "left", scopedSlots: true },
-      { title: "Price", key: "price", algin: "center", scopedSlots: true },
+      { title: this.$t("table.date"), key: "created_at", algin: "left" },
+      { title: this.$t("table.type"), key: "ord_type", algin: "left" },
       {
-        title: `Amount (${this.isAsk})`,
+        title: this.$t("table.side"),
+        key: "side",
+        algin: "left",
+        scopedSlots: true
+      },
+      {
+        title: this.$t("table.price"),
+        key: "price",
+        algin: "center",
+        scopedSlots: true
+      },
+      {
+        title: `${this.$t("table.amount")} (${this.isAsk})`,
         key: "amount",
         algin: "right",
         scopedSlots: true
       },
-      { title: "Filled%", key: "filled", algin: "right", scopedSlots: true },
       {
-        title: `Total (${this.isBid})`,
+        title: this.$t("table.filled"),
+        key: "filled",
+        algin: "right",
+        scopedSlots: true
+      },
+      {
+        title: `${this.$t("table.total")} (${this.isBid})`,
         key: "total",
         algin: "right",
         scopedSlots: true

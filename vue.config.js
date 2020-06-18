@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-escape */
 const webpack = require("webpack");
 const path = require("path");
+const PostCompilePlugin = require("webpack-post-compile-plugin");
 const TransformModulesPlugin = require("webpack-transform-modules-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -61,6 +62,10 @@ const configWebPack = {
       }
     },
     resolve: {
+      alias: {
+        "cube-ui-src": path.resolve(__dirname, "node_modules/cube-ui/src"),
+        "cube-ui": "cube-ui/lib"
+      },
       extensions: ["*", ".js", ".ts", ".tsx", ".vue", ".json"]
     },
     module: {
@@ -84,6 +89,7 @@ const configWebPack = {
       ]
     },
     plugins: [
+      new PostCompilePlugin(),
       new TransformModulesPlugin(),
       new PreloadWebpackPlugin(),
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)

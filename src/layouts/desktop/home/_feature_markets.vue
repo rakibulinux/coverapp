@@ -86,7 +86,7 @@ export default {
     MarketJoin(ticker) {
       const marketArray = ticker.split("/");
       const market = marketArray.join("_");
-      this.$store.commit("public/SYNC_EXCHANGE", market);
+      this.$store.commit("public/SYNC_EXCHANGE", { market });
     }
   }
 };

@@ -3,11 +3,10 @@
     <p
       v-for="data in depth()"
       :key="data.key"
-      class="order"
+      class="z-table-row"
       :style="{
         backgroundSize:
-          ((getVolume(data.key, data.data) / maxTotal) * 100).toFixed(0) +
-          '% 100%'
+          (((data.key * data.data) / maxTotal) * 100).toFixed(0) + '% 100%'
       }"
       @click="on_depth_clicked(data)"
     >
@@ -66,9 +65,11 @@ export default class MarketDepth extends Vue {
     const orderbook = store.state.exchange.depth;
     return orderbook.toArray(this.side);
   }
+
   trendType(type) {
     return helpers.trendType(type);
   }
+
   on_depth_clicked(order: { key: number; data: number }) {
     const price = order.key;
     let orders_with_range: [number, number][];
@@ -87,12 +88,15 @@ export default class MarketDepth extends Vue {
         .reduce((previousValue, currentValue) => previousValue + currentValue)
     );
   }
+
   getPrice(price: number) {
     return price.toFixed(helpers.pricePrecision());
   }
+
   getAmount(amount: number) {
     return amount.toFixed(helpers.amountPrecision());
   }
+
   getVolume(price: number, amount: number) {
     return (price * amount).toFixed(helpers.totalPrecision());
   }

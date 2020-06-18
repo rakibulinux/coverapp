@@ -6,12 +6,6 @@
     background: $bg-card-color;
   }
   .page-exchange {
-    .input-entry {
-      border-color: $border-color;
-    }
-    input {
-      color: $input-color;
-    }
     .ticker-info {
       background: $bg-card-color;
       .ticker-status {
@@ -66,38 +60,6 @@
         .value {
           color: $value-color;
         }
-      }
-    }
-    .change_theme {
-      border-color: $border-color;
-      i {
-        color: $icon-color;
-      }
-    }
-  }
-  .orderbook {
-    .ticker-book {
-      border-color: $border-color;
-    }
-    .change_book {
-      border-color: $border-color;
-      &:hover,
-      &.active {
-        border-color: $selected-border-color;
-      }
-    }
-    .price_usd {
-      color: $color-gray;
-    }
-  }
-  #asks_entry,
-  #bids_entry {
-    .total {
-      color: $value-color;
-    }
-    .chance-box {
-      button {
-        border-color: $border-color !important;
       }
     }
   }

@@ -4,11 +4,7 @@
       <h3>[NAME] - Your Great Choice</h3>
       <div ref="banner" class="banner">
         <swiper class="slide_viewer" :options="swiperOption">
-          <swiper-slide
-            v-for="(data, i) in banners"
-            :key="i"
-            class="slide"
-          >
+          <swiper-slide v-for="(data, i) in banners" :key="i" class="slide">
             <a
               v-for="(dataV, index) in data"
               :key="index"

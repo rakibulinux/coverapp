@@ -1,25 +1,23 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-personal-m language">
-      <head-bar title="Language" @on-remove="remove()" />
-      <div class="body-bar">
-        <div class="setting-list">
-          <setting-group :no-background="true">
-            <setting-row
-              v-for="(data, index) in messages"
-              :key="index"
-              :allow-icon="locale === data.name"
-              type="success"
-              :icon-class="{ selected: locale === data.name }"
-              @click="setLanguage(index)"
-            >
-              {{ data.name }}
-            </setting-row>
-          </setting-group>
-        </div>
+  <panel-view v-if="isShowing" class="screen-personal-m language">
+    <head-bar title="Language" @on-remove="remove()" />
+    <div class="body-bar">
+      <div class="setting-list">
+        <setting-group :no-background="true">
+          <setting-row
+            v-for="(data, index) in messages"
+            :key="index"
+            :allow-icon="locale === data.name"
+            type="success"
+            :icon-class="{ selected: locale === data.name }"
+            @click="setLanguage(index)"
+          >
+            {{ data.name }}
+          </setting-row>
+        </setting-group>
       </div>
-    </panel-view>
-  </transition>
+    </div>
+  </panel-view>
 </template>
 
 <script>

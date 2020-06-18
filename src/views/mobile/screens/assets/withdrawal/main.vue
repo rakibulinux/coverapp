@@ -1,40 +1,38 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-assets-m withdrawal">
-      <head-bar title="Withdrawal" @on-remove="remove()" />
-      <div class="body-bar">
-        <div class="withdraw-box">
-          <input-completer
-            v-model="amount"
-            label="Withdrawal Amount"
-            placeholder="Enter your amount"
-            type="number"
-          >
-            <template v-slot:right>
-              <span class="note">{{ currency.toUpperCase() }}</span>
-              <span @click="onClickAllAmount">
-                All
-              </span>
-            </template>
-          </input-completer>
+  <panel-view v-if="isShowing" class="screen-assets-m withdrawal">
+    <head-bar title="Withdrawal" @on-remove="remove()" />
+    <div class="body-bar">
+      <div class="withdraw-box">
+        <input-completer
+          v-model="amount"
+          label="Withdrawal Amount"
+          placeholder="Enter your amount"
+          type="number"
+        >
+          <template v-slot:right>
+            <span class="note">{{ currency.toUpperCase() }}</span>
+            <span @click="onClickAllAmount">
+              All
+            </span>
+          </template>
+        </input-completer>
 
-          <input-completer
-            v-model="address"
-            label="Withdrawal Address"
-            placeholder="Enter your address"
-          >
-            <!-- TODO: add support completer to choose an address from the list of addresses -->
-          </input-completer>
-        </div>
-        <div class="action">
-          <button @click="openTotp">
-            Withdrawal
-          </button>
-        </div>
+        <input-completer
+          v-model="address"
+          label="Withdrawal Address"
+          placeholder="Enter your address"
+        >
+          <!-- TODO: add support completer to choose an address from the list of addresses -->
+        </input-completer>
       </div>
-      <totp-panel ref="totp-panel" @on-submit="toptSubmit" />
-    </panel-view>
-  </transition>
+      <div class="action">
+        <button @click="openTotp">
+          Withdrawal
+        </button>
+      </div>
+    </div>
+    <totp-panel ref="totp-panel" @on-submit="toptSubmit" />
+  </panel-view>
 </template>
 
 <script>

@@ -1,39 +1,37 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-personal-m security">
-      <head-bar title="SMS Authenticator" @on-remove="remove()" />
-      <div class="body-bar">
-        <div class="sms-authenticator-box">
-          <input-completer
-            v-model="phone_number"
-            label="Phone Number"
-            prefix="+"
-            placeholder="Enter your phone number"
-          >
-            <!-- TODO: Add support completer for phone country codes  -->
-          </input-completer>
-          <input-completer
-            v-model="verification_code"
-            label="SMS authenticator code:"
-            placeholder="Enter your verification code"
-            maxlength="5"
-            type="number"
-          >
-            <template v-slot:right>
-              <span @click="sendSMS">
-                {{ wait === 0 ? "Send SMS" : wait + "s" }}
-              </span>
-            </template>
-          </input-completer>
-        </div>
-        <div class="action">
-          <button :disabled="buttonDisabled" @click="verifyCode">
-            Confirm
-          </button>
-        </div>
+  <panel-view v-if="isShowing" class="screen-personal-m security">
+    <head-bar title="SMS Authenticator" @on-remove="remove()" />
+    <div class="body-bar">
+      <div class="sms-authenticator-box">
+        <input-completer
+          v-model="phone_number"
+          label="Phone Number"
+          prefix="+"
+          placeholder="Enter your phone number"
+        >
+          <!-- TODO: Add support completer for phone country codes  -->
+        </input-completer>
+        <input-completer
+          v-model="verification_code"
+          label="SMS authenticator code:"
+          placeholder="Enter your verification code"
+          maxlength="5"
+          type="number"
+        >
+          <template v-slot:right>
+            <span @click="sendSMS">
+              {{ wait === 0 ? "Send SMS" : wait + "s" }}
+            </span>
+          </template>
+        </input-completer>
       </div>
-    </panel-view>
-  </transition>
+      <div class="action">
+        <button :disabled="buttonDisabled" @click="verifyCode">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </panel-view>
 </template>
 
 <script>

@@ -63,7 +63,7 @@ export default class App extends Vue {
   }
 
   public mounted() {
-    if (this.sended) { this.actionReSend(); }
+    if (this.sended) this.actionReSend();
   }
 
   public actionReSend() {
@@ -82,10 +82,9 @@ export default class App extends Vue {
   public async reSendEmail() {
     try {
       const { email } = this.$store.state.user;
-      const lang = "en";
 
       await new ApiClient("auth").post("identity/users/email/generate_code", {
-        email,
+        email
       });
       this.actionReSend();
     } catch (error) {

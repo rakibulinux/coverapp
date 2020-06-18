@@ -1,9 +1,9 @@
 .text-up {
-  color: $up-color;
+  color: $up-color !important;
 }
 
 .text-down {
-  color: $down-color;
+  color: $down-color !important;
 }
 
 .text-left {
@@ -88,23 +88,23 @@ button {
 }
 
 .bg-down {
-  background-color: $down-color;
+  background-color: $down-color !important;;
 }
 .bg-up {
-  background-color: $up-color;
+  background-color: $up-color !important;
 }
 
 button {
   &.bg-down {
-    background-color: $down-color;
+    background-color: $down-color !important;;
     &:hover {
-      background-color: #f03e3e;
+      background-color: #f03e3e !important;;
     }
   }
   &.bg-up {
-    background-color: $up-color;
+    background-color: $up-color !important;;
     &:hover {
-      background-color: #0ca678;
+      background-color: #0ca678 !important;;
     }
   }
   &:disabled {

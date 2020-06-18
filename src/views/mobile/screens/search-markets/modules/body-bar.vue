@@ -7,7 +7,7 @@
       <p
         v-for="(data, index) in findTickers('search', value)"
         :key="index"
-        @click="openMarketPreview(data.name.split('/'))"
+        @click="openMarketPreview(data)"
       >
         <span
           class="text-left pair"
@@ -40,6 +40,7 @@
 
 <script>
 import ZSmartModel from "@zsmartex/z-eventbus";
+
 export default {
   props: {
     value: [String, Number],

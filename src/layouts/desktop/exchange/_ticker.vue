@@ -27,7 +27,6 @@
 </template>
 
 <script lang="ts">
-import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
@@ -84,7 +83,7 @@ export default class App extends Vue {
     ];
     return (
       Number(
-        Number(ticker.volume).toFixed(helpers.pricePrecision()),
+        Number(ticker.volume).toFixed(helpers.pricePrecision())
       ).toLocaleString() +
       " " +
       this.isBid.toUpperCase()

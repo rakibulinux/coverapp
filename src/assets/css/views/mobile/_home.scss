@@ -162,15 +162,16 @@
       transform: translateX(-50%) translateY(-50%);
       > span {
         position: relative;
+        margin-left: 2px;
         i {
-          font-size: 14px;
+          font-size: 10px;
           position: absolute;
           left: 0;
           &:first-child {
-            top: 2px;
+            top: 3px;
           }
           &:last-child {
-            top: 6px;
+            top: 7px;
           }
         }
       }

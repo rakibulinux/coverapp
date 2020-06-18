@@ -135,18 +135,15 @@
 
       .orderbook {
         font-size: 10px;
-        dt,
-        dd p {
-          padding: 0;
-          line-height: 18px;
-          color: $color-gray;
-        }
+
         .ticker-status {
-          height: 40px;
+          padding: 4px 6px;
           display: flex;
-          > div {
-            margin: auto 0;
-          }
+          margin: 4px 0;
+          background-color: var(--bg-card-color);
+          border-radius: 2px;
+          line-height: 1;
+
           .last {
             flex: 1;
             position: relative;
@@ -154,13 +151,14 @@
               font-weight: bold;
             }
             .fiat {
-              font-size: 8px;
+              font-size: 7px;
               color: $color-gray;
-              margin-top: 4px;
+              margin-top: 2px;
             }
           }
           .change {
             font-weight: bold;
+            margin: auto 0;
           }
         }
       }

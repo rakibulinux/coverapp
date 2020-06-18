@@ -1,43 +1,41 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-auth-m login">
-      <head-bar :transparent="true" :left-disabled="true" @on-remove="remove()">
-        <template v-slot:right>
-          <div class="right-action">
-            <i class="ic-aui-icon-close" @click="remove()" />
-          </div>
-        </template>
-      </head-bar>
-      <div class="body-bar">
-        <form class="login-box" @submit.prevent="login()">
-          <div class="logo"></div>
-          <input-setting v-model="email" placeholder="Email Address" />
-          <input-setting
-            v-model="password"
-            type="password"
-            placeholder="Login password"
-          />
-          <button-setting type="submit" :disabled="!email || !password">
-            Login
-          </button-setting>
-          <div class="note">
-            <p><a>Forgot your password?</a></p>
-            <p>
-              Not have an account?
-              <a @click="openPanel('panel-regisrer')">Register</a>
-            </p>
-          </div>
-        </form>
-      </div>
-      <totp-panel
-        ref="totp-panel"
-        @on-submit="toptSubmit"
-        @on-failed="totpFailed"
-      />
-      <panel-regisrer ref="panel-regisrer" />
-      <panel-confirm-email ref="panel-confirm-email" />
-    </panel-view>
-  </transition>
+  <panel-view v-if="isShowing" class="screen-auth-m login">
+    <head-bar :transparent="true" :left-disabled="true" @on-remove="remove()">
+      <template v-slot:right>
+        <div class="right-action">
+          <i class="ic-aui-icon-close" @click="remove()" />
+        </div>
+      </template>
+    </head-bar>
+    <div class="body-bar">
+      <form class="login-box" @submit.prevent="login()">
+        <div class="logo"></div>
+        <input-setting v-model="email" placeholder="Email Address" />
+        <input-setting
+          v-model="password"
+          type="password"
+          placeholder="Login password"
+        />
+        <button-setting type="submit" :disabled="!email || !password">
+          Login
+        </button-setting>
+        <div class="note">
+          <p><a>Forgot your password?</a></p>
+          <p>
+            Not have an account?
+            <a @click="openPanel('panel-regisrer')">Register</a>
+          </p>
+        </div>
+      </form>
+    </div>
+    <totp-panel
+      ref="totp-panel"
+      @on-submit="toptSubmit"
+      @on-failed="totpFailed"
+    />
+    <panel-regisrer ref="panel-regisrer" />
+    <panel-confirm-email ref="panel-confirm-email" />
+  </panel-view>
 </template>
 
 <script>
@@ -125,7 +123,7 @@ export default {
       });
       ZSmartModel.on("wait-email", () => {
         this.openConfirmEmail();
-      })
+      });
     }
   }
 };

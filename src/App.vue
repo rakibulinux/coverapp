@@ -3,20 +3,23 @@
     <a-layout
       v-if="isReady"
       :class="{
-        night: this.$store.state.public.path === '/exchange',
-        'no-border': this.$store.state.public.path === '/exchange'
+        night: this.$route.path === '/exchange',
+        'no-border': this.$route.path === '/exchange'
       }"
     >
       <header-exchange v-if="!isMobile" />
 
       <router-view />
+
       <tab-bar v-if="isMobile" />
-      <footer-exchange
-        v-if="this.$store.state.public.path != '/exchange' && !isMobile"
-      />
+
+      <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
+
       <login-panel v-if="!isAuth && isMobile" ref="login-mobile" />
+
       <suggestion-2fa v-if="isAuth && isMobile" ref="suggestion-2fa" />
     </a-layout>
+
     <loading-page v-else />
   </body>
 </template>
@@ -28,7 +31,6 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 import colors from "@/colors";
-import fetchData from "@/mixins/fetchData";
 
 @Component({
   components: {
@@ -74,7 +76,6 @@ export default class App extends Vue {
   }
 
   mounted() {
-    fetchData();
     const isMobileRouter = location.pathname.includes("/m");
     if (this.isMobile && !isMobileRouter) {
       this.$router.push("/m");
@@ -97,3 +98,9 @@ export default class App extends Vue {
   }
 }
 </script>
+
+<style lang="less">
+//TODO: move this less file to another file vue
+
+@import "~@/assets/css/themes/mobile/index";
+</style>

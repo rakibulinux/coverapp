@@ -41,27 +41,29 @@ export default class MarketTrades extends Vue {
   isBid = helpers.isBidSymbol().toUpperCase();
   isAsk = helpers.isAskSymbol().toUpperCase();
 
-  COLUMN = [
-    {
-      title: `Price (${this.isBid})`,
-      key: "price",
-      algin: "left",
-      scopedSlots: true
-    },
-    {
-      title: `Amount (${this.isAsk})`,
-      key: "amount",
-      algin: "right",
-      scopedSlots: true
-    },
-    {
-      title: "Time",
-      key: "created_at",
-      class_name: "time",
-      algin: "right",
-      scopedSlots: true
-    }
-  ];
+  get COLUMN() {
+    return [
+      {
+        title: `${this.$t("table.price")} (${this.isBid})`,
+        key: "price",
+        algin: "left",
+        scopedSlots: true
+      },
+      {
+        title: `${this.$t("table.amount")} (${this.isAsk})`,
+        key: "amount",
+        algin: "right",
+        scopedSlots: true
+      },
+      {
+        title: this.$t("table.time"),
+        key: "created_at",
+        class_name: "time",
+        algin: "right",
+        scopedSlots: true
+      }
+    ];
+  }
 
   get trade_data() {
     const { trades } = this.$store.state.exchange;
@@ -118,8 +120,6 @@ export default class MarketTrades extends Vue {
 
   .z-table {
     &-row {
-      height: 20px;
-      line-height: 20px;
       padding-right: 11px;
       padding-left: 16px;
     }

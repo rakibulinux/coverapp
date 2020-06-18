@@ -111,6 +111,7 @@ function getNotificationInstance(
 
 function notice(args) {
   const { type, message } = args;
+  console.log(args);
   const outerPrefixCls = args.prefixCls || "ant-notification";
   const prefixCls = `${outerPrefixCls}-notice`;
   const duration =

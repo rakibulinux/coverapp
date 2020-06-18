@@ -3,7 +3,7 @@
     class="head-bar"
     :left-disabled="leftDisabled"
     :transparent="transparent"
-    @on-back="$emit('on-remove')"
+    @on-back="$emit('remove')"
   >
     <div class="center-action">
       <span v-if="loading" class="title loading">
@@ -15,18 +15,18 @@
   </action-bar>
 </template>
 
-<script>
-import _action_bar from "@/components/mobile/action-bar.vue";
+<script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
-    "action-bar": _action_bar
-  },
-  props: {
-    title: String,
-    loading: Boolean,
-    leftDisabled: Boolean,
-    transparent: Boolean
+    "action-bar": () => import("@/components/mobile/action-bar.vue")
   }
-};
+})
+export default class ActionBar extends Vue {
+  @Prop() readonly title!: string;
+  @Prop() readonly loading!: boolean;
+  @Prop() readonly leftDisabled!: boolean;
+  @Prop() readonly transparent!: boolean;
+}
 </script>

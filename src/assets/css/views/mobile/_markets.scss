@@ -30,15 +30,6 @@
     background-color: $bg-card-color;
     position: relative;
     height: 100%;
-    .cube-tab-panels {
-      position: absolute;
-      width: 100%;
-      height: calc(100% - 98px);
-      overflow-y: auto;
-      .cube-tab-panels-group {
-        height: 100%;
-      }
-    }
     dt {
       position: relative;
       font-size: 12px;

@@ -1,24 +1,24 @@
 <template>
   <z-content class="page-exchange-m">
-    <head-bar :title="market.join(' / ')" :left-disabled="true">
+    <head-bar :title="market.name.split('/').join(' / ')" :left-disabled="true">
       <template v-slot:right>
         <div class="right-action">
           <i
-            v-if="checkFavorite(market.join('/'))"
+            v-if="checkFavorite(market.name)"
             class="ic-star"
-            @click="addOrRemoveFavorite(market.join('/'))"
+            @click="addOrRemoveFavorite(market.name)"
           />
           <i
             v-else
             class="ic-no-star"
-            @click="addOrRemoveFavorite(market.join('/'))"
+            @click="addOrRemoveFavorite(market.name)"
           />
         </div>
       </template>
     </head-bar>
     <div class="body-bar">
       <div class="group-top">
-        <order-entry class="group-top-left" />
+        <trade-action class="group-top-left" />
         <order-book class="group-top-right" />
       </div>
       <mine-control class="group-bottom" />
@@ -26,65 +26,66 @@
   </z-content>
 </template>
 
-<script>
+<script lang="ts">
+import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
-import _order_book from "@/layouts/mobile/exchange/_order_book";
-import _order_entry from "@/layouts/mobile/exchange/_order_entry";
-import _mine_control from "@/layouts/mobile/exchange/mine-control";
-import Helpers from "./helpers";
+import { Mixins, Component } from "vue-property-decorator";
+import { MarketChannels } from "@/mixins";
+import { MarketMixin } from "@/mixins/mobile";
 
-export default {
+@Component({
   components: {
-    "order-book": _order_book,
-    "order-entry": _order_entry,
-    "mine-control": _mine_control
-  },
-  mixins: [Helpers],
-  data: () => ({
-    selected: "Buy"
-  }),
-  computed: {
-    market() {
-      const { market } = this.$store.state.public;
-      return market.toUpperCase().split("_");
-    },
-    getTypePage() {
-      const { type } = this.$router.history.current.query;
-      return !type ? "buy" : type.toLowerCase();
-    }
-  },
+    "order-book": () => import("@/layouts/mobile/exchange/order-book"),
+    "trade-action": () => import("@/layouts/mobile/exchange/trade-action"),
+    "mine-control": () => import("@/layouts/mobile/exchange/mine-control"),
+    "head-bar": () => import("@/views/mobile/modules/head-bar.vue")
+  }
+})
+export default class Exchange extends Mixins(MarketMixin) {
+  selected = "Buy";
+
+  get market() {
+    const market_id = helpers.isMarket();
+    const { markets } = store.state.public;
+
+    return markets.find(market => market.id === market_id);
+  }
+
   beforeDestroy() {
     this.removeLoad();
-  },
+  }
+
   mounted() {
     this.onLoad();
-  },
-  methods: {
-    trigger(value) {
-      this.selected = value;
-      this.$router.push("/m/exchange?type=" + value);
-    },
-    LoadData(market) {
-      this.$store.dispatch("exchange/getMarketDepth");
-    },
-    removeLoad() {
-      const channel = this.tickerName(this.market);
-      this.$store.dispatch("websocket/unsubscribe", channel);
-    },
-    onLoad() {
-      this.setTitle();
-      this.LoadData();
-      const channel = this.tickerName(this.market);
-      this.$store.dispatch("websocket/subscribe", channel);
-    },
-    setTitle() {
-      document.title = `${helpers.getMarketLastPrice()} - ${(
-        helpers.isAskSymbol() +
-        "/" +
-        helpers.isBidSymbol()
-      ).toUpperCase()} - ${config.nameEX}`;
-    }
   }
-};
+
+  trigger(value) {
+    this.selected = value;
+    this.$router.push("/m/exchange?type=" + value);
+  }
+
+  removeLoad() {
+    MarketChannels(this.market.id).forEach(channel => {
+      store.dispatch("websocket/unsubscribe", channel);
+    });
+  }
+
+  onLoad() {
+    this.setTitle();
+
+    MarketChannels(this.market.id).forEach(channel => {
+      store.dispatch("websocket/subscribe", channel);
+    });
+    store.dispatch("exchange/getMarketDepth");
+  }
+
+  setTitle() {
+    document.title = `${helpers.getMarketLastPrice()} - ${(
+      helpers.isAskSymbol() +
+      "/" +
+      helpers.isBidSymbol()
+    ).toUpperCase()} - ${config.nameEX}`;
+  }
+}
 </script>

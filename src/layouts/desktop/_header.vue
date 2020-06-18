@@ -3,13 +3,13 @@
     <router-link to="/" class="logo" />
     <div class="action-group left">
       <router-link to="/exchange">
-        Exchange
+        {{ translation("exchange") }}
       </router-link>
     </div>
     <div class="action-group right">
       <div v-if="isAuth" class="auth">
         <router-link to="/assets/balance">
-          My Assets
+          {{ translation("my_assets") }}
         </router-link>
         <a-dropdown placement="bottomCenter">
           <a class="ant-dropdown-link">
@@ -22,7 +22,7 @@
               :key="data.url"
               :title="data.name"
               :class="{
-                'ant-dropdown-menu-item-selected': path.includes(data.url),
+                'ant-dropdown-menu-item-selected': path.includes(data.url)
               }"
             >
               <router-link :to="data.url" v-text="data.name" />
@@ -49,7 +49,7 @@
               :title="data.name"
               :class="[
                 'ink',
-                { 'ant-dropdown-menu-item-selected': path.includes(data.url) },
+                { 'ant-dropdown-menu-item-selected': path.includes(data.url) }
               ]"
             >
               <router-link :to="data.url" v-text="data.name" />
@@ -60,7 +60,7 @@
               class="ink"
               @click="logout"
             >
-              Logout
+              {{ translation("user.logout") }}
             </a-menu-item>
           </a-menu>
         </a-dropdown>
@@ -103,37 +103,55 @@ import { i18n } from "@/plugins";
 
 @Component
 export default class App extends Vue {
-  public readonly BUTTON = [
-    { name: "Log In", url: "/signin" },
-    { name: "Sign Up", url: "/signup" },
-  ];
+  get BUTTON() {
+    return [
+      {
+        name: this.translation("sign_in"),
+        url: "/signin"
+      },
+      { name: this.translation("sign_up"), url: "/signup" }
+    ];
+  }
 
-  public readonly ORDERS_MENU = {
-    NAME: "Orders",
-    MENU: [
-      {
-        name: "Open Orders",
-        url: "/exchange_record/open",
-      },
-      {
-        name: "Order History",
-        url: "/exchange_record/history",
-      },
-      {
-        name: "Trade History",
-        url: "/exchange_record/transaction",
-      },
-    ],
-  };
+  get ORDERS_MENU() {
+    return {
+      NAME: "Orders",
+      MENU: [
+        {
+          name: this.translation("open_orders"),
+          url: "/exchange_record/open"
+        },
+        {
+          name: this.translation("orders_history"),
+          url: "/exchange_record/history"
+        },
+        {
+          name: this.translation("trades_history"),
+          url: "/exchange_record/transaction"
+        }
+      ]
+    };
+  }
 
-  public readonly USER_MENU = {
-    MENU: [
-      { name: "Account Security", url: "/account/security" },
-      { name: "KYC Account Verification", url: "/account/kyc" },
-      { name: "Login History", url: "/account/history" },
-      { name: "API", url: "/account/api" },
-    ],
-  };
+  get USER_MENU() {
+    return {
+      MENU: [
+        {
+          name: this.translation("user.account_security"),
+          url: "/account/security"
+        },
+        {
+          name: this.translation("user.user.kyc_account_verification"),
+          url: "/account/kyc"
+        },
+        {
+          name: this.translation("user.user.login_history"),
+          url: "/account/history"
+        },
+        { name: this.translation("user.user.api"), url: "/account/api" }
+      ]
+    };
+  }
 
   get messages() {
     return config.messages;
@@ -152,7 +170,7 @@ export default class App extends Vue {
   }
 
   get path() {
-    return this.$store.state.public.path;
+    return this.$route.path;
   }
 
   get getSelectedItemAccount() {
@@ -160,7 +178,7 @@ export default class App extends Vue {
     const account_path = {
       main: "/account",
       path: ["security", "kyc", "history", "api"],
-      name: "ORDERS_MENU",
+      name: "ORDERS_MENU"
     };
 
     if (path.includes(account_path.main)) {
@@ -185,7 +203,9 @@ export default class App extends Vue {
 
   public setLanguage(item) {
     const locale = item.key;
-    if (this.locale === locale) { return; }
+    if (this.locale === locale) {
+      return;
+    }
     localStorage.setItem("LANGUAGE_HASH", locale);
     i18n.locale = locale;
     ZSmartModel.emit("change-language");
@@ -193,6 +213,10 @@ export default class App extends Vue {
 
   public logout() {
     this.$store.dispatch("user/LOGOUT");
+  }
+
+  public translation(message, data = {}) {
+    return helpers.translation("header." + message, data);
   }
 }
 </script>

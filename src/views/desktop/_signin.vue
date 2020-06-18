@@ -7,7 +7,7 @@
           <auth-input
             v-model="email"
             name="email"
-            placeholder="Email"
+            :placeholder="$t('input.placeholder.email')"
             :placeholder-need="true"
             :error="email_error"
           />
@@ -15,7 +15,7 @@
             v-model="password"
             name="password"
             type="password"
-            placeholder="Password"
+            :placeholder="$t('input.placeholder.password')"
             :placeholder-need="true"
             :error="password_error"
           />
@@ -51,7 +51,7 @@ import ModalTotp from "@/layouts/desktop/modal/_modal_totp.vue";
     "modal-totp": ModalTotp
   }
 })
-export default class App extends Vue {
+export default class SignIn extends Vue {
   public $refs!: {
     "modal-totp": ModalTotp;
   };
@@ -88,7 +88,7 @@ export default class App extends Vue {
     }
 
     if (!helpers.validEmail(email)) {
-      return "Incorrect email address. Please enter again.";
+      return this.$t("auth.input_error.email");
     }
   }
 
@@ -99,7 +99,7 @@ export default class App extends Vue {
     }
 
     if (!helpers.validPassword(password)) {
-      return "Incorrect password. Please enter again.";
+      return this.$t("auth.input_error.password");
     }
   }
 

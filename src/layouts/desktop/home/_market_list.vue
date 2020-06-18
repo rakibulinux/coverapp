@@ -22,7 +22,7 @@
       <div class="search">
         <input
           v-model="search"
-          :placeholder="$t('table.search')"
+          :placeholder="$t('input.placeholder.search')"
           maxlength="9"
           type="text"
         />
@@ -37,7 +37,7 @@
           class="text-left"
           @click="changeSort(data.sortBy)"
         >
-          <span>{{ $t("table." + data.text) }}</span>
+          <span>{{ data.text }}</span>
           <span class="sorter">
             <i
               v-if="sortBy === data.sortBy && !sortReverse"
@@ -53,46 +53,51 @@
       </dt>
       <dd>
         <p
-          v-for="(data, index) in findTickers"
-          :key="index"
-          @click="MarketJoin(data.name)"
+          v-for="ticker in findTickers"
+          :key="ticker.id"
+          @click="MarketJoin(data)"
         >
           <i
-            v-if="!checkFavorite(data.name)"
+            v-if="!checkFavorite(ticker.name)"
             class="ic-no-star"
-            @click.stop="addOrRemoveFavorite(data.name)"
+            @click.stop="addOrRemoveFavorite(ticker.name)"
           />
           <i
             v-else
             class="ic-star"
-            @click.stop="addOrRemoveFavorite(data.name)"
+            @click.stop="addOrRemoveFavorite(ticker.name)"
           />
-          <span class="text-left">{{ data.name }}</span>
+          <span class="text-left">{{ ticker.name }}</span>
           <span
             class="text-left last"
-            :class="getTrend(data.price_change_percent)"
+            :class="getTrend(ticker.price_change_percent)"
           >
-            {{ getPrice(data.last) }}
+            {{ getPrice(ticker.last) }}
             <i class="price-usd">
               ≈ $
-              {{ getLastPriceUSD(data.base_unit + data.quote_unit, data.last) }}
+              {{
+                getLastPriceUSD(
+                  ticker.base_unit + ticker.quote_unit,
+                  ticker.last
+                )
+              }}
             </i>
           </span>
           <span
             class="text-left"
-            :class="getTrend(data.price_change_percent)"
-            v-text="data.price_change_percent"
+            :class="getTrend(ticker.price_change_percent)"
+            v-text="ticker.price_change_percent"
           />
-          <span class="text-left">{{ getPrice(data.high) }}</span>
-          <span class="text-left">{{ getPrice(data.low) }}</span>
+          <span class="text-left">{{ getPrice(ticker.high) }}</span>
+          <span class="text-left">{{ getPrice(ticker.low) }}</span>
           <span class="text-left">
             {{
-              Number(
-                Number(data.volume).toFixed(totalPrecision)
-              ).toLocaleString()
+              Number(ticker.volume)
+                .toFixedNumber(totalPrecision)
+                .toLocaleString()
             }}
           </span>
-          <span class="text-right actions" @click.stop="MarketJoin(data.name)">
+          <span class="text-right actions" @click.stop="MarketJoin(ticker)">
             <img src="@/assets/img/action_exchange.png" />
           </span>
         </p>
@@ -101,7 +106,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
 
@@ -110,17 +115,19 @@ export default {
     isSelected: "",
     search: "",
     sortBy: "volume",
-    sortReverse: false,
-    sorts: [
-      { sortBy: "name", text: "pair" },
-      { sortBy: "last", text: "last_price" },
-      { sortBy: "change", text: "24h_change" },
-      { sortBy: "high", text: "24h_high" },
-      { sortBy: "low", text: "24h_low" },
-      { sortBy: "volume", text: "24h_volume" }
-    ]
+    sortReverse: false
   }),
   computed: {
+    sorts() {
+      return [
+        { sortBy: "name", text: this.$t("table.pair") },
+        { sortBy: "last", text: this.$t("table.last_price") },
+        { sortBy: "change", text: this.$t("table.24h_change") },
+        { sortBy: "high", text: this.$t("table.24h_high") },
+        { sortBy: "low", text: this.$t("table.24h_low") },
+        { sortBy: "volume", text: this.$t("table.24h_volume") }
+      ];
+    },
     list_bid() {
       return [...config.list_bid1, ...config.list_bid2];
     },
@@ -179,10 +186,10 @@ export default {
     changeSelect(symbol) {
       this.isSelected = symbol;
     },
-    MarketJoin($market) {
-      const marketArray = $market.split("/");
-      const market = marketArray.join("_");
-      this.$store.commit("public/SYNC_EXCHANGE", market);
+    MarketJoin(market: ZTypes.Market) {
+      this.$store.commit("public/SYNC_EXCHANGE", {
+        market: [market.base_unit, market.quote_unit].join("_").toUpperCase()
+      });
     }
   }
 };

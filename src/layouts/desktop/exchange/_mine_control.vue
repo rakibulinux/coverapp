@@ -2,14 +2,14 @@
   <z-card
     id="mine_control"
     :bordered="false"
-    :tab-list="tabList"
+    :tab-list="tab_list"
     :active-tab-key="type_control"
     @tabChange="onTabChange"
     class="page-trade-mine-control"
   >
     <div slot="extra" class="extra-action cancel-all">
       <a-button @click="cancel_all_order" type="primary">
-        Cancel All
+        {{ translation("card_head.button.cancel_all") }}
       </a-button>
     </div>
     <open-orders
@@ -40,20 +40,22 @@ import * as helpers from "@zsmartex/z-helpers";
   }
 })
 export default class MineControl extends Vue {
-  public tabList = [
-    {
-      key: "open_orders",
-      tab: "Open Orders"
-    },
-    {
-      key: "orders_history",
-      tab: "History Orders"
-    },
-    {
-      key: "trades_history",
-      tab: "History Trades"
-    }
-  ];
+  get tab_list() {
+    return [
+      {
+        key: "open_orders",
+        tab: this.translation("card_head.open_orders")
+      },
+      {
+        key: "orders_history",
+        tab: this.translation("card_head.orders_history")
+      },
+      {
+        key: "trades_history",
+        tab: this.translation("card_head.trades_history")
+      }
+    ];
+  }
 
   get market() {
     return helpers.isMarket();

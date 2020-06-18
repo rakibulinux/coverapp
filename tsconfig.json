@@ -46,7 +46,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx", "babel.config.js", "vue.config.js"
   ],
   "exclude": [
     "node_modules"

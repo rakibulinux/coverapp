@@ -7,12 +7,12 @@
           <auth-input
             v-model="email"
             name="email"
-            placeholder="Email"
+            :placeholder="$t('input.placeholder.email')"
             :placeholder-need="true"
             :error="email_error"
           />
           <button type="submit" :loading="loading" :disabled="button_disabled">
-            <span>Forgot Password</span>
+            <span>{{ $t("auth.forgot_password") }}</span>
             <span v-if="sended && wait != 0">({{ wait }})</span>
           </button>
         </form>
@@ -33,7 +33,7 @@ import { setTimeout, setInterval } from "timers";
     "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
 })
-export default class App extends Vue {
+export default class ForgotPassword extends Vue {
   loading = false;
   sended = false;
   email = "";
@@ -49,7 +49,7 @@ export default class App extends Vue {
     }
 
     if (!helpers.validEmail(email)) {
-      return "Incorrect email address. Please enter again.";
+      return this.$t("auth.input_error.email");
     }
   }
 
@@ -75,10 +75,7 @@ export default class App extends Vue {
       );
       this.loading = false;
       this.set_wait_interval();
-      helpers.runNotice(
-        "success",
-        "Password reset link has been sent to your email"
-      );
+      helpers.runNotice("success", this.$t("message.password.forgot"));
     } catch (error) {
       this.loading = false;
       return error;

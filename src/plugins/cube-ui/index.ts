@@ -1,4 +1,6 @@
+import { Picker, TabBar, TabPanels } from 'cube-ui';
 import Vue from "vue";
-import Cube from "cube-ui/lib/cube.min.js";
 
-Vue.use(Cube);
+Vue.use(TabBar);
+Vue.use(TabPanels);
+Vue.use(Picker);

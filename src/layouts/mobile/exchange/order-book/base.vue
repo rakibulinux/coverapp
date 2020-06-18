@@ -1,0 +1,97 @@
+<template>
+  <div class="page-trade-m orderbook">
+    <div class="z-table">
+      <div class="z-table-head">
+        <span class="price text-left">
+          <span>Price({{ is_ask }})</span>
+        </span>
+        <span class="amount text-right">
+          <span>Amount({{ is_bid }})</span>
+        </span>
+      </div>
+      <div class="z-table-content">
+        <div class="depth depth-asks">
+          <depth side="asks" />
+        </div>
+        <ticker-status />
+        <div class="depth depth-bids">
+          <depth side="bids" />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import * as helpers from "@zsmartex/z-helpers";
+import { Vue, Component } from "vue-property-decorator";
+
+@Component({
+  components: {
+    depth: () => import("./depth"),
+    "ticker-status": () => import("./ticker-status")
+  }
+})
+export default class Orderbook extends Vue {
+  get is_ask() {
+    return helpers.isAskSymbol().toUpperCase();
+  }
+
+  get is_bid() {
+    return helpers.isBidSymbol().toUpperCase();
+  }
+}
+</script>
+
+<style lang="less">
+@ticker-status-height: 27px + 8px;
+
+.page-trade-m.orderbook {
+  position: relative;
+  .depth {
+    position: relative;
+    height: calc(50% - (@ticker-status-height / 2));
+
+    .z-table-row {
+      background-position: 0;
+      background-size: 0 0;
+      background-repeat: no-repeat;
+    }
+
+    &-asks .z-table-row {
+      background-image: linear-gradient(
+        rgba(250, 82, 82, 0.15),
+        rgba(250, 82, 82, 0.15)
+      );
+    }
+
+    &-bids .z-table-row {
+      background-image: linear-gradient(
+        rgba(18, 184, 134, 0.15),
+        rgba(18, 184, 134, 0.15)
+      );
+    }
+  }
+
+  .z-table {
+    font-weight: 500;
+
+    &-head {
+      padding: 0 4px;
+      height: 18px;
+      line-height: 18px;
+      font-size: 8px;
+    }
+
+    &-content {
+      height: calc(100% - 18px);
+    }
+
+    &-row {
+      padding: 0 4px;
+      height: 18px;
+      line-height: 18px;
+    }
+  }
+}
+</style>

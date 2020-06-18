@@ -1,50 +1,48 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-personal-m dw-history-panel">
-      <head-bar :title="title" @on-remove="remove()" />
-      <div class="body-bar">
-        <div class="information-history">
-          <div class="name"></div>
-          <div class="value">
-            <div class="">
-              <p class="amount">
-                <span class="text-left name">Amount</span>
-                <span class="text-right value">{{ amount }}</span>
-              </p>
-              <p :class="['status', status]">
-                <span class="text-left name">Status</span>
-                <span class="text-right value">
-                  {{ $t(`assets.history.state.${status}`, statusText) }}
-                </span>
-              </p>
-            </div>
-            <div class="">
-              <p class="address">
-                <span class="text-left name">Address</span>
-                <span class="text-right value">{{ address }}</span>
-              </p>
-              <p class="txid">
-                <span class="text-left name">Txid</span>
-                <span class="text-right value">{{ txid }}</span>
-              </p>
-              <p class="date">
-                <span class="text-left name">Date</span>
-                <span class="text-right value">{{ date }}</span>
-              </p>
-            </div>
+  <panel-view v-if="isShowing" class="screen-personal-m dw-history-panel">
+    <head-bar :title="title" @on-remove="remove()" />
+    <div class="body-bar">
+      <div class="information-history">
+        <div class="name"></div>
+        <div class="value">
+          <div class="">
+            <p class="amount">
+              <span class="text-left name">Amount</span>
+              <span class="text-right value">{{ amount }}</span>
+            </p>
+            <p :class="['status', status]">
+              <span class="text-left name">Status</span>
+              <span class="text-right value">
+                {{ $t(`assets.history.state.${status}`, statusText) }}
+              </span>
+            </p>
+          </div>
+          <div class="">
+            <p class="address">
+              <span class="text-left name">Address</span>
+              <span class="text-right value">{{ address }}</span>
+            </p>
+            <p class="txid">
+              <span class="text-left name">Txid</span>
+              <span class="text-right value">{{ txid }}</span>
+            </p>
+            <p class="date">
+              <span class="text-left name">Date</span>
+              <span class="text-right value">{{ date }}</span>
+            </p>
           </div>
         </div>
-        <div class="action">
-          <button class="copy-txid" @click="copyTxid">
-            Copy Txid
-          </button>
-          <button class="explorer-link">
-            Check Explorer
-          </button>
-        </div>
       </div>
-    </panel-view>
-  </transition>
+      <div class="action">
+        <button class="copy-txid" @click="copyTxid">
+          Copy Txid
+        </button>
+        <button class="explorer-link">
+          Check Explorer
+        </button>
+      </div>
+    </div>
+  </panel-view>
 </template>
 
 <script>

@@ -1,10 +1,8 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="page-verify-m">
-      <head-bar title="2FA" @on-remove="remove()" />
-      <div class="body-bar"></div>
-    </panel-view>
-  </transition>
+  <panel-view v-if="isShowing" class="page-verify-m">
+    <head-bar title="2FA" @on-remove="remove()" />
+    <div class="body-bar"></div>
+  </panel-view>
 </template>
 
 <script>

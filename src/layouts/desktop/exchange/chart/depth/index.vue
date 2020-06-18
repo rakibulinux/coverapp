@@ -109,7 +109,9 @@ export default class DepthChart extends Vue {
 
     for (const side of SIDE) {
       let total = 0;
-      depth.toArray(side).forEach(row => {
+      const depth_by_side =
+        side === "bids" ? depth.toArray(side) : depth.toArray(side).reverse();
+      depth_by_side.forEach(row => {
         const item = {
           price: null,
           volume: null,
@@ -263,7 +265,7 @@ export default class DepthChart extends Vue {
 
     context.beginPath();
     context.fillStyle = this[`${side}FillColor`];
-    context.moveTo(width + gap, height);
+    if (side === "sell") context.moveTo(width + gap, height);
 
     let x = 0;
     let y = 0;

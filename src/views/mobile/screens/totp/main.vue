@@ -1,23 +1,21 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-totp-m">
-      <head-bar title="TOTP Verification" @on-remove="remove()" />
-      <div class="body-bar">
-        <div class="totp-box">
-          <input-setting
-            v-model="otp_code"
-            placeholder="OTP Code"
-            type="number"
-            maxlength="6"
-          />
+  <panel-view v-if="isShowing" class="screen-totp-m">
+    <head-bar title="TOTP Verification" @on-remove="remove()" />
+    <div class="body-bar">
+      <div class="totp-box">
+        <input-setting
+          v-model="otp_code"
+          placeholder="OTP Code"
+          type="number"
+          maxlength="6"
+        />
 
-          <button type="submit" @click="onSubmit">
-            Submit
-          </button>
-        </div>
+        <button type="submit" @click="onSubmit">
+          Submit
+        </button>
       </div>
-    </panel-view>
-  </transition>
+    </div>
+  </panel-view>
 </template>
 
 <script>

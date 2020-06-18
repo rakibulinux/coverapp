@@ -1,64 +1,91 @@
 <template>
-  <div class="ant-layout-tab-bar">
+  <div class="z-tab-bar">
     <router-link
       v-for="(data, index) in TAB"
       :key="index"
       :to="data.url"
-      class="item"
+      :class="[
+        'z-tab-bar-item',
+        { 'z-tab-bar-item-selected': path === data.url }
+      ]"
     >
-      <div>
-        <div class="icon"><i :class="data.icon" /></div>
+      <div class="z-tab-bar-item-content">
+        <div class="icon"><a-icon :type="data.icon" /></div>
         <span class="text">{{ data.text }}</span>
       </div>
     </router-link>
   </div>
 </template>
 
-<script>
-export default {
-  data: () => ({
-    selected: "",
-    TAB: [
-      {
-        text: "Home",
-        icon: "cubeic-home",
-        url: "/m"
-      },
-      {
-        text: "Markets",
-        icon: "cubeic-home",
-        url: "/m/markets"
-      },
-      {
-        text: "Trades",
-        icon: "cubeic-like",
-        url: "/m/exchange"
-      },
-      {
-        text: "Assets",
-        icon: "ic-qianbao",
-        url: "/m/assets"
-      },
-      {
-        text: "Personal",
-        icon: "ic-personal",
-        url: "/m/personal"
-      }
-    ]
-  }),
-  computed: {
-    path() {
-      return this.$store.state.public.path;
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+
+@Component
+export default class ZTabBar extends Vue {
+  TAB = [
+    {
+      text: "Home",
+      icon: "home",
+      url: "/m"
+    },
+    {
+      text: "Markets",
+      icon: "line-chart",
+      url: "/m/markets"
+    },
+    {
+      text: "Trades",
+      icon: "retweet",
+      url: "/m/exchange"
+    },
+    {
+      text: "Assets",
+      icon: "wallet",
+      url: "/m/assets"
+    },
+    {
+      text: "Personal",
+      icon: "user",
+      url: "/m/personal"
     }
-  },
-  methods: {
-    changeSelected(path) {
-      this.selected = path;
-    }
-  },
-  mounted() {
-    this.changeSelected(this.path);
-  },
-  watch: {}
-};
+  ];
+
+  get path() {
+    return this.$route.path;
+  }
+}
 </script>
+
+<style lang="less">
+.z-tab-bar {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  height: 50px;
+  width: 100vw;
+  background-color: var(--bg-card-color);
+
+  &-item {
+    position: relative;
+    height: 100%;
+    margin: auto;
+    flex: 1;
+    text-align: center;
+
+    &:not(&-selected) {
+      color: inherit;
+    }
+
+    &-content {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+
+      i {
+        font-size: 18px;
+      }
+    }
+  }
+}
+</style>

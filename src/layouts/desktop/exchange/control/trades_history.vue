@@ -31,8 +31,13 @@ import MineControlMixin from "./mixin";
 export default class TradesHistory extends Mixins(MineControlMixin) {
   get COLUMN() {
     return [
-      { title: "Date", key: "created_at", algin: "left" },
-      { title: "Side", key: "side", algin: "left", scopedSlots: true },
+      { title: this.$t("table.date"), key: "created_at", algin: "left" },
+      {
+        title: this.$t("table.side"),
+        key: "side",
+        algin: "left",
+        scopedSlots: true
+      },
       { title: "Price", key: "price", algin: "center", scopedSlots: true },
       {
         title: `Amount (${this.isAsk})`,

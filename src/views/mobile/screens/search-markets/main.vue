@@ -1,18 +1,16 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="search-market">
-      <head-bar v-model="search" @on-remove="remove()" />
-      <body-bar
-        v-if="search"
-        :value="search"
-        :find-tickers="findTickers"
-        :get-trend="getTrend"
-        :percent-to-number="percentToNumber"
-        :check-favorite="checkFavorite"
-        :add-or-remove-favorite="addOrRemoveFavorite"
-      />
-    </panel-view>
-  </transition>
+  <panel-view v-if="isShowing" class="search-market">
+    <head-bar v-model="search" @on-remove="remove()" />
+    <body-bar
+      v-if="search"
+      :value="search"
+      :find-tickers="findTickers"
+      :get-trend="getTrend"
+      :percent-to-number="percentToNumber"
+      :check-favorite="checkFavorite"
+      :add-or-remove-favorite="addOrRemoveFavorite"
+    />
+  </panel-view>
 </template>
 
 <script>

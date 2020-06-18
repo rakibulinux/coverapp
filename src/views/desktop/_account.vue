@@ -12,7 +12,7 @@
           :key="index"
           tag="li"
           :to="data.url"
-          :class="{ selected: $store.state.public.path === data.url }"
+          :class="{ selected: $route.path === data.url }"
           class="pick"
         >
           <i :class="data.icon" />

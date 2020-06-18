@@ -1,36 +1,34 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-personal-m dw-history">
-      <head-bar title="D/W History" :loading="loading" @on-remove="remove()" />
-      <div class="body-bar">
-        <div class="history-setting">
-          <choose-completer
-            ref="market"
-            :data="CURRENCY"
-            :selected="CURRENCY[currency].value"
-            :selected-text="getCurrencySelected"
-            @on-change="changeCurrency"
-          />
-          <choose-picker
-            ref="type"
-            :data="TYPE"
-            :selected="type"
-            :selected-text="TYPE[type].name"
-            @on-change="changeType"
-          />
-        </div>
-        <div class="dw-history-list">
-          <history-row
-            v-for="(data, index) in history.data"
-            :key="index"
-            :data="data"
-            @click="openHistoryPanel"
-          />
-        </div>
+  <panel-view v-if="isShowing" class="screen-personal-m dw-history">
+    <head-bar title="D/W History" :loading="loading" @on-remove="remove()" />
+    <div class="body-bar">
+      <div class="history-setting">
+        <choose-completer
+          ref="market"
+          :data="CURRENCY"
+          :selected="CURRENCY[currency].value"
+          :selected-text="getCurrencySelected"
+          @on-change="changeCurrency"
+        />
+        <choose-picker
+          ref="type"
+          :data="TYPE"
+          :selected="type"
+          :selected-text="TYPE[type].name"
+          @on-change="changeType"
+        />
       </div>
-      <history-panel ref="history-panel" :type="type" :data="payload_panel" />
-    </panel-view>
-  </transition>
+      <div class="dw-history-list">
+        <history-row
+          v-for="(data, index) in history.data"
+          :key="index"
+          :data="data"
+          @click="openHistoryPanel"
+        />
+      </div>
+    </div>
+    <history-panel ref="history-panel" :type="type" :data="payload_panel" />
+  </panel-view>
 </template>
 
 <script>

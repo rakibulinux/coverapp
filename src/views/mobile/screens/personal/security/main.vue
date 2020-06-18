@@ -1,35 +1,33 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-personal-m security">
-      <head-bar title="Security" @on-remove="remove()" />
-      <div class="body-bar">
-        <div class="setting-list">
-          <setting-group>
-            <setting-row @click="openChangePassword">
-              Change Password
-            </setting-row>
-          </setting-group>
-          <setting-group>
-            <setting-row
-              :info="user.otp ? 'ON' : 'OFF'"
-              @click="openGoogleAuthenticator"
-            >
-              Google Authenticator
-            </setting-row>
-            <setting-row
-              :info="user.phone.validated ? 'ON' : 'OFF'"
-              @click="openSmsAuthenticator"
-            >
-              SMS Authenticator
-            </setting-row>
-          </setting-group>
-        </div>
+  <panel-view v-if="isShowing" class="screen-personal-m security">
+    <head-bar title="Security" @on-remove="remove()" />
+    <div class="body-bar">
+      <div class="setting-list">
+        <setting-group>
+          <setting-row @click="openChangePassword">
+            Change Password
+          </setting-row>
+        </setting-group>
+        <setting-group>
+          <setting-row
+            :info="user.otp ? 'ON' : 'OFF'"
+            @click="openGoogleAuthenticator"
+          >
+            Google Authenticator
+          </setting-row>
+          <setting-row
+            :info="user.phone.validated ? 'ON' : 'OFF'"
+            @click="openSmsAuthenticator"
+          >
+            SMS Authenticator
+          </setting-row>
+        </setting-group>
       </div>
-      <change-password ref="change-password" />
-      <google-authenticator ref="google-authenticator" />
-      <sms-authenticator ref="sms-authenticator" />
-    </panel-view>
-  </transition>
+    </div>
+    <change-password ref="change-password" />
+    <google-authenticator ref="google-authenticator" />
+    <sms-authenticator ref="sms-authenticator" />
+  </panel-view>
 </template>
 
 <script>

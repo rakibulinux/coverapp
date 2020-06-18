@@ -68,7 +68,7 @@ export default {
       this.$refs["search-markets"].render();
     },
     openMarketPreview(args) {
-      this.$refs["market-preview"].render(args);
+      this.$refs["market-preview"].create(args);
     }
   }
 };

@@ -6,7 +6,7 @@
       'z-table-no-scroll': !scroll,
       'z-table-hoverable': hover,
       'z-table-empty': !data.length,
-      'z-table-loading': loading,
+      'z-table-loading': loading
     }"
   >
     <div class="z-table-head">
@@ -17,9 +17,9 @@
             column.class_name || column.key,
             {
               'z-table-sort': column.sorter,
-              'z-table-sort-selected': column.sorter && sort_by === column.key,
+              'z-table-sort-selected': column.sorter && sort_by === column.key
             },
-            `text-${column.algin}`,
+            `text-${column.algin}`
           ]"
           @click="change_sort(column.key)"
         >
@@ -29,8 +29,8 @@
             :class="[
               'z-table-sort-column',
               {
-                'z-table-sort-reverse': sort_by === column.key && sort_reverse,
-              },
+                'z-table-sort-reverse': sort_by === column.key && sort_reverse
+              }
             ]"
           >
             <i class="ic-arrow-caret-up" />
@@ -46,7 +46,10 @@
       <z-empty v-else-if="!data.length && !noEmpty" />
       <p
         v-for="(item, index) in data_with_sort"
-        :class="['z-table-row', { 'z-table-row-selected': item[selected.key] === selected.value }]"
+        :class="[
+          'z-table-row',
+          { 'z-table-row-selected': item[selected.key] === selected.value }
+        ]"
         :key="index"
         @click="onClick(item)"
       >
@@ -103,7 +106,8 @@ export default class ZTable extends Vue {
   @Prop() public readonly total!: number;
   @Prop() public readonly page!: number;
   @Prop() public readonly pageSize!: number;
-  @Prop({ default: () => ({ key: "", value: "" }) }) public readonly selected!: { key: string; value: string; };
+  @Prop({ default: () => ({ key: "", value: "" }) })
+  public readonly selected!: { key: string; value: string };
   @Prop({ default: false }) public readonly noEmpty!: boolean;
   @Prop({ default: true }) public readonly border!: boolean;
 
@@ -112,10 +116,16 @@ export default class ZTable extends Vue {
 
   get data_with_sort() {
     const { data, sort_by, sort_reverse } = this;
-    if (!sort_by.length) { return data; }
+    if (!sort_by.length) {
+      return data;
+    }
 
-    const data_with_sort = data.sort((i1, i2) => String(i1[sort_by]).localeCompare(String(i2[sort_by])));
-    if (sort_reverse) { data_with_sort.reverse(); }
+    const data_with_sort = data.sort((i1, i2) =>
+      String(i1[sort_by]).localeCompare(String(i2[sort_by]))
+    );
+    if (sort_reverse) {
+      data_with_sort.reverse();
+    }
 
     return data_with_sort;
   }
@@ -133,8 +143,10 @@ export default class ZTable extends Vue {
   }
 
   public change_sort(key) {
-    const column = this.columns.find((column) => column.key === key);
-    if (!column) { return; }
+    const column = this.columns.find(column => column.key === key);
+    if (!column) {
+      return;
+    }
     if (this.sort_by === key && this.sort_reverse) {
       this.sort_by = "";
       this.sort_reverse = false;

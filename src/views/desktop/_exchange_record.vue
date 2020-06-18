@@ -8,7 +8,7 @@
           tag="li"
           :to="data.url"
           :class="{
-            selected: $store.state.public.path === data.url
+            selected: $route.path === data.url
           }"
         >
           <i :class="data.icon" />

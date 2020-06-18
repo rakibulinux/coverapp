@@ -8,7 +8,7 @@
             v-model="password"
             name="password"
             type="password"
-            placeholder="Passsord"
+            :placeholder="$t('input.placeholder.password')"
             :placeholder-need="true"
             :error="password_error"
           />
@@ -16,7 +16,7 @@
             v-model="confirm_password"
             name="confirm_password"
             type="password"
-            placeholder="Confirm passsord"
+            :placeholder="$t('input.placeholder.confirm_password')"
             :placeholder-need="true"
             :error="confirm_password_error"
           />
@@ -25,7 +25,7 @@
             :loading="loading"
             :disabled="button_disabled"
           >
-            Reset Password
+            {{ $t("reset_password") }}
           </auth-button>
         </form>
       </div>
@@ -42,17 +42,19 @@ import store from "@/store";
 @Component({
   components: {
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
-    "auth-button": () => import("@/components/desktop/auth-button.vue"),
-  },
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
+  }
 })
-export default class App extends Vue {
+export default class ResetPassword extends Vue {
   public loading = false;
   public password = "";
   public confirm_password = "";
 
   get password_error() {
     const { password } = this;
-    if (!password.length) { return false; }
+    if (!password.length) {
+      return false;
+    }
 
     if (!helpers.validPassword(password)) {
       return "Incorrect email address. Please enter again.";
@@ -61,7 +63,9 @@ export default class App extends Vue {
 
   get confirm_password_error() {
     const { password, confirm_password } = this;
-    if (!confirm_password.length) { return false; }
+    if (!confirm_password.length) {
+      return false;
+    }
 
     if (confirm_password !== password) {
       return "Incorrect email address. Please enter again.";
@@ -91,12 +95,15 @@ export default class App extends Vue {
         {
           token,
           password,
-          confirm_password,
-        },
+          confirm_password
+        }
       );
       this.loading = false;
 
-      helpers.runNotice("warning", "Password was changed");
+      helpers.runNotice(
+        "success",
+        this.$t("message.password.changed").toString()
+      );
       this.$router.push("/account/security");
     } catch (error) {
       this.loading = false;

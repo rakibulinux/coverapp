@@ -1,69 +1,67 @@
 <template>
-  <transition name="panel-move">
-    <panel-view
-      v-if="isShowing"
-      class="screen-personal-m security google-authenticator"
-    >
-      <head-bar :title="title" :loading="loading" @on-remove="back()" />
-      <div class="body-bar">
-        <div v-if="STEP_NEXT.includes(step)" class="note">
-          <div v-if="step === 1">
-            <div class="icon">
-              <img
-                src="@/assets/img/Google_Authenticator.png"
-                width="100%"
-                height="100%"
-                alt=""
-              />
-            </div>
-            <div class="content">
-              To begin, you will need to install the
-              <a href="#">Google Authenticator</a> application on your phone.
-            </div>
+  <panel-view
+    v-if="isShowing"
+    class="screen-personal-m security google-authenticator"
+  >
+    <head-bar :title="title" :loading="loading" @on-remove="back()" />
+    <div class="body-bar">
+      <div v-if="STEP_NEXT.includes(step)" class="note">
+        <div v-if="step === 1">
+          <div class="icon">
+            <img
+              src="@/assets/img/Google_Authenticator.png"
+              width="100%"
+              height="100%"
+              alt=""
+            />
           </div>
-          <div v-else-if="step === 2">
-            <div class="icon qrcode">
-              <qrcode :value="code.url" :size="90" level="L" />
-            </div>
-            <div class="content">
-              <div>
-                Please save thí key on paper. This key will allow you to recover
-                your Google Authenticator in case of phone loss.
-              </div>
-              <div class="key">
-                <span>{{ code.secret }}</span>
-              </div>
-            </div>
+          <div class="content">
+            To begin, you will need to install the
+            <a href="#">Google Authenticator</a> application on your phone.
           </div>
-          <div v-else>
-            <div class="content">
-              <div>Please enter the 16-digit key you just backed up.</div>
-              <input-setting
-                v-model="confirm_code"
-                class="input"
-                maxlength="16"
-              />
+        </div>
+        <div v-else-if="step === 2">
+          <div class="icon qrcode">
+            <qrcode :value="code.url" :size="90" level="L" />
+          </div>
+          <div class="content">
+            <div>
+              Please save thí key on paper. This key will allow you to recover
+              your Google Authenticator in case of phone loss.
+            </div>
+            <div class="key">
+              <span>{{ code.secret }}</span>
             </div>
           </div>
         </div>
-        <div v-if="step === 4" class="setup-google-authenticator-box">
-          <input-setting
-            v-model="otp_code"
-            type="number"
-            maxlength="6"
-            placeholder="OTP Code"
-          />
-
-          <input-setting v-model="password" placeholder="Login Password" />
-        </div>
-        <div class="action">
-          <button type="submit" :disabled="buttonDisabled" @click="next">
-            {{ getActionText }}
-          </button>
+        <div v-else>
+          <div class="content">
+            <div>Please enter the 16-digit key you just backed up.</div>
+            <input-setting
+              v-model="confirm_code"
+              class="input"
+              maxlength="16"
+            />
+          </div>
         </div>
       </div>
-    </panel-view>
-  </transition>
+      <div v-if="step === 4" class="setup-google-authenticator-box">
+        <input-setting
+          v-model="otp_code"
+          type="number"
+          maxlength="6"
+          placeholder="OTP Code"
+        />
+
+        <input-setting v-model="password" placeholder="Login Password" />
+      </div>
+      <div class="action">
+        <button type="submit" :disabled="buttonDisabled" @click="next">
+          {{ getActionText }}
+        </button>
+      </div>
+    </div>
+  </panel-view>
 </template>
 
 <script>

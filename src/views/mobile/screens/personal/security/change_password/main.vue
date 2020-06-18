@@ -1,48 +1,46 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="screen-personal-m security">
-      <head-bar
-        title="Change Password"
-        :loading="loading"
-        @on-remove="remove()"
-      />
-      <div class="body-bar">
-        <div class="change-password-box">
-          <div v-if="step === 1">
-            <input-setting
-              v-model="old_password"
-              placeholder="Old Password"
-              type="password"
-            />
-            <input-setting
-              v-model="new_password"
-              placeholder="New Password"
-              type="password"
-            />
-            <input-setting
-              v-model="confirm_password"
-              placeholder="Confirm Password"
-              type="password"
-            />
-          </div>
-          <div v-else>
-            <input-setting
-              v-model="otp_code"
-              type="number"
-              maxlength="6"
-              placeholder="OTP Code"
-            />
-          </div>
+  <panel-view v-if="isShowing" class="screen-personal-m security">
+    <head-bar
+      title="Change Password"
+      :loading="loading"
+      @on-remove="remove()"
+    />
+    <div class="body-bar">
+      <div class="change-password-box">
+        <div v-if="step === 1">
+          <input-setting
+            v-model="old_password"
+            placeholder="Old Password"
+            type="password"
+          />
+          <input-setting
+            v-model="new_password"
+            placeholder="New Password"
+            type="password"
+          />
+          <input-setting
+            v-model="confirm_password"
+            placeholder="Confirm Password"
+            type="password"
+          />
         </div>
-
-        <div class="action">
-          <button type="submit" :disabled="buttonDisabled" @click="next">
-            {{ getActionText }}
-          </button>
+        <div v-else>
+          <input-setting
+            v-model="otp_code"
+            type="number"
+            maxlength="6"
+            placeholder="OTP Code"
+          />
         </div>
       </div>
-    </panel-view>
-  </transition>
+
+      <div class="action">
+        <button type="submit" :disabled="buttonDisabled" @click="next">
+          {{ getActionText }}
+        </button>
+      </div>
+    </div>
+  </panel-view>
 </template>
 
 <script>

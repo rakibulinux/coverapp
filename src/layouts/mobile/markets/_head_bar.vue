@@ -6,7 +6,12 @@
       </div>
       <a-icon type="search" @click="showPanel()" />
     </div>
-    <tab-bar :value="selected" show-slider class="action-menu" @click="trigger">
+    <cube-tab-bar
+      :value="selected"
+      show-slider
+      class="action-menu"
+      @click="trigger"
+    >
       <tab
         v-for="item in ['Favorites', ...list_bid]"
         :key="item"
@@ -15,18 +20,16 @@
       >
         <span v-text="item" />
       </tab>
-    </tab-bar>
+    </cube-tab-bar>
   </div>
 </template>
 
 <script>
 import config from "@/config";
-import tabBar from "@/components/mobile/tab-bar.vue";
 import tab from "@/components/mobile/tab.vue";
 
 export default {
   components: {
-    "tab-bar": tabBar,
     tab
   },
   props: {

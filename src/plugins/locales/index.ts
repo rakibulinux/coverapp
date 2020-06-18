@@ -7,7 +7,7 @@ Vue.use(VueI18n);
 const { messages } = config;
 
 export const i18n = new VueI18n({
-  locale: "en", // set locale
+  locale: localStorage.getItem("LANGUAGE_HASH") || "en", // set locale
   fallbackLocale: "en", // set fallback locale
   messages
 });

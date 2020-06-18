@@ -12,13 +12,14 @@ export default {
     info: "Info",
   },
   header: {
-    login: "Log In",
-    register: "Sign Up",
+    exchange: "Exchange",
+    sign_in: "Sign In",
+    sign_up: "Sign Up",
     my_assets: "My Assets",
     orders: "Orders",
     open_orders: "Open Orders",
-    order_history: "Order History",
-    trade_history: "Trade History",
+    orders_history: "Orders History",
+    trades_history: "Trades History",
     user: {
       account_security: "Account Security",
       kyc_account_verification: "KYC Account verification",
@@ -27,33 +28,35 @@ export default {
       logout: "Logout",
     },
   },
-  auth: {
-    login: "Log In",
-    register: "Sign Up",
-    confirm: "Confirm",
-    forgot_password: "Forgot Password",
-    no_account: "No account?",
-    to_sign_up: "To sign up!",
-    input_error: {
-      email: "Incorrect email address. Please enter again.",
-      password:
-        "At least 8 characters, must include UPPER CASE letters and numbers.",
-      repassword: "The two passwords are different. Please re-enter.",
-      refid: "Please enter correct referral ID",
-    },
-  },
   history: {
     succeed: "success",
     failed: "failure",
     login: "Login",
   },
-  // Form placeholder
-  placeholder: {
-    "email": "Email",
-    "password": "Password",
-    "repassword": "Replace Password",
-    "refid": "Referral uid",
-    "2fa_code": "2FA Code",
+  input: {
+    placeholder: {
+      search: "Search",
+      email: "Email",
+      password: "Password",
+      confirm_password: "Confirm Password",
+      refid: "Referral uid",
+      "2fa_code": "2FA Code",
+    }
+  },
+  auth: {
+    login: "Log In",
+    register: "Sign Up",
+    confirm: "Confirm",
+    forgot_password: "Forgot Password",
+    reset_password: "Reset Password",
+    no_account: "No account?",
+    to_sign_up: "To sign up!",
+    input_error: {
+      email: "Incorrect email address. Please enter again.",
+      password: "At least 8 characters, must include UPPER CASE letters and numbers.",
+      confirm_password: "Passwords do not match. Please try again.",
+      refid: "Please enter correct referral ID"
+    }
   },
   // Header table
   table: {
@@ -106,9 +109,12 @@ export default {
       chart: "Chart",
       market_trades: "Market Trades",
       open_orders: "Open Orders",
-      history_orders: "History Orders",
-      history_trades: "History Trades",
+      orders_history: "Orders History",
+      trades_history: "Trades History",
       limit_order: "Limit Order",
+      button: {
+        cancel_all: "Cancel All"
+      }
     },
     status: {
       "change": "Change",

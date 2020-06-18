@@ -5,13 +5,17 @@
         <router-link
           tag="li"
           to="balance"
-          :class="{ selected: $store.state.public.path === '/assets/balance' }"
-        >Balance</router-link>
+          :class="{ selected: $route.path === '/assets/balance' }"
+        >
+          Balance
+        </router-link>
         <router-link
           tag="li"
           to="history"
-          :class="{ selected: $store.state.public.path === '/assets/history' }"
-        >History</router-link>
+          :class="{ selected: $route.path === '/assets/history' }"
+        >
+          History
+        </router-link>
       </ul>
       <router-view />
     </div>

@@ -144,7 +144,7 @@ export default {
     changeMarket($market) {
       const marketArray = $market.split("/");
       const market = marketArray.join("_");
-      this.$store.commit("public/SYNC_EXCHANGE", market);
+      this.$store.commit("public/SYNC_EXCHANGE", { market: market });
     }
   }
 };

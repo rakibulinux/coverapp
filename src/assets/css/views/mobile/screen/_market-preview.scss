@@ -27,36 +27,19 @@
     }
     .group-chart {
       position: relative;
-      height: calc(40% + 35px);
+      height: calc(50% + 35px);
       .head-bar {
         height: 35px;
         position: relative;
         font-size: 14px;
         line-height: 35px;
-        .tooltip-showing {
-          padding: 0 10px;
-          position: absolute;
-          width: 100%;
-          left: 50%;
-          top: 50%;
-          transform: translateX(-50%) translateY(-50%);
-          color: $mobile-icon-color;
-          font-size: 10px;
-          p {
-            display: flex;
-            line-height: 12px;
-            span {
-              width: 25%;
-            }
-            span.timestamp {
-              width: 50%;
-            }
-          }
-        }
+        background-color: $bg-head-color;
+
         .chart-picker {
           position: relative;
           display: flex;
           justify-content: left;
+
           > .picker {
             padding: 0;
             flex: 0;
@@ -88,27 +71,11 @@
       .charts {
         position: relative;
         height: calc(100% - 30px);
-        .cube-tab-panels-group {
-          position: relative;
-          height: 100%;
-        }
-        .chart {
-          position: relative;
-          width: 100%;
-          height: 100%;
-        }
-        .kline {
-        }
-        .depth {
-          > canvas {
-            position: absolute;
-          }
-        }
       }
     }
     .group-trade {
       font-size: 14px;
-      margin-top: 16px;
+      //margin-top: 16px;
       position: relative;
       .head-bar {
         background-color: $bg-head-color;

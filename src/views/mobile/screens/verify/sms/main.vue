@@ -1,8 +1,5 @@
 <template>
-  <transition name="panel-move">
-    <panel-view v-if="isShowing" class="page-verify-m">
-    </panel-view>
-  </transition>
+  <panel-view v-if="isShowing" class="page-verify-m"> </panel-view>
 </template>
 
 <script>

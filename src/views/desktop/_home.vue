@@ -7,22 +7,22 @@
   </z-content>
 </template>
 
-<script>
-import _preview from "@/layouts/desktop/home/_preview.vue";
-import _market_list from "@/layouts/desktop/home/_market_list.vue";
-import _feature_markets from "@/layouts/desktop/home/_feature_markets.vue";
-import _advantages from "@/layouts/desktop/home/_advantages.vue";
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
-    preview: _preview,
-    "market-list": _market_list,
-    "feature-markets": _feature_markets,
-    advantages: _advantages
-  },
+    preview: () => import("@/layouts/desktop/home/_preview.vue"),
+    "market-list": () => import("@/layouts/desktop/home/_market_list.vue"),
+    "feature-markets": () =>
+      import("@/layouts/desktop/home/_feature_markets.vue"),
+    advantages: () => import("@/layouts/desktop/home/_advantages.vue")
+  }
+})
+export default class Home extends Vue {
   created() {
     if (localStorage.getItem("favorites") === null)
       localStorage.setItem("favorites", "");
   }
-};
+}
 </script>

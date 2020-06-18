@@ -16,7 +16,7 @@
             <p
               v-for="(data, index) in findTickers('market', item)"
               :key="index"
-              @click="showPanel(data.name.split('/'))"
+              @click="showPanel(data)"
             >
               <span class="text-left pair">
                 <div class="name">
@@ -55,16 +55,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import store from "@/store";
 import config from "@/config";
 import * as helpers from "@zsmartex/z-helpers";
 import PullTo from "@/components/mobile/pull-to";
-import { mapState } from "vuex";
 
-export default {
-  components: {
-    "pull-to": PullTo
-  },
+@Component({
   props: {
     selected: String,
     findTickers: Function,
@@ -74,31 +72,40 @@ export default {
     getPrice: Function,
     getAmount: Function
   },
-  computed: {
-    ...mapState("public", ["lastUpdate"]),
-    list_bid() {
-      return [...config.list_bid1, ...config.list_bid2];
-    }
-  },
-  methods: {
-    async refresh(loaded) {
-      try {
-        await this.$store.dispatch("public/getTimeStamp");
-        await this.$store.dispatch("public/getMarkets");
-        await this.$store.dispatch("public/getTickers");
-        loaded("done");
-      } catch (error) {
-        loaded("failed");
-        return error;
-      }
-    },
-    getLastPriceUSD: (ticker, last) => helpers.getTickerPriceUSD(ticker, last),
-    showPanel(value) {
-      this.$emit("on-open-screen", {
-        methods: "setMarket",
-        data: value
-      });
+  components: {
+    "pull-to": PullTo
+  }
+})
+export default class MarketList extends Vue {
+  get lastUpdate() {
+    return store.state.public.lastUpdate;
+  }
+
+  get list_bid() {
+    return [...config.list_bid1, ...config.list_bid2];
+  }
+
+  async refresh(loaded) {
+    try {
+      await store.dispatch("public/getTimeStamp");
+      await store.dispatch("public/getMarkets");
+      await store.dispatch("public/getTickers");
+      loaded("done");
+    } catch (error) {
+      loaded("failed");
+      return error;
     }
   }
-};
+
+  getLastPriceUSD(ticker, last) {
+    return helpers.getTickerPriceUSD(ticker, last);
+  }
+
+  showPanel(value) {
+    this.$emit("on-open-screen", {
+      methods: "setMarket",
+      data: value
+    });
+  }
+}
 </script>

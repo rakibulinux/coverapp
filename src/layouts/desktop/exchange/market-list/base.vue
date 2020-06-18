@@ -1,7 +1,12 @@
 <template>
   <div class="page-trade-pairs">
     <div class="page-trade-pairs-search-wrapper">
-      <input v-model="search" placeholder="Search" maxlength="9" type="text" />
+      <input
+        v-model="search"
+        :placeholder="$t('input.placeholder.search')"
+        maxlength="9"
+        type="text"
+      />
       <a-icon type="search" />
     </div>
     <div class="page-trade-pairs-tabs">
@@ -87,30 +92,32 @@ export default class MarketList extends Vue {
     { name: "change", sortBy: "change", enabled: true, class: "text-right" }
   ];
 
-  public COLUMN = [
-    {
-      title: "Currency",
-      key: "base_unit",
-      class_name: "currency",
-      algin: "left",
-      scopedSlots: true
-    },
-    {
-      title: "Price",
-      key: "last",
-      class_name: "price",
-      algin: "right",
-      sorter: true
-    },
-    {
-      title: "Change",
-      key: "price_change_percent",
-      class_name: "change",
-      algin: "right",
-      scopedSlots: true,
-      sorter: true
-    }
-  ];
+  get COLUMN() {
+    return [
+      {
+        title: this.$t("table.currency"),
+        key: "base_unit",
+        class_name: "currency",
+        algin: "left",
+        scopedSlots: true
+      },
+      {
+        title: this.$t("table.price"),
+        key: "last",
+        class_name: "price",
+        algin: "right",
+        sorter: true
+      },
+      {
+        title: this.$t("table.change"),
+        key: "price_change_percent",
+        class_name: "change",
+        algin: "right",
+        scopedSlots: true,
+        sorter: true
+      }
+    ];
+  }
 
   public MARKET = [...config.list_bid1, ...config.list_bid2];
 
@@ -180,7 +187,9 @@ export default class MarketList extends Vue {
     }
 
     const market = item.name.split("/").join("_");
-    store.commit("public/SYNC_EXCHANGE", market);
+    store.commit("public/SYNC_EXCHANGE", {
+      market: market
+    });
   }
 }
 </script>
@@ -240,6 +249,13 @@ export default class MarketList extends Vue {
       &-selected {
         background: var(--blue-color);
       }
+    }
+  }
+
+  .z-table {
+    &-row {
+      height: 32px;
+      line-height: 32px;
     }
   }
 }
