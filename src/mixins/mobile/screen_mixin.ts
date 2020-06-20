@@ -35,4 +35,14 @@ export class ScreenMixin extends Vue {
     this.isShowing = false;
     if (typeof this.onDelete === "function") this.onDelete(args);
   }
+
+  close(args?) {
+    this.isShowing = false;
+    if (typeof this.onDelete === "function") this.onDelete(args);
+  }
+
+  remove(args?) {
+    this.isShowing = false;
+    if (typeof this.onDelete === "function") this.onDelete(args);
+  }
 }

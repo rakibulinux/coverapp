@@ -141,14 +141,14 @@ export default class App extends Vue {
           url: "/account/security"
         },
         {
-          name: this.translation("user.user.kyc_account_verification"),
+          name: this.translation("user.kyc_account_verification"),
           url: "/account/kyc"
         },
         {
-          name: this.translation("user.user.login_history"),
+          name: this.translation("user.login_history"),
           url: "/account/history"
         },
-        { name: this.translation("user.user.api"), url: "/account/api" }
+        { name: this.translation("user.api"), url: "/account/api" }
       ]
     };
   }

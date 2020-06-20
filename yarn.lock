@@ -1517,10 +1517,10 @@
     file-saver "^2.0.2"
     json-2-csv "^3.6.1"
 
-"@zsmartex/z-store@^2.0.13":
-  version "2.0.13"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-store/2.0.13/d494965e7a44cc567a10974b83014c0a052a2226374366ded31b46e4a14c1811#321659189f7364e4386e6ae7b8f622d1a97aae33"
-  integrity sha512-zg+23zw/GC0Y0idlBtzsoDANs7MHQa0CEb1jrBecV+U49A3Yoqh92kNCzDsOinyoJ3sIdmYij1h/14TaJu6M+Q==
+"@zsmartex/z-store@^2.0.19":
+  version "2.0.19"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-store/2.0.19/286dc0a2f2ced7f2a35394963a7885c138ededac6f270dde1d662bc6ca585083#eab756adb8e858d53b2ffffa32b3d86780f85633"
+  integrity sha512-TIQisr5Xe61jjj5iV6zuX+Ucth/awn+MCStTzRG0bAHFTNUKfhOQ3bQBtxvqo6LiNXzkCxMI6GoJ9vtdYPB7fg==
   dependencies:
     "@zsmartex/z-apiclient" "^1.0.2"
     "@zsmartex/z-eventbus" "^1.0.2"

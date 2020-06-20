@@ -4,7 +4,7 @@
     <action-input
       class="price"
       v-model="price"
-      prefix="PRICE"
+      :prefix="translation('price')"
       :suffix="currency_by_side('buy').toUpperCase()"
       :limit-length-after-dot="price_precision"
       :estimate-value="price_to_usd"
@@ -13,7 +13,7 @@
     <action-input
       class="amount"
       v-model="amount"
-      prefix="AMOUNT"
+      :prefix="translation('amount')"
       :suffix="currency_by_side('sell').toUpperCase()"
       :limit-length-after-dot="amount_precision"
       :error="amount_error"
@@ -28,7 +28,7 @@
       @change="onSliderPercentChange"
     />
     <div class="total">
-      Total:
+      {{ translation("total") }}:
       <span class="value">
         {{ (total || 0).toFixed(total_precision) }}
         {{ currency_by_side("buy").toUpperCase() }}
@@ -40,7 +40,11 @@
       :disabled="button_disabled"
       @click="place_order"
     >
-      {{ side.toUpperCase() }} {{ currency_by_side("sell").toUpperCase() }}
+      {{
+        translation(side, {
+          currency: currency_by_side("sell").toUpperCase()
+        })
+      }}
     </button>
   </div>
 </template>
@@ -146,6 +150,10 @@ export default class App extends Vue {
 
   public mounted() {
     ZSmartModel.on("depth-click", this.on_book_click);
+  }
+
+  public beforeDestroy() {
+    ZSmartModel.remove("depth-click");
   }
 
   public on_book_click(price: number, amount: number) {
@@ -267,6 +275,10 @@ export default class App extends Vue {
       this.loading = false;
       return error;
     }
+  }
+
+  public translation(message, data = {}) {
+    return helpers.translation("exchange.trade-action." + message, data);
   }
 
   @Watch("price")

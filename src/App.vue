@@ -8,9 +8,7 @@
       }"
     >
       <header-exchange v-if="!isMobile" />
-
       <router-view />
-
       <tab-bar v-if="isMobile" />
 
       <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
@@ -90,7 +88,7 @@ export default class App extends Vue {
   }
 
   public openPanel(panel: string, func?: Function) {
-    this.$refs[panel].render(func);
+    this.$refs[panel].create(func);
   }
 
   public setTheme() {

@@ -1,5 +1,5 @@
 <template>
-  <div :class="['z-input-auth', { 'z-input-auth-error': !!error }]">
+  <div :class="['z-auth-input', { 'z-auth-input-error': !!error }]">
     <input
       ref="input"
       :value="value_input"
@@ -15,20 +15,20 @@
     <span
       v-if="placeholder"
       :class="[
-        'z-input-auth-placeholder',
-        { 'z-input-auth-placeholder-on': input_focus || value_input.length },
+        'z-auth-input-placeholder',
+        { 'z-auth-input-placeholder-on': input_focus || value_input.length }
       ]"
       @click="onPlaceholderClick"
     >
       {{ placeholder }}
       <span
         v-if="input_focus || value_input.length"
-        class="z-input-auth-placeholder-need"
+        class="z-auth-input-placeholder-need"
       >
         {{ placeholderNeed ? "*" : "(optional)" }}
       </span>
     </span>
-    <span v-if="error" class="z-input-auth-error-content">
+    <span v-if="error" class="z-auth-input-error-content">
       {{ error }}
     </span>
   </div>
@@ -60,8 +60,7 @@ export default class App extends Vue {
   get input_type() {
     const { type } = this;
 
-    if (type === "number") { return "text"; }
-    return type;
+    return type === "number" ? "text" : type;
   }
 
   public onInputFocus() {
@@ -101,7 +100,7 @@ export default class App extends Vue {
 </script>
 
 <style lang="less">
-@input-prefix-cls: ~"z-input-auth";
+@input-prefix-cls: ~"z-auth-input";
 
 .@{input-prefix-cls} {
   position: relative;

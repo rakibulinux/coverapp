@@ -173,6 +173,7 @@
 </template>
 
 <script>
+//TODO fix KYC page
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";

@@ -1,13 +1,5 @@
 .panel-view {
   > .body-bar {
-    > [class^="-box"],
-    [class*="-box"] {
-      margin: 12px;
-      > * {
-        margin-bottom: 20px;
-      }
-    }
-
     > .action {
       display: flex;
       position: absolute;

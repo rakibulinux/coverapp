@@ -36,8 +36,8 @@ export default {
   input: {
     placeholder: {
       search: "Search",
-      email: "Email",
-      password: "Password",
+      email: "Email address",
+      password: "Login password",
       confirm_password: "Confirm Password",
       refid: "Referral uid",
       "2fa_code": "2FA Code",
@@ -122,12 +122,12 @@ export default {
       "low": "Low",
       "24h_volume": "24h Volume",
     },
-    entry: {
+    "trade-action": {
       price: "PRICE",
       amount: "AMOUNT",
       total: "Total",
-      sell: "Sell {currency}",
-      buy: "Buy {currency}",
+      sell: "SELL {currency}",
+      buy: "BUY {currency}",
     },
   },
   assets: {
@@ -216,6 +216,9 @@ export default {
     },
     api: {
       title: "API",
+      header: {
+        button: "Create new"
+      }
     },
   },
   ...backend,

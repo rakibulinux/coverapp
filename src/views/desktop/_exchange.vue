@@ -33,7 +33,7 @@ import config from "@/config";
     "main-chart": () => import("@/layouts/desktop/exchange/_main_chart.vue"),
     "mine-control": () =>
       import("@/layouts/desktop/exchange/_mine_control.vue"),
-    "order-book": () => import("@/layouts/desktop/exchange/_order_book.vue"),
+    "order-book": () => import("@/layouts/desktop/exchange/orderbook"),
     "market-trades": () =>
       import("@/layouts/desktop/exchange/_market_trades.vue"),
     "trade-action": () => import("@/layouts/desktop/exchange/trade-action")
@@ -72,7 +72,7 @@ export default class Exchange extends Vue {
     const channels = MarketChannels(market);
 
     channels.forEach(channel => {
-      store.dispatch("websocket/unsubscribe", channel);
+      store.commit("websocket/unsubscribe", channel);
     });
   }
 
@@ -82,7 +82,7 @@ export default class Exchange extends Vue {
     const channels = MarketChannels();
 
     channels.forEach(channel => {
-      store.dispatch("websocket/subscribe", channel);
+      store.commit("websocket/subscribe", channel);
     });
   }
 

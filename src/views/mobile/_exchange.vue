@@ -67,7 +67,7 @@ export default class Exchange extends Mixins(MarketMixin) {
 
   removeLoad() {
     MarketChannels(this.market.id).forEach(channel => {
-      store.dispatch("websocket/unsubscribe", channel);
+      store.commit("websocket/unsubscribe", channel);
     });
   }
 
@@ -75,7 +75,7 @@ export default class Exchange extends Mixins(MarketMixin) {
     this.setTitle();
 
     MarketChannels(this.market.id).forEach(channel => {
-      store.dispatch("websocket/subscribe", channel);
+      store.commit("websocket/subscribe", channel);
     });
     store.dispatch("exchange/getMarketDepth");
   }

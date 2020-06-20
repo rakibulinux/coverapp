@@ -16,7 +16,7 @@
           class="pick"
         >
           <i :class="data.icon" />
-          <span v-text="$t(data.text)"/>
+          <span v-text="data.text" />
         </router-link>
       </ul>
       <router-view />
@@ -24,38 +24,39 @@
   </z-content>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      MENU: [
-        {
-          icon: "ic-personal",
-          text: "usercenter.account_information.title",
-          url: "/account/information"
-        },
-        {
-          icon: "ic-anquan",
-          text: "usercenter.account_security.title",
-          url: "/account/security"
-        },
-        {
-          icon: "ic-shenfen",
-          text: "header.user.kyc_account_verification",
-          url: "/account/kyc"
-        },
-        {
-          icon: "ic-rili",
-          text: "usercenter.login_history.title",
-          url: "/account/history"
-        },
-        {
-          icon: "ic-API",
-          text: "usercenter.api.title",
-          url: "/account/api"
-        }
-      ]
-    }
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+
+@Component
+export default class Account extends Vue {
+  get MENU() {
+    return [
+      {
+        icon: "ic-personal",
+        text: this.$t("usercenter.account_information.title"),
+        url: "/account/information"
+      },
+      {
+        icon: "ic-anquan",
+        text: this.$t("usercenter.account_security.title"),
+        url: "/account/security"
+      },
+      {
+        icon: "ic-shenfen",
+        text: this.$t("header.user.kyc_account_verification"),
+        url: "/account/kyc"
+      },
+      {
+        icon: "ic-rili",
+        text: this.$t("usercenter.login_history.title"),
+        url: "/account/history"
+      },
+      {
+        icon: "ic-API",
+        text: this.$t("usercenter.api.title"),
+        url: "/account/api"
+      }
+    ];
   }
 }
 </script>

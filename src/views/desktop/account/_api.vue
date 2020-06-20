@@ -3,7 +3,7 @@
     <div class="setting-head">
       <span v-text="$t('usercenter.api.title')" />
       <button @click="onClick('api')">
-        Create New
+        {{ $t("usercenter.api.header.button") }}
       </button>
     </div>
     <div class="setting-body">
@@ -56,11 +56,7 @@
     </div>
     <modal-2fa ref="2fa" />
     <modal-api ref="api" @changeModal="onClick" />
-    <modal-totp
-      ref="totp"
-      @submit="onSubmitTotp"
-      @close="modalClose"
-    />
+    <modal-totp ref="totp" @submit="onSubmitTotp" @close="modalClose" />
   </div>
 </template>
 

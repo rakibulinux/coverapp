@@ -71,7 +71,7 @@ export default class MarketPreview extends Mixins(ScreenMixin, MarketMixin) {
     const channels = MarketChannels(this.market.id);
 
     channels.forEach(channel => {
-      store.dispatch("websocket/unsubscribe", channel);
+      store.commit("websocket/unsubscribe", channel);
     });
   }
 
@@ -81,7 +81,7 @@ export default class MarketPreview extends Mixins(ScreenMixin, MarketMixin) {
     const channels = MarketChannels(this.market.id);
 
     channels.forEach(channel => {
-      store.dispatch("websocket/subscribe", channel);
+      store.commit("websocket/subscribe", channel);
     });
   }
 

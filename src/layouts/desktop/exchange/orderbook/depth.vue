@@ -1,21 +1,22 @@
 <template>
   <div :style="style">
     <p
-      v-for="data in depth()"
-      :key="data.key"
+      v-for="order in depth()"
+      :key="order.price"
       class="z-table-row"
       :style="{
         backgroundSize:
-          (((data.key * data.data) / maxTotal) * 100).toFixed(0) + '% 100%'
+          (((order.price * order.amount) / maxTotal) * 100).toFixed(0) +
+          '% 100%'
       }"
-      @click="on_depth_clicked(data)"
+      @click="on_depth_clicked(order)"
     >
       <span
         :class="['text-left', trendType(side)]"
-        v-text="getPrice(data.key)"
+        v-text="getPrice(order.price)"
       />
-      <span class="text-right" v-text="getAmount(data.data)" />
-      <span class="text-right" v-text="getVolume(data.key, data.data)" />
+      <span class="text-right" v-text="getAmount(order.price)" />
+      <span class="text-right" v-text="getVolume(order.price, order.amount)" />
     </p>
   </div>
 </template>
@@ -39,7 +40,7 @@ export default class MarketDepth extends Vue {
   get maxTotal() {
     let total = 0;
     this.depth().forEach(row => {
-      total += Number(row.key * row.data);
+      total += Number(row.price * row.amount);
     });
 
     return total;
@@ -63,21 +64,26 @@ export default class MarketDepth extends Vue {
 
   depth() {
     const orderbook = store.state.exchange.depth;
-    return orderbook.toArray(this.side);
+    return orderbook
+      .toArray(this.side)
+      .map(order => {
+        return { price: order.key, amount: order.data };
+      })
+      .filter(order => order.price > 0 && order.amount > 0);
   }
 
   trendType(type) {
     return helpers.trendType(type);
   }
 
-  on_depth_clicked(order: { key: number; data: number }) {
-    const price = order.key;
+  on_depth_clicked(order: { price: number; amount: number }) {
+    const price = order.price;
     let orders_with_range: [number, number][];
     const orders = store.state.exchange.depth[this.side].orders;
     if (this.side === "bids") {
-      orders_with_range = orders.getRange(orders.minKey(), order.key, true);
+      orders_with_range = orders.getRange(orders.minKey(), order.price, true);
     } else {
-      orders_with_range = orders.getRange(order.key, orders.maxKey(), true);
+      orders_with_range = orders.getRange(order.price, orders.maxKey(), true);
     }
 
     ZSmartModel.emit(

@@ -63,7 +63,7 @@ import book_bids_svg from "@/assets/img/book_bids.svg";
 
 @Component({
   components: {
-    "depth-book": () => import("./orderbook/_depth.vue")
+    "depth-book": () => import("./depth.vue")
   }
 })
 export default class App extends Vue {
