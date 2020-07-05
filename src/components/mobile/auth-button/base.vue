@@ -2,7 +2,7 @@
   <button
     class="z-auth-button"
     :type="type"
-    :disabled="disabled"
+    :disabled="disabled || loading"
     @click="onSubmit"
   >
     <template v-if="loading">

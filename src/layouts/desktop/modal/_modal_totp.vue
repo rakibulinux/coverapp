@@ -37,11 +37,10 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
-    "auth-input": () => import("@/components/desktop/auth-input.vue"),
-  },
+    "auth-input": () => import("@/components/desktop/auth-input.vue")
+  }
 })
 export default class App extends Vue {
-
   private get valid2FA() {
     return this.totp_code.length === 6;
   }

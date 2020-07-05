@@ -49,7 +49,6 @@
 import { MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 import { Picker } from "cube-ui";
-import ZSmartModel from "@zsmartex/z-eventbus";
 import config from "@/config";
 
 @Component
@@ -81,11 +80,13 @@ export default class TrendTop extends Mixins(MarketMixin) {
     }));
   }
 
-  openMarketPreview(market) {
-    ZSmartModel.emit("open-market-preview", {
-      methods: "setMarket",
-      data: market
-    });
+  openMarketPreview(market: ZTypes.Market) {
+    // ZSmartModel.emit("open-market-preview", {
+    //   methods: "setMarket",
+    //   data: market
+    // });
+
+    this.$router.push(`/m/markets/preview/${market.id}`);
   }
 
   showPicker() {

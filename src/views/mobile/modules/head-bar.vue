@@ -2,8 +2,7 @@
   <action-bar
     class="head-bar"
     :left-disabled="leftDisabled"
-    :transparent="transparent"
-    @on-back="$emit('remove')"
+    @back="$router.back()"
   >
     <div class="center-action">
       <span v-if="loading" class="title loading">
@@ -27,6 +26,5 @@ export default class ActionBar extends Vue {
   @Prop() readonly title!: string;
   @Prop() readonly loading!: boolean;
   @Prop() readonly leftDisabled!: boolean;
-  @Prop() readonly transparent!: boolean;
 }
 </script>

@@ -101,11 +101,13 @@ export default class MarketList extends Vue {
     return helpers.getTickerPriceUSD(ticker, last);
   }
 
-  showPanel(value) {
-    this.$emit("on-open-screen", {
-      methods: "setMarket",
-      data: value
-    });
+  showPanel(market: ZTypes.Market) {
+    // this.$emit("on-open-screen", {
+    //   methods: "setMarket",
+    //   data: value
+    // });
+
+    this.$router.push(`/m/markets/preview/${market.id}`);
   }
 }
 </script>

@@ -1,104 +1,170 @@
 <template>
-  <z-content class="page-assets-m">
-    <action-bar class="head-bar" :left-disabled="true">
-      <div class="center-action">
-        Assets
-      </div>
-    </action-bar>
-    <div class="body-bar">
-      <div class="information-assets">
-        <div class="balance">
-          <div class="note">
-            Equity Value(BTC)
-          </div>
-          <div class="value">
-            0.00000000 BTC
-            <div class="valuation">
-              ≈ $0.00
-            </div>
-          </div>
-        </div>
-        <div class="action">
-          <button>Deposit</button>
-          <button>Withdraw</button>
+  <div class="page-assets-m">
+    <div class="assets-head">
+      <div class="assets-estimate">
+        <div class="assets-estimate-title">Estimated Value (BTC):</div>
+        <div class="assets-estimate-content">
+          <span class="assets-estimate-value">0.00000000</span>
+          <span class="assets-estimate-value-fiat">$0.00</span>
         </div>
       </div>
-
-      <div class="table-currency setting-list">
-        <setting-group
-          v-if="$store.getters['user/getBalance'].length"
-          :no-background="true"
-        >
-          <setting-row
-            v-for="data in CURRENCY"
-            :key="data.id"
-            :allow-icon="false"
-            :info="getTotal(data.id)"
-            @click="openCurrencyPanel(data.id)"
-          >
-            <img src="https://img.icons8.com/color/48/000000/ethereum.png" />
-            <span class="id">{{ data.id.toUpperCase() }}</span>
-            <span class="name">({{ data.name }})</span>
-          </setting-row>
-        </setting-group>
+      <div class="assets-action">
+        <div class="assets-action-item" @click="open_search_screen('deposit')">
+          Deposit
+        </div>
+        <div class="assets-action-item" @click="open_search_screen('withdraw')">
+          Withdraw
+        </div>
+        <!-- <div class="assets-action-item" disabled>
+          Transfer
+        </div> -->
       </div>
     </div>
-    <currency-panel
-      ref="currency-panel"
-      :currency="currency"
-      :open-panels="openPanels"
-    />
-    <deposit-panel ref="deposit-panel" :currency="currency" />
-    <withdrawal-panel ref="withdrawal-panel" :currency="currency" />
-  </z-content>
+    <div class="assets-table" :style="assets_table_style">
+      <assets-row
+        v-for="currency in currencies"
+        :key="currency.id"
+        :currency="currency"
+        @click="on_assets_row_clicked(currency)"
+      />
+    </div>
+
+    <panel-view />
+    <warning-modal ref="warning-modal" />
+  </div>
 </template>
 
-<script>
-import * as helpers from "@zsmartex/z-helpers";
-import _action_bar from "@/components/mobile/action-bar.vue";
-import { currency, deposit, withdrawal } from "@/views/mobile/screens/assets";
-import { _setting_group, _setting_row } from "@/components/mobile/settings";
+<script lang="tsx">
+import store from "@/store";
+import { ScreenMixin } from "@/mixins/mobile";
+import { Vue, Component } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
-    "action-bar": _action_bar,
-    "setting-row": _setting_row,
-    "setting-group": _setting_group,
-    "currency-panel": currency,
-    "deposit-panel": deposit,
-    "withdrawal-panel": withdrawal
-  },
-  data: () => ({
-    currency: null
-  }),
-  computed: {
-    CURRENCY() {
-      return this.$store.getters["public/getAllCurrencies"];
-    }
-  },
-  methods: {
-    getAssets(currency) {
-      return new helpers.Balance(currency);
-    },
-    getAvailable(currency) {
-      const assets = this.getAssets(currency);
-      return assets.getAvailable();
-    },
-    getLocked(currency) {
-      const assets = this.getAssets(currency);
-      return assets.getLocked();
-    },
-    getTotal(currency) {
-      const assets = this.getAssets(currency);
-      return assets.getTotal();
-    },
-    openCurrencyPanel(currency) {
-      this.currency = currency;
-      this.openPanels("currency-panel");
-    },
-    openPanels(panel) {
-      this.$refs[panel].render();
+    "assets-row": () => import("@/layouts/mobile/assets/assets-row.vue"),
+    "warning-modal": () => import("@/layouts/mobile/assets/warning-modal.vue"),
+    "panel-view": () => import("@/components/mobile/panel-view.vue")
+  }
+})
+export default class Assets extends Vue {
+  $refs!: {
+    [key: string]: ScreenMixin;
+  };
+
+  assets_table_style = {
+    height: "0",
+    marginTop: "0",
+    marginBottom: "0"
+  };
+
+  get user_otp() {
+    return store.state.user.otp;
+  }
+
+  get currencies() {
+    return store.state.public.currencies;
+  }
+
+  mounted() {
+    const marginBottom = 50;
+    const marginTop = document.querySelector(".assets-head").clientHeight;
+
+    this.assets_table_style.marginTop = `${marginTop.toString()}px`;
+    this.assets_table_style.height = `calc(100vh - ${marginTop}px - ${marginBottom}px)`;
+  }
+
+  open_search_screen(type: string) {
+    if (this.user_otp) {
+      this.$router.push({ path: "/m/assets/search", query: { type: type } });
+    } else {
+      this.open_warning_modal();
     }
   }
-};
+
+  open_warning_modal() {
+    (this.$refs["warning-modal"] as any).create();
+  }
+
+  on_assets_row_clicked(currency: ZTypes.Currency) {
+    this.$router.push({
+      path: `/m/assets/preview/${currency.id}`
+    });
+  }
+}
 </script>
+
+<style lang="less">
+.page-assets-m {
+  position: relative;
+
+  .assets-head {
+    position: fixed;
+    width: 100%;
+    padding: 12px 8px;
+    background-color: var(--bg-card-color);
+
+    .assets-estimate {
+      padding: 0 8px;
+      font-weight: 500;
+
+      &-title {
+        color: var(--color-gray);
+      }
+
+      &-value {
+        font-size: 16px;
+
+        &-fiat {
+          margin-left: 4px;
+          color: var(--color-gray);
+        }
+      }
+    }
+
+    .assets-action {
+      padding: 0 8px;
+      margin-top: 8px;
+      display: flex;
+
+      &-item {
+        flex: 1;
+        line-height: 20px;
+        margin: 0 8px;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        cursor: pointer;
+
+        &:first-child {
+          margin-left: 0;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          //TODO add color background for disabled item
+        }
+      }
+    }
+  }
+
+  .assets-table {
+    overflow: auto;
+    margin-left: 12px;
+    margin-right: 12px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .assets-row {
+      margin: 4px 0;
+      cursor: pointer;
+    }
+  }
+}
+</style>

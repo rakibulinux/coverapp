@@ -11,8 +11,8 @@
       height: 115px;
       width: 225px;
       padding: 18px;
-      background-color: #182640;
-      border: 1px solid #182640;
+      background-color: var(--bg-card-color);
+      border: 1px solid var(--bg-card-color);
       border-radius: 5px;
       cursor: pointer;
       .name {

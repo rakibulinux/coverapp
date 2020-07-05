@@ -71,7 +71,6 @@
 </template>
 
 <script lang="ts">
-//TODO: add support depth chart
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({

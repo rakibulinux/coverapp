@@ -34,7 +34,7 @@
         </form>
       </div>
     </div>
-    <modal-totp ref="modal-totp" @submit="onSubmitTotp" />
+    <modal-totp ref="modal-totp" :loading="loading" @submit="onSubmitTotp" />
   </z-content>
 </template>
 

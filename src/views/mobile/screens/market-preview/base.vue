@@ -1,6 +1,6 @@
 <template>
-  <panel-view v-if="isShowing" class="market-preview">
-    <head-bar :title="market.name.split('/').join(' / ')" @remove="this.delete">
+  <div v-if="market_id" class="market-preview">
+    <head-bar :title="market.name.split('/').join(' / ')">
       <template v-slot:right>
         <div class="right-action">
           <i
@@ -31,7 +31,7 @@
       />
     </div>
     <tab-bar :market="market" />
-  </panel-view>
+  </div>
 </template>
 
 <script lang="ts">
@@ -56,19 +56,27 @@ import store from "@/store";
 })
 export default class MarketPreview extends Mixins(ScreenMixin, MarketMixin) {
   widget = null;
+  market_id = "";
 
-  LoadData() {
-    store.dispatch("exchange/getMarketDepth", this.market.id);
-    store.dispatch("exchange/getMarketTrades", this.market.id);
+  get market() {
+    return store.state.public.markets.find(
+      market => market.id === this.market_id
+    );
   }
 
-  setMarket(market) {
-    this.market = market;
-    this.LoadData();
+  mounted() {
+    this.market_id = this.$route.params.market_id;
+
+    store.dispatch("exchange/getMarketDepth", this.market_id);
+    store.dispatch("exchange/getMarketTrades", this.market_id);
+  }
+
+  beforeDestroy() {
+    this.removeLoad();
   }
 
   removeLoad() {
-    const channels = MarketChannels(this.market.id);
+    const channels = MarketChannels(this.market_id);
 
     channels.forEach(channel => {
       store.commit("websocket/unsubscribe", channel);
@@ -83,17 +91,6 @@ export default class MarketPreview extends Mixins(ScreenMixin, MarketMixin) {
     channels.forEach(channel => {
       store.commit("websocket/subscribe", channel);
     });
-  }
-
-  onDelete() {
-    this.removeLoad();
-  }
-
-  onCreate(args) {
-    if (args) {
-      this[args.methods](args.data); // this.setMarket(args);
-      this.onLoad();
-    }
   }
 
   setTitle() {

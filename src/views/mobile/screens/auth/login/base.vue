@@ -1,12 +1,13 @@
 <template>
-  <panel-view v-if="isShowing" class="screen-auth">
-    <head-bar :transparent="true" :left-disabled="true" @on-remove="remove()">
+  <div class="screen-auth">
+    <head-bar :left-disabled="true">
       <template v-slot:right>
         <div class="right-action">
-          <i class="ic-aui-icon-close" @click="remove" />
+          <i class="ic-aui-icon-close" @click="back" />
         </div>
       </template>
     </head-bar>
+
     <div class="body-bar">
       <form class="screen-auth-box" @submit.prevent="login">
         <div class="screen-auth-logo" />
@@ -36,20 +37,15 @@
         </auth-button>
         <div class="screen-auth-action">
           <p class="screen-auth-action-item signup">
-            <a @click="openPanel('panel-regisrer')">Sign Up</a>
+            <a @click="$router.push('/m/auth/signup')">Sign Up</a>
           </p>
           <a class="screen-auth-action-item">Forgot password</a>
         </div>
       </form>
     </div>
-    <totp-panel
-      ref="totp-panel"
-      @on-submit="toptSubmit"
-      @on-failed="totpFailed"
-    />
-    <panel-regisrer ref="panel-regisrer" />
-    <panel-confirm-email ref="panel-confirm-email" />
-  </panel-view>
+
+    <screen-verify-otp ref="screen-verify-otp" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -61,12 +57,15 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 
 @Component({
   components: {
-    "panel-confirm-email": () => import("../confirm_email"),
-    "panel-regisrer": () => import("../signup"),
-    "totp-panel": () => import("@/views/mobile/screens/totp")
+    "panel-view": () => import("@/components/mobile/panel-view.vue"),
+    "screen-verify-otp": () => import("@/views/mobile/screens/verify/totp.vue")
   }
 })
 export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
+  $refs!: {
+    [key: string]: ScreenMixin;
+  };
+
   loading = false;
   email = "test@zsmart.tech";
   password = "J\\=v<Sfn7>8%W6S6";
@@ -81,21 +80,9 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     store.state.user.need2fa = value;
   }
 
-  openPanel(panel) {
-    (this.$refs[panel] as any).create();
-  }
-
-  closePanel(panel) {
-    (this.$refs[panel] as any).remove();
-  }
-
-  toptSubmit(otp_code) {
+  onTotpSubmit(otp_code: string) {
     this.otp_code = otp_code;
     this.login();
-  }
-
-  totpFailed() {
-    this.need2fa = false;
   }
 
   async callLogin() {
@@ -120,29 +107,32 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     }
   }
 
-  onRender(func = null) {
-    if (typeof func !== "function") return;
-    ZSmartModel.on("login-success", () => {
-      this.delete();
-    });
+  mounted() {
     ZSmartModel.on("wait-email", () => {
-      this.openPanel("panel-confirm-email");
+      //TODO: open screen wait email
     });
   }
 
-  onDelete() {
+  beforeDestroy() {
     ZSmartModel.remove("wait-email");
   }
 
   @Watch("need2fa")
   onNeed2FAChanged(need2fa: boolean) {
-    if (need2fa) this.openPanel("totp-panel");
+    this.$refs["screen-verify-otp"][`${need2fa ? "create" : "close"}`]();
+    if (!need2fa) {
+      this.otp_code = "";
+    }
   }
 }
 </script>
 
 <style lang="less">
 .screen-auth {
+  .head-bar {
+    background-color: transparent;
+  }
+
   .screen-auth-action {
     &-item {
       &.signup {

@@ -44,7 +44,7 @@ export default class ZTabBar extends Vue {
       url: "/m/assets"
     },
     {
-      text: "Personal",
+      text: "Account",
       icon: "user",
       url: "/m/personal"
     }
@@ -73,7 +73,7 @@ export default class ZTabBar extends Vue {
     text-align: center;
 
     &:not(&-selected) {
-      color: inherit;
+      color: var(--color-gray);
     }
 
     &-content {

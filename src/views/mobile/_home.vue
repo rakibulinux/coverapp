@@ -15,8 +15,6 @@
         </span>
       </div>
     </pull-to>
-    <search-markets ref="search-markets" />
-    <market-preview ref="market-preview" />
   </z-content>
 </template>
 
@@ -32,9 +30,7 @@ import { Component, Mixins } from "vue-property-decorator";
     preview: () => import("@/layouts/mobile/home/preview.vue"),
     "feature-markets": () => import("@/layouts/mobile/home/feature-markets"),
     "top-btc-volume": () => import("@/layouts/mobile/home/top-btc-volume.vue"),
-    "trend-top": () => import("@/layouts/mobile/home/trend-top.vue"),
-    "search-markets": () => import("@/views/mobile/screens/search-markets"),
-    "market-preview": () => import("@/views/mobile/screens/market-preview")
+    "trend-top": () => import("@/layouts/mobile/home/trend-top.vue")
   }
 })
 export default class Home extends Mixins(MarketMixin) {

@@ -12,10 +12,6 @@
       <tab-bar v-if="isMobile" />
 
       <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
-
-      <login-panel v-if="!isAuth && isMobile" ref="login-mobile" />
-
-      <suggestion-2fa v-if="isAuth && isMobile" ref="suggestion-2fa" />
     </a-layout>
 
     <loading-page v-else />
@@ -34,10 +30,9 @@ import colors from "@/colors";
   components: {
     "header-exchange": () => import("@/layouts/desktop/_header.vue"),
     "footer-exchange": () => import("@/layouts/desktop/_footer.vue"),
+    "panel-view": () => import("@/components/mobile/panel-view.vue"),
     "tab-bar": () => import("@/layouts/mobile/_tab_bar.vue"),
-    "loading-page": () => import("@/layouts/loading-page.vue"),
-    "suggestion-2fa": () => import("@/layouts/mobile/suggestion-2fa.vue"),
-    "login-panel": () => import("@/views/mobile/screens/auth/login")
+    "loading-page": () => import("@/layouts/loading-page.vue")
   }
 })
 export default class App extends Vue {
@@ -79,16 +74,16 @@ export default class App extends Vue {
       this.$router.push("/m");
     }
     this.setTheme();
-    ZSmartModel.on("need-login", (func = null) => {
-      this.openPanel("login-mobile", func);
+    ZSmartModel.on("need-login", (callback: Function) => {
+      //TODO: add support for login page
     });
     ZSmartModel.on("need-setup-2fa", () => {
-      this.openPanel("suggestion-2fa");
+      //TODO: add support for login 2fa page
     });
   }
 
-  public openPanel(panel: string, func?: Function) {
-    this.$refs[panel].create(func);
+  public openPanel(panel: string, callback?: Function) {
+    this.$refs[panel].create(callback);
   }
 
   public setTheme() {

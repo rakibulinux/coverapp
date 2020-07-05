@@ -19,7 +19,7 @@ import {
   Spin,
   Switch,
   Tabs,
-  Tooltip,
+  Tooltip
 } from "ant-design-vue";
 import Vue from "vue";
 

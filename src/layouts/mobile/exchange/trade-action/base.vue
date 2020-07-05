@@ -21,13 +21,13 @@
     </div>
     <trade-action-input
       v-model="price"
-      :placeholder="`Price(${isAsk})`"
+      :placeholder="`Price(${isBid})`"
       :precision="price_precision"
     />
     <div class="trade-action-estimate">≈ {{ price_with_fiat_unit }} USD</div>
     <trade-action-input
       v-model="amount"
-      :placeholder="`Amount(${isBid})`"
+      :placeholder="`Amount(${isAsk})`"
       :precision="amount_precision"
     />
     <div class="trade-action-amount-picker">
@@ -45,7 +45,11 @@
       Fee: <span class="trade-action-calculate-fee-value">{{ fee }}</span>
     </div>
     <div class="trade-action-button">
-      {{ authorized ? "" : "Login" }}
+      {{
+        authorized
+          ? [side === "buy" ? "Buy" : "Sell", isAsk].join(" ")
+          : "Login"
+      }}
     </div>
     <trade-action-balance :currency_id="side === 'buy' ? isBid : isAsk" />
   </div>

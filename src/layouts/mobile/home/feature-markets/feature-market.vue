@@ -9,7 +9,6 @@
 </template>
 
 <script lang="ts">
-import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import { MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins, Prop } from "vue-property-decorator";
@@ -19,10 +18,12 @@ export default class FeatureMarket extends Mixins(MarketMixin) {
   @Prop() readonly market!: ZTypes.Market;
 
   openMarketPreview() {
-    ZSmartModel.emit("open-market-preview", {
-      methods: "setMarket",
-      data: this.market
-    });
+    // ZSmartModel.emit("open-market-preview", {
+    //   methods: "setMarket",
+    //   data: this.market
+    // });
+
+    this.$router.push(`/m/markets/preview/${this.market.id}`);
   }
 
   get ticker() {

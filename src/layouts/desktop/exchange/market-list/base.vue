@@ -239,7 +239,7 @@ export default class MarketList extends Vue {
       flex: 1 1;
       padding: 0 4px;
       text-align: center;
-      border-right: 1px solid #182640;
+      border-right: 1px solid var(--bg-card-color);
       cursor: pointer;
 
       i {

@@ -1,0 +1,37 @@
+<template>
+  <div class="assets-deposit-address-box">
+    <div class="assets-deposit-address-title">
+      {{ currency.id.toUpperCase() }} Deposit Address:
+    </div>
+    <div class="assets-deposit-address-content">
+      <div class="assets-deposit-address-qrcode">
+        <qrcode
+          :value="deposit_address"
+          :size="125"
+          level="L"
+          background="transparent"
+        />
+      </div>
+      <div class="assets-deposit-address-value">
+        {{ deposit_address.toUpperCase() }}
+      </div>
+      <div class="assets-deposit-address-action">
+        <button><a-icon type="copy" theme="filled" /> COPY ADDRESS</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
+
+@Component({
+  components: {
+    qrcode: () => import("@/components/desktop/qrcode")
+  }
+})
+export default class DepositNotice extends Vue {
+  @Prop() readonly currency!: ZTypes.Currency;
+  @Prop() readonly deposit_address!: string;
+}
+</script>

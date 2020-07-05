@@ -1,6 +1,5 @@
 import config from "@/config";
 import store from "@/store";
-import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import Vue from "vue";
 import Router, { Route } from "vue-router";
@@ -57,6 +56,8 @@ const SetRouterByPath = (path: string, query: Route["query"]) => {
 }
 
 router.beforeEach(async (to, from, next) => {
+  store.state.public.prev_path = from.fullPath;
+
   if (!store.state.public.ready && first_route) {
     first_route = false;
 
@@ -69,7 +70,15 @@ router.beforeEach(async (to, from, next) => {
     next("/account/security");
   } else if (to.matched.some(record => record.meta.requiresAuth) && !helpers.isAuth()) {
     if (helpers.isMobile()) {
-      ZSmartModel.emit("need-login", next);
+      if (from.path === "/") {
+        next("/m");
+
+        setTimeout(() => {
+          next("/m/auth/login");
+        }, 500);
+      } else {
+        next("/m/auth/login");
+      }
     } else {
       next("/signin");
     }

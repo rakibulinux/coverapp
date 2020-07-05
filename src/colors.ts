@@ -18,7 +18,7 @@ export default {
   "text-dropdown-color": "#c6d8f3",
   "bg-color": "#0e182b",
   "bg-loading-color": "rgba(31, 37, 66, 0.9)",
-  "bg-card-color": "#182640",
+  "bg-card-color": "#1a243b",
   "bg-head-color": "#213150",
   "bg-card-head-color": "#213150",
   "bg-downdown-color": "#25344e",

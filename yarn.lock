@@ -1502,12 +1502,20 @@
     "@zsmartex/z-helpers" "^1.1.5"
     axios "^0.19.2"
 
+"@zsmartex/z-apiclient@^1.0.3":
+  version "1.0.3"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-apiclient/1.0.3/5723344aba69f541cf38daea3adf09b8cc93ff0afabadc276c9c0d588e2f7881#a642987a0da626406afe9ab6914bf6296cac2a7e"
+  integrity sha512-TGBrjPC+sRBFfpWvssTeuKHcb6BTohsT6B8AiWXirBdop0qaaCOytTs2BilzMbaViFIckqI04ObSd5uVaYPvKg==
+  dependencies:
+    "@zsmartex/z-helpers" "^1.2.10"
+    axios "^0.19.2"
+
 "@zsmartex/z-eventbus@^1.0.2":
   version "1.0.2"
   resolved "https://npm.pkg.github.com/download/@zsmartex/z-eventbus/1.0.2/d0a1bb947d5aa7b2efadef9ca8263f4ec501768070da1ab099f20149b4863d63#088322806e1e13bdad88b3d864e385d601e80657"
   integrity sha512-sRzTWzh7tcY5epMMCCj8kB32aBsiqiw2hTKVki8/vqj5AMWau6NjNpZLWjQ2vv0o4yZ1ObwGUhOrFTHHFroxRQ==
 
-"@zsmartex/z-helpers@^1.1.5", "@zsmartex/z-helpers@^1.2.5", "@zsmartex/z-helpers@^1.2.8":
+"@zsmartex/z-helpers@^1.1.5", "@zsmartex/z-helpers@^1.2.5":
   version "1.2.8"
   resolved "https://npm.pkg.github.com/download/@zsmartex/z-helpers/1.2.8/bf9d5db92f0a8e2d618b8aa19bfb2e8f09aa9b6011aca4565ea01d4e749d8f55#eb104b963e627b082826f062f5ca18df45931f70"
   integrity sha512-MPLHkW0Y47h6DxX2emo1yR4dknmVLkdky1jJZBT6O3drGdLCOOweOOq8scnXm/pRWsAbC9Y0m3l9SFn8lyKAkw==
@@ -1517,20 +1525,35 @@
     file-saver "^2.0.2"
     json-2-csv "^3.6.1"
 
-"@zsmartex/z-store@^2.0.19":
-  version "2.0.19"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-store/2.0.19/286dc0a2f2ced7f2a35394963a7885c138ededac6f270dde1d662bc6ca585083#eab756adb8e858d53b2ffffa32b3d86780f85633"
-  integrity sha512-TIQisr5Xe61jjj5iV6zuX+Ucth/awn+MCStTzRG0bAHFTNUKfhOQ3bQBtxvqo6LiNXzkCxMI6GoJ9vtdYPB7fg==
+"@zsmartex/z-helpers@^1.2.10":
+  version "1.2.10"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-helpers/1.2.10/efeb3df128a1f76afcd30adc8a8f33e611c7b75524f523156c27e3fb82e5875f#c279849cd10ac5e744b9e1aded203065ba76008d"
+  integrity sha512-hFAa19ugXrRl/lepQwqmMXlMtGoQ78KtguK6f2mXWi+TOqKiB4bAmsKuhhxFYSL8HdvwnmUZxS1Lkrkico/nKA==
+  dependencies:
+    "@types/file-saver" "^2.0.1"
+    "@zsmartex/z-types" "^1.10.3"
+    file-saver "^2.0.2"
+    json-2-csv "^3.6.1"
+
+"@zsmartex/z-store@^2.1.2":
+  version "2.1.2"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-store/2.1.2/6a73b1fcbe73fec9afa94c6a59b928d5789cde6da8fb9b70d55b8cf4722d44f5#4a60c4a95c9e6014d28318673c46746b108008b5"
+  integrity sha512-R7NNCb+hzWTXelHFUW+NNqGAYN2Y2RT2LbGydiFlrlBQ5W78wabsRaLWMwFfWu67yNpKt1EttAccEUZH1LahGw==
   dependencies:
     "@zsmartex/z-apiclient" "^1.0.2"
     "@zsmartex/z-eventbus" "^1.0.2"
     "@zsmartex/z-helpers" "^1.2.5"
     sorted-btree "^1.2.1"
 
-"@zsmartex/z-types@^1.0.9", "@zsmartex/z-types@^1.10.1":
+"@zsmartex/z-types@^1.0.9":
   version "1.10.1"
   resolved "https://npm.pkg.github.com/download/@zsmartex/z-types/1.10.1/975377324b7232e695226abd90b568b1f1042c812d1b7b0a5d0f7b2cd95f5414#0417217d3cd52964649ee121874edae5f3b65ba1"
   integrity sha512-lnCYS4PRLmnpifEM7KxryqiolUx9G5HJVMin3hII2YeOHD5SP6DiKVoxI1N1YjEaj0y+JZyzZN8QososRct2eg==
+
+"@zsmartex/z-types@^1.10.3":
+  version "1.10.3"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-types/1.10.3/5890dc6afb9bdb6f74cf5d8faff2d74e55969b616bf0d1065227e6ec4953aa1e#e1da5cd9cc4608dc3126e77a41ac07a57d17d434"
+  integrity sha512-aGQO7tYqtPDI0UVMr++tzTQ9DCakOEtc5q5Vx6Hg3i+S0NiUVzDchvZs1EaROzZeJ5ibK6OrRrz8+6Q29gApLQ==
 
 abbrev@1:
   version "1.1.1"

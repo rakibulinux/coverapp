@@ -4,3 +4,4 @@ import Vue from "vue";
 Vue.use(TabBar);
 Vue.use(TabPanels);
 Vue.use(Picker);
+
