@@ -1,6 +1,10 @@
 <template>
-  <div class="screen-assets-preview assets-preview">
-    <head-bar ref="head-bar" :title="currency.id.toUpperCase()" />
+  <panel-view class="screen-assets-preview assets-preview">
+    <head-bar
+      ref="head-bar"
+      :title="currency.id.toUpperCase()"
+      @back="destroy"
+    />
     <assets-row ref="assets-row" :currency="currency" :action-disabled="true" />
     <div
       class="assets-transaction"
@@ -9,7 +13,7 @@
       <z-empty />
     </div>
     <assets-preview-tab-bar ref="tab-bar" @click="onTabBarClick" />
-  </div>
+  </panel-view>
 </template>
 
 <script lang="ts">
@@ -32,13 +36,7 @@ export default class AssetsPreviewScreen extends Mixins(ScreenMixin) {
     "assets-transaction": Element;
   };
 
-  currency_id!: string;
-
-  get currency() {
-    return store.state.public.currencies.find(
-      currency => currency.id == this.$route.params.currency
-    );
-  }
+  currency = store.state.public.currencies[0];
 
   assets_transaction_height = 0;
 
@@ -58,18 +56,42 @@ export default class AssetsPreviewScreen extends Mixins(ScreenMixin) {
     return this.$refs["tab-bar"].$el.clientHeight;
   }
 
-  mounted() {
-    setTimeout(() => {
-      this.assets_transaction_height =
-        this.height -
-        this.head_bar_height -
-        this.assets_row_height -
-        this.tab_bar_height;
-    }, 300);
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  onTabBarClick(tab: string) {
-    this.$router.push({ path: `/m/assets/${tab}/${this.currency.id}` });
+  before_panel_create(currency: ZTypes.Currency) {
+    this.currency = currency;
+  }
+
+  panel_created() {
+    this.$nextTick(async () => {
+      while (true) {
+        if (
+          !(
+            this.height &&
+            this.$refs["head-bar"] &&
+            this.$refs["assets-row"] &&
+            this.$refs["tab-bar"]
+          )
+        ) {
+          await this.sleep(10);
+          continue;
+        }
+
+        this.assets_transaction_height =
+          this.height -
+          this.head_bar_height -
+          this.assets_row_height -
+          this.tab_bar_height;
+
+        await this.sleep(10);
+      }
+    });
+  }
+
+  onTabBarClick(type: string) {
+    this.$emit("click", type, this.currency);
   }
 }
 </script>

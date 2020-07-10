@@ -5,7 +5,26 @@
   user-select: none;
 
   .ant-layout {
+    max-height: 100vh;
     font-size: 10px;
+
+    > * {
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
+      }
+
+      &:first-child {
+        margin-bottom: 50px;
+      }
+    }
   }
 
   input {

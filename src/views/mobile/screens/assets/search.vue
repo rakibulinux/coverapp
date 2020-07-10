@@ -1,11 +1,11 @@
 <template>
-  <div class="screen-assets-search assets-search">
+  <panel-view class="screen-assets-search assets-search">
     <div class="assets-search-input">
       <div class="assets-search-input-prefix">
         <a-icon type="search" />
       </div>
       <input v-model="search" type="text" placeholder="Search coin" />
-      <div class="assets-search-input-cancel" @click="back">
+      <div class="assets-search-input-cancel" @click="destroy">
         Cancel
       </div>
     </div>
@@ -16,7 +16,7 @@
           v-for="currency in currencies"
           :key="currency.id"
           class="z-table-row"
-          @click="on_table_click(currency)"
+          @click="$emit('click', type, currency)"
         >
           <span class="logo">
             <span class="logo-content">
@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </panel-view>
 </template>
 
 <script lang="ts">
@@ -50,12 +50,8 @@ export default class AssetsSearchScreens extends Mixins(ScreenMixin) {
     );
   }
 
-  mounted() {
-    this.type = this.$route.query.type as string;
-  }
-
-  back() {
-    this.$router.back();
+  panel_created(type: string) {
+    this.type = type;
   }
 
   on_table_click(currency: ZTypes.Currency) {

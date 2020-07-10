@@ -6,6 +6,11 @@ import { Component, Vue } from "vue-property-decorator";
 export class MarketMixin extends Vue {
   market!: ZTypes.Market;
 
+  get ticker() {
+    const tickers = Object.values(store.state.public.tickers);
+    return tickers.find((ticker) => ticker.id === this.market.id);
+  }
+
   pricePrecision(market = this.market.id) {
     return helpers.pricePrecision(market);
   }
@@ -14,15 +19,15 @@ export class MarketMixin extends Vue {
     return helpers.amountPrecision(market);
   }
 
+  totalPrecision(market = this.market.id) {
+    return helpers.totalPrecision(market);
+  }
+
   findTickers(type, data) {
     const { findTickersBase } = helpers;
     let tickers = Object.values(store.state.public.tickers);
-    if (type === "market") {
-      tickers = findTickersBase(tickers, type, data);
-    }
-    if (type === "search") {
-      tickers = findTickersBase(tickers, type, data);
-    }
+
+    tickers = findTickersBase(tickers, type, data);
 
     return tickers;
   }
@@ -33,6 +38,10 @@ export class MarketMixin extends Vue {
 
   getAmount(amount: string | number, market?: string) {
     return Number(amount).toFixed(this.amountPrecision(market));
+  }
+
+  getTotal(amount: string | number, market?: string) {
+    return Number(amount).toFixed(this.totalPrecision(market));
   }
 
   checkFavorite(market: string) {

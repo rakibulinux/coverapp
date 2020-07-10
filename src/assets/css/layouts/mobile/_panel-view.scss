@@ -10,7 +10,7 @@
         height: 35px;
         font-size: 14px;
         margin-left: 10px;
-        background-color: $blue-color;
+        background-color: var(--blue-color);
         &:last-child {
           margin-right: 10px;
         }

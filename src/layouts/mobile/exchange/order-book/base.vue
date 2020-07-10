@@ -60,15 +60,15 @@ export default class Orderbook extends Vue {
 
     &-asks .z-table-row {
       background-image: linear-gradient(
-        rgba(250, 82, 82, 0.15),
-        rgba(250, 82, 82, 0.15)
+        var(--down-bg-color),
+        var(--down-bg-color)
       );
     }
 
     &-bids .z-table-row {
       background-image: linear-gradient(
-        rgba(18, 184, 134, 0.15),
-        rgba(18, 184, 134, 0.15)
+        rgba(46, 228, 178, 0.25),
+        rgba(46, 228, 178, 0.25)
       );
     }
   }

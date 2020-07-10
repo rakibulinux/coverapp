@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   DatePicker,
+  Drawer,
   Dropdown,
   Icon,
   Input,
@@ -40,5 +41,6 @@ Vue.use(Spin);
 Vue.use(Switch);
 Vue.use(Tabs);
 Vue.use(Slider);
+Vue.use(Drawer);
 Vue.component("z-content", zContent);
 Vue.component("z-card", zCard);

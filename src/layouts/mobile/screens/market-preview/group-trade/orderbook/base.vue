@@ -1,12 +1,6 @@
 <template>
   <div class="orderbook">
-    <depth
-      v-for="side in SIDE"
-      :key="side"
-      :side="side"
-      :getPrice="getPrice"
-      :getAmount="getAmount"
-    />
+    <depth v-for="side in SIDE" :key="side" :market="market" :side="side" />
   </div>
 </template>
 
@@ -19,8 +13,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
   }
 })
 export default class OrderBook extends Vue {
-  @Prop() readonly getPrice!: (price: number) => string;
-  @Prop() readonly getAmount!: (amount: number) => string;
+  @Prop() readonly market!: ZTypes.Market;
 
   SIDE = ["bids", "asks"];
 }

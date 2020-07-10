@@ -5,7 +5,7 @@
   }
   .assets-menu {
     display: flex;
-    background: $bg-card-color;
+    background: var(--bg-card-color);
     padding: 15px 0;
     > li {
       font-size: 14px;
@@ -13,12 +13,12 @@
       margin: 0 18px;
       cursor: pointer;
       &.selected {
-        color: $blue-color;
+        color: var(--blue-color);
         &:after {
           content: "";
           width: 20px;
           height: 2px;
-          background: $blue-color;
+          background: var(--blue-color);
           position: absolute;
           left: 50%;
           margin-left: -10px;
@@ -29,7 +29,7 @@
   }
   .assets-main {
     border-radius: 2px;
-    background: $bg-card-color;
+    background: var(--bg-card-color);
     .assets-head {
       padding-bottom: 20px;
       position: relative;
@@ -85,10 +85,10 @@
         dl {
           display: table;
           width: 100%;
-          border-bottom: 1px solid $border-color;
+          border-bottom: 1px solid var(--border-color);
           &.head {
             line-height: 32px;
-            color: $color-gray;
+            color: var(--color-gray);
           }
           &.selected {
             background-color: $selected-bg-color;
@@ -116,7 +116,7 @@
               white-space: nowrap;
               p {
                 margin-left: 4px;
-                color: $color-gray;
+                color: var(--color-gray);
               }
             }
             &.action {
@@ -128,7 +128,7 @@
                 position: relative;
                 &.selected {
                   &:after {
-                    color: $bg-card-color;
+                    color: var(--bg-card-color);
                     display: inline-block;
                     content: "";
                     position: absolute;
@@ -151,7 +151,7 @@
             position: relative;
             clear: both;
             padding: 0 20px;
-            background: $bg-card-color;
+            background: var(--bg-card-color);
           }
         }
       }
@@ -161,7 +161,7 @@
         dd.loading,
         dd.empty {
           min-height: 400px;
-          border-bottom: 1px solid $border-color;
+          border-bottom: 1px solid var(--border-color);
           dl {
             text-align: center;
             border-bottom: 0;
@@ -174,10 +174,10 @@
           display: table;
           line-height: 43px;
           width: 100%;
-          border-bottom: 1px solid $border-color;
+          border-bottom: 1px solid var(--border-color);
           &.head {
             line-height: 32px;
-            color: $color-gray;
+            color: var(--color-gray);
           }
           &.selected {
             background-color: $selected-bg-color;
@@ -192,7 +192,7 @@
               padding-left: 20px;
               width: 150px;
               &.loading {
-                color: $blue-color;
+                color: var(--blue-color);
               }
             }
             &.coin {
@@ -210,7 +210,7 @@
                 display: flex;
               }
               .title {
-                color: $color-gray;
+                color: var(--color-gray);
                 width: 60px;
                 + span {
                   overflow: hidden;
@@ -225,7 +225,7 @@
                 white-space: nowrap;
                 word-break: break-all;
                 &:hover {
-                  color: $blue-color;
+                  color: var(--blue-color);
                   text-decoration: underline;
                 }
               }
@@ -259,8 +259,8 @@
             position: relative;
             clear: both;
             padding: 0 20px;
-            border-bottom: 1px solid $border-color;
-            background: $bg-card-color;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card-color);
           }
         }
       }
@@ -283,7 +283,7 @@
       margin: 0;
       font-size: 12px;
       line-height: 1.75;
-      color: $color-gray;
+      color: var(--color-gray);
     }
   }
   .assets-action {
@@ -300,7 +300,7 @@
         width: 200px;
         height: 43px;
         &:hover {
-          background-color: $blue-color;
+          background-color: var(--blue-color);
         }
       }
     }
@@ -324,7 +324,7 @@
     line-height: 22px;
     margin-bottom: 15px;
     .form-label {
-      color: $color-gray;
+      color: var(--color-gray);
       .label-right {
         float: right;
       }
@@ -335,7 +335,7 @@
         width: 100%;
         color: $text-default-color;
         font-size: 16px;
-        border: 1px solid $border-color;
+        border: 1px solid var(--border-color);
         padding: 0 20px;
         line-height: 43px;
         &:disabled {
@@ -344,7 +344,7 @@
         }
       }
       .form-tag {
-        color: $color-gray;
+        color: var(--color-gray);
         position: absolute;
         right: 20px;
         top: 50%;
@@ -363,7 +363,7 @@
     font-weight: bold;
     padding: 12px;
     &:hover {
-      background-color: $blue-color;
+      background-color: var(--blue-color);
     }
   }
 }

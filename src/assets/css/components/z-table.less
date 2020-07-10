@@ -5,13 +5,11 @@
 .@{table-prefix-cls} {
   position: relative;
   min-height: 100%;
-  padding-bottom: 20px;
 
   &-head {
     font-weight: 500;
     position: absolute;
     top: 0;
-    height: 32px;
     line-height: 32px;
     color: var(--color-gray);
     > span > span {
@@ -146,7 +144,11 @@
   }
 
   &-pagination {
-    margin-top: 12px;
-    text-align: right;
+    padding-bottom: 20px;
+
+    &-content {
+      margin-top: 12px;
+      text-align: right;
+    }
   }
 }

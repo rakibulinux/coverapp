@@ -1,46 +1,73 @@
 <template>
   <div class="trend-top">
-    <div class="ex_table table_noscroll">
-      <dt class="menu">
-        <span class="text-left">
-          <li @click="isGainers = true" :class="{ selected: isGainers }">
-            Gainers
-          </li>
-        </span>
-        <span class="text-left">
-          <li @click="isGainers = false" :class="{ selected: !isGainers }">
-            Losers
-          </li>
-        </span>
-        <span class="text-right">
-          <div class="other" @click="showPicker">
-            Choose Markets
-            <i class="ic-jiaohuan1" />
-          </div>
-        </span>
-      </dt>
-      <dd>
-        <p
-          v-for="market in findTopMarkets"
-          :key="market.id"
-          @click="openMarketPreview(market)"
+    <cube-tab-bar
+      class="trend-top-action-group"
+      ref="tab-nav"
+      v-model="selectedLabel"
+      show-slider
+      :use-transition="false"
+    >
+      <cube-tab
+        class="trend-top-action"
+        :class="[item.label === 'gainers' ? 'text-left' : 'text-right']"
+        v-for="item in tabs"
+        :label="item.label"
+        :key="item.label"
+      >
+        <span>{{ item.text }}</span>
+      </cube-tab>
+      <span
+        class="trend-top-action more text-right"
+        @click="$router.push('/m/markets')"
+      >
+        More >>
+      </span>
+    </cube-tab-bar>
+
+    <div class="z-table z-table-no-scroll">
+      <div class="z-table-head">
+        <span class="text-left">Pair</span>
+        <span class="text-right">Price</span>
+        <span class="text-right">(24h)Change</span>
+      </div>
+      <cube-slide
+        ref="slide"
+        :allow-vertical="true"
+        :loop="false"
+        :initial-index="initialIndex"
+        :auto-play="false"
+        :show-dots="false"
+        :options="{
+          listenScroll: true,
+          probeType: 3,
+          directionLockThreshold: 0
+        }"
+        @change="changePage"
+      >
+        <cube-slide-item
+          v-for="item in tabs"
+          :key="item.label"
+          :label="item.label"
         >
-          <span class="text-left pair">
-            <span>{{ market.base_unit.toUpperCase() }}</span>
-            <span>/ {{ market.quote_unit.toUpperCase() }}</span>
-          </span>
-          <span
-            class="text-left"
-            :class="getTrend(market.price_change_percent)"
-            >{{ getPrice(market.last, market.name) }}</span
+          <cube-scroll
+            :data="findTickers('market', item.label)"
+            nest-mode="native"
+            :options="{
+              disableTouch: true,
+              directionLockThreshold: 0
+            }"
           >
-          <span class="text-right rate">
-            <div :class="getTrend(market.price_change_percent, true)">
-              {{ market.price_change_percent }}
+            <div class="z-table-content">
+              <market-row
+                v-for="market in findTopMarkets(item.label === 'gainers')"
+                :key="market.id"
+                :market="market"
+                @click="$emit('click', market)"
+              />
             </div>
-          </span>
-        </p>
-      </dd>
+          </cube-scroll>
+        </cube-slide-item>
+      </cube-slide>
     </div>
   </div>
 </template>
@@ -48,18 +75,39 @@
 <script lang="ts">
 import { MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
-import { Picker } from "cube-ui";
-import config from "@/config";
 
-@Component
+@Component({
+  components: {
+    "market-row": () => import("@/components/mobile/market-row")
+  }
+})
 export default class TrendTop extends Mixins(MarketMixin) {
-  picker!: Picker;
+  $refs!: {
+    [key: string]: any;
+  };
 
-  isGainers = true;
-  findBy = "All";
+  selectedLabel = "gainers";
 
-  get findTopMarkets() {
-    let tickers = this.findTickers("market", this.findBy);
+  tabs = [
+    {
+      label: "gainers",
+      text: "Top Gainers"
+    },
+    {
+      label: "losers",
+      text: "Top Losers"
+    }
+  ];
+
+  get initialIndex() {
+    const index = this.tabs.findIndex(
+      tab => tab.label.toLowerCase() === this.selectedLabel.toLowerCase()
+    );
+    return index;
+  }
+
+  findTopMarkets(isGainers: boolean) {
+    let tickers = this.findTickers("market", "All");
 
     tickers = tickers.sort(
       (low, high) =>
@@ -67,43 +115,82 @@ export default class TrendTop extends Mixins(MarketMixin) {
         this.percentToNumber(high.price_change_percent)
     );
 
-    if (this.isGainers) tickers = tickers.reverse();
-    return tickers.slice(0, 5);
+    if (isGainers) tickers = tickers.reverse();
+    return tickers.slice(0, 10);
   }
 
-  get findAllBid() {
-    const listBids = ["All", ...config.list_bid1, ...config.list_bid2];
-
-    return listBids.map(bid => ({
-      value: bid,
-      text: bid + " Market"
-    }));
-  }
-
-  openMarketPreview(market: ZTypes.Market) {
-    // ZSmartModel.emit("open-market-preview", {
-    //   methods: "setMarket",
-    //   data: market
-    // });
-
-    this.$router.push(`/m/markets/preview/${market.id}`);
-  }
-
-  showPicker() {
-    if (!this.picker) {
-      this.picker = this.$createPicker({
-        title: "Select Market",
-        data: [this.findAllBid],
-        onSelect: this.selectHandle,
-        cancelTxt: "Cancel",
-        confirmTxt: "Confirm"
-      });
-    }
-    this.picker.show();
-  }
-
-  selectHandle(selectedVal, selectedIndex, selectedText) {
-    this.findBy = selectedVal[0];
+  changePage(index) {
+    this.selectedLabel = this.tabs[index].label;
   }
 }
 </script>
+
+<style lang="less">
+@tab-bar-height: 50px;
+@head-bar-height: 35px;
+
+.trend-top {
+  height: calc(100vh - @tab-bar-height - @head-bar-height);
+  background-color: var(--bg-card-color);
+
+  &-action {
+    position: relative;
+    display: inline-block;
+    width: 100% / 3;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 25px;
+    color: var(--color-gray);
+
+    &-group {
+      display: block;
+      height: 25px;
+      line-height: 25px;
+      padding: 0 16px;
+
+      .cube-tab-bar-slider {
+        display: none;
+      }
+
+      .cube-tab_active {
+        color: var(--blue-color);
+      }
+
+      .cube-tab {
+        width: 100% / 3;
+        padding: 0;
+      }
+    }
+
+    &.more {
+      font-size: 9px;
+      color: var(--color-gray);
+    }
+  }
+
+  .z-table {
+    height: calc(100vh - 50px - 35px - 25px - 20px);
+    min-height: auto;
+    padding-bottom: 0;
+
+    &-head {
+      height: 20px;
+      line-height: 20px;
+      padding: 0 16px;
+    }
+
+    .cube-slide {
+      height: calc(100% - 20px);
+    }
+
+    &-content {
+      height: 100%;
+    }
+
+    &-row {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
+}
+</style>

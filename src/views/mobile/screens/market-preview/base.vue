@@ -1,6 +1,6 @@
 <template>
-  <div v-if="market_id" class="market-preview">
-    <head-bar :title="market.name.split('/').join(' / ')">
+  <panel-view class="market-preview">
+    <head-bar :title="title" @back="destroy">
       <template v-slot:right>
         <div class="right-action">
           <i
@@ -17,21 +17,12 @@
       </template>
     </head-bar>
     <div class="body-bar">
-      <ticker-status
-        :market="market"
-        :get-price="getPrice"
-        :get-amount="getAmount"
-        :percent-to-number="percentToNumber"
-      />
+      <ticker-status :market="market" />
       <group-chart :market="market" />
-      <group-trade
-        :get-price="getPrice"
-        :get-amount="getAmount"
-        :get-time="getTime"
-      />
+      <group-trade :market="market" />
     </div>
     <tab-bar :market="market" />
-  </div>
+  </panel-view>
 </template>
 
 <script lang="ts">
@@ -54,42 +45,40 @@ import store from "@/store";
       import("@/layouts/mobile/screens/market-preview/tab-bar.vue")
   }
 })
-export default class MarketPreview extends Mixins(ScreenMixin, MarketMixin) {
+export default class MarketPreviewScreen extends Mixins(
+  ScreenMixin,
+  MarketMixin
+) {
+  market: ZTypes.Market = store.state.public.markets[0];
   widget = null;
-  market_id = "";
 
-  get market() {
-    return store.state.public.markets.find(
-      market => market.id === this.market_id
-    );
+  get title() {
+    return this.market.name.replace("/", " / ");
   }
 
   mounted() {
-    this.market_id = this.$route.params.market_id;
-
-    store.dispatch("exchange/getMarketDepth", this.market_id);
-    store.dispatch("exchange/getMarketTrades", this.market_id);
+    this.market = store.state.public.markets[0]; // For backup
   }
 
-  beforeDestroy() {
-    this.removeLoad();
-  }
+  before_panel_create(market: ZTypes.Market) {
+    this.market = market;
 
-  removeLoad() {
-    const channels = MarketChannels(this.market_id);
-
-    channels.forEach(channel => {
-      store.commit("websocket/unsubscribe", channel);
-    });
-  }
-
-  onLoad() {
     this.setTitle();
+    store.dispatch("exchange/getMarketDepth", this.market.id);
+    store.dispatch("exchange/getMarketTrades", this.market.id);
 
     const channels = MarketChannels(this.market.id);
 
     channels.forEach(channel => {
       store.commit("websocket/subscribe", channel);
+    });
+  }
+
+  before_panel_destroy() {
+    const channels = MarketChannels(this.market.id);
+
+    channels.forEach(channel => {
+      store.commit("websocket/unsubscribe", channel);
     });
   }
 
@@ -102,3 +91,7 @@ export default class MarketPreview extends Mixins(ScreenMixin, MarketMixin) {
   }
 }
 </script>
+
+<style lang="less">
+@import "~@/assets/css/screens/market-preview";
+</style>

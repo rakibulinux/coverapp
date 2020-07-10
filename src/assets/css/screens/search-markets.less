@@ -1,0 +1,44 @@
+.search-markets {
+  .head-bar {
+    background-color: var(--bg-card-color);
+    width: 100%;
+    position: relative;
+
+    i,
+    .cancel {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    input {
+      width: 100%;
+      border: 0;
+      line-height: 40px;
+      padding: 0 70px 0 40px;
+      caret-color: var(--blue-color);
+      font-size: 14px;
+      color: var(--text-default-color);
+
+      &::placeholder {
+        color: var(--input-placeholder-color);
+      }
+    }
+    .cancel {
+      font-size: 16px;
+      right: 12px;
+    }
+  }
+
+  .body-bar {
+    background-color: var(--bg-color);
+    position: relative;
+    height: 100%;
+  }
+
+  i {
+    color: var(--color-gray);
+    font-size: 18px;
+    left: 12px;
+  }
+}

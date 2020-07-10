@@ -1,11 +1,3 @@
-.text-up {
-  color: $up-color !important;
-}
-
-.text-down {
-  color: $down-color !important;
-}
-
 .text-left {
   text-align: left !important;
 }
@@ -38,7 +30,7 @@
     margin-bottom: auto;
     border-radius: 18px;
     background: $bg-color;
-    border: 1px solid $border-color;
+    border: 1px solid var(--border-color);
     margin-left: 16px;
     padding: 0 45px 0 25px;
     width: 175px;
@@ -88,23 +80,37 @@ button {
 }
 
 .bg-down {
-  background-color: $down-color !important;;
+  background-color: var(--down-color) !important;
 }
 .bg-up {
-  background-color: $up-color !important;
+  background-color: var(--up-color) !important;
+}
+
+.text-up {
+  color: var(--up-color) !important;
+
+  &.bg-up {
+    background-color: var(--up-bg-color) !important;
+  }
+}
+
+.text-down {
+  color: var(--down-color) !important;
+
+  &.bg-down {
+    background-color: var(--down-bg-color) !important;
+  }
 }
 
 button {
   &.bg-down {
-    background-color: $down-color !important;;
     &:hover {
-      background-color: #f03e3e !important;;
+      background-color: #f03e3e !important;
     }
   }
   &.bg-up {
-    background-color: $up-color !important;;
     &:hover {
-      background-color: #0ca678 !important;;
+      background-color: #0ca678 !important;
     }
   }
   &:disabled {

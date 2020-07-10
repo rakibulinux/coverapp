@@ -1,7 +1,8 @@
 <template>
   <transition name="panel-move">
-    <slot class="panel-view" />
-    <router-view v-if="is_mounted" class="panel-view" />
+    <div v-if="isActive" class="panel-view">
+      <slot />
+    </div>
   </transition>
 </template>
 
@@ -10,10 +11,10 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class PanelView extends Vue {
-  is_mounted = false;
+  isActive = false;
 
   mounted() {
-    this.is_mounted = true;
+    (this.$parent as any).PanelView = this;
   }
 }
 </script>

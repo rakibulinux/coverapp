@@ -5,6 +5,7 @@
         v-for="(market_name, index) in featureMarkets('one')"
         :key="`one` + index"
         :market="getMarketByName(market_name)"
+        @click="$emit('click', getMarketByName(market_name))"
       />
     </swiper-slide>
     <swiper-slide>
@@ -12,6 +13,7 @@
         v-for="(market_name, index) in featureMarkets('two')"
         :key="`one` + index"
         :market="getMarketByName(market_name)"
+        @click="$emit('click', getMarketByName(market_name))"
       />
       <li>More</li>
     </swiper-slide>

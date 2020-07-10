@@ -50,7 +50,7 @@ dd p {
             font-size: 14px;
           }
           &.second {
-            color: $color-gray;
+            color: var(--color-gray);
             line-height: 16px;
             font-size: 12px;
           }
@@ -85,7 +85,7 @@ dd p {
           display: inline-block;
         }
         .sorter {
-          color: $color-gray;
+          color: var(--color-gray);
           position: relative;
           font-size: 18px;
           flex: 0 0 14px;

@@ -1,9 +1,9 @@
 <template>
-  <div class="screen-auth">
+  <panel-view class="screen-auth">
     <head-bar :left-disabled="true">
       <template v-slot:right>
         <div class="right-action">
-          <i class="ic-aui-icon-close" @click="back" />
+          <i class="ic-aui-icon-close" @click="destroy" />
         </div>
       </template>
     </head-bar>
@@ -52,12 +52,12 @@
 
         <div class="screen-auth-action">
           <p class="screen-auth-action-item">
-            Already have an account? <a @click="back">Login</a>
+            Already have an account? <a @click="destroy">Login</a>
           </p>
         </div>
       </form>
     </div>
-  </div>
+  </panel-view>
 </template>
 
 <script lang="ts">
@@ -77,14 +77,6 @@ export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
 
   button_rules = ["loading", "email", "password", "confirm_password"];
 
-  open_login_page() {
-    const { prev_path } = store.state.public;
-
-    prev_path.includes("/m/auth/login")
-      ? this.back()
-      : this.$router.push({ path: "/m/auth/login" });
-  }
-
   async register() {
     const { email, password, refid, captcha_response } = this;
 
@@ -99,3 +91,7 @@ export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
   }
 }
 </script>
+
+<style lang="less">
+@import "~@/assets/css/screens/auth";
+</style>

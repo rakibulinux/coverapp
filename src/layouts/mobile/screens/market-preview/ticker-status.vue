@@ -4,7 +4,7 @@
       <p class="price">{{ getLastPrice }}</p>
       <p class="last-change">
         <span>{{ getPriceUSD }}</span>
-        <span :class="getLastTrend">{{ getChange }}</span>
+        <span :class="getLastTrend">{{ ticker.price_change_percent }}</span>
       </p>
     </div>
     <div class="right-panel text-right">
@@ -17,24 +17,16 @@
 
 <script lang="ts">
 import store from "@/store";
-import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
+import { MarketMixin } from "@/mixins/mobile";
+import { Mixins, Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class MarketPreviewTickerStatus extends Vue {
+export default class Depth extends Mixins(MarketMixin) {
   @Prop() readonly market!: ZTypes.Market;
-  @Prop() readonly getPrice!: (
-    price: string | number,
-    market?: string
-  ) => string;
-  @Prop() readonly getAmount!: (
-    price: string | number,
-    market?: string
-  ) => string;
-  @Prop() readonly percentToNumber!: (value?: string) => number;
 
   get ticker() {
-    const ticker = store.getters["public/getAllTickers"][this.market.id];
+    const ticker = store.state.public.tickers[this.market.id];
     return ticker;
   }
 
@@ -44,10 +36,6 @@ export default class MarketPreviewTickerStatus extends Vue {
 
   get getPriceUSD() {
     return helpers.getMarketLastUSD(this.market.id);
-  }
-
-  get getChange() {
-    return this.ticker.price_change_percent;
   }
 
   get getVolume() {
@@ -63,7 +51,7 @@ export default class MarketPreviewTickerStatus extends Vue {
   }
 
   get getLastTrend() {
-    const change = this.percentToNumber(this.getChange);
+    const change = parseInt(this.ticker.price_change_percent);
     return helpers.getTrend(change);
   }
 }

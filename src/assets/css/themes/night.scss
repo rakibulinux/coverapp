@@ -1,15 +1,15 @@
 .night {
   dt {
-    color: $color-gray;
+    color: var(--color-gray);
   }
   .ant-layout-header {
-    background: $bg-card-color;
+    background: var(--bg-card-color);
   }
   .page-exchange {
     .ticker-info {
-      background: $bg-card-color;
+      background: var(--bg-card-color);
       .ticker-status {
-        color: $color-gray;
+        color: var(--color-gray);
       }
       .market-list {
         &.selected,
@@ -24,7 +24,7 @@
           }
         }
         #market_list {
-          border-color: $border-color;
+          border-color: var(--border-color);
           .sorter {
             i {
               color: $sort-color;
@@ -41,12 +41,12 @@
             background-color: $row-hover-bg-color;
           }
           .input-box {
-            border-color: $border-color;
+            border-color: var(--border-color);
             input {
-              background-color: $bg-card-color;
+              background-color: var(--bg-card-color);
             }
             i {
-              color: $color-gray;
+              color: var(--color-gray);
             }
             ::-webkit-input-placeholder {
               color: $input-placeholder-color;
@@ -64,9 +64,9 @@
     }
   }
   .switch {
-    border-color: $border-color;
+    border-color: var(--border-color);
     button {
-      color: $color-gray;
+      color: var(--color-gray);
       &.selected {
         background-color: $selected-bg-color;
         color: $selected-color !important;

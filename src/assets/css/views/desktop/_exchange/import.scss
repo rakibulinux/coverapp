@@ -43,7 +43,7 @@
 
 #market_list {
   height: 100%;
-  background: $bg-card-color;
+  background: var(--bg-card-color);
   .input-box {
     position: relative;
     padding: 5px 5px;
@@ -57,12 +57,12 @@
       width: 100%;
       padding-left: 32px;
       &::placeholder {
-        color: $color-gray;
+        color: var(--color-gray);
       }
       &:focus {
-        border-color: $blue-color;
+        border-color: var(--blue-color);
         & + i {
-          color: $blue-color;
+          color: var(--blue-color);
         }
       }
     }
@@ -71,7 +71,7 @@
       left: 8px;
       top: calc(50% - 10px);
       font-size: 20px;
-      color: $color-gray;
+      color: var(--color-gray);
     }
   }
   .markets {
@@ -83,7 +83,7 @@
       flex: 1 1;
       padding: 0 4px;
       text-align: center;
-      border-right: 1px solid $bg-card-color;
+      border-right: 1px solid var(--bg-card-color);
       cursor: pointer;
       &.favorites {
         font-size: 18px;
@@ -93,7 +93,7 @@
       }
       &.selected {
         color: #fff;
-        background-color: $blue-color;
+        background-color: var(--blue-color);
       }
     }
   }
@@ -149,7 +149,7 @@
         span {
           .favorite {
             text-align: center;
-            color: $color-gray;
+            color: var(--color-gray);
             i {
               font-size: 16gpx;
               line-height: 30px;
@@ -164,7 +164,7 @@
           background: $selected-bg-color;
         }
         &.selected {
-          background-image: linear-gradient($blue-color, $blue-color);
+          background-image: linear-gradient(var(--blue-color), var(--blue-color));
           background-color: $selected-bg-color;
           background-position: 0;
           background-repeat: no-repeat;
@@ -199,7 +199,7 @@
   padding: 4px 0;
   overflow: hidden;
   input {
-    caret-color: $blue-color;
+    caret-color: var(--blue-color);
   }
   .group-left {
     visibility: visible;
@@ -240,17 +240,17 @@
     display: block;
     transition: border-color 0.15s;
     span {
-      color: $color-gray;
+      color: var(--color-gray);
     }
     &.active {
-      border-color: $blue-color !important; //night
+      border-color: var(--blue-color) !important; //night
       .estimate-box {
         z-index: 3;
         display: block !important;
       }
     }
     &.error {
-      border-color: #fa5252 !important;
+      border-color: $down-color !important;
       background-color: rgba(250, 82, 82, 0.1);
     }
   }
@@ -270,7 +270,7 @@
       font-size: 18px;
     }
     &:hover i {
-      color: $blue-color !important;
+      color: var(--blue-color) !important;
     }
   }
   .ant-card-head {
@@ -281,7 +281,7 @@
       padding: 0;
       transition: all 0.2s;
       &.selected {
-        border-bottom-color: $blue-color;
+        border-bottom-color: var(--blue-color);
         text-shadow: 0.2px 0px 0.05px;
         font-weight: normal;
       }
@@ -389,7 +389,7 @@
           height: 2px;
           left: 0;
           bottom: -2px;
-          background: $blue-color;
+          background: var(--blue-color);
           position: absolute;
           z-index: 5;
         }

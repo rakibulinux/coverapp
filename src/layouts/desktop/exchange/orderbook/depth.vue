@@ -3,7 +3,7 @@
     <p
       v-for="order in depth()"
       :key="order.price"
-      class="z-table-row"
+      class="z-table-row depth-row"
       :style="{
         backgroundSize:
           (((order.price * order.amount) / maxTotal) * 100).toFixed(0) +

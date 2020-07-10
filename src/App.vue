@@ -9,6 +9,7 @@
     >
       <header-exchange v-if="!isMobile" />
       <router-view />
+      <auth-login-screen ref="auth-login-screen" />
       <tab-bar v-if="isMobile" />
 
       <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
@@ -32,7 +33,8 @@ import colors from "@/colors";
     "footer-exchange": () => import("@/layouts/desktop/_footer.vue"),
     "panel-view": () => import("@/components/mobile/panel-view.vue"),
     "tab-bar": () => import("@/layouts/mobile/_tab_bar.vue"),
-    "loading-page": () => import("@/layouts/loading-page.vue")
+    "loading-page": () => import("@/layouts/loading-page.vue"),
+    "auth-login-screen": () => import("@/views/mobile/screens/auth/login")
   }
 })
 export default class App extends Vue {
@@ -74,12 +76,16 @@ export default class App extends Vue {
       this.$router.push("/m");
     }
     this.setTheme();
-    ZSmartModel.on("need-login", (callback: Function) => {
-      //TODO: add support for login page
+    ZSmartModel.on("need-login", (callback?: Function) => {
+      this.$refs["auth-login-screen"].create(callback);
     });
-    ZSmartModel.on("need-setup-2fa", () => {
-      //TODO: add support for login 2fa page
-    });
+
+    if (this.isMobile) {
+      history.pushState(null, document.title, location.href);
+      window.addEventListener("popstate", function(event) {
+        history.pushState(null, document.title, location.href);
+      });
+    }
   }
 
   public openPanel(panel: string, callback?: Function) {

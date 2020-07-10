@@ -42,11 +42,6 @@ export default class ZTabBar extends Vue {
       text: "Assets",
       icon: "wallet",
       url: "/m/assets"
-    },
-    {
-      text: "Account",
-      icon: "user",
-      url: "/m/personal"
     }
   ];
 

@@ -31,8 +31,8 @@ export class Chart {
 
   buyStrokeColor = colors["up-color"];
   sellStrokeColor = colors["down-color"];
-  buyFillColor = "rgb(23, 67, 78, 0.5)";
-  sellFillColor = "rgba(69, 46, 67, 0.5)";
+  buyFillColor = colors["up-bg-color"];
+  sellFillColor = colors["down-bg-color"];
 
   depth_data: { buy: DepthData[]; sell: DepthData[] } = {
     buy: [],

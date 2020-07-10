@@ -9,10 +9,16 @@
         </div>
       </div>
       <div class="assets-action">
-        <div class="assets-action-item" @click="open_search_screen('deposit')">
+        <div
+          class="assets-action-item"
+          @click="open_assets_search_screen('deposit')"
+        >
           Deposit
         </div>
-        <div class="assets-action-item" @click="open_search_screen('withdraw')">
+        <div
+          class="assets-action-item"
+          @click="open_assets_search_screen('withdraw')"
+        >
           Withdraw
         </div>
         <!-- <div class="assets-action-item" disabled>
@@ -25,11 +31,20 @@
         v-for="currency in currencies"
         :key="currency.id"
         :currency="currency"
-        @click="on_assets_row_clicked(currency)"
+        @click="open_assets_preview_screen(currency)"
       />
     </div>
 
-    <panel-view />
+    <screen-assets-preview
+      ref="screen-assets-preview"
+      @click="open_screen_by_type_and_currency"
+    />
+    <screen-assets-deposit ref="screen-assets-deposit" />
+    <screen-assets-withdraw ref="screen-assets-withdraw" />
+    <screen-assets-search
+      ref="screen-assets-search"
+      @click="open_screen_by_type_and_currency"
+    />
     <warning-modal ref="warning-modal" />
   </div>
 </template>
@@ -42,8 +57,15 @@ import { Vue, Component } from "vue-property-decorator";
 @Component({
   components: {
     "assets-row": () => import("@/layouts/mobile/assets/assets-row.vue"),
-    "warning-modal": () => import("@/layouts/mobile/assets/warning-modal.vue"),
-    "panel-view": () => import("@/components/mobile/panel-view.vue")
+    "screen-assets-preview": () =>
+      import("@/views/mobile/screens/assets/preview.vue"),
+    "screen-assets-deposit": () =>
+      import("@/views/mobile/screens/assets/deposit.vue"),
+    "screen-assets-withdraw": () =>
+      import("@/views/mobile/screens/assets/withdraw.vue"),
+    "screen-assets-search": () =>
+      import("@/views/mobile/screens/assets/search.vue"),
+    "warning-modal": () => import("@/layouts/mobile/assets/warning-modal.vue")
   }
 })
 export default class Assets extends Vue {
@@ -73,9 +95,35 @@ export default class Assets extends Vue {
     this.assets_table_style.height = `calc(100vh - ${marginTop}px - ${marginBottom}px)`;
   }
 
-  open_search_screen(type: string) {
+  open_screen_by_type_and_currency(type: string, currency: ZTypes.Currency) {
+    this[`open_assets_${type}_screen`](currency);
+  }
+
+  open_assets_preview_screen(currency: ZTypes.Currency) {
+    this.$nextTick(() => {
+      this.open_screen("preview", currency);
+    });
+  }
+
+  open_assets_deposit_screen(currency: ZTypes.Currency) {
     if (this.user_otp) {
-      this.$router.push({ path: "/m/assets/search", query: { type: type } });
+      this.open_screen("deposit", currency);
+    } else {
+      this.open_warning_modal();
+    }
+  }
+
+  open_assets_withdraw_screen(currency: ZTypes.Currency) {
+    if (this.user_otp) {
+      this.open_screen("withdraw", currency);
+    } else {
+      this.open_warning_modal();
+    }
+  }
+
+  open_assets_search_screen(type: string) {
+    if (this.user_otp) {
+      this.open_screen("search", type);
     } else {
       this.open_warning_modal();
     }
@@ -85,10 +133,8 @@ export default class Assets extends Vue {
     (this.$refs["warning-modal"] as any).create();
   }
 
-  on_assets_row_clicked(currency: ZTypes.Currency) {
-    this.$router.push({
-      path: `/m/assets/preview/${currency.id}`
-    });
+  open_screen(screen: string, payload?: any) {
+    this.$refs[`screen-assets-${screen}`].create(payload);
   }
 }
 </script>

@@ -1,10 +1,6 @@
 <template>
-  <panel-view
-    v-if="isShowing"
-    class="screen-verify-otp verify-otp"
-    @remove="close"
-  >
-    <head-bar @remove="$emit('cancel')" />
+  <panel-view class="screen-verify-otp verify-otp">
+    <head-bar @back="$emit('cancel')" />
 
     <form class="screen-verify-box" @submit.prevent="onSubmit">
       <div class="screen-auth-title">
@@ -40,7 +36,7 @@ export default class VerifyOTPScreen extends Mixins(ScreenMixin, VerifyMixin) {
     return !(this.otp_code.length === 6);
   }
 
-  onCreate() {
+  panel_created() {
     this.otp_code = "";
   }
 
@@ -58,6 +54,8 @@ export default class VerifyOTPScreen extends Mixins(ScreenMixin, VerifyMixin) {
 </script>
 
 <style lang="less">
+@import "~@/assets/css/screens/auth";
+
 .verify-otp {
   &-box {
   }

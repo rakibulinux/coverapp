@@ -95,7 +95,7 @@
     }
   }
   .market-list {
-    background: $bg-card-color;
+    background: var(--bg-card-color);
     border-radius: 6px;
     .menu-table {
       display: flex;
@@ -133,8 +133,8 @@
       padding-bottom: 20px;
       dt {
         padding: 0 25px 0 40px;
-        color: $color-gray;
-        border-bottom: 1px solid $border-color;
+        color: var(--color-gray);
+        border-bottom: 1px solid var(--border-color);
         span {
           height: 40px;
           line-height: 40px;
@@ -156,7 +156,7 @@
           cursor: pointer;
           height: 43px;
           padding: 0 25px 0 10px;
-          border-bottom: 1px solid $border-color;
+          border-bottom: 1px solid var(--border-color);
           &:hover {
             background-color: rgba(0, 0, 0, 0.15);
             transition: background-color 0.35s;
@@ -273,7 +273,7 @@
             transition: all 0.5s ease-out;
             opacity: 1;
             &-active {
-              background-color: $blue-color;
+              background-color: var(--blue-color);
               width: 60px;
             }
           }
@@ -304,7 +304,7 @@
         height: 3px;
         margin-left: -40px;
         opacity: 0.75;
-        background: $blue-color;
+        background: var(--blue-color);
       }
     }
     ul.about-content {
@@ -331,7 +331,7 @@
           .desc {
             font-size: 14px;
             margin-top: 18px;
-            color: $color-gray;
+            color: var(--color-gray);
           }
         }
       }

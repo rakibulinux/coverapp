@@ -1,36 +1,37 @@
 <template>
   <z-content class="page-home-m pull-content">
-    <pull-to :last-update="lastUpdate" :top-load-method="refresh">
-      <preview />
-      <feature-markets />
-      <top-btc-volume />
-      <trend-top />
-      <div class="more-market">
-        <span @click="$router.push('/m/markets')">
-          More
-          <span>
-            <a-icon type="down" />
-            <a-icon type="down" />
-          </span>
-        </span>
-      </div>
-    </pull-to>
+    <head-bar
+      @user-click="open_user_drawer"
+      @search-click="open_search_market_screen"
+    />
+    <preview />
+    <feature-markets @click="open_market_preview_screen" />
+    <trend-top @click="open_market_preview_screen" />
+
+    <user-drawer ref="user-drawer" />
+    <screen-search-markets
+      ref="screen-search-markets"
+      @click="open_market_preview_screen"
+    />
+    <screen-market-preview ref="screen-market-preview" />
   </z-content>
 </template>
 
 <script lang="ts">
-import ZSmartModel from "@zsmartex/z-eventbus";
-import store from "@/store";
 import { MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {
-    "pull-to": () => import("@/components/mobile/pull-to"),
+    "head-bar": () => import("@/layouts/mobile/home/head-bar.vue"),
     preview: () => import("@/layouts/mobile/home/preview.vue"),
     "feature-markets": () => import("@/layouts/mobile/home/feature-markets"),
-    "top-btc-volume": () => import("@/layouts/mobile/home/top-btc-volume.vue"),
-    "trend-top": () => import("@/layouts/mobile/home/trend-top.vue")
+    "trend-top": () => import("@/layouts/mobile/home/trend-top.vue"),
+    "user-drawer": () => import("@/layouts/mobile/home/user-drawer"),
+    "screen-market-preview": () =>
+      import("@/views/mobile/screens/market-preview"),
+    "screen-search-markets": () =>
+      import("@/views/mobile/screens/search-markets")
   }
 })
 export default class Home extends Mixins(MarketMixin) {
@@ -38,57 +39,20 @@ export default class Home extends Mixins(MarketMixin) {
     [key: string]: any;
   };
 
-  get lastUpdate() {
-    return store.state.public.lastUpdate;
+  open_user_drawer() {
+    this.$refs["user-drawer"].create();
   }
 
-  mounted() {
-    ZSmartModel.on("open-market-preview", args => {
-      //this.removeSearchMarket();
-      this.openMarketPreview(args);
-    });
+  open_search_market_screen() {
+    this.$refs["screen-search-markets"].create();
   }
 
-  beforeDestroy() {
-    ZSmartModel.remove("open-market-preview");
-    ZSmartModel.remove("open-search-markets");
-  }
-
-  async refresh(loaded) {
-    try {
-      await store.dispatch("public/getTimeStamp");
-      await store.dispatch("public/getGlobalPrice");
-      await store.dispatch("public/getCurrencies");
-      await store.dispatch("public/getMarkets");
-      await store.dispatch("public/getSparkLines");
-      await store.dispatch("public/getTickers");
-      loaded("done");
-    } catch (error) {
-      loaded("failed");
-      return error;
-    }
-  }
-
-  // removeSearchMarket() {
-  //   this.$refs["search-markets"].remove();
-  // }
-
-  removeMarketPreview() {
-    this.$refs["market-preview"].delete();
-  }
-
-  // openSearchMarket() {
-  //   this.$refs["search-markets"].render();
-  // }
-
-  openMarketPreview(args) {
-    this.$refs["market-preview"].create(args);
+  open_market_preview_screen(market: ZTypes.Market) {
+    this.$refs["screen-market-preview"].create(market);
   }
 }
 </script>
 
-<style>
-.child {
-  height: 500px;
-}
+<style lang="less">
+@import "~@/assets/css/views/mobile/home";
 </style>

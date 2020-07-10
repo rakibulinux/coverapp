@@ -1,6 +1,6 @@
 .highcharts-xaxis .highcharts-tick {
   stroke-width: 1px;
-  stroke: $color-gray;
+  stroke: var(--color-gray);
 }
 
 .night {
@@ -9,12 +9,12 @@
   .highcharts-axis-line {
     stroke: transparent;
     &:first-child {
-      stroke: $color-gray;
+      stroke: var(--color-gray);
     }
   }
   g.highcharts-axis-labels text {
-    color: $color-gray !important;
-    fill: $color-gray !important;
+    color: var(--color-gray) !important;
+    fill: var(--color-gray) !important;
   }
 }
 
@@ -24,12 +24,12 @@
   .highcharts-axis-line {
     stroke: transparent;
     &:first-child {
-      stroke: $color-gray;
+      stroke: var(--color-gray);
     }
   }
   g.highcharts-axis-labels text {
-    color: $color-gray !important;
-    fill: $color-gray !important;
+    color: var(--color-gray) !important;
+    fill: var(--color-gray) !important;
   }
 }
 
@@ -40,7 +40,7 @@
 
 .night {
   .highcharts-label.highcharts-tooltip.highcharts-color-undefined span {
-    color: $color-gray !important;
+    color: var(--color-gray) !important;
   }
 }
 .light {
@@ -51,8 +51,8 @@
 
 .highcharts-legend-item.highcharts-area-series.highcharts-color-undefined {
   text {
-    color: $color-gray !important;
-    fill: $color-gray !important;
+    color: var(--color-gray) !important;
+    fill: var(--color-gray) !important;
     &:hover {
       color: $white-color !important;
       fill: $white-color !important;

@@ -40,14 +40,14 @@
             margin-right: 20px;
             transition: all .3s;
             &:hover {
-              color: $color-gray;
+              color: var(--color-gray);
             }
           }
         }
         a {
           text-decoration: none !important;
           &:hover {
-            color: $blue-color;
+            color: var(--blue-color);
           }
         }
       }
@@ -56,9 +56,9 @@
           display: block;
         }
         a {
-          color: $blue-color;
+          color: var(--blue-color);
           &:hover {
-            color: $blue-color;
+            color: var(--blue-color);
           }
         }
       }
@@ -68,7 +68,7 @@
     line-height: 56px;
     height: 56px;
     font-size: 14px;
-    border-top: 1px solid $border-color;
+    border-top: 1px solid var(--border-color);
     text-align: center;
   }
 }

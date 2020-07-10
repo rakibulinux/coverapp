@@ -1,9 +1,9 @@
 <template>
-  <div class="screen-auth">
+  <panel-view class="screen-auth">
     <head-bar :left-disabled="true">
       <template v-slot:right>
         <div class="right-action">
-          <i class="ic-aui-icon-close" @click="back" />
+          <i class="ic-aui-icon-close" @click="destroy" />
         </div>
       </template>
     </head-bar>
@@ -37,15 +37,16 @@
         </auth-button>
         <div class="screen-auth-action">
           <p class="screen-auth-action-item signup">
-            <a @click="$router.push('/m/auth/signup')">Sign Up</a>
+            <a @click="open_signup_screen">Sign Up</a>
           </p>
           <a class="screen-auth-action-item">Forgot password</a>
         </div>
       </form>
     </div>
 
-    <screen-verify-otp ref="screen-verify-otp" />
-  </div>
+    <screen-auth-signup ref="screen-auth-signup" />
+    <screen-verify-otp ref="screen-verify-otp" @cancel="need2fa = false" />
+  </panel-view>
 </template>
 
 <script lang="ts">
@@ -58,7 +59,8 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 @Component({
   components: {
     "panel-view": () => import("@/components/mobile/panel-view.vue"),
-    "screen-verify-otp": () => import("@/views/mobile/screens/verify/totp.vue")
+    "screen-verify-otp": () => import("@/views/mobile/screens/verify/totp.vue"),
+    "screen-auth-signup": () => import("@/views/mobile/screens/auth/signup")
   }
 })
 export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
@@ -80,6 +82,24 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     store.state.user.need2fa = value;
   }
 
+  panel_created(callback?: Function) {
+    this.$on("login-success", () => {
+      if (typeof callback === "function") callback();
+    });
+
+    ZSmartModel.on("wait-email", () => {
+      //TODO: open screen wait email
+    });
+  }
+
+  before_panel_destroy() {
+    ZSmartModel.remove("wait-email");
+  }
+
+  open_signup_screen() {
+    this.$refs["screen-auth-signup"].create();
+  }
+
   onTotpSubmit(otp_code: string) {
     this.otp_code = otp_code;
     this.login();
@@ -88,15 +108,27 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   async callLogin() {
     const { email, password, otp_code } = this;
 
-    this.loading = true;
-    await store.dispatch("user/LOGIN", {
-      payload: {
-        email,
-        password,
-        otp_code
-      }
-    });
-    this.loading = false;
+    try {
+      this.loading = true;
+      await store.dispatch("user/LOGIN", {
+        payload: {
+          email,
+          password,
+          otp_code
+        }
+      });
+      this.loading = false;
+      this.need2fa = false;
+
+      this.$emit("login-success", "");
+
+      this.$nextTick(() => {
+        this.destroy();
+      });
+    } catch (error) {
+      this.loading = false;
+      return error;
+    }
   }
 
   login() {
@@ -107,27 +139,17 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     }
   }
 
-  mounted() {
-    ZSmartModel.on("wait-email", () => {
-      //TODO: open screen wait email
-    });
-  }
-
-  beforeDestroy() {
-    ZSmartModel.remove("wait-email");
-  }
-
   @Watch("need2fa")
   onNeed2FAChanged(need2fa: boolean) {
-    this.$refs["screen-verify-otp"][`${need2fa ? "create" : "close"}`]();
-    if (!need2fa) {
-      this.otp_code = "";
-    }
+    this.$refs["screen-verify-otp"][`${need2fa ? "create" : "destroy"}`]();
+    this.otp_code = "";
   }
 }
 </script>
 
 <style lang="less">
+@import "~@/assets/css/screens/auth";
+
 .screen-auth {
   .head-bar {
     background-color: transparent;

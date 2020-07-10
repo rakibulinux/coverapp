@@ -106,15 +106,20 @@ export default class SignIn extends Vue {
   public async callLogin() {
     const { email, password, otp_code, captcha_response } = this;
 
-    this.loading = true;
-    const payload = {
-      email,
-      password,
-      otp_code,
-      captcha_response
-    };
-    await store.dispatch("user/LOGIN", { payload });
-    this.loading = false;
+    try {
+      this.loading = true;
+      const payload = {
+        email,
+        password,
+        otp_code,
+        captcha_response
+      };
+      await store.dispatch("user/LOGIN", { payload });
+      this.loading = false;
+    } catch (error) {
+      this.loading = false;
+      return error;
+    }
   }
 
   public login() {

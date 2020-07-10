@@ -7,7 +7,7 @@
   .setting-menu {
     width: 260px;
     border-radius: 2px;
-    background: $bg-card-color;
+    background: var(--bg-card-color);
     display: block;
     padding-bottom: 40px;
     li {
@@ -47,7 +47,7 @@
         cursor: pointer;
         position: relative;
         border-left: 4px solid transparent;
-        border-top: 1px solid $border-color;
+        border-top: 1px solid var(--border-color);
         i {
           position: absolute;
           left: 25px;
@@ -59,7 +59,7 @@
           background-color: rgba(0, 0, 0, 0.15);
         }
         &:last-child {
-          border-bottom: 1px solid $border-color;
+          border-bottom: 1px solid var(--border-color);
         }
       }
     }
@@ -68,12 +68,12 @@
     width: calc(100% - 260px);
     margin-left: 20px;
     border-radius: 2px;
-    background: $bg-card-color;
+    background: var(--bg-card-color);
     min-height: calc(100vh - 254px - 48px - 40px - 108px);
     font-size: 14px;
     padding: 20px;
     .setting-head {
-      border-bottom: 1px solid $border-color;
+      border-bottom: 1px solid var(--border-color);
       padding-bottom: 20px;
       position: relative;
       font-size: 18px;
@@ -85,8 +85,8 @@
         float: right;
         padding: 4px 10px;
         font-size: 14px;
-        color: $blue-color;
-        border: 1px solid $blue-color;
+        color: var(--blue-color);
+        border: 1px solid var(--blue-color);
         border-radius: 4px;
         cursor: pointer;
       }
@@ -95,7 +95,7 @@
       position: relative;
       min-height: 800px;
       tr td {
-        border-bottom: 1px solid $border-color;
+        border-bottom: 1px solid var(--border-color);
         &.desc {
           color: $footer-text-color;
         }

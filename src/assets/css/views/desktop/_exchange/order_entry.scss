@@ -28,7 +28,7 @@
         position: relative;
         label {
           font-size: 12px;
-          color: $color-gray;
+          color: var(--color-gray);
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
@@ -65,7 +65,7 @@
           height: 14px;
           line-height: 14px;
           font-size: 11px;
-          background-color: $blue-color;
+          background-color: var(--blue-color);
           padding-left: 16px;
           color: #fff;
           opacity: 0;
@@ -94,8 +94,8 @@
           flex: 1;
           color: #7085ac;
           &:hover {
-            border-color: $blue-color !important;
-            color: $blue-color;
+            border-color: var(--blue-color) !important;
+            color: var(--blue-color);
           }
           &:first-child {
             margin-left: 0;

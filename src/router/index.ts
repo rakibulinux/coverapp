@@ -1,5 +1,6 @@
 import config from "@/config";
 import store from "@/store";
+import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import Vue from "vue";
 import Router, { Route } from "vue-router";
@@ -74,10 +75,10 @@ router.beforeEach(async (to, from, next) => {
         next("/m");
 
         setTimeout(() => {
-          next("/m/auth/login");
+          ZSmartModel.emit("need-login", next);
         }, 500);
       } else {
-        next("/m/auth/login");
+        ZSmartModel.emit("need-login", next);
       }
     } else {
       next("/signin");

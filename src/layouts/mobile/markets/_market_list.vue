@@ -1,113 +1,105 @@
 <template>
-  <div class="body-bar ex_table">
-    <dt>
+  <div
+    class="body-bar z-table z-table-no-scroll"
+    :style="{ height: `${height}px` }"
+  >
+    <div class="z-table-head">
       <span class="text-left">Pair / Vol</span>
-      <span class="text-left">Last Price</span>
+      <span class="text-right">Last Price</span>
       <span class="text-right">24h Chg%</span>
-    </dt>
-    <cube-tab-panels v-model="selected">
-      <cube-tab-panel
-        v-for="item in ['Favorites', ...list_bid]"
-        :key="item"
-        :label="item"
+    </div>
+    <cube-slide
+      ref="slide"
+      :allow-vertical="true"
+      :loop="false"
+      :initial-index="initialIndex"
+      :auto-play="false"
+      :show-dots="false"
+      :options="{
+        listenScroll: true,
+        probeType: 3,
+        directionLockThreshold: 0
+      }"
+      @scroll="scroll"
+      @change="changePage"
+    >
+      <cube-slide-item
+        v-for="item in list_bid"
+        :key="item.label"
+        :label="item.label"
       >
-        <pull-to :last-update="lastUpdate" :top-load-method="refresh">
-          <dd>
-            <p
-              v-for="(data, index) in findTickers('market', item)"
-              :key="index"
-              @click="showPanel(data)"
-            >
-              <span class="text-left pair">
-                <div class="name">
-                  <span>{{ data.base_unit.toUpperCase() }}</span>
-                  <span>/ {{ data.quote_unit.toUpperCase() }}</span>
-                </div>
-                <div class="vol">
-                  Vol: {{ getAmount(data.volume, data.name) }}
-                </div>
-              </span>
-              <span class="text-left last">
-                <div class="coin" :class="getTrend(data.price_change_percent)">
-                  {{ getPrice(data.last, data.name) }}
-                </div>
-                <div class="fait">
-                  $
-                  {{
-                    getLastPriceUSD(data.base_unit + data.quote_unit, data.last)
-                  }}
-                </div>
-              </span>
-              <span class="text-right rate">
-                <div
-                  :class="
-                    getTrend(percentToNumber(data.price_change_percent), true)
-                  "
-                >
-                  {{ data.price_change_percent }}
-                </div>
-              </span>
-            </p>
-          </dd>
-        </pull-to>
-      </cube-tab-panel>
-    </cube-tab-panels>
+        <cube-scroll
+          :data="findTickers('market', item.label)"
+          nest-mode="native"
+          :options="{
+            disableTouch: true,
+            stopPropagation: true,
+            directionLockThreshold: 0,
+            pullDownRefresh: false,
+            pullUpLoad: false
+          }"
+        >
+          <div class="z-table-content">
+            <market-row
+              v-for="market in findTickers('market', item.label)"
+              :key="market.id"
+              :market="market"
+              @click="$emit('click', market)"
+            />
+          </div>
+        </cube-scroll>
+      </cube-slide-item>
+    </cube-slide>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import store from "@/store";
-import config from "@/config";
-import * as helpers from "@zsmartex/z-helpers";
-import PullTo from "@/components/mobile/pull-to";
+import { MarketMixin } from "@/mixins/mobile";
+import { Mixins, Component, Prop } from "vue-property-decorator";
 
 @Component({
-  props: {
-    selected: String,
-    findTickers: Function,
-    checkFavorite: Function,
-    percentToNumber: Function,
-    getTrend: Function,
-    getPrice: Function,
-    getAmount: Function
-  },
   components: {
-    "pull-to": PullTo
+    "market-row": () => import("@/components/mobile/market-row")
   }
 })
-export default class MarketList extends Vue {
-  get lastUpdate() {
-    return store.state.public.lastUpdate;
+export default class MarketList extends Mixins(MarketMixin) {
+  @Prop() readonly height!: number;
+
+  $refs!: {
+    [key: string]: any;
+  };
+
+  get tab_nav(): any {
+    return this.head_bar.$refs["tab-nav"];
+  }
+
+  get head_bar(): any {
+    return this.$parent.$children.find(children => children.$refs["tab-nav"]);
   }
 
   get list_bid() {
-    return [...config.list_bid1, ...config.list_bid2];
+    return this.head_bar.list_bid;
   }
 
-  async refresh(loaded) {
-    try {
-      await store.dispatch("public/getTimeStamp");
-      await store.dispatch("public/getMarkets");
-      await store.dispatch("public/getTickers");
-      loaded("done");
-    } catch (error) {
-      loaded("failed");
-      return error;
-    }
+  get initialIndex() {
+    const index = this.list_bid.findIndex(
+      bid =>
+        bid.label.toLowerCase() === this.head_bar.selectedLabel.toLowerCase()
+    );
+    return index;
   }
 
-  getLastPriceUSD(ticker, last) {
-    return helpers.getTickerPriceUSD(ticker, last);
+  scroll(pos) {
+    const x = Math.abs(pos.x);
+    const tabItemWidth = this.tab_nav.$el.clientWidth;
+    const slideScrollerWidth = this.$refs.slide.slide.scrollerWidth;
+    const deltaX = (x / slideScrollerWidth) * tabItemWidth;
+
+    this.tab_nav.setSliderTransform(deltaX);
   }
 
-  showPanel(market: ZTypes.Market) {
-    // this.$emit("on-open-screen", {
-    //   methods: "setMarket",
-    //   data: value
-    // });
-
-    this.$router.push(`/m/markets/preview/${market.id}`);
+  changePage(index) {
+    this.head_bar.selectedLabel = this.list_bid[index].label;
   }
 }
 </script>

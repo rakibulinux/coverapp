@@ -19,24 +19,24 @@ import _modal from "@/components/desktop/exchange/_modal.vue";
 export default {
   components: {
     "trade-action-part": () => import("./trade-action-part.vue"),
-    "modal-exchange": _modal,
+    "modal-exchange": _modal
   },
   data: () => ({
     tabList: [
       {
         key: "limit",
-        tab: "Limit Order",
-      },
+        tab: "Limit Order"
+      }
     ],
-    selected: "limit",
+    selected: "limit"
   }),
   methods: {
     onTabChange(type) {
       this.selected = type;
     },
     translation: (message, data = {}) =>
-      helpers.translation("exchange." + message, data),
-  },
+      helpers.translation("exchange." + message, data)
+  }
 };
 </script>
 
@@ -121,10 +121,10 @@ export default {
           background-color: var(--bg-card-color);
           border-color: var(--up-color);
           &:hover {
-            box-shadow: 0 0 0 7px rgba(18, 184, 134, 0.15);
+            box-shadow: 0 0 0 7px rgba(46, 228, 178, 0.25);
           }
           &:focus {
-            box-shadow: 0 0 0 7px rgba(18, 184, 134, 0.15);
+            box-shadow: 0 0 0 7px rgba(46, 228, 178, 0.25);
           }
         }
       }
@@ -142,10 +142,10 @@ export default {
           background-color: var(--bg-card-color);
           border-color: var(--down-color);
           &:hover {
-            box-shadow: 0 0 0 7px rgba(250, 82, 82, 0.15);
+            box-shadow: 0 0 0 7px var(--down-bg-color);
           }
           &:focus {
-            box-shadow: 0 0 0 7px rgba(250, 82, 82, 0.15);
+            box-shadow: 0 0 0 7px var(--down-bg-color);
           }
         }
       }

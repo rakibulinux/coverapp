@@ -1,37 +1,54 @@
 <template>
   <div class="trades">
-    <div class="ex_table table_noscroll">
-      <dt>
-        <span class="text-left">Time</span>
-        <span class="text-center">Price</span>
-        <span class="text-right">Amount</span>
-      </dt>
-      <dd>
-        <p v-for="(trade, index) in trades" :key="index">
-          <span class="text-left">{{ getTime(trade.created_at) }}</span>
-          <span class="text-center" :class="trendType(trade.taker_type)">
-            {{ getPrice(trade.price) }}
-          </span>
-          <span class="text-right">{{ getAmount(trade.amount) }}</span>
-        </p>
-      </dd>
-    </div>
+    <z-table :columns="COLUMN" :data="trades" :scroll="false">
+      <template slot="price" slot-scope="{ column, item }">
+        <span
+          :class="['price', `text-${column.algin}`, trendType(item.taker_type)]"
+        >
+          {{ item.price }}
+        </span>
+      </template>
+    </z-table>
   </div>
 </template>
 
 <script lang="ts">
 import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { MarketMixin } from "@/mixins/mobile";
+import { Mixins, Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class Trades extends Vue {
-  @Prop() readonly getPrice!: (price: number) => string;
-  @Prop() readonly getAmount!: (amount: number) => string;
-  @Prop() readonly getTime!: (time: Date) => string;
+export default class Trades extends Mixins(MarketMixin) {
+  @Prop() readonly market!: ZTypes.Market;
+
+  get COLUMN() {
+    return [
+      { title: "Time", key: "created_at", class_name: "time", algin: "left" },
+      {
+        title: `Price(${this.market.quote_unit.toUpperCase()})`,
+        key: "price",
+        algin: "center",
+        scopedSlots: true
+      },
+      {
+        title: `Amount(${this.market.base_unit.toUpperCase()})`,
+        key: "amount",
+        algin: "right"
+      }
+    ];
+  }
 
   get trades() {
-    return store.state.exchange.trades.slice(0, 15);
+    const trades = store.state.exchange.trades.slice(0, 15);
+
+    return trades.map(trade => {
+      return {
+        price: this.getPrice(trade.price),
+        amount: this.getAmount(trade.amount),
+        created_at: helpers.getDate(trade.created_at).split(" ")[1]
+      };
+    });
   }
 
   trendType(value: ZTypes.Side) {

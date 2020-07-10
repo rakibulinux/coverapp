@@ -1,6 +1,6 @@
 <template>
-  <div class="screen-assets-deposit assets-deposit">
-    <head-bar title="Deposit" />
+  <panel-view class="screen-assets-deposit assets-deposit">
+    <head-bar title="Deposit" @back="destroy" />
 
     <deposit-currency-picker :currency="currency" @click="open_search_screen" />
     <deposit-address-box
@@ -8,7 +8,7 @@
       :deposit_address="deposit_address"
     />
     <deposit-notice :currency="currency" />
-  </div>
+  </panel-view>
 </template>
 
 <script lang="ts">
@@ -30,11 +30,10 @@ import { Mixins, Component } from "vue-property-decorator";
 export default class DepositScreen extends Mixins(ScreenMixin) {
   loading = false;
   deposit_address = "NCJTG2MSZCS5KI4YJRLQATOKQNTC4NMUWQ5EBMXN";
+  currency = store.state.public.currencies[0];
 
-  get currency() {
-    return store.state.public.currencies.find(
-      currency => currency.id == this.$route.params.currency
-    );
+  before_panel_create(currency: ZTypes.Currency) {
+    this.currency = currency;
   }
 
   open_search_screen() {

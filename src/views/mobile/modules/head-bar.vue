@@ -2,7 +2,7 @@
   <action-bar
     class="head-bar"
     :left-disabled="leftDisabled"
-    @back="$router.back()"
+    @back="$emit('back')"
   >
     <div class="center-action">
       <span v-if="loading" class="title loading">

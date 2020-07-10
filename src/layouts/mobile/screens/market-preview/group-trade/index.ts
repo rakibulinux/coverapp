@@ -1,3 +1,3 @@
-import main from "./main.vue";
+import Base from "./base.vue";
 
-export default main;
+export default Base;

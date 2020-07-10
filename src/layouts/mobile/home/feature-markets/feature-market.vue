@@ -1,5 +1,5 @@
 <template>
-  <li class="market" @click="openMarketPreview">
+  <li class="market" @click="$emit('click')">
     <p class="name">{{ market.name.replace("/", " / ") }}</p>
     <p class="last">{{ last }}</p>
     <p :class="['rate', getTrend(price_change_percent)]">
@@ -16,15 +16,6 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 @Component
 export default class FeatureMarket extends Mixins(MarketMixin) {
   @Prop() readonly market!: ZTypes.Market;
-
-  openMarketPreview() {
-    // ZSmartModel.emit("open-market-preview", {
-    //   methods: "setMarket",
-    //   data: this.market
-    // });
-
-    this.$router.push(`/m/markets/preview/${this.market.id}`);
-  }
 
   get ticker() {
     return helpers.getTicker(this.market.id);

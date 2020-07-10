@@ -1,0 +1,190 @@
+.market-preview {
+  .head-bar {
+  }
+  .body-bar {
+    background-color: var(--bg-color);
+    height: calc(100% - 90px);
+    overflow: auto;
+    .ticker-status {
+      display: flex;
+      padding: 8px 10px;
+      font-size: 12px;
+      line-height: 14px;
+      > div {
+        flex: 1;
+      }
+      .left-panel {
+        line-height: 21px;
+        .price {
+          font-size: 20px;
+        }
+        span + span {
+          margin-left: 4px;
+        }
+      }
+      .right-panel {
+      }
+    }
+    .group-chart {
+      position: relative;
+      height: calc(50% + 35px);
+      .head-bar {
+        height: 35px;
+        position: relative;
+        font-size: 14px;
+        line-height: 35px;
+        background-color: var(--bg-card-color);
+
+        .chart-picker {
+          position: relative;
+          display: flex;
+          justify-content: left;
+
+          > .picker {
+            padding: 0;
+            flex: 0;
+            text-align: left;
+            cursor: pointer;
+            .text {
+              padding: 0 10px;
+              display: flex;
+            }
+          }
+          .time-picker {
+            .selected {
+              color: var(--blue-color);
+            }
+            i {
+              margin-left: 6px;
+              font-size: 10px;
+              color: var(--blue-color);
+            }
+            .active i {
+              transform: rotate(180deg);
+            }
+          }
+        }
+      }
+      .charts {
+        position: relative;
+        height: calc(100% - 35px);
+      }
+    }
+    .group-trade {
+      font-size: 14px;
+      //margin-top: 16px;
+      position: relative;
+      .head-bar {
+        background-color: var(--bg-card-color);
+        height: 35px;
+        position: relative;
+        display: flex;
+        justify-content: left;
+        > .picker {
+          line-height: 35px;
+          flex: none;
+          text-align: left;
+          padding: 0 10px;
+        }
+      }
+      .orderbook,
+      .trades {
+        display: flex;
+        padding: 0 10px;
+      }
+
+      .orderbook {
+        .z-table {
+          margin: 0 2px;
+
+          &-content {
+            height: 100%;
+          }
+        }
+
+        .bids {
+          .depth-row {
+            background-position: right center !important;
+          }
+        }
+      }
+
+      .z-table {
+        &-head, &-row {
+          padding: 0;
+        }
+      }
+    }
+  }
+
+  .z-table {
+    width: 100%;
+
+    &-head, &-row {
+      font-size: 10px;
+      font-weight: normal;
+    }
+
+    &-head {
+      height: 30px;
+      line-height: 30px;
+    }
+
+    &-content {
+      height: calc(100% - 30px);
+    }
+
+    &-row {
+      height: 20px;
+      line-height: 20px;
+      border-bottom: 0;
+    }
+  }
+
+  .tab-bar {
+    background-color: var(--bg-head-color);
+    position: fixed;
+    display: block;
+    height: 50px;
+    width: 100%;
+    bottom: 0;
+    padding: 0.43em 12px;
+    > div {
+      &:first-child {
+        float: left;
+      }
+      &:last-child {
+        float: right;
+      }
+      display: inline-block;
+      width: 48%;
+      text-align: center;
+      font-size: 16px;
+      height: 35px;
+      line-height: 34px;
+    }
+  }
+}
+
+.ant-dropdown-kline {
+  left: 10px !important;
+  right: 10px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  .ant-dropdown-menu {
+    color: var(--text-default-color);
+    display: table;
+    box-shadow: none;
+    width: 100%;
+    .ant-dropdown-menu-item {
+      float: left;
+      margin: 0;
+      clear: none;
+      width: 20%;
+      padding: 0;
+      text-align: center;
+      font-size: 12px !important;
+    }
+  }
+}

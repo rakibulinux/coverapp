@@ -2,6 +2,7 @@
   <div
     class="z-table"
     :class="{
+      'z-table-pagination': pagination,
       'z-table-borderable': border,
       'z-table-no-scroll': !scroll,
       'z-table-hoverable': hover,
@@ -71,8 +72,8 @@
     </div>
     <a-pagination
       v-if="pagination && !loading"
+      class="z-table-pagination-content"
       showSizeChanger
-      class="z-table-pagination"
       :current="page"
       :total="total"
       :page-size="pageSize"
@@ -84,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 interface Column {
   title: string;

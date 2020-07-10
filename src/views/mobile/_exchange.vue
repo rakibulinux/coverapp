@@ -89,3 +89,7 @@ export default class Exchange extends Mixins(MarketMixin) {
   }
 }
 </script>
+
+<style lang="less">
+@import "~@/assets/css/views/mobile/exchange";
+</style>
