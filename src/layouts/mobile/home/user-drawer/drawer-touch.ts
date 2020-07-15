@@ -2,6 +2,8 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class DrawerTouch extends Vue {
+  allowTouch!: () => boolean;
+
   destroy?(): void;
   create?(): void;
 
@@ -152,6 +154,7 @@ export default class DrawerTouch extends Vue {
   }
 
   handleMouseMove(event: TouchEvent) {
+    if (!this.allowTouch()) return;
     const drawer_mask = this.drawer_mask();
 
     if (!event.touches) return;

@@ -1,43 +1,70 @@
 <template>
-  <div :style="style">
-    <p
-      v-for="order in depth()"
-      :key="order.price"
-      class="z-table-row depth-row"
-      :style="{
-        backgroundSize:
-          (((order.price * order.amount) / maxTotal) * 100).toFixed(0) +
-          '% 100%'
-      }"
-      @click="on_depth_clicked(order)"
-    >
-      <span
-        :class="['text-left', trendType(side)]"
-        v-text="getPrice(order.price)"
+  <div class="depth" :class="side">
+    <depth-overlay
+      ref="overlay"
+      :market="market"
+      :side="side"
+      :depth="depth()"
+    />
+
+    <a-spin v-if="loading" size="large">
+      <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
+    </a-spin>
+    <div v-else :style="style">
+      <depth-row
+        v-for="(order, index) in depth()"
+        :key="`${side}-${index}`"
+        :side="side"
+        :max-sum="maxSum"
+        :market="market"
+        :order="order"
+        :ref="`depth-row-${index}`"
+        @click="on_depth_clicked(order)"
+        @mouseover="on_depth_hover(side, index)"
+        @mouseleave="on_depth_leave_hover()"
       />
-      <span class="text-right" v-text="getAmount(order.price)" />
-      <span class="text-right" v-text="getVolume(order.price, order.amount)" />
-    </p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import store from "@/store";
+import DepthOverLay from "./depth-overlay.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 
-@Component
+interface MouseEvent {
+  side?: MarketDepth["side"];
+  index?: number;
+  hover: boolean;
+}
+
+@Component({
+  components: {
+    "depth-row": () => import("./depth-row.vue"),
+    "depth-overlay": () => import("./depth-overlay.vue")
+  }
+})
 export default class MarketDepth extends Vue {
   @Prop() readonly side!: "asks" | "bids";
+  @Prop() readonly loading!: boolean;
 
-  whShow = "normal";
+  $refs!: {
+    overlay: DepthOverLay;
+  };
 
-  market = helpers.isMarket();
-  isBid = helpers.isBidSymbol().toUpperCase();
-  isAsk = helpers.isAskSymbol().toUpperCase();
+  get overlay_mouse_event() {
+    return this.$refs["overlay"].mouse_event;
+  }
 
-  get maxTotal() {
+  get market() {
+    const market_id = helpers.isMarket();
+
+    return store.state.public.markets.find(market => market.id == market_id);
+  }
+
+  get maxSum() {
     let total = 0;
     this.depth().forEach(row => {
       total += Number(row.price * row.amount);
@@ -63,28 +90,28 @@ export default class MarketDepth extends Vue {
   }
 
   depth() {
-    const orderbook = store.state.exchange.depth;
-    return orderbook
-      .toArray(this.side)
-      .map(order => {
-        return { price: order.key, amount: order.data };
-      })
-      .filter(order => order.price > 0 && order.amount > 0);
+    let depth = store.state.exchange.depth.toArray(this.side).map(order => {
+      return { price: order.key, amount: order.data };
+    });
+    depth = depth.filter(order => order.price > 0 && order.amount > 0);
+    depth = (this.side === "bids" ? depth : depth.reverse()).splice(0, 50);
+
+    return this.side === "bids" ? depth : depth.reverse();
   }
 
-  trendType(type) {
-    return helpers.trendType(type);
+  orders_best_range(order_price: number) {
+    const orders = store.state.exchange.depth[this.side].orders;
+    const orders_with_range =
+      this.side === "bids"
+        ? orders.getRange(orders.minKey(), order_price, true)
+        : orders.getRange(order_price, orders.maxKey(), true);
+
+    return orders_with_range;
   }
 
   on_depth_clicked(order: { price: number; amount: number }) {
     const price = order.price;
-    let orders_with_range: [number, number][];
-    const orders = store.state.exchange.depth[this.side].orders;
-    if (this.side === "bids") {
-      orders_with_range = orders.getRange(orders.minKey(), order.price, true);
-    } else {
-      orders_with_range = orders.getRange(order.price, orders.maxKey(), true);
-    }
+    const orders_with_range = this.orders_best_range(order.price);
 
     ZSmartModel.emit(
       "depth-click",
@@ -95,16 +122,15 @@ export default class MarketDepth extends Vue {
     );
   }
 
-  getPrice(price: number) {
-    return price.toFixed(helpers.pricePrecision());
+  on_depth_hover(side: MarketDepth["side"], index: number) {
+    const element_hover = this.$refs[`depth-row-${index}`][0].$el;
+    const DOMRect: DOMRect = element_hover.getBoundingClientRect();
+
+    this.$refs["overlay"].create(index, DOMRect);
   }
 
-  getAmount(amount: number) {
-    return amount.toFixed(helpers.amountPrecision());
-  }
-
-  getVolume(price: number, amount: number) {
-    return (price * amount).toFixed(helpers.totalPrecision());
+  on_depth_leave_hover() {
+    this.$refs["overlay"].destroy();
   }
 }
 </script>

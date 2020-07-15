@@ -46,6 +46,7 @@ export default class Trades extends Mixins(MarketMixin) {
       return {
         price: this.getPrice(trade.price),
         amount: this.getAmount(trade.amount),
+        taker_type: trade.taker_type,
         created_at: helpers.getDate(trade.created_at).split(" ")[1]
       };
     });

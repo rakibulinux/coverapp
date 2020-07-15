@@ -144,20 +144,20 @@ dd {
 }
 
 html {
-  background: #171a25;
+  background: var(--bg-color);
   ::-webkit-scrollbar {
     width: 5px;
     height: 10px;
   }
   ::-webkit-scrollbar-track-piece {
-    background-color: rgba(0, 0, 0, 0.2);
-    -webkit-border-radius: 6px;
+    background-color: transparent;
+    border-radius: 6px;
   }
 
   ::-webkit-scrollbar-thumb:vertical {
     height: 5px;
     background-color: $bg-downdown-border-color;
-    -webkit-border-radius: 6px;
+    border-radius: 6px;
   }
 
   ::-webkit-scrollbar-thumb:horizontal {

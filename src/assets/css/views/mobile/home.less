@@ -35,44 +35,63 @@
 
   .feature-markets {
     background: var(--bg-card-color);
+    padding-top: 18px;
     margin-bottom: 8px;
-    padding: 16px 10px;
+
     .swiper-slide {
       display: flex;
     }
-    li {
+
+    &-item {
       flex: 1;
-      float: left;
-      text-align: center;
-      position: relative;
-      &::first-child {
-        padding-left: 16px;
-      }
-      &:not(:last-child)::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        width: 1px;
-        height: 100%;
-        right: 0;
-        background: var(--border-color);
-      }
-      p {
-        line-height: 16px;
-        &.name {
-          color: var(--color-gray);
-        }
-        &.last {
-          line-height: 20px;
-        }
-        &.rate,
-        &.name {
-          font-size: 13px;
+      padding: 0 16px;
+      margin: auto;
+
+      &.more {
+        text-align: right;
+        color: var(--color-gray);
+        i {
+          color: var(--text-default-color);
         }
       }
     }
+
+    &-title {
+      font-size: 8px;
+    }
+
+    &-price {
+      font-size: 14px;
+
+      &-usd {
+        font-size: 8px;
+        color: var(--color-gray);
+      }
+    }
+
     .swiper-pagination {
-      bottom: 2px;
+      position: relative;
+      text-align: center;
+      transition: opacity 0.3s;
+      z-index: 1;
+
+      &-bullet {
+        display: inline-block;
+        background-color: hsla(0, 0%, 100%, 0.2);
+        width: 3px;
+        height: 3px;
+        margin: 0 2px;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+        opacity: 1;
+
+        &-active {
+          background-color: var(--blue-color);
+          width: 10px;
+        }
+      }
     }
   }
 }

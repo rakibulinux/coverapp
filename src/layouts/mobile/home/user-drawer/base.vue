@@ -16,7 +16,7 @@
 <script lang="ts">
 import ZSmartModel from "@zsmartex/z-eventbus";
 import DrawerTouch from "./drawer-touch";
-import { Mixins, Component } from "vue-property-decorator";
+import { Mixins, Component, Prop } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -26,6 +26,8 @@ import { Mixins, Component } from "vue-property-decorator";
   }
 })
 export default class HomePageDrawer extends Mixins(DrawerTouch) {
+  @Prop() readonly allowTouch!: () => boolean;
+
   width = Math.max((window.innerWidth * 0.85).toFixedNumber(0), 300);
   isActive = false;
 

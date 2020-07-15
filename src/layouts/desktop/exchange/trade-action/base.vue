@@ -87,12 +87,12 @@ export default {
     margin: 20px 6px;
     .ant-slider {
       &-rail {
-        background-color: #3b4861 !important;
+        background-color: var(--border-color) !important;
       }
 
       &-dot {
         top: -3px;
-        background-color: #3b4861;
+        background-color: var(--border-color);
         width: 10px;
         height: 10px;
       }
@@ -101,7 +101,7 @@ export default {
         height: 16px;
         width: 16px;
         margin-top: -6px;
-        border: 3px solid;
+        background-color: var(--border-color);
       }
 
       &-track {
@@ -109,20 +109,25 @@ export default {
       }
     }
 
+    &-buy,
+    &-sell {
+      .ant-slider {
+        &-dot {
+          border-color: var(--color-gray) !important;
+        }
+      }
+    }
+
     &-buy {
       .ant-slider {
         &-dot {
-          border: 1px solid var(--bg-color);
           &-active {
             background-color: var(--up-color);
           }
         }
         &-handle {
-          background-color: var(--bg-card-color);
-          border-color: var(--up-color);
-          &:hover {
-            box-shadow: 0 0 0 7px rgba(46, 228, 178, 0.25);
-          }
+          border-color: var(--up-color) !important;
+          &:hover,
           &:focus {
             box-shadow: 0 0 0 7px rgba(46, 228, 178, 0.25);
           }
@@ -133,17 +138,13 @@ export default {
     &-sell {
       .ant-slider {
         &-dot {
-          border: 1px solid var(--bg-color);
           &-active {
             background-color: var(--down-color);
           }
         }
         &-handle {
-          background-color: var(--bg-card-color);
-          border-color: var(--down-color);
-          &:hover {
-            box-shadow: 0 0 0 7px var(--down-bg-color);
-          }
+          border-color: var(--down-color) !important;
+          &:hover,
           &:focus {
             box-shadow: 0 0 0 7px var(--down-bg-color);
           }

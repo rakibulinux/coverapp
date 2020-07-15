@@ -8,7 +8,7 @@
     <feature-markets @click="open_market_preview_screen" />
     <trend-top @click="open_market_preview_screen" />
 
-    <user-drawer ref="user-drawer" />
+    <user-drawer :allowTouch="allowTouch" ref="user-drawer" />
     <screen-search-markets
       ref="screen-search-markets"
       @click="open_market_preview_screen"
@@ -38,6 +38,22 @@ export default class Home extends Mixins(MarketMixin) {
   $refs!: {
     [key: string]: any;
   };
+
+  allowTouch() {
+    if (
+      !this.$refs["screen-search-markets"] ||
+      !this.$refs["screen-market-preview"]
+    )
+      return true;
+
+    if (
+      this.$refs["screen-search-markets"].isActive ||
+      this.$refs["screen-market-preview"].isActive
+    )
+      return false;
+
+    return true;
+  }
 
   open_user_drawer() {
     this.$refs["user-drawer"].create();

@@ -1,4 +1,40 @@
+import isArray from "isarray";
+import isObject from 'isobject';
+
 export default {
+  createCanvas(height, width, parent_element: HTMLElement) {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const pixelRatio = this.getPixelRatio(ctx);
+
+    canvas.height = height * pixelRatio;
+    canvas.width = width * pixelRatio;
+    canvas.style.height = height + "px";
+    canvas.style.width = width + "px";
+
+    ctx.scale(pixelRatio, pixelRatio);
+
+    parent_element.appendChild(canvas);
+
+    return canvas;
+  },
+  resizeCanvas(canvas: HTMLCanvasElement, height: number, width: number, callback?: Function) {
+    const context = canvas.getContext("2d");
+    const pixelRatio = this.getPixelRatio(context);
+
+    context.resetTransform();
+
+    canvas.height = height * pixelRatio;
+    canvas.style.height = height + "px";
+    canvas.style.width = width + "px";
+    canvas.width = width * pixelRatio;
+    canvas.style.height = height + "px";
+    canvas.style.width = width + "px";
+
+    context.scale(pixelRatio, pixelRatio);
+
+    if (typeof callback === "function") callback();
+  },
   getPixelRatio(ctx) {
     const backingStore = ctx.backingStorePixelRatio ||
       ctx.webkitBackingStorePixelRatio ||
@@ -52,8 +88,28 @@ export default {
   },
   clearCanvas(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    //const w = canvas.width;
-    //canvas.width = 1;
-    //canvas.width = w;
+    const w = canvas.width;
+    canvas.width = 1;
+    canvas.width = w;
+  },
+  merge(target, source) {
+    if (!isObject(target) || !isObject(source)) {
+      return;
+    }
+  
+    for (const key in source) {
+      if (Object.prototype.isPrototypeOf.call(target, key)) {
+        const targetProp = target[key];
+        const sourceProp = source[key];
+  
+        if (isObject(sourceProp) && isObject(targetProp) && !isArray(sourceProp) && !isArray(targetProp)) {
+          this.merge(targetProp, sourceProp);
+        } else {
+          if (source[key] || source[key] === 0 || source[key] === false) {
+            target[key] = source[key];
+          }
+        }
+      }
+    }
   }
 };

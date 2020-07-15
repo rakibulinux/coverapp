@@ -27,7 +27,7 @@ export default class DepthChart extends Vue {
   get depth() {
     const SIDE = ["bids", "asks"];
     const depth = store.state.exchange.depth;
-    const data: { buy: DepthData[]; sell: DepthData[] } = { buy: [], sell: [] };
+    const data: Chart["depth_data"] = { buy: [], sell: [] };
 
     for (const side of SIDE) {
       let total = 0;
@@ -58,28 +58,24 @@ export default class DepthChart extends Vue {
 
   mounted() {
     this.chart = new Chart(this.element_id);
+    this.chart.init();
     window.addEventListener("resize", () => {
-      this.chart.resize();
+      //this.chart.resize();
     });
   }
 
   beforeDestroy() {
     window.removeEventListener("resize", () => {
-      this.chart.resize();
+      //this.chart.resize();
     });
-    this.chart.destroy();
+    //this.chart.destroy();
   }
 
   @Watch("depth")
-  onDepthChanged(depth: this["depth"]) {
+  onDepthChanged(depth: Chart["depth_data"]) {
     this.chart.depth_data = depth;
     if (!this.chart.chart_ready && !this.showing) return;
-    this.chart.draw_chart();
-  }
-
-  @Watch("showing")
-  onShowingChanged(showing: boolean) {
-    if (showing) this.chart.draw_chart();
+    this.chart.draw();
   }
 }
 </script>

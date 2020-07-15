@@ -1,11 +1,24 @@
 <template>
-  <li class="market" @click="$emit('click')">
-    <p class="name">{{ market.name.replace("/", " / ") }}</p>
-    <p class="last">{{ last }}</p>
-    <p :class="['rate', getTrend(price_change_percent)]">
-      {{ price_change_percent }}
-    </p>
-  </li>
+  <div class="feature-markets-item" @click="$emit('click')">
+    <div class="feature-markets-title">
+      <span class="feature-markets-name">
+        {{ market.name.replace("/", " / ") }}
+      </span>
+      <span
+        class="feature-markets-change"
+        :class="getTrend(ticker.price_change_percent)"
+      >
+        {{ ticker.price_change_percent }}
+      </span>
+    </div>
+    <div
+      class="feature-markets-price"
+      :class="getTrend(ticker.price_change_percent)"
+    >
+      {{ Number(ticker.last).toLocaleString() }}
+    </div>
+    <div class="feature-markets-price-usd">≈ ${{ last_usd }}</div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -21,16 +34,10 @@ export default class FeatureMarket extends Mixins(MarketMixin) {
     return helpers.getTicker(this.market.id);
   }
 
-  get last() {
-    const ticker = this.ticker;
-
-    return this.getPrice(ticker.last);
-  }
-
-  get price_change_percent() {
-    const ticker = this.ticker;
-
-    return ticker.price_change_percent;
+  get last_usd() {
+    return helpers
+      .getTickerPriceUSD(this.market.id, Number(this.ticker.last))
+      .toLocaleString();
   }
 }
 </script>

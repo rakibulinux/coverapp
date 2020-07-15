@@ -71,4 +71,8 @@ export class MarketMixin extends Vue {
   getTime(time: Date) {
     return helpers.getTime(time);
   }
+
+  trendType(type) {
+    return helpers.trendType(type);
+  }
 }

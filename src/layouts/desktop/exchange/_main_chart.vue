@@ -15,11 +15,6 @@
       </button>
     </div>
     <trading-view-chart v-show="whChart === 'tradingview'" />
-    <depth-chart
-      v-show="whChart === 'depth'"
-      :wrap-height="wrapHeight()"
-      :wrap-width="wrapWidth()"
-    />
   </z-card>
 </template>
 

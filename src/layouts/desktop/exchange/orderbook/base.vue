@@ -13,24 +13,14 @@
         <img :src="item" />
       </div>
     </div>
-    <div class="z-table">
+    <div class="z-table z-table-hoverable">
       <div class="z-table-head">
         <span class="text-left">{{ $t("table.price") }} ({{ isBid }})</span>
         <span class="text-right">{{ $t("table.amount") }} ({{ isAsk }})</span>
         <span class="text-right">{{ $t("table.sum") }} ({{ isBid }})</span>
       </div>
       <div :class="['z-table-content', type + '-type']">
-        <div class="depth asks">
-          <a-spin v-if="loading" size="large">
-            <a-icon
-              slot="indicator"
-              type="loading"
-              style="font-size: 24px"
-              spin
-            />
-          </a-spin>
-          <depth-book v-else side="asks" />
-        </div>
+        <depth-book side="asks" :loading="loading" />
         <div class="ticker-book">
           <div class="now-price" :class="getLastTrend()">
             {{ getLastPrice() }}
@@ -38,23 +28,14 @@
             <span class="change">{{ getChange() }}</span>
           </div>
         </div>
-        <div class="depth bids">
-          <a-spin v-if="loading" size="large">
-            <a-icon
-              slot="indicator"
-              type="loading"
-              style="font-size: 24px"
-              spin
-            />
-          </a-spin>
-          <depth-book v-else side="bids" />
-        </div>
+        <depth-book side="bids" :loading="loading" />
       </div>
     </div>
   </z-card>
 </template>
 
 <script lang="ts">
+import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import book_asks_svg from "@/assets/img/book_asks.svg";
@@ -94,7 +75,7 @@ export default class App extends Vue {
 
   public async get_depth() {
     this.loading = true;
-    await this.$store.dispatch("exchange/getMarketDepth");
+    await store.dispatch("exchange/getMarketDepth");
     this.loading = false;
   }
 
@@ -177,7 +158,6 @@ export default class App extends Vue {
     &-row {
       opacity: 1;
       padding: 0;
-      cursor: pointer;
       overflow: hidden;
 
       span {
@@ -190,9 +170,32 @@ export default class App extends Vue {
       }
 
       &:hover {
-        background-color: var(--selected-bg-color);
+        border-color: var(--border-color) !important;
+        background-color: transparent;
       }
     }
+  }
+
+  .asks {
+    .depth-overlay-mask {
+      bottom: 0;
+    }
+  }
+
+  .asks .depth-row {
+    &:hover {
+      border-top: 1px solid;
+    }
+  }
+
+  .bids .depth-row {
+    &:hover {
+      border-bottom: 1px solid;
+    }
+  }
+
+  .depth-row-hover {
+    background-color: var(--bg-downdown-color) !important;
   }
 
   .ch {

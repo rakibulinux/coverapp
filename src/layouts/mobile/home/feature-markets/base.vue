@@ -15,7 +15,12 @@
         :market="getMarketByName(market_name)"
         @click="$emit('click', getMarketByName(market_name))"
       />
-      <li>More</li>
+      <div
+        class="feature-markets-item more"
+        @click="$router.push('/m/markets')"
+      >
+        More <a-icon type="double-right" />
+      </div>
     </swiper-slide>
     <div slot="pagination" class="swiper-pagination" />
   </swiper>
@@ -35,7 +40,8 @@ export default class FeatureMarkets extends Vue {
   swiperOption = {
     spaceBetween: 0,
     pagination: {
-      el: ".swiper-pagination"
+      el: ".swiper-pagination",
+      clickable: false
     }
   };
 
