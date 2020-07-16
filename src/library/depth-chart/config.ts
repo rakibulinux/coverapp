@@ -23,25 +23,39 @@ export interface yAxisChartConfig {
     display: boolean;
     size: number;
   };
+  tickLine: {
+    color: string;
+    display: boolean;
+    width: number;
+    size: number;
+  };
   tickText: {
     position: "inside" | "outside";
     color: string;
     size: number;
+    baseLine: "top" | "middle" | "bottom";
+    margin: number;
   };
 }
 
 export interface xAxisChartConfig {
-  height: number,
+  height: number;
   axisLine: {
-    color: string
-    display: boolean,
-    size: number
-  },
+    color: string;
+    display: boolean;
+    size: number;
+  };
+  tickLine: {
+    color: string;
+    display: boolean;
+    height: number;
+    size: number;
+  };
   tickText: {
     color: string;
-    size: number
-    margin: number,
-  },
+    size: number;
+    margin: number;
+  };
 }
 
 export interface TooltipConfig {
@@ -53,9 +67,9 @@ export interface TooltipConfig {
     dashValue: [4, 4];
   };
   standard: {
-    size: number
-    color: string
-    bgColor: string
+    size: number;
+    color: string;
+    bgColor: string;
     paddingLeft: number;
     paddingRight: number;
     paddingTop: number;
@@ -63,16 +77,16 @@ export interface TooltipConfig {
   };
   rect: {
     title: {
-      size: number
-      color: string
-      price: string
-      amount: string
-    },
+      size: number;
+      color: string;
+      price: string;
+      amount: string;
+    };
     value: {
-      size: number
-      color: string
-    }
-  }
+      size: number;
+      color: string;
+    };
+  };
 }
 
 export interface Config {
@@ -116,9 +130,17 @@ export const default_config: Config = {
       display: true,
       size: 0.5,
     },
+    tickLine: {
+      color: colors["border-color"],
+      display: false,
+      width: 0,
+      size: 0,
+    },
     tickText: {
       position: "inside",
+      baseLine: "bottom",
       color: colors["color-gray"],
+      margin: 0,
       size: 10,
     },
   },
@@ -128,6 +150,12 @@ export const default_config: Config = {
       color: colors["border-color"],
       display: true,
       size: 0.5,
+    },
+    tickLine: {
+      color: colors["border-color"],
+      display: false,
+      height: 0,
+      size: 0,
     },
     tickText: {
       color: colors["color-gray"],
@@ -141,7 +169,7 @@ export const default_config: Config = {
       size: 1,
       color: colors["color-gray"],
       type: "solid", //solid | dash,
-      dashValue: [4, 4]
+      dashValue: [4, 4],
     },
     standard: {
       size: 8,
@@ -162,7 +190,7 @@ export const default_config: Config = {
       value: {
         size: 12,
         color: colors["text-default-color"],
-      }
-    }
-  }
+      },
+    },
+  },
 };

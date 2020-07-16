@@ -1,14 +1,9 @@
 <template>
-  <div id="tradingview_chart">
-    <div id="tv_chart_container" />
-    <loading-page
-      v-if="loading"
-      style="background-color: var(--bg-card-color);"
-    />
-  </div>
+  <div :id="element_id" />
 </template>
 
 <script lang="ts">
+import uuid from "uuid/v4";
 import store from "@/store";
 import DataFeed from "@/library/DataFeed";
 import config from "@/config";
@@ -24,6 +19,8 @@ import { cssjson, charting_library as TradingView } from "@/assets/js";
   }
 })
 export default class TradingViewChart extends Vue {
+  element_id = uuid();
+
   public loading = false;
   public isAsk = helpers.isAskSymbol();
   public isBid = helpers.isBidSymbol();
@@ -33,7 +30,7 @@ export default class TradingViewChart extends Vue {
     symbol: this.symbol,
     datafeed: new DataFeed(store),
     interval: localStorage.getItem("tradingview.resolution") || "15",
-    container_id: "tv_chart_container",
+    container_id: this.element_id,
     library_path: "/charting_library/",
     timezone: config.timeZone,
     locale: "en",
@@ -82,6 +79,10 @@ export default class TradingViewChart extends Vue {
   public studies = [];
   public tvWidget!: TradingView;
 
+  get element() {
+    return document.getElementById(this.element_id);
+  }
+
   get chartType() {
     return Number(localStorage.getItem("tradingview.chartType")) || 1;
   }
@@ -97,9 +98,8 @@ export default class TradingViewChart extends Vue {
   }
 
   public iframe() {
-    return (document.querySelector(
-      "#tv_chart_container iframe"
-    ) as HTMLIFrameElement).contentWindow;
+    return (this.element.querySelector(`iframe`) as HTMLIFrameElement)
+      .contentWindow;
   }
 
   public renderChart() {

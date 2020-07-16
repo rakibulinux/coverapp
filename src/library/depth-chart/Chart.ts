@@ -93,8 +93,8 @@ export class Chart {
     this.gird_chart_panel = new GirdChartPanel(this, this.depth_chart_panel_height, this.depth_chart_panel_width);
     this.depth_chart_panel = new DepthChartPanel(this, this.depth_chart_panel_height, this.depth_chart_panel_width);
     this.mark_chart_panel = new MarkChartPanel(this, this.element.clientHeight, this.depth_chart_panel_width);
-    this.x_axis_chart_panel = new XAxisChartPanel(this, this.depth_chart_panel_width);
-    this.y_axis_chart_panel = new YAxisChartPanel(this, this.depth_chart_panel_height);
+    this.x_axis_chart_panel = new XAxisChartPanel(this, this.element.clientWidth);
+    this.y_axis_chart_panel = new YAxisChartPanel(this, this.element.clientHeight);
   }
 
   draw() {

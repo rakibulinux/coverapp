@@ -23,6 +23,8 @@ export default class DepthChartPanel extends ChartPanel {
       this.width,
       this.parent_element
     );
+    this.canvas.style.position = "absolute";
+    this.canvas.style.left = "0";
 
     this.draw_chart();
     this.chart_ready = true;

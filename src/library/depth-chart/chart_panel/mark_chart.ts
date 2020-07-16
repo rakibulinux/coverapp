@@ -26,7 +26,10 @@ export default class MarkChartPanel extends ChartPanel {
       width,
       this.parent_element
     );
+    this.canvas.style.position = "absolute";
+    this.canvas.style.left = "0";
     this.canvas.style.zIndex = "1";
+
     this.start_event();
     this.chart_ready = true;
   }
@@ -35,34 +38,54 @@ export default class MarkChartPanel extends ChartPanel {
     this.canvas.addEventListener(
       "touchstart",
       (event) => {
-        this.handleMouseMove(event);
+        this.handleTouchMove(event);
       },
       false
     );
     this.canvas.addEventListener(
       "touchend",
       (event) => {
-        this.handleMouseOut();
+        this.handleTouchOut();
       },
       false
     );
     this.canvas.addEventListener(
       "touchcancel",
       (event) => {
-        this.handleMouseOut();
+        this.handleTouchOut();
       },
       false
     );
     this.canvas.addEventListener(
       "touchmove",
       (event) => {
-        this.handleMouseMove(event);
+        this.handleTouchMove(event);
       },
       false
     );
+
+    this.canvas.addEventListener(
+      "mousemove",
+      (event) => {
+        this.handleMouseMove(event);
+      }
+    )
+
+    this.canvas.addEventListener(
+      "mouseout",
+      () => {
+        this.handleMouseOut();
+      }
+    )
   }
 
-  handleMouseMove(event?: TouchEvent) {
+  handleMouseMove(event?: MouseEvent) {
+    const offsetX = event.offsetX;
+
+    this.draw_tooltip(offsetX);
+  }
+
+  handleTouchMove(event?: TouchEvent) {
     if (!event) return;
     if (!event.touches) return;
     if (!event.touches.length) return;
@@ -247,17 +270,18 @@ export default class MarkChartPanel extends ChartPanel {
   }
 
   handleMouseOut() {
-    const width = this.width;
-    const height = this.height;
+    this.destroy_tooltip();
+  }
 
+  handleTouchOut() {
+    this.destroy_tooltip();
+  }
+
+  destroy_tooltip() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.mouseEvent.hover = false;
     this.mouseEvent.offsetX = 0;
-  }
-
-  drawRoundedStandard() {
-    //
   }
 
   drawRoundedRect(

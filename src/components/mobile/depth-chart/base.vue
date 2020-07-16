@@ -6,7 +6,7 @@
 import uuid from "uuid/v4";
 import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
-import { Chart, DepthData } from "./depth-chart";
+import { Chart } from "@/library/depth-chart";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component

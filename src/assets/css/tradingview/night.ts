@@ -2,6 +2,12 @@ import colors from "@/colors";
 
 export default {
   children: {
+    ".chart-page": {
+      children: {},
+      attributes: {
+        "background-color": colors["bg-card-color"] + " !important",
+      }
+    },
     ".chart-page .pane-legend-icon-container svg": {
       children: {},
       attributes: { fill: colors["icon-color"] }

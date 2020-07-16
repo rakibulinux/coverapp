@@ -175,13 +175,20 @@
   }
 }
 
-#main_chart {
+.page-exchange-chart {
   margin-top: 4px;
   height: calc(100% - #{$ticker-status-height + $mine-control-height + 8px});
-  #tradingview_chart,
-  #tradingview_chart > *,
-  #depth_chart {
+
+  &-item {
+    position: absolute;
+    width: 100%;
     height: 100%;
+    background-color: var(--bg-card-color);
+    z-index: 0;
+
+    &-selected {
+      z-index: 1;
+    }
   }
 }
 

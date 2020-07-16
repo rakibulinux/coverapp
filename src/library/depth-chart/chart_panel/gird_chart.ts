@@ -17,6 +17,9 @@ export default class GirdChartPanel extends ChartPanel {
     this.width = width;
 
     this.canvas = utlis.createCanvas(this.height, this.width, this.parent_element);
+    this.canvas.style.position = "absolute";
+    this.canvas.style.left = "0";
+
     this.draw_chart();
     this.chart_ready = true;
   }
@@ -43,7 +46,7 @@ export default class GirdChartPanel extends ChartPanel {
     context.lineWidth = this.config.gird.horizontal.size;
     context.strokeStyle = this.config.gird.horizontal.color;
 
-    for (let count = 1; count <= gird_count; count++) {
+    for (let count = 1; count < gird_count; count++) {
       context.beginPath();
       context.setLineDash(this.config.gird.horizontal.style === "dash" ? this.config.gird.horizontal.dashValue : []);
       context.moveTo(
@@ -64,7 +67,7 @@ export default class GirdChartPanel extends ChartPanel {
     context.lineWidth = this.config.gird.vertical.size;
     context.strokeStyle = this.config.gird.vertical.color;
 
-    for (let count = 1; count <= gird_count; count++) {
+    for (let count = 1; count < gird_count; count++) {
       context.beginPath();
       context.setLineDash(this.config.gird.vertical.style === "dash" ? this.config.gird.vertical.dashValue : []);
       context.moveTo(

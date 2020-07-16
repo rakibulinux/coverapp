@@ -5,7 +5,7 @@
     </div>
     <div class="group-middle">
       <ticker-status />
-      <main-chart />
+      <chart />
       <mine-control />
     </div>
     <div class="group-right">
@@ -30,7 +30,7 @@ import config from "@/config";
   components: {
     "market-list": () => import("@/layouts/desktop/exchange/market-list"),
     "ticker-status": () => import("@/layouts/desktop/exchange/_ticker.vue"),
-    "main-chart": () => import("@/layouts/desktop/exchange/_main_chart.vue"),
+    chart: () => import("@/layouts/desktop/exchange/chart"),
     "mine-control": () =>
       import("@/layouts/desktop/exchange/_mine_control.vue"),
     "order-book": () => import("@/layouts/desktop/exchange/orderbook"),

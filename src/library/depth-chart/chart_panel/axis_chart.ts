@@ -4,7 +4,9 @@ export interface TickConfig {
   x: number;
   y: number;
   height: number;
-  color: string;
+  size: number;
+  tickColor: string;
+  textColor: string;
   font: string;
 }
 
@@ -18,8 +20,9 @@ export default class AxisChartPanel extends ChartPanel {
     config: TickConfig
   ) {
     context.beginPath();
-    context.lineWidth = 1;
-    context.fillStyle = context.strokeStyle = config.color;
+    context.lineWidth = config.size;
+    context.fillStyle = config.textColor;
+    context.strokeStyle = config.tickColor;
 
     if (type === "vertical") {
       context.moveTo(config.x, config.y);

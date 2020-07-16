@@ -18,12 +18,15 @@ export default class YAxisChartPanel extends AxisChartPanel {
     this.height = height;
 
     this.canvas = utlis.createCanvas(this.height, this.width, this.parent_element);
+    this.canvas.style.position = "absolute";
+    this.canvas.style[this.config.yAxis.tickText.position === "outside" ? "right" : "left"] = "0";
+
     this.chart_ready = true;
   }
 
   draw_chart() {
     const context = this.context;
-    const height = this.height;
+    const height = this.height - this.config.xAxis.height;
 
     if (this.has_paint) context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     context.font = `${this.config.yAxis.tickText.size}px Arial`;
@@ -42,23 +45,28 @@ export default class YAxisChartPanel extends AxisChartPanel {
   }
 
   draw_ticks(context: CanvasRenderingContext2D, height: number) {
-    const gird_count = 4;
+    const gird_count = this.gird_count;
 
-    for (let i = 0; i < gird_count + 1; i++) {
-      const x = 2;
+    for (let i = 0; i <= gird_count; i++) {
+      const x = this.config.yAxis.tickText.margin;
       const y = height - (height / gird_count) * i;
-      if (y <= 10) {
+
+      if (y <= this.config.yAxis.tickText.size) {
         context.textBaseline = "top";
       } else {
-        context.textBaseline = "bottom";
+        context.textBaseline = this.config.yAxis.tickText.baseLine;
       }
+
       const tickConfig = {
         x: 0,
         y: y,
-        height: 0,
-        color: this.config.yAxis.tickText.color,
+        height: this.config.yAxis.tickLine.width,
+        size: this.config.yAxis.tickLine.size,
+        tickColor: this.config.yAxis.tickLine.color,
+        textColor: this.config.yAxis.tickText.color,
         font: `${this.config.yAxis.tickText.size}px Arial`,
       };
+
       this.render_tick(
         context,
         x,
