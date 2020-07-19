@@ -9,7 +9,7 @@
     >
       <header-exchange v-if="!isMobile" />
       <router-view />
-      <auth-login-screen ref="auth-login-screen" />
+      <auth-login-screen v-if="isMobile" ref="auth-login-screen" />
       <tab-bar v-if="isMobile" />
 
       <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
@@ -71,16 +71,17 @@ export default class App extends Vue {
   }
 
   mounted() {
-    const isMobileRouter = location.pathname.includes("/m");
+    this.setTheme();
+
+    const isMobileRouter = this.$route.meta.mobile;
     if (this.isMobile && !isMobileRouter) {
       this.$router.push("/m");
     }
-    this.setTheme();
-    ZSmartModel.on("need-login", (callback?: Function) => {
-      this.$refs["auth-login-screen"].create(callback);
-    });
+    if (isMobileRouter) {
+      ZSmartModel.on("need-login", (callback?: Function) => {
+        this.$refs["auth-login-screen"].create(callback);
+      });
 
-    if (this.isMobile) {
       history.pushState(null, document.title, location.href);
       window.addEventListener("popstate", function(event) {
         history.pushState(null, document.title, location.href);
