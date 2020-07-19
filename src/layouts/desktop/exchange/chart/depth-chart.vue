@@ -48,6 +48,8 @@ export default class DepthChart extends Vue {
   mounted() {
     this.chart = new Chart(this.element_id);
 
+    this.chart.config.chart.strokeSize = 2;
+
     this.chart.config.xAxis.height = 30;
     this.chart.config.xAxis.axisLine.size = 1;
     this.chart.config.xAxis.tickText.size = 12;
