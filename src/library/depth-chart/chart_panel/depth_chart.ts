@@ -113,7 +113,7 @@ export default class DepthChartPanel extends ChartPanel {
       });
     });
 
-    context.lineWidth = 1;
+    context.lineWidth = this.config.chart.strokeSize;
     context.strokeStyle = this.config.chart[`${side}StrokeColor`];
     context.lineTo(side === "buy" ? 0 : width + gap, y);
     context.lineTo(side === "buy" ? -gap : width + gap, height);

@@ -7,6 +7,7 @@ export interface ChartConfig {
   sellStrokeColor: string;
   buyFillColor: string;
   sellFillColor: string;
+  strokeSize: number;
 }
 
 export interface GirdConfig {
@@ -108,6 +109,7 @@ export const default_config: Config = {
     sellStrokeColor: colors["down-color"],
     buyFillColor: colors["up-bg-color"],
     sellFillColor: colors["down-bg-color"],
+    strokeSize: 1,
   },
   gird: {
     horizontal: {

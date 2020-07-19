@@ -42,6 +42,7 @@ export default class YAxisChartPanel extends AxisChartPanel {
     context.moveTo(0, 0);
     context.lineTo(0, height + 1);
     context.stroke();
+    context.closePath();
   }
 
   draw_ticks(context: CanvasRenderingContext2D, height: number) {
