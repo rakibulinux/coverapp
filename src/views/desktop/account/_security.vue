@@ -5,11 +5,7 @@
     </div>
     <div class="setting-body">
       <table class="table">
-        <tr
-          v-for="(data, index) in $store.getters['user/getAccountSecurity']"
-          :key="index"
-          class="row"
-        >
+        <tr v-for="(data, index) in account_security" :key="index" class="row">
           <td class="name" v-html="data.name" />
           <td class="desc" v-html="data.desc" />
           <td class="action">

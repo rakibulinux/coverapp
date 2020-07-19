@@ -1,3 +1,4 @@
+import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import { ActionTree } from "vuex";
 
@@ -7,6 +8,7 @@ const actions: ActionTree<any, RootState> = {
 
     (global as any).store = store;
     (global as any).helpers = helpers;
+    (global as any).ApiClient = ApiClient;
 
     return Promise.all([
       dispatch("user/getLogged"),
