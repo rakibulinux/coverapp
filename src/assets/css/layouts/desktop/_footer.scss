@@ -2,8 +2,8 @@
   min-width: 1200px;
   padding: 0 10px;
   font-size: 14px;
-  color: $footer-text-color;
-  background: $bg-color;
+  color: var(--footer-text-color);
+  background: transparent;
   .menu-footer {
     display: flex;
     padding-top: 30px;

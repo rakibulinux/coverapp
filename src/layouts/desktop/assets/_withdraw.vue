@@ -165,3 +165,9 @@ export default {
   }
 };
 </script>
+
+<style lang="less">
+.assets-withdraw {
+  padding: 20px 0;
+}
+</style>

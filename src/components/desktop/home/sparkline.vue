@@ -1,31 +1,32 @@
 <template>
-  <div class="svg-box">
-    <svg ref="svg" width="226" height="50" stroke-width="1" />
-  </div>
+  <div class="svg-box" />
 </template>
 
 <script>
-import { sparkline } from "@/assets/js";
+import colors from "@/colors";
+import sparkline from "@/library/sparkline";
 
 export default {
   props: {
     data: Array
   },
   mounted() {
-    const element = this.$refs["svg"];
-
-    sparkline(element, this.data);
-    /*$().sparkline(this.data, {
-      type: "line",
-      width: "100%",
-      height: "100%",
-      spotRadius: "0",
-      lineColor: "#2d3b5f",
-      disableHighlight: true,
-      disableInteraction: true,
-      fillColor: "#202d4c",
-      disableTooltips: true
-    });*/
+    this.$nextTick(() => {
+      sparkline(this.$el, {
+        values: this.data,
+        width: this.$el.clientWidth,
+        height: this.$el.clientHeight,
+        lineWidth: 1,
+        spotColor: "transparent",
+        highlightSpotColor: "transparent",
+        highlightLineColor: "transparent",
+        minSpotColor: "transparent",
+        maxSpotColor: "transparent",
+        lineColor: colors["blue-dark-color"],
+        fillColor: colors["bg-card-head-color"],
+        borderColor: "transparent"
+      });
+    });
   }
 };
 </script>

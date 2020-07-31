@@ -42,10 +42,6 @@ import config from "@/config";
 export default class Exchange extends Vue {
   identifier = 0;
 
-  beforeCreate() {
-    store.dispatch("exchange/getMarketTrades");
-  }
-
   mounted() {
     this.onLoad();
     ZSmartModel.on("exchange-render", this.forceRerender);
@@ -58,14 +54,9 @@ export default class Exchange extends Vue {
   forceRerender(new_market, old_market) {
     this.$nextTick(async () => {
       this.identifier += 1;
-      await this.removeLoad(old_market);
-      await this.LoadData();
-      await this.onLoad();
+      this.removeLoad(old_market);
+      this.onLoad();
     });
-  }
-
-  LoadData() {
-    store.dispatch("exchange/getMarketTrades");
   }
 
   removeLoad(market) {
@@ -78,10 +69,9 @@ export default class Exchange extends Vue {
 
   onLoad() {
     this.setTitle();
+    store.state.exchange.depth.clear();
 
-    const channels = MarketChannels();
-
-    channels.forEach(channel => {
+    MarketChannels().forEach(channel => {
       store.commit("websocket/subscribe", channel);
     });
   }

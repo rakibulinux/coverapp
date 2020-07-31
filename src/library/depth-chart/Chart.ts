@@ -102,4 +102,20 @@ export class Chart {
     this.x_axis_chart_panel.draw_chart();
     this.y_axis_chart_panel.draw_chart();
   }
+
+  resize() {
+    this.gird_chart_panel.resize(this.depth_chart_panel_height, this.depth_chart_panel_width);
+    this.depth_chart_panel.resize(this.depth_chart_panel_height, this.depth_chart_panel_width);
+    this.mark_chart_panel.resize(this.element.clientHeight, this.depth_chart_panel_width);
+    this.x_axis_chart_panel.resize(this.element.clientWidth);
+    this.y_axis_chart_panel.resize(this.element.clientHeight);
+  }
+
+  destroy() {
+    this.gird_chart_panel.destroy();
+    this.depth_chart_panel.destroy();
+    this.mark_chart_panel.destroy();
+    this.x_axis_chart_panel.destroy();
+    this.y_axis_chart_panel.destroy();
+  }
 }

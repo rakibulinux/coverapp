@@ -27,6 +27,14 @@ export default class XAxisChartPanel extends AxisChartPanel {
     this.chart_ready = true;
   }
 
+  resize(width: number) {
+    this.width = width;
+
+    utlis.resizeCanvas(this.canvas, this.height, width);
+
+    this.draw_chart();
+  }
+
   draw_chart() {
     const context = this.context;
     const width =
@@ -81,6 +89,8 @@ export default class XAxisChartPanel extends AxisChartPanel {
     const Divisor = Math.ceil(length / gird_count * 2);
     let x = 0;
 
+    context.textAlign = "center";
+
     for (let i = 0; i < data.length; i++) {
       const item = data[i];
 
@@ -92,23 +102,19 @@ export default class XAxisChartPanel extends AxisChartPanel {
       const textWidth = Math.floor(context.measureText(text).width);
 
       if (type === "sell") {
-        x = equalWidth + i * scaleW - textWidth / 2 + gap;
+        x = equalWidth + i * scaleW;
       } else {
-        x = equalWidth - i * scaleW - textWidth / 2 - gap;
+        x = equalWidth - i * scaleW;
       }
 
       if (x + textWidth >= width) {
-        x = width - textWidth - 5;
+        x = width - textWidth / 2 - 5;
       } else if (x < textWidth) {
-        x = 5;
+        x = textWidth / 2 + 5;
       } else if (type === "buy" && i === 0) {
-        context.textAlign = "right";
-        x = equalWidth - gap;
+        x = equalWidth - gap - textWidth / 2;
       } else if (type === "sell" && i === 0) {
-        context.textAlign = "right";
-        x = equalWidth + gap + textWidth;
-      } else {
-        context.textAlign = "left";
+        x = equalWidth + gap + textWidth / 2;
       }
 
       const tickConfig = {

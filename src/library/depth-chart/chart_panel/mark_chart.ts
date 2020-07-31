@@ -34,6 +34,13 @@ export default class MarkChartPanel extends ChartPanel {
     this.chart_ready = true;
   }
 
+  resize(height: number, width: number) {
+    this.height = height - this.config.xAxis.height;
+    this.width = width;
+
+    utlis.resizeCanvas(this.canvas, height, width);
+  }
+
   start_event() {
     this.canvas.addEventListener(
       "touchstart",

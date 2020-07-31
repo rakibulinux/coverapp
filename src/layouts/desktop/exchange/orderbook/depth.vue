@@ -7,10 +7,7 @@
       :depth="depth()"
     />
 
-    <a-spin v-if="loading" size="large">
-      <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
-    </a-spin>
-    <div v-else :style="style">
+    <div :style="style">
       <depth-row
         v-for="(order, index) in depth()"
         :key="`${side}-${index}`"
@@ -48,7 +45,6 @@ interface MouseEvent {
 })
 export default class MarketDepth extends Vue {
   @Prop() readonly side!: "asks" | "bids";
-  @Prop() readonly loading!: boolean;
 
   $refs!: {
     overlay: DepthOverLay;

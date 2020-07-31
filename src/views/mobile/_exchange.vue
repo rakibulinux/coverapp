@@ -73,11 +73,11 @@ export default class Exchange extends Mixins(MarketMixin) {
 
   onLoad() {
     this.setTitle();
+    store.state.exchange.depth.clear();
 
     MarketChannels(this.market.id).forEach(channel => {
       store.commit("websocket/subscribe", channel);
     });
-    store.dispatch("exchange/getMarketDepth");
   }
 
   setTitle() {

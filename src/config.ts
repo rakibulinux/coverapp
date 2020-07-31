@@ -12,16 +12,9 @@ export default {
     const quote_unit = "USDT";
     return base_unit + "_" + quote_unit;
   },
-  /*
-  feature_markets: ["BTC/ZAR", "BCH/BTC", "ETH/BTC", "DASH/BTC", "LTC/BTC"],
-  list_bid1: ["BTC", "ZAR", "USD"],
-  list_bid2: ["ETH", "USDT"],
-  */
-  "feature_markets": ["ETH/USDT", "ZIPT/ETH", "ETH/USDT", "ZIPT/ETH", "TST/ETH"],
+  "feature_markets": ["ETH/USDT", "BTC/USDT", "ZIPT/ETH", "ETH/USDT", "TST/ETH"],
   "list_bid1": ["ETH", "BTC", "USDT"],
   "list_bid2": ["ZIPT", "TST"],
-  "default_selected_market": "ETH",
-  "topMarket": "BTC",
   "messages": {
     en,
     vn,

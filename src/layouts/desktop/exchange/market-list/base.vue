@@ -57,7 +57,7 @@
           :class="[
             'change',
             `text-${column.algin}`,
-            `text-${getMarketPriceChange(item) >= 0 ? 'up' : 'down'}`
+            `text-${getMarketPriceChange(item.id) >= 0 ? 'up' : 'down'}`
           ]"
         >
           {{ item.price_change_percent }}

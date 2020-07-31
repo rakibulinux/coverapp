@@ -35,10 +35,11 @@ const SetRouterByPath = (path: string, query: Route["query"]) => {
   if (path.includes("/exchange/")) {
     const markets: string[] = store.getters["public/getAllMarkets"].map(row => row.name);
     const market = path.replace("/exchange/", "").split("-");
-    if (!markets.includes(market.join("/"))) return router.push("/exchange");
-
-    store.commit("public/SYNC_EXCHANGE", { market: market.join("_") });
-    router.push("/exchange");
+    if (!markets.includes(market.join("/"))) {
+      return router.push("/exchange");
+    } else {
+      store.commit("public/SYNC_EXCHANGE", { market: market.join("_") });
+    }
   } else if (path === "/confirmation") {
     switch (Object.keys(query)[0]) {
       case "confirmation_email": {
@@ -67,7 +68,9 @@ router.beforeEach(async (to, from, next) => {
 
   SetRouterByPath(to.path, to.query);
 
-  if (to.matched.some(record => record.meta.guest) && helpers.authStatus() === "active") {
+  if (helpers.isMobile() && !to.matched.some(record => record.meta.mobile)) {
+    next("/m");
+  } else if (to.matched.some(record => record.meta.guest) && helpers.authStatus() === "active") {
     next("/account/security");
   } else if (to.matched.some(record => record.meta.requiresAuth) && !helpers.isAuth()) {
     if (helpers.isMobile()) {

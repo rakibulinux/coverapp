@@ -20,7 +20,7 @@
         <span class="text-right">{{ $t("table.sum") }} ({{ isBid }})</span>
       </div>
       <div :class="['z-table-content', type + '-type']">
-        <depth-book side="asks" :loading="loading" />
+        <depth-book side="asks" />
         <div class="ticker-book">
           <div class="now-price" :class="getLastTrend()">
             {{ getLastPrice() }}
@@ -28,7 +28,7 @@
             <span class="change">{{ getChange() }}</span>
           </div>
         </div>
-        <depth-book side="bids" :loading="loading" />
+        <depth-book side="bids" />
       </div>
     </div>
   </z-card>
@@ -67,16 +67,6 @@ export default class App extends Vue {
 
   get isAsk() {
     return helpers.isAskSymbol().toUpperCase();
-  }
-
-  public mounted() {
-    this.get_depth();
-  }
-
-  public async get_depth() {
-    this.loading = true;
-    await store.dispatch("exchange/getMarketDepth");
-    this.loading = false;
   }
 
   public getLastTrend() {

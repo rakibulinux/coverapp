@@ -24,6 +24,14 @@ export default class YAxisChartPanel extends AxisChartPanel {
     this.chart_ready = true;
   }
 
+  resize(height: number) {
+    this.height = height;
+
+    utlis.resizeCanvas(this.canvas, height, this.width);
+
+    this.draw_chart();
+  }
+
   draw_chart() {
     const context = this.context;
     const height = this.height - this.config.xAxis.height;

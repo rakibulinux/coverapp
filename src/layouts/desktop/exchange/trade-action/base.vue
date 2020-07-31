@@ -101,6 +101,7 @@ export default {
         height: 16px;
         width: 16px;
         margin-top: -6px;
+        border-width: 3px;
         background-color: var(--border-color);
       }
 

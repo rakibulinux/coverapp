@@ -30,6 +30,15 @@ export default class DepthChartPanel extends ChartPanel {
     this.chart_ready = true;
   }
 
+  resize(height: number, width: number) {
+    this.height = height;
+    this.width = width;
+
+    utlis.resizeCanvas(this.canvas, height, width);
+
+    this.draw_chart();
+  }
+
   draw_chart() {
     const context = this.context;
     const height = this.height;
@@ -98,12 +107,7 @@ export default class DepthChartPanel extends ChartPanel {
         x = width - 2;
       }
 
-      // if (this.jagged) {
-      //   context.lineTo(x, lastPoint.y);
-      // }
-
       context.lineTo(x, y);
-      //const lastPoint = { x, y };
 
       callback({
         x,
@@ -115,8 +119,8 @@ export default class DepthChartPanel extends ChartPanel {
 
     context.lineWidth = this.config.chart.strokeSize;
     context.strokeStyle = this.config.chart[`${side}StrokeColor`];
-    context.lineTo(side === "buy" ? 0 : width + gap, y);
-    context.lineTo(side === "buy" ? -gap : width + gap, height);
+    context.lineTo(side === "buy" ? -1 : width + 1, y);
+    context.lineTo(side === "buy" ? -1 : width + 1, height);
     //context.lineTo(side === "buy" ? equalWidth - gap : equalWidth + gap, height);
     context.stroke();
     context.fill();

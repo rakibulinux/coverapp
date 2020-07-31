@@ -40,4 +40,10 @@ export default class ChartPanel {
   get context() {
     return utlis.getContext2D(this.canvas);
   }
+
+  destroy() {
+    this.chart_ready = false;
+
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
 }

@@ -62,9 +62,9 @@ export default class MarketPreviewScreen extends Mixins(
 
   before_panel_create(market: ZTypes.Market) {
     this.market = market;
+    store.state.exchange.depth.clear();
 
     this.setTitle();
-    store.dispatch("exchange/getMarketDepth", this.market.id);
     store.dispatch("exchange/getMarketTrades", this.market.id);
 
     const channels = MarketChannels(this.market.id);

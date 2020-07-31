@@ -24,8 +24,13 @@ export default class GirdChartPanel extends ChartPanel {
     this.chart_ready = true;
   }
 
-  resize() {
-    utlis.resizeCanvas(this.canvas, this.height, this.width);
+  resize(height: number, width: number) {
+    this.height = height;
+    this.width = width;
+
+    utlis.resizeCanvas(this.canvas, height, width);
+
+    this.draw_chart();
   }
 
   draw_chart() {

@@ -3,8 +3,8 @@
     <a-layout
       v-if="isReady"
       :class="{
-        night: this.$route.path === '/exchange',
-        'no-border': this.$route.path === '/exchange'
+        night: $route.path === '/exchange',
+        'no-border': $route.path === '/exchange'
       }"
     >
       <header-exchange v-if="!isMobile" />
@@ -73,18 +73,22 @@ export default class App extends Vue {
   mounted() {
     this.setTheme();
 
-    const isMobileRouter = this.$route.meta.mobile;
-    if (this.isMobile && !isMobileRouter) {
-      this.$router.push("/m");
-    }
-    if (isMobileRouter) {
-      ZSmartModel.on("need-login", (callback?: Function) => {
-        this.$refs["auth-login-screen"].create(callback);
-      });
+    if (this.isMobile) {
+      let first_time = true;
 
-      history.pushState(null, document.title, location.href);
-      window.addEventListener("popstate", function(event) {
+      this.$router.afterEach(() => {
+        if (!first_time) return;
+
+        first_time = false;
+
+        ZSmartModel.on("need-login", (callback?: Function) => {
+          this.$refs["auth-login-screen"].create(callback);
+        });
+
         history.pushState(null, document.title, location.href);
+        window.addEventListener("popstate", () => {
+          history.pushState(null, document.title, location.href);
+        });
       });
     }
   }

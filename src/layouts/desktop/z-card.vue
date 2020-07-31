@@ -3,8 +3,8 @@
     <div class="ant-card-head">
       <div class="ant-card-head-wrapper">
         <div class="ant-card-head-title">
-          <slot name="title" />
           <template>{{ title }}</template>
+          <slot name="title" />
         </div>
         <div class="ant-card-extra">
           <slot name="extra" />
@@ -28,7 +28,7 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class Card extends Vue {
+export default class ZCard extends Vue {
   @Prop() public readonly title!: string;
   @Prop({ default: () => [] }) public readonly tabList!: Array<{
     key: string;

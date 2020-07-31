@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts">
+import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 
@@ -84,7 +85,7 @@ export default class MarketTrades extends Vue {
 
   async get_trades() {
     this.loading = true;
-    await this.$store.dispatch("exchange/getMarketTrades");
+    await store.dispatch("exchange/getMarketTrades");
     this.loading = false;
   }
 

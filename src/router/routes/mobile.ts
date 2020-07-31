@@ -2,6 +2,7 @@ export default [
   {
     path: "/m",
     name: "Mobile",
+    meta: { mobile: true },
     component: () => import("@/views/mobile/_index.vue"),
     children: [
       {
@@ -24,8 +25,5 @@ export default [
         }
       }
     ],
-    meta: {
-      mobile: true,
-    },
   },
 ];

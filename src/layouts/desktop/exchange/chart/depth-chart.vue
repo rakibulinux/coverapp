@@ -5,6 +5,7 @@
 <script lang="ts">
 import store from "@/store";
 import uuid from "uuid/v4";
+import ResizeObserver from "resize-observer-polyfill";
 import { Chart } from "@/library/depth-chart";
 import { Vue, Component, Watch } from "vue-property-decorator";
 
@@ -12,6 +13,8 @@ import { Vue, Component, Watch } from "vue-property-decorator";
 export default class DepthChart extends Vue {
   chart: Chart;
   element_id = uuid();
+  resize_observer: ResizeObserver;
+  limit_depth = 500;
 
   get depth() {
     const SIDE = ["bids", "asks"];
@@ -22,20 +25,17 @@ export default class DepthChart extends Vue {
       let total = 0;
       let depth_by_side =
         side === "bids" ? depth.toArray(side) : depth.toArray("asks").reverse();
-      depth_by_side = depth_by_side.splice(0, 500);
+      depth_by_side = depth_by_side.splice(0, this.limit_depth);
       depth_by_side.forEach(row => {
-        const item = {
-          price: null,
-          volume: null,
-          total: null
-        };
+        if (!row.key || !row.data) return;
 
-        total = Number(total + row.data);
-        item.price = row.key;
-        item.volume = row.data;
-        item.total = total.toFixedNumber(4);
+        total = Number(total + row.data).toFixedNumber(4);
 
-        data[side === "bids" ? "buy" : "sell"].push(item);
+        data[side === "bids" ? "buy" : "sell"].push({
+          price: row.key,
+          volume: row.data,
+          total
+        });
       });
     }
 
@@ -48,6 +48,21 @@ export default class DepthChart extends Vue {
   mounted() {
     this.chart = new Chart(this.element_id);
 
+    this.set_chart_config();
+    this.chart.init();
+
+    this.resize_observer = new ResizeObserver(() => {
+      this.chart.resize();
+    });
+    this.resize_observer.observe(this.$el);
+  }
+
+  beforeDestroy() {
+    this.resize_observer.unobserve(this.$el);
+    this.chart.destroy();
+  }
+
+  set_chart_config() {
     this.chart.config.chart.strokeSize = 2;
 
     this.chart.config.xAxis.height = 30;
@@ -72,7 +87,6 @@ export default class DepthChart extends Vue {
     this.chart.config.tooltip.crosshair.type = "dash";
     this.chart.config.tooltip.crosshair.color = "side";
     this.chart.config.tooltip.crosshair.dashValue = [4, 4];
-    this.chart.init();
   }
 
   @Watch("depth")
