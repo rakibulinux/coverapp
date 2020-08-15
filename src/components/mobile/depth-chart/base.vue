@@ -4,10 +4,10 @@
 
 <script lang="ts">
 import uuid from "uuid/v4";
-import store from "@/store";
+import TradeController from "@/controllers/trade";
 import * as helpers from "@zsmartex/z-helpers";
 import { Chart } from "@/library/depth-chart";
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class DepthChart extends Vue {
@@ -15,6 +15,11 @@ export default class DepthChart extends Vue {
   @Prop() readonly showing!: boolean;
   element_id = uuid();
   chart!: Chart;
+  uuid_callback: string;
+
+  get orderbook() {
+    return TradeController.orderbook;
+  }
 
   get price_precision() {
     return helpers.pricePrecision(this.market_id);
@@ -24,16 +29,16 @@ export default class DepthChart extends Vue {
     return helpers.amountPrecision(this.market_id);
   }
 
-  get depth() {
+  depth() {
     const SIDE = ["bids", "asks"];
-    const depth = store.state.exchange.depth;
     const data: Chart["depth_data"] = { buy: [], sell: [] };
 
     for (const side of SIDE) {
       let total = 0;
-      let depth_by_side =
-        side === "bids" ? depth.toArray(side) : depth.toArray("asks").reverse();
-      depth_by_side = depth_by_side.splice(0, 100);
+      const depth_by_side = this.orderbook.toArray(
+        side as ZTypes.TakerType,
+        100
+      );
       depth_by_side.forEach(row => {
         const item = {
           price: null,
@@ -41,9 +46,9 @@ export default class DepthChart extends Vue {
           total: null
         };
 
-        total = Number(total + row.data);
-        item.price = row.key;
-        item.volume = row.data;
+        total = Number(total + row.amount);
+        item.price = row.price;
+        item.volume = row.amount;
         item.total = total.toFixedNumber(4);
 
         data[side === "bids" ? "buy" : "sell"].push(item);
@@ -62,20 +67,19 @@ export default class DepthChart extends Vue {
     window.addEventListener("resize", () => {
       //this.chart.resize();
     });
+
+    this.uuid_callback = this.orderbook.add_callback(() => {
+      const depth = this.depth();
+
+      this.chart.depth_data = depth;
+      if (!this.chart.chart_ready) return;
+      this.chart.draw();
+    });
   }
 
   beforeDestroy() {
-    window.removeEventListener("resize", () => {
-      //this.chart.resize();
-    });
-    //this.chart.destroy();
-  }
-
-  @Watch("depth")
-  onDepthChanged(depth: Chart["depth_data"]) {
-    this.chart.depth_data = depth;
-    if (!this.chart.chart_ready && !this.showing) return;
-    this.chart.draw();
+    this.orderbook.remove_callback(this.uuid_callback);
+    this.chart.destroy();
   }
 }
 </script>

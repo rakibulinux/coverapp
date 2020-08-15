@@ -115,6 +115,7 @@ export default class SignIn extends Vue {
         captcha_response
       };
       await store.dispatch("user/LOGIN", { payload });
+      helpers.runNotice("success", "Logged in successfully");
       this.loading = false;
     } catch (error) {
       this.loading = false;

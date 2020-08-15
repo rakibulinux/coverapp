@@ -1,5 +1,4 @@
-import store from "@/store";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import TradeController from "@/controllers/trade";
 import * as helpers from "@zsmartex/z-helpers";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -7,26 +6,24 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class MineControlMixin extends Vue {
   @Prop() public readonly type_control!: string;
 
-  public isAsk = helpers.isAskSymbol().toUpperCase();
-  public isBid = helpers.isBidSymbol().toUpperCase();
-  public price_precision = helpers.pricePrecision();
-  public amount_precision = helpers.amountPrecision();
-  public total_precision = helpers.totalPrecision();
+  name!: "open_orders" | "orders_history" | "trades_history";
+
+  isAsk = helpers.isAskSymbol().toUpperCase();
+  isBid = helpers.isBidSymbol().toUpperCase();
+  price_precision = helpers.pricePrecision();
+  amount_precision = helpers.amountPrecision();
+  total_precision = helpers.totalPrecision();
 
   get checkSession() {
     return helpers.isAuth();
   }
-  get isLoading() {
-    return store.getters["exchange/loadingStatus"];
-  }
-  get mine_control_data() {
-    return store.state.exchange.mine_control;
+
+  get loading() {
+    return this.mine_control.loading;
   }
 
-  public mounted() {
-    ZSmartModel.on("mine_control-updated", () => {
-      this.$forceUpdate();
-    });
+  get mine_control() {
+    return TradeController[this.name];
   }
 
   public getDate(time) {

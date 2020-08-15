@@ -1,26 +1,29 @@
 <template>
-  <div :style="style">
-    <p
-      v-for="(order, index) in depth()"
-      :key="index"
-      :style="{
-        backgroundSize:
-          (((order.price * order.amount) / maxTotal) * 100).toFixed(0) +
-          '% 100%'
-      }"
-      class="z-table-row"
-      @click="on_depth_clicked(order)"
-    >
-      <span
-        :class="['text-left', trendType(side)]"
-        v-text="getPrice(order.price)"
-      />
-      <span class="text-right" v-text="getAmount(order.amount)" />
-    </p>
+  <div class="depth" :class="[`depth-${side}`]">
+    <div :style="style">
+      <p
+        v-for="(order, index) in depth()"
+        :key="index"
+        :style="{
+          backgroundSize:
+            (((order.price * order.amount) / maxTotal) * 100).toFixed(0) +
+            '% 100%'
+        }"
+        class="z-table-row"
+        @click="on_depth_clicked(order)"
+      >
+        <span
+          :class="['text-left', trendType(side)]"
+          v-text="getPrice(order.price)"
+        />
+        <span class="text-right" v-text="getAmount(order.amount)" />
+      </p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+import TradeController from "@/controllers/trade";
 import store from "@/store";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
@@ -30,11 +33,17 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 export default class MarketDepth extends Vue {
   @Prop() readonly side!: "asks" | "bids";
 
+  uuid_callback: string;
+
   whShow = "normal";
 
   market = helpers.isMarket();
   isBid = helpers.isBidSymbol().toUpperCase();
   isAsk = helpers.isAskSymbol().toUpperCase();
+
+  get orderbook() {
+    return TradeController.orderbook;
+  }
 
   get maxTotal() {
     let total = 0;
@@ -45,32 +54,26 @@ export default class MarketDepth extends Vue {
     return total;
   }
 
-  mounted() {
-    ZSmartModel.on("update-depth", () => {
-      this.$forceUpdate();
-    });
-  }
-
   get style() {
     return this.side === "bids"
       ? "position: absolute;width: 100%;top: 0;"
       : "position: absolute;width: 100%;bottom: 0;";
   }
 
-  beforeDestroy() {
-    ZSmartModel.remove("update-depth");
+  depth() {
+    const orderbook = this.orderbook;
+    const depth = orderbook.toArray(this.side, 6);
+    return this.side === "bids" ? depth : depth.reverse();
   }
 
-  depth() {
-    const orderbook = store.state.exchange.depth;
-    let depth = orderbook
-      .toArray(this.side)
-      .map(order => {
-        return { price: order.key, amount: order.data };
-      })
-      .filter(order => order.price > 0 && order.amount > 0);
-    depth = (this.side === "bids" ? depth : depth.reverse()).splice(0, 6);
-    return this.side === "bids" ? depth : depth.reverse();
+  mounted() {
+    this.uuid_callback = this.orderbook.add_callback(side => {
+      if (this.side === side) this.$forceUpdate();
+    });
+  }
+
+  beforeDestroy() {
+    this.orderbook.remove_callback(this.uuid_callback);
   }
 
   trendType(type) {
@@ -79,21 +82,27 @@ export default class MarketDepth extends Vue {
 
   on_depth_clicked(order: { price: number; amount: number }) {
     const price = order.price;
-    let orders_with_range: [number, number][];
-    const orders = store.state.exchange.depth[this.side].orders;
+    const orders = this.depth();
+    const index = orders.findIndex(ord => ord.price === order.price);
+    let orders_with_range: { price: number; amount: number }[];
+
+    if (index < 0) return;
+
     if (this.side === "bids") {
-      orders_with_range = orders.getRange(orders.minKey(), order.price, true);
+      orders_with_range =
+        index === 0 ? [orders[0]] : orders.slice(0, index + 1);
     } else {
-      orders_with_range = orders.getRange(order.price, orders.maxKey(), true);
+      orders_with_range =
+        index === orders.length - 1
+          ? [orders[orders.length - 1]]
+          : orders.slice(index, orders.length);
     }
 
-    ZSmartModel.emit(
-      "depth-click",
-      price,
-      orders_with_range
-        .map(order => order[1])
-        .reduce((previousValue, currentValue) => previousValue + currentValue)
-    );
+    const amount = orders_with_range
+      .map(order => order.amount)
+      .reduce((previousValue, currentValue) => previousValue + currentValue);
+
+    ZSmartModel.emit("depth-click", price, amount);
   }
 
   getPrice(price: number) {

@@ -28,17 +28,17 @@
         :class="['z-table-row', 'depth-row']"
       >
         <span v-if="side === 'bids'" class="text-left">
-          {{ getAmount(order.data) }}
+          {{ getAmount(order.amount) }}
         </span>
         <span v-if="side === 'bids'" class="text-right text-up">
-          {{ getPrice(order.key) }}
+          {{ getPrice(order.price) }}
         </span>
 
         <span v-if="side === 'asks'" class="text-left text-down">
-          {{ getPrice(order.key) }}
+          {{ getPrice(order.price) }}
         </span>
         <span v-if="side === 'asks'" class="text-right">
-          {{ getAmount(order.data) }}
+          {{ getAmount(order.amount) }}
         </span>
       </div>
     </div>
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
+import TradeController from "@/controllers/trade";
 import * as helpers from "@zsmartex/z-helpers";
 import { MarketMixin } from "@/mixins/mobile";
 import { Mixins, Component, Prop } from "vue-property-decorator";
@@ -54,27 +54,40 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
 @Component
 export default class Depth extends Mixins(MarketMixin) {
   @Prop() readonly market!: ZTypes.Market;
-  @Prop() readonly side!: "bids" | "asks";
+  @Prop() readonly side!: ZTypes.TakerType;
+
+  uuid_callback: string;
+
+  get orderbook() {
+    return TradeController.orderbook;
+  }
 
   get maxTotal() {
     let total = 0;
     this.depth().forEach(row => {
-      total += Number(row.key * row.data);
+      total += Number(row.price * row.amount);
     });
 
     return total;
   }
 
-  depth() {
-    let depth_by_side = store.state.exchange.depth.toArray(this.side);
-    if (this.side === "asks") {
-      depth_by_side = depth_by_side.reverse();
-    }
-
-    return depth_by_side.splice(0, 15);
+  mounted() {
+    this.uuid_callback = this.orderbook.add_callback(side => {
+      if (this.side === side) this.$forceUpdate();
+    });
   }
 
-  trendType(value: ZTypes.Side) {
+  beforeDestroy() {
+    this.orderbook.remove_callback(this.uuid_callback);
+  }
+
+  depth() {
+    const depth = this.orderbook.toArray(this.side);
+
+    return depth.splice(0, 15);
+  }
+
+  trendType(value: ZTypes.OrderSide) {
     return helpers.trendType(value);
   }
 }

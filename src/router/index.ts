@@ -8,6 +8,14 @@ import routes from "./routes";
 
 Vue.use(Router);
 
+try {
+  const favorites = localStorage.getItem("favorites");
+
+  if (favorites.length) JSON.parse(favorites);
+} catch (error) {
+  localStorage.removeItem("favorites");
+}
+
 let first_route = true;
 
 const router = new Router({

@@ -20,7 +20,7 @@
         <span class="text-right">{{ $t("table.sum") }} ({{ isBid }})</span>
       </div>
       <div :class="['z-table-content', type + '-type']">
-        <depth-book side="asks" />
+        <depth-book ref="depth-asks" side="asks" />
         <div class="ticker-book">
           <div class="now-price" :class="getLastTrend()">
             {{ getLastPrice() }}
@@ -28,14 +28,14 @@
             <span class="change">{{ getChange() }}</span>
           </div>
         </div>
-        <depth-book side="bids" />
+        <depth-book ref="depth-bids" side="bids" />
       </div>
     </div>
   </z-card>
 </template>
 
 <script lang="ts">
-import store from "@/store";
+import TradeController from "@/controllers/trade";
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import book_asks_svg from "@/assets/img/book_asks.svg";
@@ -48,6 +48,10 @@ import book_bids_svg from "@/assets/img/book_bids.svg";
   }
 })
 export default class App extends Vue {
+  $refs!: {
+    [key: string]: any;
+  };
+
   public loading = false;
   public type = "normal";
 
@@ -56,6 +60,10 @@ export default class App extends Vue {
     default: book_avg_svg,
     bids: book_bids_svg
   };
+
+  get orderbook() {
+    return TradeController.orderbook;
+  }
 
   get market() {
     return helpers.isMarket();

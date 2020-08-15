@@ -5,6 +5,7 @@
       :market="market"
       :side="side"
       :depth="depth()"
+      :orders_best_range="orders_best_range"
     />
 
     <div :style="style">
@@ -25,6 +26,7 @@
 </template>
 
 <script lang="ts">
+import TradeController from "@/controllers/trade";
 import store from "@/store";
 import DepthOverLay from "./depth-overlay.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
@@ -46,9 +48,15 @@ interface MouseEvent {
 export default class MarketDepth extends Vue {
   @Prop() readonly side!: "asks" | "bids";
 
+  uuid_callback: string;
+
   $refs!: {
     overlay: DepthOverLay;
   };
+
+  get orderbook() {
+    return TradeController.orderbook;
+  }
 
   get overlay_mouse_event() {
     return this.$refs["overlay"].mouse_event;
@@ -76,31 +84,39 @@ export default class MarketDepth extends Vue {
   }
 
   mounted() {
-    ZSmartModel.on("update-depth", () => {
-      this.$forceUpdate();
+    this.uuid_callback = this.orderbook.add_callback(side => {
+      if (side === this.side) this.$forceUpdate();
     });
   }
 
   beforeDestroy() {
-    ZSmartModel.remove("update-depth");
+    this.orderbook.remove_callback(this.uuid_callback);
   }
 
   depth() {
-    let depth = store.state.exchange.depth.toArray(this.side).map(order => {
-      return { price: order.key, amount: order.data };
-    });
+    let depth = this.orderbook.toArray(this.side);
     depth = depth.filter(order => order.price > 0 && order.amount > 0);
-    depth = (this.side === "bids" ? depth : depth.reverse()).splice(0, 50);
+    depth = depth.splice(0, 50);
 
     return this.side === "bids" ? depth : depth.reverse();
   }
 
   orders_best_range(order_price: number) {
-    const orders = store.state.exchange.depth[this.side].orders;
-    const orders_with_range =
-      this.side === "bids"
-        ? orders.getRange(orders.minKey(), order_price, true)
-        : orders.getRange(order_price, orders.maxKey(), true);
+    const orders = this.depth();
+    const index = orders.findIndex(ord => ord.price === order_price);
+    let orders_with_range: { price: number; amount: number }[];
+
+    if (index < 0) return;
+
+    if (this.side === "bids") {
+      orders_with_range =
+        index === 0 ? [orders[0]] : orders.slice(0, index + 1);
+    } else {
+      orders_with_range =
+        index === orders.length - 1
+          ? [orders[orders.length - 1]]
+          : orders.slice(index, orders.length);
+    }
 
     return orders_with_range;
   }

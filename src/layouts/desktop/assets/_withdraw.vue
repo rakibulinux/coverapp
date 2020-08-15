@@ -123,7 +123,7 @@ export default {
   },
   mounted() {
     if (!this.$store.state.user.otp)
-      helpers.runMessage("warning", this.$t("message.withdraw.enable2fa"));
+      helpers.runNotice("warning", this.$t("message.withdraw.enable2fa"));
   },
   methods: {
     place_all_available() {

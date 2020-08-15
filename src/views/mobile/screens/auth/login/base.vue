@@ -9,7 +9,7 @@
     </head-bar>
 
     <div class="body-bar">
-      <form class="screen-auth-box" @submit.prevent="login">
+      <form class="screen-auth-box" @submit.prevent="login()">
         <div class="screen-auth-logo" />
         <div class="screen-auth-title">
           Log In
@@ -45,7 +45,11 @@
     </div>
 
     <screen-auth-signup ref="screen-auth-signup" />
-    <screen-verify-otp ref="screen-verify-otp" @cancel="need2fa = false" />
+    <screen-verify-otp
+      ref="screen-verify-otp"
+      @submit="login"
+      @cancel="need2fa = false"
+    />
   </panel-view>
 </template>
 
@@ -55,6 +59,7 @@ import { ScreenMixin } from "@/mixins/mobile";
 import { Mixins, Component, Watch } from "vue-property-decorator";
 import AuthMixin from "../mixins";
 import ZSmartModel from "@zsmartex/z-eventbus";
+import * as helpers from "@zsmartex/z-helpers";
 
 @Component({
   components: {
@@ -69,7 +74,7 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   };
 
   loading = false;
-  email = "test@zsmart.tech";
+  email = "demo@zsmart.tech";
   password = "J\\=v<Sfn7>8%W6S6";
   otp_code = "";
   button_rules = ["loading", "email", "password"];
@@ -85,10 +90,6 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   panel_created(callback?: Function) {
     this.$on("login-success", () => {
       if (typeof callback === "function") callback();
-    });
-
-    ZSmartModel.on("wait-email", () => {
-      //TODO: open screen wait email
     });
   }
 
@@ -120,7 +121,9 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
       this.loading = false;
       this.need2fa = false;
 
+      helpers.runNotice("success", "Logged in successfully");
       this.$emit("login-success", "");
+      this.$router.push("/m");
 
       this.$nextTick(() => {
         this.destroy();
@@ -131,7 +134,9 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     }
   }
 
-  login() {
+  login(otp_code?: string) {
+    if (otp_code) this.otp_code = otp_code;
+
     if (this.need2fa) {
       if (this.otp_code.length >= 6) this.callLogin();
     } else {

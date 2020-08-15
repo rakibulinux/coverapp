@@ -1,5 +1,11 @@
 <template>
-  <z-table :columns="COLUMN" :data="trades_data" :hover="false" :border="false">
+  <z-table
+    :columns="COLUMN"
+    :loading="loading"
+    :data="trades_data"
+    :hover="false"
+    :border="false"
+  >
     <template slot="side" slot-scope="{ item, column }">
       <span :class="['side', `text-${column.algin}`, getTrend(item.side)]">
         {{ item.side }}
@@ -29,6 +35,8 @@ import MineControlMixin from "./mixin";
 
 @Component
 export default class TradesHistory extends Mixins(MineControlMixin) {
+  name = "trades_history";
+
   get COLUMN() {
     return [
       { title: this.$t("table.date"), key: "created_at", algin: "left" },
@@ -54,10 +62,16 @@ export default class TradesHistory extends Mixins(MineControlMixin) {
     ];
   }
 
-  get trades_data() {
-    const data = this.mine_control_data.trades_history.data;
+  mounted() {
+    this.mine_control.updated = () => {
+      this.$forceUpdate();
+    };
+  }
 
-    return data.map(order => {
+  get trades_data() {
+    const orders = this.mine_control.trades;
+
+    return orders.map(order => {
       order.created_at = this.getDate(order.created_at);
 
       return order;

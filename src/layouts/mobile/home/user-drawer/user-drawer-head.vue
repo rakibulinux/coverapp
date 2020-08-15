@@ -1,6 +1,16 @@
 <template>
   <div class="user-drawer-head user-info">
-    <div v-if="isAuth" class="user-info-content"></div>
+    <div v-if="isAuth" class="user-info-content">
+      <div class="user-info-avatar">
+        <img src="@/assets/img/avatar.png" />
+      </div>
+
+      <div class="user-info-title">
+        {{ user_info.email }}
+
+        <div class="user-info-description">UID: {{ user_info.uid }}</div>
+      </div>
+    </div>
     <div v-else class="user-info-content" @click="$emit('login-click')">
       <div class="user-info-avatar">
         <img src="@/assets/img/avatar.png" />
@@ -15,32 +25,78 @@
     </div>
 
     <div class="user-info-action-group">
-      <div class="user-info-action">
+      <div
+        v-for="action in actions"
+        :key="action.key"
+        class="user-info-action"
+        @click="onActionClick(action.key)"
+      >
         <div class="user-info-action-icon">
-          <a-icon type="file-protect" />
+          <a-icon :type="action.icon" />
         </div>
-        <div class="user-info-action-content">Security</div>
-      </div>
-      <div class="user-info-action">
-        <div class="user-info-action-icon"><a-icon type="idcard" /></div>
-        <div class="user-info-action-content">KYC</div>
-      </div>
-      <div class="user-info-action">
-        <div class="user-info-action-icon"><a-icon type="solution" /></div>
-        <div class="user-info-action-content">History</div>
+        <div class="user-info-action-content">{{ action.text }}</div>
       </div>
     </div>
+
+    <security-screen ref="security-screen" />
   </div>
 </template>
 
 <script lang="ts">
+import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    "security-screen": () => import("@/views/mobile/screens/security")
+  }
+})
 export default class UserDrawerHead extends Vue {
+  $refs!: {
+    "security-screen": any;
+  };
+
+  actions = [
+    {
+      key: "security",
+      icon: "file-protect",
+      text: "Security"
+    },
+    {
+      key: "kyc",
+      icon: "idcard",
+      text: "KYC"
+    },
+    {
+      key: "history",
+      icon: "solution",
+      text: "History"
+    }
+  ];
+
   get isAuth(): boolean {
     return helpers.isAuth();
+  }
+
+  get user_info() {
+    return store.state.user;
+  }
+
+  onActionClick(key: string) {
+    if (!this.isAuth) {
+      this.$emit("login-click");
+
+      return;
+    }
+
+    switch (key) {
+      case "security":
+        this.$refs["security-screen"].create();
+        break;
+      default:
+        break;
+    }
   }
 }
 </script>

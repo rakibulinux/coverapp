@@ -1,31 +1,62 @@
 <template>
-  <panel-view class="search-markets">
-    <head-bar v-model="search" @cancel="destroy" />
-    <body-bar
-      v-if="search"
-      v-model="search"
-      @click="open_market_preview_screen"
-    />
-  </panel-view>
+  <search-screen
+    class="search-markets"
+    v-model="value"
+    :data="findTickers('search', value)"
+    :head-text="value ? 'Search result' : ''"
+    @click="open_market_preview_screen"
+  >
+    <template v-if="value" slot-scope="{ item }">
+      <span class="text-left name">{{ item.name }}</span>
+      <span class="text-left last">
+        <span class="price" v-text="item.last" />
+        <span class="price-usd">
+          ${{ getTickerPriceUSD(item.id, Number(item.last)) }}
+        </span>
+      </span>
+      <span class="text-right chance">
+        <div
+          :class="[
+            getTrend(item.price_change_percent, true),
+            getTrend(item.price_change_percent, false)
+          ]"
+        >
+          {{ item.price_change_percent }}
+        </div>
+      </span>
+      <span class="text-right favorite-action">
+        <a-icon
+          type="star"
+          :theme="checkFavorite(item.name) ? 'filled' : 'outlined'"
+          @click.stop="addOrRemoveFavorite(item.name)"
+        />
+      </span>
+    </template>
+  </search-screen>
 </template>
 
 <script lang="ts">
-import { ScreenMixin } from "@/mixins/mobile";
+import * as helpers from "@zsmartex/z-helpers";
+import { SearchScreenMixin, MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {
-    "head-bar": () =>
-      import("@/layouts/mobile/screens/search-market/head-bar.vue"),
-    "body-bar": () =>
-      import("@/layouts/mobile/screens/search-market/body-bar.vue")
+    "search-screen": () => import("@/views/mobile/screens/search")
   }
 })
-export default class SearchMarketScreen extends Mixins(ScreenMixin) {
-  search = "";
+export default class SearchMarketScreen extends Mixins(
+  SearchScreenMixin,
+  MarketMixin
+) {
+  value = "";
 
   open_market_preview_screen(market: ZTypes.Market) {
     this.$emit("click", market);
+  }
+
+  getTickerPriceUSD(market: string, price: number) {
+    return helpers.getTickerPriceUSD(market, price);
   }
 }
 </script>

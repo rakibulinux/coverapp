@@ -54,15 +54,15 @@ export default class AssetsRow extends Vue {
   }
 
   get locked() {
-    return this.assets.getLocked();
+    return this.assets.locked;
   }
 
   get available() {
-    return this.assets.getAvailable();
+    return this.assets.available;
   }
 
   get total() {
-    return this.assets.getTotal();
+    return this.assets.total;
   }
 
   get available_usd() {

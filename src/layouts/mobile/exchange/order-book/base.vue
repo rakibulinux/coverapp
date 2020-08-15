@@ -10,13 +10,9 @@
         </span>
       </div>
       <div class="z-table-content">
-        <div class="depth depth-asks">
-          <depth side="asks" />
-        </div>
+        <depth side="asks" />
         <ticker-status />
-        <div class="depth depth-bids">
-          <depth side="bids" />
-        </div>
+        <depth side="bids" />
       </div>
     </div>
   </div>

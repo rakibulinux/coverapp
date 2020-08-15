@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
+import TradeController from "@/controllers/trade";
 import uuid from "uuid/v4";
 import ResizeObserver from "resize-observer-polyfill";
 import { Chart } from "@/library/depth-chart";
-import { Vue, Component, Watch } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class DepthChart extends Vue {
@@ -16,24 +16,31 @@ export default class DepthChart extends Vue {
   resize_observer: ResizeObserver;
   limit_depth = 500;
 
-  get depth() {
+  uuid_callback: string;
+
+  get orderbook() {
+    return TradeController.orderbook;
+  }
+
+  depth() {
     const SIDE = ["bids", "asks"];
-    const depth = store.state.exchange.depth;
+    const orderbook = this.orderbook;
     const data: Chart["depth_data"] = { buy: [], sell: [] };
 
     for (const side of SIDE) {
       let total = 0;
-      let depth_by_side =
-        side === "bids" ? depth.toArray(side) : depth.toArray("asks").reverse();
-      depth_by_side = depth_by_side.splice(0, this.limit_depth);
+      const depth_by_side = orderbook.toArray(
+        side as "asks" | "bids",
+        this.limit_depth
+      );
       depth_by_side.forEach(row => {
-        if (!row.key || !row.data) return;
+        if (!row.price || !row.amount) return;
 
-        total = Number(total + row.data).toFixedNumber(4);
+        total = Number(total + row.amount).toFixedNumber(4);
 
         data[side === "bids" ? "buy" : "sell"].push({
-          price: row.key,
-          volume: row.data,
+          price: row.price,
+          volume: row.amount,
           total
         });
       });
@@ -55,9 +62,18 @@ export default class DepthChart extends Vue {
       this.chart.resize();
     });
     this.resize_observer.observe(this.$el);
+
+    this.uuid_callback = this.orderbook.add_callback(() => {
+      const depth = this.depth();
+
+      this.chart.depth_data = depth;
+      if (!this.chart.chart_ready) return;
+      this.chart.draw();
+    });
   }
 
   beforeDestroy() {
+    this.orderbook.remove_callback(this.uuid_callback);
     this.resize_observer.unobserve(this.$el);
     this.chart.destroy();
   }
@@ -87,13 +103,6 @@ export default class DepthChart extends Vue {
     this.chart.config.tooltip.crosshair.type = "dash";
     this.chart.config.tooltip.crosshair.color = "side";
     this.chart.config.tooltip.crosshair.dashValue = [4, 4];
-  }
-
-  @Watch("depth")
-  onDepthChanged(depth: Chart["depth_data"]) {
-    this.chart.depth_data = depth;
-    if (!this.chart.chart_ready) return;
-    this.chart.draw();
   }
 }
 </script>

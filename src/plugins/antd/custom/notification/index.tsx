@@ -52,9 +52,25 @@ function getPlacementStyle(
         bottom: "auto",
       };
       break;
+    case "topCenter":
+      style = {
+        transform: "translateX(-50%)",
+        left: "50%",
+        top,
+        bottom: "auto",
+      };
+      break;
     case "bottomLeft":
       style = {
         left: 0,
+        top: "auto",
+        bottom,
+      };
+      break;
+    case "bottomCenter":
+      style = {
+        transform: "translateX(-50%)",
+        left: "50%",
         top: "auto",
         bottom,
       };
@@ -113,8 +129,7 @@ function notice(args) {
   const { type, message } = args;
   const outerPrefixCls = args.prefixCls || "ant-notification";
   const prefixCls = `${outerPrefixCls}-notice`;
-  const duration =
-    args.duration === undefined ? defaultDuration : args.duration;
+  const duration = args.duration || defaultDuration;
 
   const { placement, top, bottom, getContainer, closeIcon } = args;
   getNotificationInstance(

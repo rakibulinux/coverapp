@@ -9,6 +9,7 @@
     font-size: 10px;
 
     > * {
+      overflow-y: auto;
       scrollbar-width: none;
 
       &::-webkit-scrollbar {
@@ -35,6 +36,44 @@
       font-size: 10px;
       font-weight: 500;
       color: var(--input-placeholder-color);
+    }
+  }
+
+  .ant-notification {
+    width: auto;
+    bottom: 55px !important;
+    margin: 0;
+
+    &-notice {
+      padding: 0;
+      margin-bottom: 8px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+
+      &-content {
+        width: calc(100vw - 32px);
+        text-align: center;
+      }
+
+      &-message {
+        max-width: 100%;
+        word-break: break-word;
+        text-align: left;
+        font-size: 12px;
+
+        padding: 2px 8px;
+        background-color: rgba(255, 255, 255, 0.075);
+        border-radius: 4px;
+      }
+
+      &-close {
+        display: none;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }

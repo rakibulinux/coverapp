@@ -67,7 +67,7 @@ export default class XAxisChartPanel extends AxisChartPanel {
 
     const depth_data = this.depth_data;
 
-    ["buy", "sell"].forEach((type: "buy" | "sell") => {
+    ["buy", "sell"].forEach((type: ZTypes.OrderSide) => {
       if (!depth_data[type].length) return;
 
       this.draw_tick(context, width, depth_data[type], gird_count, type);

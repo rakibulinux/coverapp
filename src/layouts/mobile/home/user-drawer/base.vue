@@ -102,6 +102,7 @@ export default class HomePageDrawer extends Mixins(DrawerTouch) {
     }
 
     &-content {
+      padding: 8px 0;
       width: 100%;
 
       & > * {
@@ -119,13 +120,14 @@ export default class HomePageDrawer extends Mixins(DrawerTouch) {
 
     &-title {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 18px;
       margin-left: 4px;
     }
 
     &-description {
       color: var(--color-gray);
       font-size: 10px;
+      font-weight: normal;
     }
 
     &-action {

@@ -1494,20 +1494,11 @@
   resolved "https://npm.pkg.github.com/download/@zsmartex/klinecharts/5.3.7/c2681bb47059856c8d11b6a188eb407ee232220fa1b9a058916829535376a657#06a7fcbf6d38c90b19d579a49b0d8b42415dc689"
   integrity sha512-VDZgamW2gzyZI7yaPDAI7Fdlm6NACawD3lcmakRG11fJ9rylav/c04COU5goTNfnmLg3VNJgX3c9flJN5uTqzw==
 
-"@zsmartex/z-apiclient@^1.0.2":
-  version "1.0.2"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-apiclient/1.0.2/a86cc6c9cbbff1e338a7a101c73433ab6be8be4629e7b4a079b23c96ee859e29#bb19d63b2c618e52af7bd01e0c3564027521104f"
-  integrity sha512-kN2BiQ67RyIEmqcVcvw+Jt8b5q44XnMRuVadwdd1dx/DGp732MlsNcUJYVh1QRB6GwsHZ/O8Bnd0eMAAuBiBjw==
+"@zsmartex/z-apiclient@^1.0.4":
+  version "1.0.4"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-apiclient/1.0.4/08b8ba4dff8712fbd6f1dc6d989891eecd7080f85f9acbc3bb9ebb2ec0d3862c#bf7b53c0b47582c02bd9e6237fb30ed98eca1057"
+  integrity sha512-fu3sQD8DjxS1y2pebAbgs5GWsweZySlgLpWM7tRPn/HjXSz/+wTQ+53oRIkWP8vT5HPi1m1TnNd+prJUcNnn/Q==
   dependencies:
-    "@zsmartex/z-helpers" "^1.1.5"
-    axios "^0.19.2"
-
-"@zsmartex/z-apiclient@^1.0.3":
-  version "1.0.3"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-apiclient/1.0.3/5723344aba69f541cf38daea3adf09b8cc93ff0afabadc276c9c0d588e2f7881#a642987a0da626406afe9ab6914bf6296cac2a7e"
-  integrity sha512-TGBrjPC+sRBFfpWvssTeuKHcb6BTohsT6B8AiWXirBdop0qaaCOytTs2BilzMbaViFIckqI04ObSd5uVaYPvKg==
-  dependencies:
-    "@zsmartex/z-helpers" "^1.2.10"
     axios "^0.19.2"
 
 "@zsmartex/z-eventbus@^1.0.2":
@@ -1515,45 +1506,26 @@
   resolved "https://npm.pkg.github.com/download/@zsmartex/z-eventbus/1.0.2/d0a1bb947d5aa7b2efadef9ca8263f4ec501768070da1ab099f20149b4863d63#088322806e1e13bdad88b3d864e385d601e80657"
   integrity sha512-sRzTWzh7tcY5epMMCCj8kB32aBsiqiw2hTKVki8/vqj5AMWau6NjNpZLWjQ2vv0o4yZ1ObwGUhOrFTHHFroxRQ==
 
-"@zsmartex/z-helpers@^1.1.5", "@zsmartex/z-helpers@^1.2.5":
-  version "1.2.8"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-helpers/1.2.8/bf9d5db92f0a8e2d618b8aa19bfb2e8f09aa9b6011aca4565ea01d4e749d8f55#eb104b963e627b082826f062f5ca18df45931f70"
-  integrity sha512-MPLHkW0Y47h6DxX2emo1yR4dknmVLkdky1jJZBT6O3drGdLCOOweOOq8scnXm/pRWsAbC9Y0m3l9SFn8lyKAkw==
+"@zsmartex/z-helpers@^1.2.20":
+  version "1.2.20"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-helpers/1.2.20/5e1e6a1bb391781e6140b56385cfc993b327a7766c57e0c5f46dd23da3c5841c#db29508e0512a96e0a0994b51a331ed816f4ee49"
+  integrity sha512-qmt0GdZltqfR93lX/pux/ytOiJHeujuf7F7zt2p9SvSY+Cq8kOpQRlAwLc69FvHGGN/7JE0w6gKVqHhJna4Zlg==
   dependencies:
     "@types/file-saver" "^2.0.1"
-    "@zsmartex/z-types" "^1.0.9"
     file-saver "^2.0.2"
     json-2-csv "^3.6.1"
 
-"@zsmartex/z-helpers@^1.2.10":
-  version "1.2.10"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-helpers/1.2.10/efeb3df128a1f76afcd30adc8a8f33e611c7b75524f523156c27e3fb82e5875f#c279849cd10ac5e744b9e1aded203065ba76008d"
-  integrity sha512-hFAa19ugXrRl/lepQwqmMXlMtGoQ78KtguK6f2mXWi+TOqKiB4bAmsKuhhxFYSL8HdvwnmUZxS1Lkrkico/nKA==
+"@zsmartex/z-store@^2.2.7":
+  version "2.2.7"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-store/2.2.7/71d2419eef252bbaf9d694c75c875fd1be8b22cb1b914656fe1004fff657b968#031fea5fe3d2cf7441f78a8c9a09b112c1fb45a9"
+  integrity sha512-6MN+6Gri8v6b30qRQeVpx0H+yaNQ2RLG1KJrXoeZHjeF145aW9cxoiDDHyMlh/yLqrSCI74tnBMHXi4y/S98WA==
   dependencies:
-    "@types/file-saver" "^2.0.1"
-    "@zsmartex/z-types" "^1.10.3"
-    file-saver "^2.0.2"
-    json-2-csv "^3.6.1"
-
-"@zsmartex/z-store@^2.1.19":
-  version "2.1.19"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-store/2.1.19/19d116db09e4f198c2f3dc50abfd645f3525aac1c9d47a8547cc38234213526b#c01d409a41a24f7058d3f7246d91724ebc8f98d7"
-  integrity sha512-mIhs84PKvKoXedKdcs1Ku+Lv1Q+raegKi0mt8kebhdcr6kl6YT5ksnCaWDZ6zPOugLg6HgYl4zORk0QoDekNcg==
-  dependencies:
-    "@zsmartex/z-apiclient" "^1.0.2"
-    "@zsmartex/z-eventbus" "^1.0.2"
-    "@zsmartex/z-helpers" "^1.2.5"
     sorted-btree "^1.2.1"
 
-"@zsmartex/z-types@^1.0.9":
-  version "1.10.1"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-types/1.10.1/975377324b7232e695226abd90b568b1f1042c812d1b7b0a5d0f7b2cd95f5414#0417217d3cd52964649ee121874edae5f3b65ba1"
-  integrity sha512-lnCYS4PRLmnpifEM7KxryqiolUx9G5HJVMin3hII2YeOHD5SP6DiKVoxI1N1YjEaj0y+JZyzZN8QososRct2eg==
-
-"@zsmartex/z-types@^1.10.3":
-  version "1.10.3"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-types/1.10.3/5890dc6afb9bdb6f74cf5d8faff2d74e55969b616bf0d1065227e6ec4953aa1e#e1da5cd9cc4608dc3126e77a41ac07a57d17d434"
-  integrity sha512-aGQO7tYqtPDI0UVMr++tzTQ9DCakOEtc5q5Vx6Hg3i+S0NiUVzDchvZs1EaROzZeJ5ibK6OrRrz8+6Q29gApLQ==
+"@zsmartex/z-types@^1.10.6":
+  version "1.10.6"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-types/1.10.6/1661a4beda546ed2b81f9a78c55abb0eb2c0311b30a4941cb71d3a5151124514#e1f0810f0bcde2d085ac86a0db388877707edbf1"
+  integrity sha512-iJBCDsbRTC8MmodO3xMgtPnUO5uxsmXiCHJEd82V2i2Yg9ue8TDQOMHIuFUVQNWt+wNh9d4JX+oAky7/fE6vsw==
 
 abbrev@1:
   version "1.1.1"

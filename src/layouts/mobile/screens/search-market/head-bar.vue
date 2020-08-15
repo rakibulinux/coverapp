@@ -1,13 +1,18 @@
 <template>
-  <div class="head-bar">
-    <a-icon type="search" />
-    <input
-      type="text"
-      :value="value"
-      placeholder="Please input Keywords"
-      @input="$emit('input', $event.target.value)"
-    />
-    <span class="cancel" @click="$emit('cancel')">Cancel</span>
+  <div class="search-markets-head">
+    <div class="search-markets-head-input">
+      <a-icon type="search" />
+      <input
+        type="text"
+        :value="value"
+        placeholder="Search"
+        @input="$emit('input', $event.target.value)"
+      />
+      <a-icon v-if="value.length" type="close" />
+    </div>
+    <span class="search-markets-head-action" @click="$emit('cancel')">
+      Cancel
+    </span>
   </div>
 </template>
 

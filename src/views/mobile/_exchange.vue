@@ -4,13 +4,7 @@
       <template v-slot:right>
         <div class="right-action">
           <i
-            v-if="checkFavorite(market.name)"
-            class="ic-star"
-            @click="addOrRemoveFavorite(market.name)"
-          />
-          <i
-            v-else
-            class="ic-no-star"
+            :class="checkFavorite(market.name) ? 'ic-star' : 'ic-no-star'"
             @click="addOrRemoveFavorite(market.name)"
           />
         </div>
@@ -21,7 +15,7 @@
         <trade-action class="group-top-left" />
         <order-book class="group-top-right" />
       </div>
-      <mine-control class="group-bottom" />
+      <mine-control class="group-bottom" :market="market" />
     </div>
   </z-content>
 </template>
@@ -30,6 +24,7 @@
 import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
+import TradeController from "@/controllers/trade";
 import { Mixins, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import { MarketMixin } from "@/mixins/mobile";
@@ -43,8 +38,6 @@ import { MarketMixin } from "@/mixins/mobile";
   }
 })
 export default class Exchange extends Mixins(MarketMixin) {
-  selected = "Buy";
-
   get market() {
     const market_id = helpers.isMarket();
     const { markets } = store.state.public;
@@ -60,11 +53,6 @@ export default class Exchange extends Mixins(MarketMixin) {
     this.onLoad();
   }
 
-  trigger(value) {
-    this.selected = value;
-    this.$router.push("/m/exchange?type=" + value);
-  }
-
   removeLoad() {
     MarketChannels(this.market.id).forEach(channel => {
       store.commit("websocket/unsubscribe", channel);
@@ -73,7 +61,7 @@ export default class Exchange extends Mixins(MarketMixin) {
 
   onLoad() {
     this.setTitle();
-    store.state.exchange.depth.clear();
+    TradeController.orderbook.clear();
 
     MarketChannels(this.market.id).forEach(channel => {
       store.commit("websocket/subscribe", channel);

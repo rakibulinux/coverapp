@@ -2,9 +2,9 @@
   <dl :class="{ selected: showBox }">
     <span class="coin">{{ currency.toUpperCase() }}</span>
     <span class="name">{{ getCurrencyName }}</span>
-    <span class="total">{{ balance.getTotal() }}</span>
-    <span class="available">{{ balance.getAvailable() }}</span>
-    <span class="locked">{{ balance.getLocked() }}</span>
+    <span class="total">{{ balance.total }}</span>
+    <span class="available">{{ balance.available }}</span>
+    <span class="locked">{{ balance.locked }}</span>
     <span class="btc_val">
       {{ balance.getTotalBTC() }}
       <p>≈ {{ balance.getTotalUSD() }} USD</p>
@@ -47,7 +47,7 @@
       />
       <withdraw-box
         v-else-if="type === 'withdraw'"
-        :available="balance.getAvailable()"
+        :available="balance.available"
         :currency="getCurrency"
       />
       <a-spin v-if="loading" size="large">
@@ -99,16 +99,9 @@ export default {
   },
   mounted() {
     ZSmartModel.on("assets-box-open", this.clearShowBox);
-    ZSmartModel.on("balance-update", currency => {
-      if (this.currency.toLowerCase() !== currency) return;
-      this.$nextTick(() => {
-        this.$forceUpdate();
-      });
-    });
   },
   beforeDestroy() {
     ZSmartModel.remove("assets-box-open");
-    ZSmartModel.remove("balance-update");
   },
   methods: {
     clearShowBox() {

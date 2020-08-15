@@ -2,7 +2,7 @@ import isArray from "isarray";
 import isObject from 'isobject';
 
 export default {
-  createCanvas(height, width, parent_element: HTMLElement) {
+  createCanvas(height, width, parent_element: HTMLElement | Element) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     const pixelRatio = this.getPixelRatio(ctx);

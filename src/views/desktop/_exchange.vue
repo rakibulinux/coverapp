@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import TradeController from "@/controllers/trade";
 import { Vue, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
@@ -60,6 +61,7 @@ export default class Exchange extends Vue {
   }
 
   removeLoad(market) {
+    TradeController.orderbook.clear();
     const channels = MarketChannels(market);
 
     channels.forEach(channel => {
@@ -69,7 +71,7 @@ export default class Exchange extends Vue {
 
   onLoad() {
     this.setTitle();
-    store.state.exchange.depth.clear();
+    TradeController.orderbook.clear();
 
     MarketChannels().forEach(channel => {
       store.commit("websocket/subscribe", channel);

@@ -46,20 +46,40 @@
 
     .group-bottom {
       margin-top: 8px;
-      .title {
-        height: 35px;
-        line-height: 35px;
-        padding: 0 12px;
-        border-bottom: 1px solid var(--border-color);
-        .content {
-          font-size: 14px;
-        }
-        .action {
-          font-size: 10px;
-          float: right;
-          cursor: pointer;
-          color: var(--color-gray);
-        }
+    }
+  }
+
+  &-orders {
+    &-head {
+      height: 35px;
+      line-height: 35px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--border-color);
+
+      &-title, &-action {
+        display: inline-block;
+      }
+
+      &-action {
+        font-size: 10px;
+        float: right;
+        cursor: pointer;
+        color: var(--color-gray);
+      }
+    }
+
+    &-content {
+      overflow-y: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
       }
     }
   }

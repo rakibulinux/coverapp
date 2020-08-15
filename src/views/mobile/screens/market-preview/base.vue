@@ -16,7 +16,7 @@
         </div>
       </template>
     </head-bar>
-    <div class="body-bar">
+    <div v-if="panel_ready" class="body-bar">
       <ticker-status :market="market" />
       <group-chart :market="market" />
       <group-trade :market="market" />
@@ -26,6 +26,7 @@
 </template>
 
 <script lang="ts">
+import TradeController from "@/controllers/trade";
 import { Component, Mixins } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import { ScreenMixin, MarketMixin } from "@/mixins/mobile";
@@ -60,24 +61,21 @@ export default class MarketPreviewScreen extends Mixins(
     this.market = store.state.public.markets[0]; // For backup
   }
 
-  before_panel_create(market: ZTypes.Market) {
+  async before_panel_create(market: ZTypes.Market) {
     this.market = market;
-    store.state.exchange.depth.clear();
 
     this.setTitle();
-    store.dispatch("exchange/getMarketTrades", this.market.id);
+    TradeController.orderbook.clear();
 
-    const channels = MarketChannels(this.market.id);
-
-    channels.forEach(channel => {
+    await store.dispatch("exchange/getMarketTrades", this.market.id);
+    MarketChannels(this.market.id).forEach(channel => {
       store.commit("websocket/subscribe", channel);
     });
   }
 
   before_panel_destroy() {
-    const channels = MarketChannels(this.market.id);
-
-    channels.forEach(channel => {
+    TradeController.orderbook.clear();
+    MarketChannels(this.market.id).forEach(channel => {
       store.commit("websocket/unsubscribe", channel);
     });
   }

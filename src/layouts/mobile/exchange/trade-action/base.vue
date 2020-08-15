@@ -4,7 +4,7 @@
       <span
         v-for="(_side, index) in SIDE"
         :key="index"
-        @click="side = _side"
+        @click="change_side(_side)"
         :class="{
           [`bg-${_side === 'buy' ? 'up' : 'down'}`]: side === _side,
           [`text-${_side === 'buy' ? 'up' : 'down'}`]: side !== _side
@@ -21,13 +21,19 @@
     </div>
     <trade-action-input
       v-model="price"
-      :placeholder="`Price(${isBid})`"
+      :placeholder="`Price(${market.quote_unit.toUpperCase()})`"
       :precision="price_precision"
     />
-    <div class="trade-action-estimate">≈ {{ price_with_fiat_unit }} USD</div>
+    <div class="trade-action-estimate">
+      ≈
+      {{
+        amount_to_usd(currency_by_side("buy"), Number(this.price)).toFixed(2)
+      }}
+      USD
+    </div>
     <trade-action-input
       v-model="amount"
-      :placeholder="`Amount(${isAsk})`"
+      :placeholder="`Amount(${market.base_unit.toUpperCase()})`"
       :precision="amount_precision"
     />
     <div class="trade-action-amount-picker">
@@ -38,28 +44,40 @@
     <div class="trade-action-calculate-total">
       Total:
       <span class="trade-action-calculate-total-value">{{ total }}</span>
-      ≈ {{ total_with_fiat_unit }} USD
+      ≈
+      {{
+        amount_to_usd(currency_by_side("buy"), Number(this.price)).toFixed(2)
+      }}
+      USD
     </div>
 
     <div class="trade-action-calculate-fee">
       Fee: <span class="trade-action-calculate-fee-value">{{ fee }}</span>
     </div>
-    <div class="trade-action-button">
+    <div
+      :class="[
+        'trade-action-button',
+        { 'trade-action-button-disabled': button_disabled }
+      ]"
+      @click="create_order"
+    >
       {{
         authorized
-          ? [side === "buy" ? "Buy" : "Sell", isAsk].join(" ")
+          ? [
+              side === "buy" ? "Buy" : "Sell",
+              market.base_unit.toUpperCase()
+            ].join(" ")
           : "Login"
       }}
     </div>
-    <trade-action-balance :currency_id="side === 'buy' ? isBid : isAsk" />
+    <trade-action-balance :currency_id="currency_by_side(side)" />
   </div>
 </template>
 
 <script lang="ts">
-import store from "@/store";
-import * as helpers from "@zsmartex/z-helpers";
+import { TradeActionMixin } from "@/mixins";
 import { Picker } from "cube-ui";
-import { Vue, Component } from "vue-property-decorator";
+import { Mixins, Component } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -67,104 +85,36 @@ import { Vue, Component } from "vue-property-decorator";
     "trade-action-balance": () => import("./trade-action-balance.vue")
   }
 })
-export default class TradeAction extends Vue {
+export default class TradeAction extends Mixins(TradeActionMixin) {
   picker!: Picker;
 
-  side = "buy";
-  ord_type = "limit";
+  side: ZTypes.OrderSide = "buy";
   price = "";
   amount = "";
 
   SIDE = ["buy", "sell"];
-  AMOUNT_PERCENT = [25, 50, 75, 100];
   ORDER_TYPES = [
     { value: "limit", text: "Limit Order" },
     { value: "market", text: "Market Order" }
   ];
 
-  get total() {
-    const price = Number(this.price);
-    const amount = Number(this.amount);
-    const { total_precision } = this;
-
-    return (price * amount).toFixed(total_precision);
+  get AMOUNT_PERCENT() {
+    return Object.keys(this.marks_slider).map(percent => Number(percent));
   }
 
-  get fee() {
-    const ANY = "any";
-    const total = Number(this.total);
-    const { total_precision } = this;
-    const { trading_fees } = store.state.public;
-    const user_role = store.state.user.role;
+  mounted() {
+    const side_by_route = this.$route.query.type;
 
-    const trading_fee =
-      trading_fees.find(trading_fee => {
-        const rule1 = trading_fee.group === user_role;
-        const rule2 =
-          trading_fee.market_id === this.market_id ||
-          trading_fee.market_id === ANY;
-
-        return rule1 && rule2;
-      }) ||
-      trading_fees.find(trading_fee => {
-        return (
-          (trading_fee.group === ANY &&
-            trading_fee.market_id === this.market_id) ||
-          trading_fee.market_id === ANY
-        );
-      });
-
-    return (
-      Number(trading_fee[this.side === "buy" ? "maker" : "taker"]) * total
-    ).toFixed(total_precision);
-  }
-
-  get market_id() {
-    return helpers.isMarket();
-  }
-
-  get isAsk() {
-    return helpers.isAskSymbol().toUpperCase();
-  }
-
-  get isBid() {
-    return helpers.isBidSymbol().toUpperCase();
-  }
-
-  get authorized() {
-    return helpers.isAuth();
-  }
-
-  get price_precision() {
-    return helpers.pricePrecision();
-  }
-
-  get amount_precision() {
-    return helpers.amountPrecision();
-  }
-
-  get total_precision() {
-    return helpers.totalPrecision();
-  }
-
-  get price_with_fiat_unit() {
-    return helpers
-      .getTickerPriceUSD(this.market_id, Number(this.price))
-      .toFixed(2);
-  }
-
-  get total_with_fiat_unit() {
-    return helpers
-      .getTickerPriceUSD(this.market_id, Number(this.total))
-      .toFixed(2);
+    if (side_by_route) {
+      this.side = side_by_route as ZTypes.OrderSide;
+    }
   }
 
   change_side(side) {
-    this.side = side;
-  }
+    if (this.side === side) return;
 
-  change_ord_type(ord_type: string) {
-    this.ord_type = ord_type;
+    this.side = side;
+    this.$router.push(`/m/exchange?type=${side}`);
   }
 
   show_type_picker() {
@@ -358,6 +308,10 @@ export default class TradeAction extends Vue {
     width: 100%;
     text-align: center;
     font-weight: 500;
+
+    &-disabled {
+      cursor: not-allowed;
+    }
   }
 
   &.buy &-button {

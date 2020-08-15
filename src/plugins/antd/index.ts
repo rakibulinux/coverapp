@@ -15,6 +15,7 @@ import {
   Menu,
   Modal,
   Pagination,
+  Progress,
   Select,
   Slider,
   Spin,
@@ -42,5 +43,6 @@ Vue.use(Switch);
 Vue.use(Tabs);
 Vue.use(Slider);
 Vue.use(Drawer);
+Vue.use(Progress);
 Vue.component("z-content", zContent);
 Vue.component("z-card", zCard);

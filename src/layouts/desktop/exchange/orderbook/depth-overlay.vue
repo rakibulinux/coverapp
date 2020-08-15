@@ -29,7 +29,6 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import { MarketMixin } from "@/mixins/mobile";
 import { Mixins, Component, Prop } from "vue-property-decorator";
 
@@ -38,6 +37,12 @@ export default class DepthOverLay extends Mixins(MarketMixin) {
   @Prop() readonly market!: ZTypes.Market;
   @Prop() readonly side!: "asks" | "bids";
   @Prop() readonly depth: { price: number; amount: number }[];
+  @Prop() orders_best_range?: (
+    order_price: number
+  ) => {
+    price: number;
+    amount: number;
+  }[];
 
   $refs!: {
     "overlay-mask": HTMLElement;
@@ -63,20 +68,19 @@ export default class DepthOverLay extends Mixins(MarketMixin) {
 
   get overlayData() {
     const orders_with_range = this.orders_best_range(
-      this.depth[this.mouse_event.index].price,
-      this.side
+      this.depth[this.mouse_event.index].price
     );
 
     const avg_price = this.getPrice(
-      orders_with_range.map(order => order[0]).reduce((a, b) => a + b, 0) /
+      orders_with_range.map(order => order.price).reduce((a, b) => a + b, 0) /
         orders_with_range.length
     );
     const sum_volume = this.getAmount(
-      orders_with_range.map(order => order[1]).reduce((a, b) => a + b, 0)
+      orders_with_range.map(order => order.amount).reduce((a, b) => a + b, 0)
     );
     const sum_total = this.getTotal(
       orders_with_range
-        .map(order => order[0] * order[1])
+        .map(order => order.price * order.amount)
         .reduce((a, b) => a + b, 0)
     );
 
@@ -85,16 +89,6 @@ export default class DepthOverLay extends Mixins(MarketMixin) {
       sum_volume,
       sum_total
     };
-  }
-
-  orders_best_range(order_price: number, side) {
-    const orders = store.state.exchange.depth[side].orders;
-    const orders_with_range =
-      side === "bids"
-        ? orders.getRange(orders.minKey(), order_price, true)
-        : orders.getRange(order_price, orders.maxKey(), true);
-
-    return orders_with_range;
   }
 
   create(index: number, DOMRect: DOMRect) {

@@ -28,9 +28,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import TradeController from "@/controllers/trade";
 import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
+import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -40,6 +41,8 @@ import * as helpers from "@zsmartex/z-helpers";
   }
 })
 export default class MineControl extends Vue {
+  type_control = "open_orders";
+
   get tab_list() {
     return [
       {
@@ -61,47 +64,35 @@ export default class MineControl extends Vue {
     return helpers.isMarket();
   }
 
-  get type_control() {
-    return store.state.exchange.mine_control.type;
-  }
-
-  set type_control(value) {
-    store.state.exchange.mine_control.type = value;
-  }
-
   public mounted() {
-    if (this.$store.state.exchange.mine_control.market === this.market) {
-      return;
-    }
     if (helpers.isAuth()) {
       this.getData();
     }
   }
 
   public getData() {
-    this.$store.dispatch("exchange/getOpenOrders", {
-      state: "wait",
-      market: helpers.isMarket(),
-      size: 100
-    });
-    this.$store.dispatch("exchange/getOrdersHistory", {
-      market: helpers.isMarket(),
-      size: 100
-    });
-    this.$store.dispatch("exchange/getTradesHistory", {
-      market: helpers.isMarket(),
-      size: 100
-    });
+    ["open_orders", "orders_history", "trades_history"].forEach(
+      async (type: "open_orders" | "orders_history" | "trades_history") => {
+        const mine_control = TradeController[type];
+        mine_control.market = this.market;
+
+        mine_control.market = this.market;
+        mine_control.clear();
+        await mine_control.getData();
+
+        mine_control.realtime = true;
+      }
+    );
   }
 
   public cancel_all_order() {
-    this.$store.dispatch("exchange/CANCEL_ALL_ORDER", {
-      market: helpers.isMarket()
+    store.dispatch("exchange/CANCEL_ALL_ORDER", {
+      market: this.market
     });
   }
 
   public onTabChange(type) {
-    store.commit("exchange/SET_MINE_CONTROL_TYPE", type);
+    this.type_control = type;
   }
 
   public translation(message, data = {}) {

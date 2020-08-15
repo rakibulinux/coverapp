@@ -42,6 +42,11 @@ export default class ActionBar extends Vue {
   .center-action {
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+
+    .title {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   .right-action {

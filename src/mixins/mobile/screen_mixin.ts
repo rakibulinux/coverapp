@@ -13,20 +13,35 @@ export class ScreenMixin extends Vue {
   before_panel_destroy?(payload?: any): void;
   panel_destroyed?(payload?: any): void;
 
+  rending_time = 300;
+  panel_rending = false;
+
   private PanelView!: {
     isActive: boolean;
   };
 
-  private get isActive(): boolean {
+  get isActive() {
     if (!this.PanelView) return false;
 
     return this.PanelView.isActive;
   }
 
-  private set isActive(value: boolean) {
+  set isActive(value: boolean) {
     if (!this.PanelView) return;
 
-    this.PanelView.isActive = value;
+    this.panel_rending = true;
+    this.$nextTick(() => {
+      this.PanelView.isActive = value;
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.panel_rending = false;
+        }, this.rending_time);
+      })
+    })
+  }
+
+  get panel_ready() {
+    return !this.panel_rending;
   }
 
   sleep(ms) {
@@ -35,30 +50,40 @@ export class ScreenMixin extends Vue {
 
   create(payload?: any) {
     if (!this.PanelView) throw "PanelView is not ready";
+    if (this.panel_rending) throw "PanelView rending";
     if (typeof this.before_panel_create === "function") {
       this.before_panel_create(payload);
     }
-    this.isActive = true;
-
     this.$nextTick(() => {
-      if (typeof this.panel_created === "function") {
-        this.panel_created(payload);
-      }
+      this.isActive = true;
+
+      this.$nextTick(() => {
+        if (typeof this.panel_created === "function") {
+          setTimeout(() => {
+            this.panel_created(payload);
+          }, this.rending_time);
+        }
+      });
     });
   }
 
   destroy(payload?: any) {
     if (!this.PanelView) throw "PanelView is not ready";
+    if (this.panel_rending) throw "PanelView rending";
     if (typeof this.before_panel_destroy === "function") {
       this.before_panel_destroy(payload);
     }
 
-    this.isActive = false;
-
     this.$nextTick(() => {
-      if (typeof this.panel_destroyed === "function") {
-        this.panel_destroyed(payload);
-      }
+      this.isActive = false;
+
+      this.$nextTick(() => {
+        if (typeof this.panel_destroyed === "function") {
+          setTimeout(() => {
+            this.panel_destroyed(payload);
+          }, this.rending_time);
+        }
+      });
     });
   }
 }

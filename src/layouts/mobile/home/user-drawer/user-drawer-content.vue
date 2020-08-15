@@ -1,6 +1,8 @@
 <template>
   <div class="user-drawer-content">
-    <setting-row :data="{ icon: 'message', text: 'Support' }" />
+    <setting-row icon="message">
+      Support
+    </setting-row>
   </div>
 </template>
 

@@ -52,7 +52,7 @@ export default class Trades extends Mixins(MarketMixin) {
     });
   }
 
-  trendType(value: ZTypes.Side) {
+  trendType(value: ZTypes.OrderSide) {
     return helpers.trendType(value);
   }
 }
