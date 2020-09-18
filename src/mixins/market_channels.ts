@@ -16,7 +16,7 @@ export const MarketChannels = (market: string = helpers.isMarket()) => {
   );
 
   return [
-    "ob-inc",
+    "depth",
     "trades",
     "kline-" + RESOLUTION_STREAM[tradingview_resolution]
   ].map(channel => [market, channel].join("."));

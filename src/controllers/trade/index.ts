@@ -32,7 +32,7 @@ export class TradeController {
 export interface TradeController extends OrdersController, MineControl {
   orderbook: OrderBook;
 }
-applyMixins(TradeController, [OrdersController, MineControl, OrderBook]);
+applyMixins(TradeController, [OrdersController, MineControl]);
 const class_mounted = new TradeController();
 
 export default class_mounted;

@@ -17,7 +17,7 @@
     "@zsmartex/z-apiclient": "^1.0.4",
     "@zsmartex/z-eventbus": "^1.0.2",
     "@zsmartex/z-helpers": "^1.2.20",
-    "@zsmartex/z-store": "^2.2.7",
+    "@zsmartex/z-store": "^2.2.9",
     "@zsmartex/z-types": "^1.10.6",
     "accessible-nprogress": "^2.0.1",
     "ant-design-vue": "^1.6.0",

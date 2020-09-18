@@ -1,11 +1,16 @@
 <template>
   <z-table
     :columns="COLUMN"
-    :loading="loading"
-    :data="orders_data"
+    :loading="mine_control.loading"
+    :data="mine_control.orders"
     :hover="false"
     :border="false"
   >
+    <template slot="created_at" slot-scope="{ item, column }">
+      <span :class="['created_at', `text-${column.algin}`]">
+        {{ getDate(item.created_at) }}
+      </span>
+    </template>
     <template slot="side" slot-scope="{ item, column }">
       <span :class="['side', `text-${column.algin}`, getTrend(item.side)]">
         {{ item.side }}
@@ -38,7 +43,7 @@
         <i
           v-if="item.state === 'wait'"
           class="ic-aui-icon-close"
-          @click="$store.dispatch('exchange/CANCEL_ORDER', data.id)"
+          @click="TradeController.stop_order(item.id)"
         />
       </span>
     </template>
@@ -46,6 +51,7 @@
 </template>
 
 <script>
+import TradeController from "@/controllers/trade";
 import { Component, Mixins } from "vue-property-decorator";
 import MineControlMixin from "./mixin";
 
@@ -55,40 +61,49 @@ export default class OrdersHistory extends Mixins(MineControlMixin) {
 
   get COLUMN() {
     return [
-      { title: this.$t("table.date"), key: "created_at", algin: "left" },
+      {
+        title: this.$t("table.date"),
+        key: "created_at",
+        algin: "left",
+        scopedSlots: true,
+      },
       { title: this.$t("table.type"), key: "ord_type", algin: "left" },
       {
         title: this.$t("table.side"),
         key: "side",
         algin: "left",
-        scopedSlots: true
+        scopedSlots: true,
       },
       {
         title: this.$t("table.price"),
         key: "price",
         algin: "center",
-        scopedSlots: true
+        scopedSlots: true,
       },
       {
         title: `${this.$t("table.amount")} (${this.isAsk})`,
         key: "amount",
         algin: "right",
-        scopedSlots: true
+        scopedSlots: true,
       },
       {
         title: this.$t("table.filled"),
         key: "filled",
         algin: "right",
-        scopedSlots: true
+        scopedSlots: true,
       },
       {
         title: `${this.$t("table.total")} (${this.isBid})`,
         key: "total",
         algin: "right",
-        scopedSlots: true
+        scopedSlots: true,
       },
-      { title: ``, key: "action", algin: "right", scopedSlots: true }
+      { title: ``, key: "action", algin: "right", scopedSlots: true },
     ];
+  }
+
+  get TradeController() {
+    return TradeController;
   }
 
   mounted() {
@@ -100,7 +115,7 @@ export default class OrdersHistory extends Mixins(MineControlMixin) {
   get orders_data() {
     const orders = this.mine_control.orders;
 
-    return orders.map(order => {
+    return orders.map((order) => {
       order.created_at = this.getDate(order.created_at);
 
       return order;

@@ -1,3 +1,4 @@
+import store from "@/store";
 import ApiClient from "@zsmartex/z-apiclient";
 import Vue from "vue";
 
@@ -11,18 +12,56 @@ export default class OrdersManager {
     total: 0,
   };
 
-  // Config
-  market = "All";
   state: ZTypes.OrderState | "All" = "All";
-  ready = false;
-  loading = false;
-  realtime = false;
-  // Data
-  orders = new Array<ZTypes.Order>();
+  type : "open_orders" | "orders_history";
 
-  constructor(market?: string, state?: ZTypes.OrderState | "All") {
-    if (market) this.market = market;
+  constructor(type: OrdersManager["type"], state?: ZTypes.OrderState | "All") {
+    this.type = type;
     if (state) this.state = state;
+  }
+
+  get config() {
+    return store.state.exchange.mine_control["trades_history"].config;
+  }
+
+  get market() {
+    return this.config.market;
+  }
+
+  set market(market: string) {
+    this.config.market = market;
+  }
+
+  get ready() {
+    return this.config.ready;
+  }
+
+  set ready(ready: boolean) {
+    this.config.ready = ready;
+  }
+
+  get loading() {
+    return this.config.loading;
+  }
+
+  set loading(loading: boolean) {
+    this.config.loading = loading;
+  }
+
+  get realtime() {
+    return this.config.realtime;
+  }
+
+  set realtime(realtime: boolean) {
+    this.config.realtime = realtime;
+  }
+
+  get orders() {
+    return store.state.exchange.mine_control[this.type].data;
+  }
+
+  set orders(val) {
+    store.state.exchange.mine_control[this.type].data = val;
   }
 
   async getData(page = this.headers.page, limit = this.headers.limit) {
@@ -43,13 +82,13 @@ export default class OrdersManager {
       this.headers.page = Number(headers.page);
       this.headers.total = Number(headers.total);
       this.headers.limit = Number(headers["per-page"]);
-      this.loading = false;
       this.ready = true;
 
       return { data, headers };
     } catch (error) {
-      this.loading = false;
       return error;
+    } finally {
+      Vue.set(this, "loading", false);
     }
   }
 
@@ -74,11 +113,7 @@ export default class OrdersManager {
     const index = this.findIndex(id);
 
     if (index >= 0) {
-      this.orders.splice(index, 1);
-
-      if (typeof this.updated === "function") {
-        this.updated();
-      }
+      Vue.delete(this.orders, index);
     }
   }
 
@@ -91,7 +126,7 @@ export default class OrdersManager {
     if (this.find(order.id)) {
       const index = this.findIndex(order.id);
 
-      if (index >= 0) this.orders[index] = order;
+      if (index >= 0) Vue.set(this.orders, index, order);
     } else {
       let orders = this.orders;
 
@@ -100,10 +135,6 @@ export default class OrdersManager {
       orders = orders.slice(0, 100);
 
       Vue.set(this, "orders", orders);
-    }
-
-    if (typeof this.updated === "function") {
-      this.updated();
     }
 
     return true;
@@ -123,7 +154,7 @@ export default class OrdersManager {
     this.ready = false;
     this.loading = false;
     this.realtime = false;
-    this.orders.length = 0;
+    this.orders = [];
 
     if (typeof this.updated === "function") {
       this.updated();

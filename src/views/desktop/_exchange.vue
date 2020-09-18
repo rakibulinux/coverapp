@@ -44,7 +44,7 @@ export default class Exchange extends Vue {
   identifier = 0;
 
   mounted() {
-    this.onLoad();
+    this.onLoad(helpers.isMarket());
     ZSmartModel.on("exchange-render", this.forceRerender);
   }
 
@@ -56,7 +56,7 @@ export default class Exchange extends Vue {
     this.$nextTick(async () => {
       this.identifier += 1;
       this.removeLoad(old_market);
-      this.onLoad();
+      this.onLoad(new_market);
     });
   }
 
@@ -69,9 +69,10 @@ export default class Exchange extends Vue {
     });
   }
 
-  onLoad() {
+  onLoad(market: string) {
     this.setTitle();
     TradeController.orderbook.clear();
+    TradeController.orderbook.fetch(market, 500);
 
     MarketChannels().forEach(channel => {
       store.commit("websocket/subscribe", channel);

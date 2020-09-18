@@ -1,3 +1,4 @@
+import TradeController from "@/controllers/trade";
 import uuid from "uuid/v4";
 import Vue from "vue";
 
@@ -56,13 +57,11 @@ export class Depth {
   }
 }
 
-type Side = "asks" | "bids";
-
 export default class OrderBook {
   asks: Depth
   bids: Depth
   sequence: number;
-  callback = new Array<{ uuid: string; func: (side?: Side) => void }>();
+  callback = new Array<{ uuid: string; func: (side?: ZTypes.TakerType) => void }>();
 
   constructor() {
     this.asks = new Depth((a, b) => a.price - b.price);
@@ -73,32 +72,51 @@ export default class OrderBook {
     this.bids.updated = () => this.updated("bids");
   }
 
-  get(key: any, side: Side) {
+  async fetch(market_id: string, limit?: number) {
+    try {
+      const { data } = await TradeController.get_depth(market_id, limit);
+      const depth: { [key in ZTypes.TakerType]: string[][] } = data;
+      this.clear();
+
+      ["asks", "bids"].forEach((side: ZTypes.TakerType) => {
+        depth[side].forEach(row => {
+          const price = Number(row[0]);
+          const amount = Number(row[1]);
+
+          this.insert(price, amount, side);
+        })
+      })
+    } catch (error) {
+      return error;
+    }
+  }
+
+  get(key: any, side: ZTypes.TakerType) {
     return this[side].find(key);
   }
 
-  has_key(key: any, side: Side) {
+  has_key(key: any, side: ZTypes.TakerType) {
     return !!this[side].find(key);
   }
 
-  insert(key: any, data: any, side: Side) {
+  insert(key: any, data: any, side: ZTypes.TakerType) {
     this[side].add(key, data);
   }
 
-  remove(key: any, side: Side) {
+  remove(key: any, side: ZTypes.TakerType) {
     this[side].delete(key);
   }
 
-  toArray(side :Side, limit?: number) {
+  toArray(side: ZTypes.TakerType, limit?: number) {
     return this[side].toArray(limit);
   }
 
   clear() {
     this.sequence = 0;
-    ["asks", "bids"].forEach((side) => this[(side as Side)].clear());
+    ["asks", "bids"].forEach((side) => this[(side as ZTypes.TakerType)].clear());
   }
 
-  add_callback(callback: (side: Side) => void) {
+  add_callback(callback: (side: ZTypes.TakerType) => void) {
     const uuid_callback = uuid();
 
     this.callback.push({ uuid: uuid_callback, func: callback });

@@ -1,5 +1,7 @@
 import store from "./store";
+import websocket from "./websocket";
 
 export default {
-  store
+  store,
+  websocket
 };

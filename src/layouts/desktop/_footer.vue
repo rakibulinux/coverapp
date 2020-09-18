@@ -52,18 +52,18 @@
         <li class="title">
           Contact Us
         </li>
-        <li class="m" v-text="`Service: ${contactus.service}`" />
+        <!-- <li class="m" v-text="`Service: ${contactus.service}`" />
         <li class="m" v-text="`Business: ${contactus.business}`" />
         <li class="m">
           Facebook:
           <a :href="contactus.facebook" target="_blank">Hữu Hà</a>
-        </li>
+        </li> -->
       </ul>
     </div>
     <div class="bottom-footer">
       &copy; 2019-2020
-      <a :href="copyright.link" target="_blank" v-text="copyright.name" />.
-      All rights reserved.
+      <a :href="copyright.link" target="_blank" v-text="copyright.name" />. All
+      rights reserved.
     </div>
   </div>
 </template>
@@ -76,12 +76,12 @@ export default class App extends Vue {
   public contactus = {
     service: "business@zsmart.tech",
     business: "business@zsmart.tech",
-    facebook: "https://fb.com/huuhait",
+    facebook: "https://fb.com/huuhait"
   };
 
   public copyright = {
     name: "ZSmart",
-    link: "https://www.zsmart.tech/",
+    link: "https://www.zsmart.tech/"
   };
 }
 </script>

@@ -7,14 +7,14 @@ const nameEX = "NameEX";
 
 export default {
   nameEX,
-  "default_market": () => {
+  default_market: () => {
     const base_unit = "ETH";
     const quote_unit = "USDT";
     return base_unit + "_" + quote_unit;
   },
-  "feature_markets": ["ETH/USDT", "BTC/USDT", "ZIPT/ETH", "ETH/USDT", "TST/ETH"],
-  "list_bid1": ["ETH", "BTC", "USDT"],
-  "list_bid2": ["ZIPT", "TST"],
+  "feature_markets": ["ETH/USDT", "ETH/USDT", "ETH/USDT", "ETH/USDT", "ETH/USDT"],
+  "list_bid1": ["USDT", "ETH", "BTC"],
+  "list_bid2": ["ETC", "USDC"],
   "messages": {
     en,
     vn,

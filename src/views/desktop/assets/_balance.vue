@@ -45,7 +45,7 @@
           <balance-row
             v-for="currency in CURRENCY"
             :key="currency"
-            :currency="currency"
+            :currency_id="currency"
           />
         </dd>
         <a-spin v-else size="large">

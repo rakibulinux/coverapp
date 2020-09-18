@@ -55,7 +55,7 @@
         <p
           v-for="ticker in findTickers"
           :key="ticker.id"
-          @click="MarketJoin(data)"
+          @click="MarketJoin(ticker)"
         >
           <i
             v-if="!checkFavorite(ticker.name)"

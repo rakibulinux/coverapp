@@ -14,16 +14,12 @@ export default class MineControlMixin extends Vue {
   amount_precision = helpers.amountPrecision();
   total_precision = helpers.totalPrecision();
 
-  get checkSession() {
-    return helpers.isAuth();
-  }
-
-  get loading() {
-    return this.mine_control.loading;
-  }
-
   get mine_control() {
     return TradeController[this.name];
+  }
+
+  get checkSession() {
+    return helpers.isAuth();
   }
 
   public getDate(time) {

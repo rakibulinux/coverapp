@@ -8,7 +8,7 @@
     class="page-trade-mine-control"
   >
     <div slot="extra" class="extra-action cancel-all">
-      <a-button @click="cancel_all_order" type="primary">
+      <a-button @click="cancel_all_orders" type="primary">
         {{ translation("card_head.button.cancel_all") }}
       </a-button>
     </div>
@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import TradeController from "@/controllers/trade";
-import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
@@ -85,10 +84,8 @@ export default class MineControl extends Vue {
     );
   }
 
-  public cancel_all_order() {
-    store.dispatch("exchange/CANCEL_ALL_ORDER", {
-      market: this.market
-    });
+  public cancel_all_orders() {
+    TradeController.stop_orders(this.market);
   }
 
   public onTabChange(type) {

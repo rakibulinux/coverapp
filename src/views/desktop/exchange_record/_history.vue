@@ -10,7 +10,7 @@
             <a-select
               v-model="market"
               style="width:115px"
-              @change="$value => (market = $value)"
+              @change="($value) => (market = $value)"
             >
               <a-select-option v-for="data in MARKET" :key="data" :value="data">
                 {{ data }}
@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import TradeController from "@/controllers/trade";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
@@ -111,8 +112,13 @@ import Helpers from "./helpers";
 export default {
   mixins: [Helpers],
   data: () => ({
-    status: "All"
+    status: "All",
   }),
+  computed: {
+    TradeController() {
+      return TradeController;
+    },
+  },
   methods: {
     vaildStatus(status) {
       if (status === "Waiting") {
@@ -133,7 +139,7 @@ export default {
         state: this.status != "All" ? this.vaildStatus(this.status) : "",
         type: this.type != "All" ? this.type.toLowerCase() : "",
         limit,
-        page
+        page,
       };
 
       try {
@@ -149,8 +155,8 @@ export default {
       }
     },
     CloseOrder(id) {
-      this.$store.dispatch("exchange/CANCEL_ORDER", id);
-    }
-  }
+      TradeController.stop_order(id);
+    },
+  },
 };
 </script>

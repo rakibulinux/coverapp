@@ -81,12 +81,18 @@
 </template>
 
 <script>
+import TradeController from "@/controllers/trade";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 
 export default {
   mixins: [Helpers],
+  computed: {
+    TradeController() {
+      return TradeController;
+    },
+  },
   methods: {
     async getData(page = 1) {
       this.loading = true;
@@ -114,7 +120,7 @@ export default {
     },
     async CloseOrder(id) {
       try {
-        await this.$store.dispatch("exchange/CANCEL_ORDER", id);
+        await TradeController.stop_order(id)
         const index = this.array.data.findIndex(row => row.id === id);
         this.array.data.splice(index, 1);
         this.array.max--;

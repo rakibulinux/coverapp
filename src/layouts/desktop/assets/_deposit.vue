@@ -7,7 +7,7 @@
           v-text="$t('assets.deposit.deposit_address')"
         />
         <div class="address-form">
-          <input type="text" :value="depositAddress" readonly />
+          <input type="text" :value="deposit_address || 'LOADING'" readonly />
           <a @click="copy_address" v-text="$t('assets.deposit.copy')" />
           <a
             v-click-outside:mousedown.capture="show_qr_code"
@@ -17,7 +17,7 @@
             <span v-text="$t('assets.deposit.qr_code')" />
             <div class="show-qrcode" :class="{ active: qrcode_show }">
               <qrcode
-                :value="depositAddress"
+                :value="deposit_address"
                 :size="110"
                 level="L"
                 background="transparent"
@@ -29,7 +29,7 @@
       <a
         v-if="currency.type === 'coin'"
         class="block-address"
-        :href="currency.explorer_address.replace('#{address}', depositAddress)"
+        :href="currency.explorer_address.replace('#{address}', deposit_address)"
         target="_blank"
       >
         Block Browser
@@ -54,6 +54,7 @@
 </template>
 
 <script lang="ts">
+import ApiClient from "@zsmartex/z-apiclient";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 
@@ -63,17 +64,44 @@ import * as helpers from "@zsmartex/z-helpers";
   }
 })
 export default class DepositBox extends Vue {
-  @Prop() public readonly depositAddress!: string;
   @Prop() public readonly currency!: ZTypes.Currency;
 
-  public qrcode_show = false;
+  deposit_address = "";
+  qrcode_show = false;
+  destroyed = false;
 
-  public copy_address() {
-    helpers.copyText(this.depositAddress);
+  mounted() {
+    this.getDepositAddress();
   }
 
-  public show_qr_code() {
+  async getDepositAddress() {
+    if (this.destroyed) return;
+    try {
+      const { data } = await new ApiClient("trade").get(
+        "account/deposit_address/" + this.currency.id
+      );
+      this.deposit_address = data.address;
+    } catch (error) {
+      return error;
+    } finally {
+      if (!this.deposit_address) {
+        setTimeout(() => {
+          this.getDepositAddress();
+        }, 3000);
+      }
+    }
+  }
+
+  copy_address() {
+    helpers.copyText(this.deposit_address);
+  }
+
+  show_qr_code() {
     this.qrcode_show = false;
+  }
+
+  beforeDestroy() {
+    this.destroyed = true;
   }
 }
 </script>

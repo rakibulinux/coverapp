@@ -1,3 +1,4 @@
+import store from "@/store";
 import ApiClient from "@zsmartex/z-apiclient";
 import Vue from "vue";
 
@@ -10,16 +11,51 @@ export default class TradesManager {
     total: 0,
   };
 
-  // Config
-  market = "All";
-  ready = false;
-  loading = false;
-  realtime = false;
-  // Data
-  trades = new Array<ZTypes.Trade>();
+  constructor() {
+  }
 
-  constructor(market?: string) {
-    if (market) this.market = market;
+  get config() {
+    return store.state.exchange.mine_control["trades_history"].config;
+  }
+
+  get market() {
+    return this.config.market;
+  }
+
+  set market(market: string) {
+    this.config.market = market;
+  }
+
+  get ready() {
+    return this.config.ready;
+  }
+
+  set ready(ready: boolean) {
+    this.config.ready = ready;
+  }
+
+  get loading() {
+    return this.config.loading;
+  }
+
+  set loading(loading: boolean) {
+    this.config.loading = loading;
+  }
+
+  get realtime() {
+    return this.config.realtime;
+  }
+
+  set realtime(realtime: boolean) {
+    this.config.realtime = realtime;
+  }
+
+  get trades() {
+    return store.state.exchange.mine_control["trades_history"].data;
+  }
+
+  set trades(val) {
+    store.state.exchange.mine_control["trades_history"].data = val;
   }
 
   async getData(page = this.headers.page, limit = this.headers.limit) {
@@ -40,13 +76,13 @@ export default class TradesManager {
       this.headers.page = Number(headers.page);
       this.headers.total = Number(headers.total);
       this.headers.limit = Number(headers["per-page"]);
-      this.loading = false;
       this.ready = true;
 
       return { data, headers };
     } catch (error) {
-      this.loading = false;
       return error;
+    } finally {
+      Vue.set(this, "loading", false);
     }
   }
 
@@ -70,11 +106,7 @@ export default class TradesManager {
     const index = this.findIndex(id);
 
     if (index >= 0) {
-      this.trades.splice(index, 1);
-
-      if (typeof this.updated === "function") {
-        this.updated();
-      }
+      Vue.delete(this.trades, index);
     }
   }
 
@@ -97,11 +129,6 @@ export default class TradesManager {
       Vue.set(this, "trades", trades);
     }
 
-    
-    if (typeof this.updated === "function") {
-      this.updated();
-    }
-
     return true;
   }
 
@@ -120,9 +147,5 @@ export default class TradesManager {
     this.loading = false;
     this.realtime = false;
     this.trades.length = 0;
-
-    if (typeof this.updated === "function") {
-      this.updated();
-    }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <dl :class="{ selected: showBox }">
-    <span class="coin">{{ currency.toUpperCase() }}</span>
-    <span class="name">{{ getCurrencyName }}</span>
+    <span class="coin">{{ currency.id.toUpperCase() }}</span>
+    <span class="name">{{ currency.name }}</span>
     <span class="total">{{ balance.total }}</span>
     <span class="available">{{ balance.available }}</span>
     <span class="locked">{{ balance.locked }}</span>
@@ -40,105 +40,79 @@
       </a-dropdown>
     </span>
     <div v-if="showBox" class="action-box">
-      <deposit-box
-        v-if="type === 'deposit'"
-        :deposit-address="deposit_address || 'ERROR'"
-        :currency="getCurrency"
-      />
+      <deposit-box v-if="type === 'deposit'" :currency="currency" />
       <withdraw-box
         v-else-if="type === 'withdraw'"
         :available="balance.available"
-        :currency="getCurrency"
+        :currency="currency"
       />
-      <a-spin v-if="loading" size="large">
-        <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
-      </a-spin>
     </div>
   </dl>
 </template>
 
-<script>
+<script lang="ts">
 import store from "@/store";
-import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import _deposit from "@/layouts/desktop/assets/_deposit.vue";
 import _withdraw from "@/layouts/desktop/assets/_withdraw.vue";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
     "deposit-box": _deposit,
     "withdraw-box": _withdraw
-  },
-  props: {
-    currency: String
-  },
-  data: () => ({
-    type: "deposit",
-    showBox: false,
-    loading: false,
-    deposit_address: null
-  }),
-  computed: {
-    MARKET() {
-      const { currency } = this;
-      const TICKER = store.getters["public/getAllMarkets"];
-      return TICKER.filter(ticker => {
-        if (ticker.base_unit === currency) return ticker;
-      });
-    },
-    getCurrency() {
-      return new helpers.Currency(this.currency).get();
-    },
-    getCurrencyName() {
-      return this.getCurrency.name;
-    },
-    balance() {
-      return new helpers.Balance(this.currency);
-    }
-  },
+  }
+})
+export default class BalanceRow extends Vue {
+  @Prop() readonly currency_id!: string;
+
+  type = "";
+  showBox = false;
+
+  MARKET() {
+    const { currency } = this;
+    const TICKER = store.getters["public/getAllMarkets"];
+    return TICKER.filter(ticker => {
+      if (ticker.base_unit === currency) return ticker;
+    });
+  }
+
+  get currency() {
+    return new helpers.Currency(this.currency_id).get();
+  }
+
+  get balance() {
+    return new helpers.Balance(this.currency.id);
+  }
+
   mounted() {
     ZSmartModel.on("assets-box-open", this.clearShowBox);
-  },
+  }
+
   beforeDestroy() {
     ZSmartModel.remove("assets-box-open");
-  },
-  methods: {
-    clearShowBox() {
-      this.showBox = false;
-      this.type = null;
-    },
-    beforeOpenBox() {
-      ZSmartModel.emit("assets-box-open");
-    },
-    changeAssets(type) {
-      this.beforeOpenBox();
-      this.type = type;
-      this.showBox = true;
-      if (type === "deposit" && this.deposit_address === null) {
-        this.getDepositAddress();
-      }
-    },
-    async getDepositAddress() {
-      const { currency } = this;
-      this.loading = true;
-
-      try {
-        const { data } = await new ApiClient("trade").get(
-          "account/deposit_address/" + this.currency
-        );
-        this.deposit_address = data.address;
-        this.loading = false;
-      } catch (error) {
-        this.loading = false;
-        return error;
-      }
-    },
-    changeMarket($market) {
-      const marketArray = $market.split("/");
-      const market = marketArray.join("_");
-      this.$store.commit("public/SYNC_EXCHANGE", { market: market });
-    }
   }
-};
+
+  clearShowBox() {
+    this.showBox = false;
+    this.type = null;
+  }
+
+  beforeOpenBox() {
+    ZSmartModel.emit("assets-box-open");
+  }
+
+  changeAssets(type) {
+    this.beforeOpenBox();
+    this.type = type;
+    this.showBox = true;
+  }
+
+  changeMarket($market) {
+    const marketArray = $market.split("/");
+    const market = marketArray.join("_");
+    this.$store.commit("public/SYNC_EXCHANGE", { market: market });
+  }
+}
 </script>

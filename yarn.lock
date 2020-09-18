@@ -1515,10 +1515,10 @@
     file-saver "^2.0.2"
     json-2-csv "^3.6.1"
 
-"@zsmartex/z-store@^2.2.7":
-  version "2.2.7"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-store/2.2.7/71d2419eef252bbaf9d694c75c875fd1be8b22cb1b914656fe1004fff657b968#031fea5fe3d2cf7441f78a8c9a09b112c1fb45a9"
-  integrity sha512-6MN+6Gri8v6b30qRQeVpx0H+yaNQ2RLG1KJrXoeZHjeF145aW9cxoiDDHyMlh/yLqrSCI74tnBMHXi4y/S98WA==
+"@zsmartex/z-store@^2.2.9":
+  version "2.2.9"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-store/2.2.9/30b261361cdfa672a74a5615802853ec7e1058498426cb20e74771d12f01166f#0134b7c8fb5e267641198be052b130cc4771d612"
+  integrity sha512-DxLWpCey/pkzuLQXsBXEVz2JZDkxBE+j5RgjplCdO7ZVmod4hpAKE8lVHzToyx2LQxvpuPGZOeLVudXsWCklig==
   dependencies:
     sorted-btree "^1.2.1"
 
