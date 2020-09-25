@@ -127,13 +127,13 @@ class ZSocket {
 
           if (resolution !== Number(localStorage.getItem("tradingview.resolution"))) return;
 
-          this.store.dispatch("exchange/dataFeed", { type: "kline", payload: event });
+          this.store.dispatch("exchange/dataFeed", { type: "kline", kline: event });
           ZSmartModel.emit("new-kline", event);
         }
 
         if (tradesMatch) {
           this.store.commit("exchange/ADD_TRADE", event);
-          this.store.dispatch("exchange/dataFeed", { type: "trades", payload: event });
+          this.store.dispatch("exchange/dataFeed", { type: "trades", trades: event.trades });
           ZSmartModel.emit("new-trade", event);
         }
 

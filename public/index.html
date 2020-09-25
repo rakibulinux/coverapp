@@ -14,6 +14,60 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <title>ZSmart</title>
+    <script>
+      window.z_cache = {};
+
+      var getJSON = function(url, callback) {
+      var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function() {
+          var status = xhr.status;
+          if (status === 200) {
+            callback(null, xhr.response);
+          } else {
+            callback(status, xhr.response);
+          }
+        };
+        xhr.send();
+      };
+
+      getJSON("/api/v2/trade/public/currencies", function(err, data) {
+        if (err !== null) {
+          window.z_cache.currencies = { success: false, data };
+        } else {
+          window.z_cache.currencies = { success: true, data };
+        }
+      });
+      getJSON("/api/v2/trade/public/markets", function(err, data) {
+        if (err !== null) {
+          window.z_cache.markets = { success: false, data };
+        } else {
+          window.z_cache.markets = { success: true, data };
+        }
+      });
+      getJSON("/api/v2/trade/public/markets/tickers", function(err, data) {
+        if (err !== null) {
+          window.z_cache.tickers = { success: false, data };
+        } else {
+          window.z_cache.tickers = { success: true, data };
+        }
+      });
+      getJSON("/api/v2/trade/public/trading_fees", function(err, data) {
+        if (err !== null) {
+          window.z_cache.trading_fees = { success: false, data };
+        } else {
+          window.z_cache.trading_fees = { success: true, data };
+        }
+      });
+      getJSON("/api/v2/finex/public/global_price", function(err, data) {
+        if (err !== null) {
+          window.z_cache.global_price = { success: false, data };
+        } else {
+          window.z_cache.global_price = { success: true, data };
+        }
+      });
+    </script>
   </head>
   <body>
     <div class="page-loading">

@@ -23,10 +23,7 @@
         <span>{{ $t("table.24h_volume") }}</span>
         <i>{{ getVolume(NameToID(data)) }} {{ data.split("/")[1] }}</i>
       </p>
-      <sparkline
-        v-if="getSparkline(NameToID(data))"
-        :data="getSparkline(NameToID(data))"
-      />
+      <sparkline :market_id="NameToID(data)" />
     </li>
   </ul>
 </template>
@@ -58,9 +55,6 @@ export default {
     NameToID(name) {
       const nameArray = name.split("/");
       return nameArray.join("").toLowerCase();
-    },
-    getSparkline(ticker) {
-      return this.$store.getters["public/getAllSparkline"][ticker];
     },
     getTicker: ticker => helpers.getTicker(ticker),
     getLastPrice(ticker) {

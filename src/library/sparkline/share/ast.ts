@@ -7,29 +7,29 @@ export interface StyleFace {
 }
 
 export interface OptionsFace extends StyleFace {
-  width: string;
-  height: string;
-  type: string;
-  values: number[];
-  padding: number;
-  disableInteraction: boolean;
-  defaultPixelsPerValue: number;
-  spotRadius: number;
-  spotColor: string;
-  highlightSpotColor: string;
-  highlightLineColor: string;
-  minSpotColor: string;
-  maxSpotColor: string;
-  barColor: string;
-  negBarColor: string;
-  barWidth: number;
-  barSpacing: number;
-  zeroColor: string;
-  zeroAxis: boolean;
-  offset: number;
-  sliceColors: string[];
-  borderWidth: number;
-  borderColor: string;
+  width?: string;
+  height?: string;
+  type?: string;
+  values?: number[];
+  padding?: number;
+  disableInteraction?: boolean;
+  defaultPixelsPerValue?: number;
+  spotRadius?: number;
+  spotColor?: string;
+  highlightSpotColor?: string;
+  highlightLineColor?: string;
+  minSpotColor?: string;
+  maxSpotColor?: string;
+  barColor?: string;
+  negBarColor?: string;
+  barWidth?: number;
+  barSpacing?: number;
+  zeroColor?: string;
+  zeroAxis?: boolean;
+  offset?: number;
+  sliceColors?: string[];
+  borderWidth?: number;
+  borderColor?: string;
 }
 
 export const styleDefault: StyleFace = {

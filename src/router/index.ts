@@ -71,7 +71,20 @@ router.beforeEach(async (to, from, next) => {
   if (!store.state.public.ready && first_route) {
     first_route = false;
 
-    await store.dispatch("store/INIT");
+    await store.dispatch("user/getLogged");
+    [
+      { commit: "public/MARKETS", key: "markets" },
+      { commit: "public/CURRENCIES", key: "currencies" },
+      { commit: "public/TICKERS", key: "tickers" },
+      { commit: "public/SET_TRADING_FEES", key: "trading_fees" },
+      { commit: "public/GLOBAL_PRICE", key: "global_price" },
+    ].forEach(({ commit, key }) => {
+      if ((window as any).z_cache[key].success) {
+        store.commit(commit, (window as any).z_cache[key].data);
+      }
+    })
+
+    store.commit("public/PAGE_READY");
   }
 
   SetRouterByPath(to.path, to.query);
