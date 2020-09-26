@@ -21,4 +21,4 @@ new Vue({
   i18n,
   router,
   render: (h) => h(App),
-}).$mount("body");
+}).$mount("#body-content");

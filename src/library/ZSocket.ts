@@ -102,9 +102,9 @@ class ZSocket {
           const orderbook = TradeController.orderbook;
           const payload: { asks: string[][]; bids: string[][]; sequence: number } = event;
 
-          if (orderbook.sequence >= payload.sequence) return;
+          // if (orderbook.sequence >= payload.sequence) return;
 
-          orderbook.sequence = payload.sequence;
+          // orderbook.sequence = payload.sequence;
 
           (["asks", "bids"]).forEach((side: ZTypes.TakerType) => {
             if (!payload[side]) return;
@@ -113,8 +113,8 @@ class ZSocket {
               const order_price = Number(order[0]);
               const order_amount = Number(order[1]);
 
-              if (order_amount) {
-                orderbook.insert(order_price, order_amount, side);
+              if (order_amount > 0) {
+                orderbook.add(order_price, order_amount, side);
               } else {
                 orderbook.remove(order_price, side);
               }

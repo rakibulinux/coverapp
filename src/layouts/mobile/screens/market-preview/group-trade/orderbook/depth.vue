@@ -71,16 +71,6 @@ export default class Depth extends Mixins(MarketMixin) {
     return total;
   }
 
-  mounted() {
-    this.uuid_callback = this.orderbook.add_callback(side => {
-      if (this.side === side) this.$forceUpdate();
-    });
-  }
-
-  beforeDestroy() {
-    this.orderbook.remove_callback(this.uuid_callback);
-  }
-
   depth() {
     const depth = this.orderbook.toArray(this.side);
 

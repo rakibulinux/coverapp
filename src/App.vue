@@ -14,8 +14,6 @@
 
       <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
     </a-layout>
-
-    <loading-page v-else />
   </body>
 </template>
 

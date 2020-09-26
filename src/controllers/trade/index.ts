@@ -2,7 +2,7 @@ import ApiClient from "@zsmartex/z-apiclient";
 import { applyMixins } from "../mixins";
 import MineControl from "./mine_control";
 import OrdersController from "./orders";
-import OrderBook from "./order_book";
+import OrderBook from "./orderbook";
 
 export class TradeController {
   constructor() {

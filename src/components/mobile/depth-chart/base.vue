@@ -67,18 +67,9 @@ export default class DepthChart extends Vue {
     window.addEventListener("resize", () => {
       //this.chart.resize();
     });
-
-    this.uuid_callback = this.orderbook.add_callback(() => {
-      const depth = this.depth();
-
-      this.chart.depth_data = depth;
-      if (!this.chart.chart_ready) return;
-      this.chart.draw();
-    });
   }
 
   beforeDestroy() {
-    this.orderbook.remove_callback(this.uuid_callback);
     this.chart.destroy();
   }
 }

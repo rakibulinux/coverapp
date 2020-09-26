@@ -76,7 +76,7 @@ router.beforeEach(async (to, from, next) => {
       { commit: "public/MARKETS", key: "markets" },
       { commit: "public/CURRENCIES", key: "currencies" },
       { commit: "public/TICKERS", key: "tickers" },
-      { commit: "public/SET_TRADING_FEES", key: "trading_fees" },
+      { commit: "public/TRADING_FEES", key: "trading_fees" },
       { commit: "public/GLOBAL_PRICE", key: "global_price" },
     ].forEach(({ commit, key }) => {
       if ((window as any).z_cache[key].success) {

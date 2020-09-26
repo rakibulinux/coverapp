@@ -7,7 +7,7 @@ import TradeController from "@/controllers/trade";
 import uuid from "uuid/v4";
 import ResizeObserver from "resize-observer-polyfill";
 import { Chart } from "@/library/depth-chart";
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator";
 
 @Component
 export default class DepthChart extends Vue {
@@ -22,7 +22,7 @@ export default class DepthChart extends Vue {
     return TradeController.orderbook;
   }
 
-  depth() {
+  get depth() {
     const SIDE = ["bids", "asks"];
     const orderbook = this.orderbook;
     const data: Chart["depth_data"] = { buy: [], sell: [] };
@@ -62,18 +62,9 @@ export default class DepthChart extends Vue {
       this.chart.resize();
     });
     this.resize_observer.observe(this.$el);
-
-    this.uuid_callback = this.orderbook.add_callback(() => {
-      const depth = this.depth();
-
-      this.chart.depth_data = depth;
-      if (!this.chart.chart_ready) return;
-      this.chart.draw();
-    });
   }
 
   beforeDestroy() {
-    this.orderbook.remove_callback(this.uuid_callback);
     this.resize_observer.unobserve(this.$el);
     this.chart.destroy();
   }
@@ -103,6 +94,14 @@ export default class DepthChart extends Vue {
     this.chart.config.tooltip.crosshair.type = "dash";
     this.chart.config.tooltip.crosshair.color = "side";
     this.chart.config.tooltip.crosshair.dashValue = [4, 4];
+  }
+
+  @Watch("depth")
+  onDepthChange(depth_data: DepthChart["depth"]) {
+    if (this.chart.chart_ready) {
+      this.chart.depth_data = depth_data;
+      this.chart.draw();
+    }
   }
 }
 </script>

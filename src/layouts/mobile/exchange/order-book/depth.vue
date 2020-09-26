@@ -66,16 +66,6 @@ export default class MarketDepth extends Vue {
     return this.side === "bids" ? depth : depth.reverse();
   }
 
-  mounted() {
-    this.uuid_callback = this.orderbook.add_callback(side => {
-      if (this.side === side) this.$forceUpdate();
-    });
-  }
-
-  beforeDestroy() {
-    this.orderbook.remove_callback(this.uuid_callback);
-  }
-
   trendType(type) {
     return helpers.trendType(type);
   }

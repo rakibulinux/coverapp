@@ -40,7 +40,7 @@ export default class Sparkline extends Vue {
     const time_from = new Date(time_now.setDate(time_now.getDate() - 1));
 
     try {
-      const { data } = await new ApiClient("trade").get(
+      const { data }: { data: number[] } = await new ApiClient("trade").get(
         `public/markets/${this.market_id}/k-line`,
         {
           time_from: (time_from.getTime() / 1000).toFixedNumber(0),
@@ -49,7 +49,7 @@ export default class Sparkline extends Vue {
         }
       );
 
-      return data;
+      return data.map(row => row[4]);
     } catch (error) {
       return error;
     }

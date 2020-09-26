@@ -83,16 +83,6 @@ export default class MarketDepth extends Vue {
       : "position: absolute;width: 100%;bottom: 0;";
   }
 
-  mounted() {
-    this.uuid_callback = this.orderbook.add_callback(side => {
-      if (side === this.side) this.$forceUpdate();
-    });
-  }
-
-  beforeDestroy() {
-    this.orderbook.remove_callback(this.uuid_callback);
-  }
-
   depth() {
     let depth = this.orderbook.toArray(this.side);
     depth = depth.filter(order => order.price > 0 && order.amount > 0);
