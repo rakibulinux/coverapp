@@ -26,8 +26,8 @@
               <li>• Make sure your email is functioning normally.</li>
             </ul>
           </div>
-          <button type="submit" :disabled="buttonDisabled">
-            <span>Resend Email</span>
+          <button type="submit" :disabled="button_disabled">
+            <span>{{ button_content }}</span>
             <span v-if="sended && wait != 0">({{ wait }})</span>
           </button>
         </form>
@@ -37,15 +37,25 @@
 </template>
 
 <script lang="ts">
+import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import ApiClient from "@zsmartex/z-apiclient";
+import * as helpers from "@zsmartex/z-helpers";
+import UserController from "@/controllers/user";
+import { i18n } from "@/plugins";
+import ZSmartModel from "@zsmartex/z-eventbus";
 
 @Component
 export default class App extends Vue {
-  public wait = 0;
-  public WaitInterval?: NodeJS.Timeout;
+  wait = 0;
+  WaitInterval?: NodeJS.Timeout;
+  confirming = false;
 
-  get buttonDisabled() {
+  get confirmation_token() {
+    return this.$route.query["confirmation_token"];
+  }
+
+  get button_disabled() {
     let allow = true;
     const { sended, wait } = this;
 
@@ -53,16 +63,33 @@ export default class App extends Vue {
     return !allow;
   }
 
+  get button_content() {
+    return this.confirming ? "Confirming Email" : "Resend Email";
+  }
+
   // TODO: move sended_email from store to router meta data
   get sended() {
     return this.$store.state.user.session.sended_email;
   }
 
-  set sended(value) {
+  set sended(value: boolean) {
     this.$store.state.user.session.sended_email = value;
   }
 
-  public mounted() {
+  async mounted() {
+    if (this.confirmation_token) {
+      const lang = this.$route.query["lang"] as string;
+      if (lang) {
+        localStorage.setItem("LANGUAGE_HASH", lang);
+        i18n.locale = lang;
+        ZSmartModel.emit("change-language");
+      }
+
+      this.confirming = true;
+
+      await UserController.confirm_email(this.confirmation_token);
+      this.confirming = false;
+    }
     if (this.sended) this.actionReSend();
   }
 
@@ -81,12 +108,11 @@ export default class App extends Vue {
 
   public async reSendEmail() {
     try {
-      const { email } = this.$store.state.user;
-
       await new ApiClient("auth").post("identity/users/email/generate_code", {
-        email
+        email: store.state.user.real_email
       });
       this.actionReSend();
+      helpers.runNotice("success", "check email");
     } catch (error) {
       return error;
     }

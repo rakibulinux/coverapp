@@ -39,7 +39,9 @@ const SetRouterByPath = (path: string, query: Route["query"]) => {
 
   store.commit("public/SET_ROUTER", path);
   store.commit("public/SET_TITLE", config[page_title]);
+}
 
+const PathHandle = (path: string, query: Route["query"]) => {
   if (path.includes("/exchange/")) {
     const markets: string[] = store.getters["public/getAllMarkets"].map(row => row.name);
     const market = path.replace("/exchange/", "").split("-");
@@ -48,25 +50,12 @@ const SetRouterByPath = (path: string, query: Route["query"]) => {
     } else {
       store.commit("public/SYNC_EXCHANGE", { market: market.join("_") });
     }
-  } else if (path === "/confirmation") {
-    switch (Object.keys(query)[0]) {
-      case "confirmation_email": {
-        const token = query.confirmation_email;
-        store.dispatch("user/CONFIRM_EMAIL", token);
-        break;
-      } case "confirmation_reset": {
-        const token = query.confirmation_reset;
-        store.dispatch("user/CHECK_RESET_TOKEN", token);
-        break;
-      } default: {
-        router.push("/signin");
-      }
-    }
   }
 }
 
 router.beforeEach(async (to, from, next) => {
   store.state.public.prev_path = from.fullPath;
+  PathHandle(to.path, to.query);
 
   if (!store.state.public.ready && first_route) {
     first_route = false;
@@ -82,16 +71,16 @@ router.beforeEach(async (to, from, next) => {
       if ((window as any).z_cache[key].success) {
         store.commit(commit, (window as any).z_cache[key].data);
       }
-    })
+    });
 
     store.commit("public/PAGE_READY");
   }
 
-  SetRouterByPath(to.path, to.query);
-
-  if (helpers.isMobile() && !to.matched.some(record => record.meta.mobile)) {
+  if (helpers.authStatus() === "pending" && !to.fullPath.includes("/confirmation/email")) {
+    next("/confirmation/email");
+  } else if (helpers.isMobile() && !to.matched.some(record => record.meta.mobile)) {
     next("/m");
-  } else if (to.matched.some(record => record.meta.guest) && helpers.authStatus() === "active") {
+  } else if (to.matched.some(record => record.meta.guest) && helpers.isAuth()) {
     next("/account/security");
   } else if (to.matched.some(record => record.meta.requiresAuth) && !helpers.isAuth()) {
     if (helpers.isMobile()) {
@@ -107,13 +96,15 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next("/signin");
     }
-  } else if (to.matched.some(record => record.meta.onlyWait)) {
-    next("/signin");
-  } else if (to.matched.some(record => record.meta.requiresTokenReset) && !store.state.user.reset_password_token) {
+  } else if (to.matched.some(record => record.meta.requiresTokenReset) && !to.query["confirmation_token"]) {
     next("/signin");
   } else {
     next();
   }
+});
+
+router.afterEach((to, from) => {
+  SetRouterByPath(to.path, to.query);
 });
 
 export default router;

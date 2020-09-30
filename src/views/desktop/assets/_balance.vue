@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="$store.getters['user/getBalance'].length"
-    class="assets-main balance"
-  >
+  <div class="assets-main balance">
     <div class="assets-head">
       <span class="total">
         <span class="label">{{ $t("assets.total_assets_calc") }}:</span>
@@ -41,21 +38,13 @@
           <span class="btc_val" v-text="$t('table.btc_val')" />
           <span class="text-center action" v-text="$t('table.action')" />
         </dl>
-        <dd v-if="$store.getters['user/getBalance'].length">
+        <dd>
           <balance-row
             v-for="currency in CURRENCY"
             :key="currency"
             :currency_id="currency"
           />
         </dd>
-        <a-spin v-else size="large">
-          <a-icon
-            slot="indicator"
-            type="loading"
-            style="font-size: 24px"
-            spin
-          />
-        </a-spin>
       </div>
     </div>
   </div>

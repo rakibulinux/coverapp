@@ -18,6 +18,10 @@
         <dt v-text="translation('status.low')" />
         <dt class="value" v-text="getLowPrice" />
       </dl>
+      <dl class="amount">
+        <dt v-text="translation('status.24h_amount')" />
+        <dt class="value" v-text="getAmount" />
+      </dl>
       <dl class="volume">
         <dt v-text="translation('status.24h_volume')" />
         <dt class="value" v-text="getVolume" />
@@ -75,6 +79,19 @@ export default class App extends Vue {
     return helpers.getMarketLastPrice() < Number(ticker.low)
       ? helpers.getMarketLastPrice()
       : Number(ticker.low).toFixed(helpers.pricePrecision());
+  }
+
+  get getAmount() {
+    const ticker = this.$store.getters["public/getAllTickers"][
+      helpers.isMarket()
+    ];
+    return (
+      Number(
+        Number(ticker.amount).toFixed(helpers.pricePrecision())
+      ).toLocaleString() +
+      " " +
+      this.isAsk.toUpperCase()
+    );
   }
 
   get getVolume() {

@@ -68,7 +68,7 @@ export default {
   "titlePage.signin": `Log In - ${nameEX}`,
   "titlePage.signup": `Sign Up - ${nameEX}`,
   "titlePage.forgotpassword": `Forgot Login Password - ${nameEX}`,
-  "titlePage.resetpassword": `Reset Login Password - ${nameEX}`,
+  "titlePage.confirmation.reset_password": `Reset Login Password - ${nameEX}`,
   "titlePage.confirmation.email": `Email Verification - ${nameEX}`,
   /**  auth **/
   "titlePage.assets.balance": `My Assets - ${nameEX}`,

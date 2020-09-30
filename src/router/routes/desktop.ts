@@ -40,7 +40,7 @@ export default [
       },
       {
         path: "kyc",
-        component: () => import("@/views/desktop/account/_kyc.vue")
+        component: () => import("@/views/desktop/account/kyc")
       },
       {
         path: "history",
@@ -96,9 +96,10 @@ export default [
   },
   {
     path: "/confirmation/email",
-    name: "ConfirmEmail",
-    component: () => import("@/views/desktop/_confirmemail.vue"),
+    name: "Confirmation Email",
+    component: () => import("@/views/desktop/confirmation_email.vue"),
     meta: {
+      requiresAuth: true,
       onlyWait: true
     }
   },
@@ -111,9 +112,9 @@ export default [
     }
   },
   {
-    path: "/resetpassword",
-    name: "ResetPassword",
-    component: () => import("@/views/desktop/_resetpassword.vue"),
+    path: "/confirmation/reset_password",
+    name: "Confirmation ResetPassword",
+    component: () => import("@/views/desktop/confirmation_reset_password.vue"),
     meta: {
       requiresTokenReset: true
     }

@@ -15,7 +15,7 @@
         <table class="table">
           <tbody>
             <tr
-              v-for="(data, index) in activity.array"
+              v-for="(data, index) in activity"
               :key="index"
               class="history-row"
             >
@@ -29,50 +29,63 @@
           </tbody>
         </table>
       </div>
-      <a-spin v-if="isLoading" size="large">
+      <a-spin v-if="loading" size="large">
         <a-icon slot="indicator" type="loading" style="font-size: 24px" spin />
       </a-spin>
       <a-pagination
         size="small"
-        :current="activity.page"
-        :page-size="25"
-        :total="activity.max"
+        :current="page"
+        :page-size="limit"
+        :total="total"
         @change="onPageChange"
       />
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
-import { mapState } from "vuex";
+import UserController from "@/controllers/user";
 
-export default {
-  computed: {
-    ...mapState("user", ["activity"]),
-    isLoading() {
-      return this.activity.loading;
-    }
-  },
+@Component
+export default class AccountHistory extends Vue {
+  loading = false;
+  page = 1;
+  limit = 25;
+  activity: ZTypes.Activity[] = [];
+  total = 0;
+
   mounted() {
-    if (!this.activity.loading)
-      this.$store.dispatch("user/GET_ACTIVITY", {
-        limit: 25,
-        page: 1,
-        topic: "session",
-        action: "login"
-      });
-  },
-  methods: {
-    onPageChange($page) {
-      this.$store.dispatch("user/GET_ACTIVITY", {
-        page: $page,
-        limit: 25,
-        topic: "session",
-        action: "login"
-      });
-    },
-    getDate: date => helpers.getDate(date, true)
+    this.get_activity();
   }
-};
+
+  async get_activity(page = this.page, limit = this.limit) {
+    this.loading = true;
+    try {
+      const { data, headers } = await UserController.get_activity(
+        "session",
+        "login",
+        page,
+        limit
+      );
+      this.activity = data;
+      this.total = headers.total;
+    } catch (error) {
+      return error;
+    } finally {
+      this.loading = false;
+      this.page = page;
+      this.limit = limit;
+    }
+  }
+
+  onPageChange(page) {
+    this.get_activity(page, 25);
+  }
+
+  getDate(date: Date) {
+    return helpers.getDate(date, true);
+  }
+}
 </script>

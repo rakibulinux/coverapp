@@ -52,12 +52,12 @@
         <li class="title">
           Contact Us
         </li>
-        <!-- <li class="m" v-text="`Service: ${contactus.service}`" />
+        <li class="m" v-text="`Service: ${contactus.service}`" />
         <li class="m" v-text="`Business: ${contactus.business}`" />
         <li class="m">
           Facebook:
           <a :href="contactus.facebook" target="_blank">Hữu Hà</a>
-        </li> -->
+        </li>
       </ul>
     </div>
     <div class="bottom-footer">

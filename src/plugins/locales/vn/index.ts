@@ -70,6 +70,7 @@ export default {
     "24h_change": "Thay đổi giá 24h",
     "24h_high": "Giá cao nhất 24h",
     "24h_low": "Giá thấp nhất 24h",
+    "24h_amount": "Số lượng 24h",
     "24h_volume": "Khối lượng 24h",
     "ip_address": "Địa chỉ IP",
     "action": "Hành động",
@@ -100,6 +101,7 @@ export default {
       "change": "Thay đổi giá",
       "high": "Giá cao nhất",
       "low": "Giá thấp nhất",
+      "24h_amount": "Số lượng 24h",
       "24h_volume": "Khối lượng 24h",
     },
     entry: {

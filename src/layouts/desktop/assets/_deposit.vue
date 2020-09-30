@@ -17,6 +17,7 @@
             <span v-text="$t('assets.deposit.qr_code')" />
             <div class="show-qrcode" :class="{ active: qrcode_show }">
               <qrcode
+                v-if="deposit_address"
                 :value="deposit_address"
                 :size="110"
                 level="L"

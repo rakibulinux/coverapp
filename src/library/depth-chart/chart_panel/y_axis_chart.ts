@@ -40,7 +40,7 @@ export default class YAxisChartPanel extends AxisChartPanel {
     context.font = `${this.config.yAxis.tickText.size}px Arial`;
 
     this.draw_line(context, height);
-    this.draw_ticks(context, height);
+    if (this.max_amount) this.draw_ticks(context, height);
     this.has_paint = true;
   }
 

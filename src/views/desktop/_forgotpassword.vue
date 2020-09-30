@@ -54,11 +54,9 @@ export default class ForgotPassword extends Vue {
   }
 
   get button_disabled() {
-    const role_1 = !this.email_error;
-    const role_2 = !this.sended && this.wait !== 0;
-    const allow = role_1 && role_2;
-
-    return !allow;
+    if (this.email_error || this.email.length === 0) return true;
+    if (this.sended) return true;
+    if (this.wait !== 0) return true;
   }
 
   async forgot_password() {

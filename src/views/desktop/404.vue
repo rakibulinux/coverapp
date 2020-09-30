@@ -39,23 +39,26 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class PageNotFound extends Vue {
   header_class = "ant-layout-header";
   footer_class = "ant-layout-footer";
+  loop_set_height!: NodeJS.Timeout;
+  $el: HTMLElement;
 
   mounted() {
-    this.$nextTick(() => {
+    this.loop_set_height = setInterval(() => {
       this.set_content_height();
-    });
+    }, 100);
 
     window.addEventListener("resize", this.set_content_height);
   }
 
   beforeDestroy() {
+    clearInterval(this.loop_set_height);
     window.removeEventListener("resize", this.set_content_height);
   }
 

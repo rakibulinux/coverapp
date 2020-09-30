@@ -1,9 +1,9 @@
 <template>
-  <div class="autocomplete" :class="[{ selected }, type]">
+  <div class="z-auto-complete" :class="[{ selected }, type]">
     <div v-if="selected" class="mask" @click="selected = !selected" />
     <div class="select-con" @click="selected = !selected">
       <div class="con">
-        {{ show_value }}
+        {{ value }}
       </div>
       <div class="more">
         <i class="ic-arrow-caret-down" />
@@ -14,42 +14,102 @@
         v-for="(data, index) in rows"
         :key="index"
         @click="changeSelect(data)"
-        v-text="show_data(data)"
+        v-text="data"
       />
     </ul>
   </div>
 </template>
 
-<script>
-import ZSmartModel from "@zsmartex/z-eventbus";
+<script lang="ts">
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-export default {
-  props: ["rows", "width", "default_value", "event", "type"],
-  data() {
-    return {
-      selected: false,
-      value: this.default_value
-    };
-  },
-  computed: {
-    isName() {
-      return ["region", "market"].includes(this.event);
-    },
-    show_value() {
-      if (this.isName) return this.value.name;
-      else return this.value;
+@Component
+export default class AutoComplete extends Vue {
+  @Prop() readonly rows!: any[];
+  @Prop() readonly value!: string;
+  @Prop({ default: "small" }) readonly type!: "small" | "big";
+
+  selected = false;
+
+  changeSelect(data) {
+    this.selected = !this.selected;
+    this.$emit("input", data);
+  }
+}
+</script>
+
+<style lang="less">
+.z-auto-complete {
+  width: 240px;
+  border: 1px solid #314362;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  color: #e5e6e8;
+  position: relative;
+  cursor: pointer;
+  .select-con {
+    line-height: 50px;
+    display: flex;
+    height: 50px;
+    .con {
+      height: 100%;
+      width: 90%;
+      padding-left: 5%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-  },
-  methods: {
-    show_data(data) {
-      if (this.isName) return data.name;
-      else return data;
-    },
-    changeSelect(data) {
-      ZSmartModel.emit(this.event, data);
-      this.value = data;
-      this.selected = !this.selected;
+    .more {
+      display: inline-block;
+      flex-basis: 10%;
+      width: 10%;
+      background: var(--icon-color);
+      height: 100%;
+      text-align: center;
+      color: #fff;
+      vertical-align: middle;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+      border: 1px solid var(--icon-color);
+      i {
+        vertical-align: middle;
+        font-size: 10px;
+      }
     }
   }
-};
-</script>
+  .list {
+    padding: 0 10px;
+    background: #3f5a85;
+    position: absolute;
+    left: 0;
+    top: 50px;
+    width: 100%;
+    max-height: 0px;
+    transition: all 0.15s ease-out;
+    overflow-y: auto;
+    z-index: 1;
+    li {
+      width: 100%;
+      height: 30px;
+      line-height: 30px;
+      color: #f6f7f8;
+      border-bottom: 1px solid #7c89af;
+      cursor: pointer;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:hover {
+        background: rgba(49, 58, 86, 0.2);
+      }
+    }
+  }
+  &.selected {
+    border: 1px solid #b5cfff;
+    .list {
+      border: 1px solid var(--icon-color);
+      transition: all 0.25s ease-in;
+      max-height: 200px;
+    }
+  }
+}
+</style>

@@ -31,7 +31,7 @@
         </a-dropdown>
         <a-dropdown placement="bottomCenter">
           <a class="ant-dropdown-link">
-            UUUU
+            {{ $store.state.user.email }}
             <i class="ic-arrow-down" />
           </a>
           <a-menu slot="overlay" class="dropdown-user">

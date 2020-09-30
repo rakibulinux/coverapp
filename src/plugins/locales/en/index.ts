@@ -85,6 +85,7 @@ export default {
     "24h_change": "24h Change",
     "24h_high": "24h High",
     "24h_low": "24h Low",
+    "24h_amount": "24h Amount",
     "24h_volume": "24h Volume",
     "ip_address": "IP Address",
     "action": "Action",
@@ -120,6 +121,7 @@ export default {
       "change": "Change",
       "high": "High",
       "low": "Low",
+      "24h_amount": "24h Amount",
       "24h_volume": "24h Volume",
     },
     "trade-action": {

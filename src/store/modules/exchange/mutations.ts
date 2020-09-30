@@ -6,7 +6,7 @@ const mutations: MutationTree<ExchangeState> = {
   UPDATE_BAR_CHART(state, payload) {
     const { stream } = state.TradingView;
     const sub = stream[0];
-    let { lastBar } = sub;
+    const { lastBar } = sub;
     if (!lastBar) return;
     let resolution: number = sub.resolution;
     if (sub.resolution.includes("D")) {
@@ -41,7 +41,7 @@ const mutations: MutationTree<ExchangeState> = {
   ADD_BAR_CHART(state, payload) {
     const { stream } = state.TradingView;
     const sub = stream[0];
-    let { lastBar } = sub;
+    const { lastBar } = sub;
     if (!lastBar) return;
     let { resolution } = sub;
     if (resolution.includes("D")) resolution = 1440;

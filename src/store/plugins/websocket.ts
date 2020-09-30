@@ -2,6 +2,7 @@ import config from "@/config";
 import * as helpers from "@zsmartex/z-helpers";
 import { Store } from "vuex";
 import ZSocket from "@/library/ZSocket";
+import UserController from "@/controllers/user";
 
 const RESOLUTION_STREAM: { [key: string]: string } = {
   "1": "1m",
@@ -46,8 +47,8 @@ export default (store: Store<RootState>) => {
       const channel = helpers.isMarket() + ".kline-" + RESOLUTION_STREAM[payload];
 
       public_socket.subscribe(channel);
-    } else if (type === "user/AUTH_SUCCESS" && !(global as any).admin) {
-      store.dispatch("user/getBalance");
+    } else if (type === "user/AUTH_SUCCESS" && store.state.user.state === "active") {
+      UserController.get_balance();
 
       private_socket.connect();
     } else if (type === "user/LOGOUT") {

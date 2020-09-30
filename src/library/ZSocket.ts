@@ -1,6 +1,7 @@
 import TradeController from "@/controllers/trade";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { Store } from "vuex";
+import UserController from '@/controllers/user';
 
 class ZSocket {
   [key: string]: any;
@@ -155,8 +156,9 @@ class ZSocket {
             TradeController.trades_history.add(trade);
             break;
           } case "balance": {
-            this.store.commit("user/UPDATE_BALANCE", event);
-            break;
+            const balance: ZTypes.Balance = event;
+
+            UserController.add_update_balance(balance);
           }
         }
       }
