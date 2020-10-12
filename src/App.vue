@@ -1,20 +1,18 @@
 <template>
-  <body :class="{ 'mobile-view': isMobile }">
-    <a-layout
-      v-if="isReady"
-      :class="{
-        night: $route.path === '/exchange',
-        'no-border': $route.path === '/exchange'
-      }"
-    >
-      <header-exchange v-if="!isMobile" />
-      <router-view />
-      <auth-login-screen v-if="isMobile" ref="auth-login-screen" />
-      <tab-bar v-if="isMobile" />
+  <a-layout
+    v-if="isReady"
+    :class="{
+      night: $route.path === '/exchange',
+      'no-border': $route.path === '/exchange'
+    }"
+  >
+    <header-exchange v-if="!isMobile" />
+    <router-view />
+    <auth-login-screen v-if="isMobile" ref="auth-login-screen" />
+    <tab-bar v-if="isMobile" />
 
-      <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
-    </a-layout>
-  </body>
+    <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
+  </a-layout>
 </template>
 
 <script lang="ts">
@@ -69,6 +67,7 @@ export default class App extends Vue {
   }
 
   mounted() {
+    if (this.isMobile) document.body.classList.add("mobile-view");
     this.setTheme();
 
     if (this.isMobile) {

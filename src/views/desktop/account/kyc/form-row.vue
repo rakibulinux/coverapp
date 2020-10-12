@@ -14,7 +14,7 @@
         type="text"
         :value="value"
         :placeholder="placeholder"
-        @input="onInputChange"
+        @input="$event => onInputChange($event.target.value)"
       />
     </div>
   </div>

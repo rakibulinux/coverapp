@@ -3,8 +3,50 @@
     <div class="setting-head">
       KYC Account verification
     </div>
-    <div v-if="is_uploaded_documents" class="setting-body"></div>
-    <div v-else class="setting-body">
+
+    <div v-if="is_uploaded_documents && !re_issues" class="setting-body">
+      <form @submit.prevent="re_issues = true">
+        <div class="document-list-box">
+          <div class="document-list-row">
+            <span class="list-label">Country / Region:</span>
+            <span class="list-content">{{ country }}</span>
+          </div>
+          <div class="document-list-row">
+            <span class="list-label">Last name:</span>
+            <span class="list-content">{{ first_name }}</span>
+          </div>
+          <div class="document-list-row">
+            <span class="list-label">First name:</span>
+            <span class="list-content">{{ last_name }}</span>
+          </div>
+          <div class="document-list-row">
+            <span class="list-label">Type of certificate:</span>
+            <span class="list-content">{{ doc_type }}</span>
+          </div>
+          <div class="document-list-row">
+            <span class="list-label">ID Number:</span>
+            <span class="list-content">{{ doc_number }}</span>
+          </div>
+
+          <div class="form-row">
+            <div
+              class="form-control"
+              style="text-align: center;margin-top: 24px;"
+            >
+              <button type="submit" :disabled="document_state == 'pending'">
+                {{
+                  document_state === "pending"
+                    ? "Review pending"
+                    : "Review rejected, please modify the information to resubmit"
+                }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div v-if="re_issues" class="setting-body">
       <form @submit.prevent="onSubmit">
         <form-row
           label="Country / Region"
@@ -162,6 +204,9 @@ export default class AccountKYC extends Vue {
   back_upload?: File;
   in_hand_upload: File;
 
+  re_issues = false;
+  document_state = "";
+
   get button_disabled() {
     if (this.loading) return true;
   }
@@ -179,6 +224,31 @@ export default class AccountKYC extends Vue {
   mounted() {
     ZSmartModel.on("region", country => (this.country = country));
     ZSmartModel.on("doc_type", doc_type => (this.doc_type = doc_type));
+
+    if (this.is_uploaded_documents) this.get_document();
+  }
+
+  async get_document() {
+    this.loading = true;
+    try {
+      const response = await new ApiClient("applogic").get(
+        "resource/documents"
+      );
+      const document = response.data;
+      if (!document) return (this.re_issues = true);
+
+      this.first_name = document.first_name;
+      this.last_name = document.last_name;
+      this.country = document.country;
+      this.doc_type = document.doc_type;
+      this.doc_number = document.doc_number;
+      this.document_state = document.state;
+      this.re_issues = false;
+    } catch (error) {
+      return error;
+    } finally {
+      this.loading = false;
+    }
   }
 
   onFileChange($event: Event, type: "front" | "back" | "in_hand") {
@@ -193,6 +263,7 @@ export default class AccountKYC extends Vue {
     this[`${type}_upload`] = file;
     reader.onload = e => (this[`${type}_upload_data`] = e.target.result);
   }
+
   async onSubmit() {
     this.loading = true;
     const formData = new FormData();
@@ -218,18 +289,30 @@ export default class AccountKYC extends Vue {
       return error;
     } finally {
       this.loading = false;
-      this.first_name = "";
-      this.last_name = "";
-      this.country = "";
-      this.doc_type = "";
-      this.doc_number = "";
-      this.front_upload = null;
-      this.back_upload = null;
-      this.in_hand_upload = null;
-      this.front_upload_data = null;
-      this.back_upload_data = null;
-      this.in_hand_upload_data = null;
     }
   }
 }
 </script>
+
+<style lang="less">
+.document-list {
+  &-box {
+  }
+  &-row {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+
+    .list-label {
+      display: block;
+      flex-basis: 185px;
+      color: var(--color-gray);
+    }
+    .list-content {
+      flex: 1 1;
+    }
+  }
+}
+</style>

@@ -16,6 +16,9 @@ const actions: ActionTree<ExchangeState, RootState> = {
   dataFeed({ state, commit }, { type, trades, kline }: { type: string, trades: ZTypes.PublicTrade[], kline: number[] }) {
     const { stream } = state.TradingView;
     const sub = stream[0];
+    if (!sub) return;
+    if (!sub.lastBar) return;
+    
     if (type === "trades") {
       for (const trade of trades) {
         const data = {

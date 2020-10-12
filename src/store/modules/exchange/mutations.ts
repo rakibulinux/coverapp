@@ -25,7 +25,7 @@ const mutations: MutationTree<ExchangeState> = {
         high: lastBar.close,
         low: lastBar.close,
         close: payload.price,
-        volume: payload.volume,
+        volume: payload.volume
       };
     } else {
       if (payload.price < lastBar.low) lastBar.low = payload.price;
@@ -57,7 +57,7 @@ const mutations: MutationTree<ExchangeState> = {
         high: payload["high"],
         low: payload["low"],
         close: payload["close"],
-        volume: payload["volume"],
+        volume: payload["volume"]
       };
     } else {
       if (payload["close"] < lastBar.low) lastBar.low = payload["close"];
@@ -68,9 +68,6 @@ const mutations: MutationTree<ExchangeState> = {
     }
     state.TradingView.stream[0].lastBar = _lastBar;
     state.TradingView.stream[0].listener(_lastBar);
-  },
-  ON_CANCELED_ORDER: (id) => {
-    helpers.runNotice("success", helpers.translation("message.order.canceled").toString());
   },
   ADD_TRADE(state, { trades }) {
     state.trades.splice(100, 1);
@@ -83,7 +80,7 @@ const mutations: MutationTree<ExchangeState> = {
         total: trade.total,
         market: trade.market,
         created_at: trade.created_at,
-        taker_type: trade.taker_type,
+        taker_type: trade.taker_type
       });
 
       document.title = `${trade.price} - ${(
@@ -102,7 +99,7 @@ const mutations: MutationTree<ExchangeState> = {
   UPDATE_RESOLUTION(state, resolution) {
     state.TradingView.resolution = resolution;
     localStorage.setItem("tradingview.resolution", resolution);
-  },
+  }
 };
 
 export default mutations;

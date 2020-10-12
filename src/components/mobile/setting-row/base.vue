@@ -29,9 +29,11 @@ export default class SettingRow extends Vue {
 
 <style lang="less">
 .setting-row {
+  position: relative;
   height: 40px;
   line-height: 40px;
-  display: flex;
+  width: 100%;
+  display: block;
   padding: 0 8px;
   border-bottom: 1px solid var(--bg-color);
   justify-content: space-between;
@@ -47,22 +49,23 @@ export default class SettingRow extends Vue {
   }
 
   &-value {
-    position: relative;
+    position: absolute;
+    top: 0;
+    right: 12px;
+    height: 100%;
     color: var(--color-gray);
     font-size: 10px;
     display: flex;
-    vertical-align: middle;
-    margin-right: 12px;
   }
 
   &-action {
-    position: absolute;
-    right: -12px;
+    line-height: 1;
+    margin: auto;
   }
 
   i {
     color: var(--color-gray);
-    vertical-align: middle;
+    vertical-align: text-bottom;
   }
 }
 </style>

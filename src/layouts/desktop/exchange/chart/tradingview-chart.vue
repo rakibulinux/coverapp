@@ -87,7 +87,7 @@ export default class TradingViewChart extends Vue {
     return Number(localStorage.getItem("tradingview.chartType")) || 1;
   }
 
-  public mounted() {
+  mounted() {
     this.renderChart();
     ZSmartModel.on("tradingview-ready", () => {
       this.loading = false;
