@@ -17,7 +17,7 @@
             <i slot="icon" v-show="false" />
             <span class="text" v-if="selected !== 'time-picker'">
               {{ kline_times[kline_resolution].title }}
-              <i class="ic-arrow-caret-down" />
+              <i class="zicon-caret-down" />
             </span>
             <a-dropdown
               v-else
@@ -28,7 +28,7 @@
             >
               <span :class="['text', { active: dropdownShowing }]">
                 {{ kline_times[kline_resolution].title }}
-                <i class="ic-arrow-caret-down" />
+                <i class="zicon-caret-down" />
               </span>
               <a-menu slot="overlay">
                 <a-menu-item
@@ -71,7 +71,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { PublicController } from "@/controllers";
+import { MarketMixin } from "@/mixins/mobile";
+import { Vue, Component, Prop, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -79,8 +81,8 @@ import { Vue, Component, Prop } from "vue-property-decorator";
     "depth-chart": () => import("@/components/mobile/depth-chart")
   }
 })
-export default class GroupChart extends Vue {
-  @Prop() readonly market!: ZTypes.Market;
+export default class GroupChart extends Mixins(MarketMixin) {
+  @Prop() readonly market_id!: string;
 
   tabs = [
     {
@@ -165,17 +167,3 @@ export default class GroupChart extends Vue {
 }
 </script>
 
-<style lang="less">
-.kline-chart,
-.depth-chart {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: var(--bg-color);
-  z-index: 0;
-
-  &.showing {
-    z-index: 1;
-  }
-}
-</style>

@@ -1,12 +1,24 @@
 <template>
   <div :class="['order-row', `order-row-${order.side}`]">
     <circle-filled :filled="filled_percent" :side="order.side" />
-    {{ order.id }}
-    {{ order.created_at }}
+    <div class="order-row-col">
+      <div class="created_at">{{ date }}</div>
+      <div></div>
+    </div>
+    {{ order.price }}
+    {{ order.executed_volume }}
+    {{ order.origin_volume }}
+    {{ order.ord_type }}
+    {{ order.side }}
+    <div class="order-row-col">
+    </div>
+    <div class="order-row-col">
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({
@@ -25,18 +37,23 @@ export default class OrderRow extends Vue {
       100
     ).toFixedNumber(2);
   }
+
+  get date() {
+    return helpers.getDate(this.order.created_at);
+  }
 }
 </script>
 
 <style lang="less">
 .order-row {
   position: relative;
-  display: block;
+  display: flex;
   width: 100%;
   padding: 8px 12px;
 
   .order-row-circle-filled {
     position: relative;
+    margin-right: 8px;
 
     .ant-progress-circle-trail {
       stroke: var(--disabled-color) !important;
@@ -44,6 +61,16 @@ export default class OrderRow extends Vue {
 
     .ant-progress-text {
       font-size: 7px;
+    }
+  }
+
+  &-col {
+    display: flex;
+    flex: 1;
+
+    .created_at {
+      font-size: 8px;
+      color: var(--color-gray);
     }
   }
 

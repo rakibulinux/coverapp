@@ -13,7 +13,7 @@
       @click="step--"
     >
       <span class="ant-modal-action-x">
-        <i class="ic-arrow-back" />
+        <i class="zicon-arrow-back" />
       </span>
     </button>
     <div v-if="step === 1">
@@ -25,7 +25,7 @@
         Enter your phone number so we can send you an SMS with the
         authentication code.
       </div>
-      <form v-if="$store.state.user.phone" @submit.prevent="sendCode">
+      <form v-if="UserController.phone" @submit.prevent="sendCode">
         <div class="phone-number">
           <auth-input
             v-model="phone_number"
@@ -79,6 +79,7 @@ import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import phone from "phone";
+import { UserController } from "@/controllers";
 
 @Component({
   components: {
@@ -124,7 +125,7 @@ export default class App extends Mixins(Helpers) {
 
   public onCreate() {
     this.step = 1;
-    this.phone_number = store.state.user.phone.number || "";
+    this.phone_number = UserController.phone.number || "";
     this.verification_code = "";
   }
 
@@ -134,8 +135,8 @@ export default class App extends Mixins(Helpers) {
     try {
       await new ApiClient("auth").post(
         `resource/phones${
-          this.$store.state.user.phone.number &&
-          this.$store.state.user.phone.number === phone_number
+          UserController.phone.number &&
+          UserController.phone.number === phone_number
             ? "/send_code"
             : ""
         }`,
@@ -154,7 +155,6 @@ export default class App extends Mixins(Helpers) {
     this.loading = true;
     const { phone_number, verification_code } = this;
     const payload = { phone_number, verification_code };
-    // if (this.$store.state.user.otp) payload["otp_code"] = this.otp_code;
     try {
       await new ApiClient("auth").post("resource/phones/verify", payload);
       helpers.runNotice("success", "Phone was verified successfully");

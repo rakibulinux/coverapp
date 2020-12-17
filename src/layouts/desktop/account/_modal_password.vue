@@ -6,11 +6,11 @@
     :width="400"
   >
     <need-security
-      v-if="!$store.state.user.otp"
+      v-if="!UserController.otp"
       @closeModal="closeModal"
       @changeModal="changeModal"
     />
-    <div v-else-if="$store.state.user.otp && step === 1">
+    <div v-else-if="UserController.otp && step === 1">
       <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
       <div class="title">
         Change password
@@ -46,7 +46,7 @@
         </auth-button>
       </form>
     </div>
-    <div v-else-if="$store.state.user.otp && step === 2">
+    <div v-else-if="UserController.otp && step === 2">
       <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
       <div class="title">
         Google Authentication

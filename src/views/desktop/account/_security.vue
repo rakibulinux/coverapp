@@ -30,6 +30,7 @@ import * as helpers from "@zsmartex/z-helpers";
 import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
 import _modal_password from "@/layouts/desktop/account/_modal_password.vue";
 import Helpers from "./helpers";
+import { UserController } from "@/controllers";
 
 @Component({
   components: {
@@ -39,10 +40,6 @@ import Helpers from "./helpers";
   mixins: [Helpers]
 })
 export default class AccountSecurity extends Vue {
-  get user_state() {
-    return store.state.user;
-  }
-
   get account_security() {
     return [
       {
@@ -56,11 +53,11 @@ export default class AccountSecurity extends Vue {
         }
       },
       {
-        status: this.user_state.otp,
+        status: UserController.otp,
         name: this.translation("account_security.rows.otp.name"),
         desc: this.translation("account_security.rows.otp.desc"),
         action: {
-          allow: !this.user_state.otp,
+          allow: !UserController.otp,
           text: this.translation("account_security.rows.otp.action"),
           runner: "2fa"
         }

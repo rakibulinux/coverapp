@@ -4,7 +4,7 @@
       <feature-market
         v-for="(market_name, index) in featureMarkets('one')"
         :key="`one` + index"
-        :market="getMarketByName(market_name)"
+        :market_id="getMarketByName(market_name).id"
         @click="$emit('click', getMarketByName(market_name))"
       />
     </swiper-slide>
@@ -12,7 +12,7 @@
       <feature-market
         v-for="(market_name, index) in featureMarkets('two')"
         :key="`one` + index"
-        :market="getMarketByName(market_name)"
+        :market_id="getMarketByName(market_name).id"
         @click="$emit('click', getMarketByName(market_name))"
       />
       <div
@@ -30,6 +30,7 @@
 import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import config from "@/config";
+import { PublicController } from "@/controllers";
 
 @Component({
   components: {
@@ -53,7 +54,7 @@ export default class FeatureMarkets extends Vue {
       .join("")
       .toLowerCase();
 
-    return store.state.public.markets.find(market => market.id == market_id);
+    return PublicController.markets.find(market => market.id == market_id);
   }
 
   featureMarkets(type) {

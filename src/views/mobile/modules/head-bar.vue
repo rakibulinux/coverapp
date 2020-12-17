@@ -4,7 +4,10 @@
     :left-disabled="leftDisabled"
     @back="$emit('back')"
   >
-    <div class="center-action">
+    <div v-if="$slots.center" class="center-action">
+      <slot name="center" />
+    </div>
+    <div v-else class="center-action">
       <span v-if="loading" class="title loading">
         Loading <a-icon type="loading" />
       </span>

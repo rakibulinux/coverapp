@@ -61,7 +61,7 @@
               <market-row
                 v-for="market in findTopMarkets(item.label === 'gainers')"
                 :key="market.id"
-                :market="market"
+                :market_id="market.id"
                 @click="$emit('click', market)"
               />
             </div>

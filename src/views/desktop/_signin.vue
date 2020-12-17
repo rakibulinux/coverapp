@@ -43,6 +43,7 @@ import { Vue, Component, Watch } from "vue-property-decorator";
 import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import ModalTotp from "@/layouts/desktop/modal/_modal_totp.vue";
+import { UserController } from "@/controllers";
 
 @Component({
   components: {
@@ -55,12 +56,15 @@ export default class SignIn extends Vue {
   public $refs!: {
     "modal-totp": ModalTotp;
   };
-  public loading = false;
   public email = "";
   public password = "";
   public otp_code = "";
   public captcha_response = "";
   public payload_modal = {};
+
+  get loading() {
+    return UserController.state == "loading"
+  }
 
   get button_disabled() {
     const { email_error, password_error } = this;
@@ -74,11 +78,11 @@ export default class SignIn extends Vue {
   }
 
   get need2fa() {
-    return this.$store.state.user.need2fa;
+    return UserController.need2fa;
   }
 
-  set need2fa(value) {
-    store.state.user.need2fa = value;
+  set need2fa(need2fa) {
+    UserController.need2fa = need2fa;
   }
 
   get email_error() {
@@ -106,21 +110,12 @@ export default class SignIn extends Vue {
   public async callLogin() {
     const { email, password, otp_code, captcha_response } = this;
 
-    try {
-      this.loading = true;
-      const payload = {
-        email,
-        password,
-        otp_code,
-        captcha_response
-      };
-      await store.dispatch("user/LOGIN", { payload });
-      helpers.runNotice("success", "Logged in successfully");
-      this.loading = false;
-    } catch (error) {
-      this.loading = false;
-      return error;
-    }
+    await UserController.login({
+      email,
+      password,
+      otp_code,
+      captcha_response
+    }, "/account/security");
   }
 
   public login() {

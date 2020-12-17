@@ -2,7 +2,7 @@
   <div class="depth" :class="[`depth-${side}`]">
     <div :style="style">
       <p
-        v-for="(order, index) in depth()"
+        v-for="(order, index) in depth"
         :key="index"
         :style="{
           backgroundSize:
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import TradeController from "@/controllers/trade";
+import { TradeController } from "@/controllers";
 import store from "@/store";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
@@ -33,13 +33,9 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 export default class MarketDepth extends Vue {
   @Prop() readonly side!: "asks" | "bids";
 
-  uuid_callback: string;
-
-  whShow = "normal";
-
-  market = helpers.isMarket();
-  isBid = helpers.isBidSymbol().toUpperCase();
-  isAsk = helpers.isAskSymbol().toUpperCase();
+  get market() {
+    return TradeController.market;
+  }
 
   get orderbook() {
     return TradeController.orderbook;
@@ -47,7 +43,7 @@ export default class MarketDepth extends Vue {
 
   get maxTotal() {
     let total = 0;
-    this.depth().forEach(row => {
+    this.depth.forEach(row => {
       total += Number(row.price * row.amount);
     });
 
@@ -60,7 +56,7 @@ export default class MarketDepth extends Vue {
       : "position: absolute;width: 100%;bottom: 0;";
   }
 
-  depth() {
+  get depth() {
     const orderbook = this.orderbook;
     const depth = orderbook.toArray(this.side, 6);
     return this.side === "bids" ? depth : depth.reverse();
@@ -72,7 +68,7 @@ export default class MarketDepth extends Vue {
 
   on_depth_clicked(order: { price: number; amount: number }) {
     const price = order.price;
-    const orders = this.depth();
+    const orders = this.depth;
     const index = orders.findIndex(ord => ord.price === order.price);
     let orders_with_range: { price: number; amount: number }[];
 
@@ -96,11 +92,11 @@ export default class MarketDepth extends Vue {
   }
 
   getPrice(price: number) {
-    return price.toFixed(helpers.pricePrecision());
+    return price.toFixed(this.market.price_precision);
   }
 
   getAmount(amount: number) {
-    return amount.toFixed(helpers.amountPrecision());
+    return amount.toFixed(this.market.amount_precision);
   }
 }
 </script>

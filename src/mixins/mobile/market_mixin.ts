@@ -1,13 +1,19 @@
-import store from "@/store";
+import { PublicController, TradeController } from '@/controllers';
 import * as helpers from "@zsmartex/z-helpers";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export class MarketMixin extends Vue {
-  market!: ZTypes.Market;
+  get market() {
+    if (this["market_id"]) {
+      return PublicController.markets.find(market => market.id == this["market_id"]);
+    }
+
+    return TradeController.market;
+  }
 
   get ticker() {
-    const tickers = Object.values(store.state.public.tickers);
+    const tickers = Object.values(PublicController.tickers);
     return tickers.find((ticker) => ticker.id === this.market.id);
   }
 
@@ -25,7 +31,7 @@ export class MarketMixin extends Vue {
 
   findTickers(type, data) {
     const { findTickersBase } = helpers;
-    let tickers = Object.values(store.state.public.tickers);
+    let tickers = Object.values(PublicController.tickers);
 
     tickers = findTickersBase(tickers, type, data);
 
@@ -44,12 +50,12 @@ export class MarketMixin extends Vue {
     return Number(amount).toFixed(this.totalPrecision(market));
   }
 
-  checkFavorite(market: string) {
-    return helpers.checkFavorite(market);
+  check_favorite(market_id: string) {
+    return PublicController.helpers.check_favorite(market_id);
   }
 
-  addOrRemoveFavorite(market: string) {
-    helpers.addOrRemoveFavorite(market);
+  add_remove_favorite(market_id: string) {
+    PublicController.helpers.add_remove_favorite(market_id);
   }
 
   percentToNumber(value: string) {

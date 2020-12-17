@@ -26,6 +26,7 @@ module.exports = {
     "@typescript-eslint/getter-return": "off",
     "@typescript-eslint/no-constant-condition": "off",
     "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/interface-name-prefix": "off",
     
     "no-constant-condition": "off",
     "getter-return": "off"

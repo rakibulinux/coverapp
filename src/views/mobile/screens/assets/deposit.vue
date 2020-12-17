@@ -16,6 +16,7 @@ import store from "@/store";
 import ApiClient from "@zsmartex/z-apiclient";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Mixins, Component } from "vue-property-decorator";
+import { PublicController } from "@/controllers";
 
 @Component({
   components: {
@@ -30,7 +31,7 @@ import { Mixins, Component } from "vue-property-decorator";
 export default class DepositScreen extends Mixins(ScreenMixin) {
   loading = false;
   deposit_address = "NCJTG2MSZCS5KI4YJRLQATOKQNTC4NMUWQ5EBMXN";
-  currency = store.state.public.currencies[0];
+  currency = PublicController.currencies[0];
 
   before_panel_create(currency: ZTypes.Currency) {
     this.currency = currency;

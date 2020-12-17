@@ -1,4 +1,4 @@
-import * as helpers from "@zsmartex/z-helpers";
+import { TradeController } from '@/controllers';
 
 const RESOLUTION_STREAM = {
   "1": "1m",
@@ -10,14 +10,10 @@ const RESOLUTION_STREAM = {
   "1W": "1w"
 };
 
-export const MarketChannels = (market: string = helpers.isMarket()) => {
-  const tradingview_resolution = localStorage.getItem(
-    "tradingview.resolution"
-  );
-
+export const MarketChannels = (market: string = TradeController.market.id) => {
   return [
     "depth",
     "trades",
-    "kline-" + RESOLUTION_STREAM[tradingview_resolution]
+    "kline-" + RESOLUTION_STREAM[TradeController.tradingview.resolution]
   ].map(channel => [market, channel].join("."));
 }

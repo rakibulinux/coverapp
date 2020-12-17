@@ -32,6 +32,7 @@ import DepthOverLay from "./depth-overlay.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
+import { PublicController } from "@/controllers";
 
 interface MouseEvent {
   side?: MarketDepth["side"];
@@ -48,8 +49,6 @@ interface MouseEvent {
 export default class MarketDepth extends Vue {
   @Prop() readonly side!: "asks" | "bids";
 
-  uuid_callback: string;
-
   $refs!: {
     overlay: DepthOverLay;
   };
@@ -63,9 +62,7 @@ export default class MarketDepth extends Vue {
   }
 
   get market() {
-    const market_id = helpers.isMarket();
-
-    return store.state.public.markets.find(market => market.id == market_id);
+    return TradeController.market
   }
 
   get maxSum() {
@@ -119,7 +116,7 @@ export default class MarketDepth extends Vue {
       "depth-click",
       price,
       orders_with_range
-        .map(order => order[1])
+        .map(order => order.amount)
         .reduce((previousValue, currentValue) => previousValue + currentValue)
     );
   }

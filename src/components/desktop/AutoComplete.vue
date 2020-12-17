@@ -6,7 +6,7 @@
         {{ value }}
       </div>
       <div class="more">
-        <i class="ic-arrow-caret-down" />
+        <i class="zicon-caret-down" />
       </div>
     </div>
     <ul class="list">

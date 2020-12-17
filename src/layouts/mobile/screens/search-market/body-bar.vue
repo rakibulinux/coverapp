@@ -30,8 +30,8 @@
         <span class="text-right favorite-action">
           <a-icon
             type="star"
-            :theme="checkFavorite(market.name) ? 'filled' : 'outlined'"
-            @click.stop="addOrRemoveFavorite(market.name)"
+            :theme="check_favorite(market.name) ? 'filled' : 'outlined'"
+            @click.stop="add_remove_favorite(market.name)"
           />
         </span>
       </div>

@@ -16,8 +16,6 @@ export default class DepthChart extends Vue {
   resize_observer: ResizeObserver;
   limit_depth = 500;
 
-  uuid_callback: string;
-
   get orderbook() {
     return TradeController.orderbook;
   }
@@ -62,6 +60,10 @@ export default class DepthChart extends Vue {
       this.chart.resize();
     });
     this.resize_observer.observe(this.$el);
+    if (this.chart.chart_ready && this.depth) {
+      this.chart.depth_data = this.depth;
+      this.chart.draw();
+    }
   }
 
   beforeDestroy() {

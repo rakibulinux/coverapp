@@ -4,8 +4,8 @@
       <template v-slot:right>
         <div class="right-action">
           <i
-            :class="checkFavorite(market.name) ? 'ic-star' : 'ic-no-star'"
-            @click="addOrRemoveFavorite(market.name)"
+            :class="check_favorite(market.name) ? 'zicon-star' : 'zicon-no-star'"
+            @click="add_remove_favorite(market.name)"
           />
         </div>
       </template>
@@ -24,10 +24,10 @@
 import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
-import TradeController from "@/controllers/trade";
 import { Mixins, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import { MarketMixin } from "@/mixins/mobile";
+import { PublicController, TradeController, WebSocketController } from "@/controllers";
 
 @Component({
   components: {
@@ -38,24 +38,17 @@ import { MarketMixin } from "@/mixins/mobile";
   }
 })
 export default class Exchange extends Mixins(MarketMixin) {
-  get market() {
-    const market_id = helpers.isMarket();
-    const { markets } = store.state.public;
-
-    return markets.find(market => market.id === market_id);
+  mounted() {
+    this.onLoad();
   }
 
   beforeDestroy() {
     this.removeLoad();
   }
 
-  mounted() {
-    this.onLoad();
-  }
-
   removeLoad() {
     MarketChannels(this.market.id).forEach(channel => {
-      store.commit("websocket/unsubscribe", channel);
+      WebSocketController.unsubscribe("public", channel);
     });
   }
 
@@ -64,15 +57,13 @@ export default class Exchange extends Mixins(MarketMixin) {
     TradeController.orderbook.clear();
 
     MarketChannels(this.market.id).forEach(channel => {
-      store.commit("websocket/subscribe", channel);
+      WebSocketController.subscribe("public", channel);
     });
   }
 
   setTitle() {
     document.title = `${helpers.getMarketLastPrice()} - ${(
-      helpers.isAskSymbol() +
-      "/" +
-      helpers.isBidSymbol()
+      TradeController.market.name
     ).toUpperCase()} - ${config.nameEX}`;
   }
 }

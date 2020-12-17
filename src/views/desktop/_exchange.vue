@@ -1,10 +1,10 @@
 <template>
   <z-content :key="identifier" class="page-exchange">
-    <div class="group-left">
+    <div class="group-left" :class="{ 'hide': hide_pairs_table }">
       <market-list />
     </div>
     <div class="group-middle">
-      <ticker-status />
+      <ticker-status :hide_pairs_table="hide_pairs_table" @update-hide="(val) => hide_pairs_table = val" />
       <chart />
       <mine-control />
     </div>
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import TradeController from "@/controllers/trade";
+import { TradeController, WebSocketController } from "@/controllers";
 import { Vue, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
@@ -42,14 +42,18 @@ import config from "@/config";
 })
 export default class Exchange extends Vue {
   identifier = 0;
+  hide_pairs_table = false;
 
   mounted() {
-    this.onLoad(helpers.isMarket());
+    this.onLoad(TradeController.market.id);
     ZSmartModel.on("exchange-render", this.forceRerender);
+    if (window.innerWidth < 1600) {
+      this.hide_pairs_table = true;
+    }
   }
 
   beforeDestroy() {
-    this.removeLoad(helpers.isMarket());
+    this.removeLoad(TradeController.market.id);
   }
 
   forceRerender(new_market, old_market) {
@@ -65,7 +69,7 @@ export default class Exchange extends Vue {
     const channels = MarketChannels(market);
 
     channels.forEach(channel => {
-      store.commit("websocket/unsubscribe", channel);
+      WebSocketController.unsubscribe("public", channel);
     });
   }
 
@@ -75,15 +79,13 @@ export default class Exchange extends Vue {
     TradeController.orderbook.fetch(market, 500);
 
     MarketChannels().forEach(channel => {
-      store.commit("websocket/subscribe", channel);
+      WebSocketController.subscribe("public", channel);
     });
   }
 
   setTitle() {
     document.title = `${helpers.getMarketLastPrice()} - ${(
-      helpers.isAskSymbol() +
-      "/" +
-      helpers.isBidSymbol()
+      TradeController.market.name
     ).toUpperCase()} - ${config.nameEX}`;
   }
 }

@@ -7,10 +7,10 @@
         </li>
         <li class="m">
           <a href="#" class="icon-link">
-            <i class="ic-telegram" />
+            <i class="zicon-telegram" />
           </a>
           <a href="#" class="icon-link">
-            <i class="ic-twitter" />
+            <i class="zicon-twitter" />
           </a>
         </li>
       </ul>

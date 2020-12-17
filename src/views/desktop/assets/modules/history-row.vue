@@ -51,7 +51,7 @@
       </div>
     </span>
     <span class="action text-right">
-      <i class="ic-arrow-down" @click="changeBox" />
+      <i class="zicon-arrow-down" @click="changeBox" />
     </span>
   </dl>
 </template>
@@ -59,6 +59,7 @@
 <script>
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
+import { PublicController } from "@/controllers";
 
 export default {
   props: {
@@ -80,7 +81,7 @@ export default {
       else return "fail";
     },
     currencyArray(currency) {
-      const currencies = this.$store.getters["public/getAllCurrencies"];
+      const currencies = PublicController.currencies;
       for (const i in currencies) {
         if (currencies[i].id === currency) return currencies[i];
       }

@@ -1,6 +1,6 @@
 <template>
   <a-layout
-    v-if="isReady"
+    v-if="page_ready"
     :class="{
       night: $route.path === '/exchange',
       'no-border': $route.path === '/exchange'
@@ -20,8 +20,9 @@ import config from "@/config";
 import setTheme from "@/library/setTheme";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator";
 import colors from "@/colors";
+import { PublicController, UserController } from "./controllers";
 
 @Component({
   components: {
@@ -39,21 +40,21 @@ export default class App extends Vue {
   };
 
   get isAuth() {
-    return helpers.isAuth();
+    return UserController.state == "active";
   }
 
   get isMobile() {
     return helpers.isMobile();
   }
 
-  get isReady() {
-    return this.$store.state.public.ready;
+  get page_ready() {
+    return PublicController.page_ready;
   }
 
   public beforeCreate() {
     "localStorage" in window;
-    if (localStorage.getItem("SYMBOLS_HASH") == null) {
-      localStorage.setItem("SYMBOLS_HASH", config.default_market());
+    if (localStorage.getItem("market") == null) {
+      localStorage.setItem("market", config.default_market);
     }
     if (localStorage.getItem("LANGUAGE_HASH") == null) {
       localStorage.setItem("LANGUAGE_HASH", "en");
@@ -96,6 +97,11 @@ export default class App extends Vue {
 
   public setTheme() {
     new setTheme().setTheme(colors);
+  }
+
+  @Watch("page_ready")
+  on_page_ready(page_ready: boolean) {
+    document.querySelector("body>.page-loading").remove();
   }
 }
 </script>

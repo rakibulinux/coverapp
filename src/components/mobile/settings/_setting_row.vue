@@ -5,7 +5,7 @@
       <div v-if="info" class="text">{{ info }}</div>
       <i
         v-if="type === ARROW && allowIcon"
-        :class="['ic-arrow-forward', iconClass]"
+        :class="['zicon-arrow-forward', iconClass]"
       />
       <a-icon
         v-else-if="type === SUCCESS && allowIcon"

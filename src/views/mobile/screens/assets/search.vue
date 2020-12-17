@@ -37,6 +37,7 @@
 import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Mixins, Component } from "vue-property-decorator";
+import { PublicController } from "@/controllers";
 
 @Component
 export default class AssetsSearchScreens extends Mixins(ScreenMixin) {
@@ -45,7 +46,7 @@ export default class AssetsSearchScreens extends Mixins(ScreenMixin) {
   search = "";
 
   get currencies() {
-    return store.state.public.currencies.filter(currency =>
+    return PublicController.currencies.filter(currency =>
       currency.id.toLowerCase().includes(this.search.toLowerCase())
     );
   }

@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts">
+import { UserController } from "@/controllers";
 import TradeController from "@/controllers/trade";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
@@ -41,6 +42,10 @@ import { Vue, Component } from "vue-property-decorator";
 })
 export default class MineControl extends Vue {
   type_control = "open_orders";
+
+  get TradeController() {
+    return TradeController;
+  }
 
   get tab_list() {
     return [
@@ -60,11 +65,11 @@ export default class MineControl extends Vue {
   }
 
   get market() {
-    return helpers.isMarket();
+    return TradeController.market;
   }
 
   public mounted() {
-    if (helpers.isAuth()) {
+    if (UserController.state == "active") {
       this.getData();
     }
   }
@@ -73,9 +78,9 @@ export default class MineControl extends Vue {
     ["open_orders", "orders_history", "trades_history"].forEach(
       async (type: "open_orders" | "orders_history" | "trades_history") => {
         const mine_control = TradeController[type];
-        mine_control.market = this.market;
+        mine_control.market = this.market.id;
 
-        mine_control.market = this.market;
+        mine_control.market = this.market.id;
         mine_control.clear();
         await mine_control.getData();
 
@@ -85,7 +90,7 @@ export default class MineControl extends Vue {
   }
 
   public cancel_all_orders() {
-    TradeController.stop_orders(this.market);
+    TradeController.stop_orders(this.market.id);
   }
 
   public onTabChange(type) {

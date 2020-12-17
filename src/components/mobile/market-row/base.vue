@@ -36,7 +36,7 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class MarketRow extends Mixins(MarketMixin) {
-  @Prop() readonly market!: ZTypes.Market;
+  @Prop() readonly market_id!: string;
 
   getLastPriceUSD(market, last) {
     return helpers.getTickerPriceUSD(market, last);

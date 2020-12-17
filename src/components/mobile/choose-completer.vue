@@ -2,8 +2,8 @@
   <div class="choose-completer">
     <span class="text-selected" @click="changeDropdown">
       {{ selectedText || selected }}
-      <i v-if="isShowing" class="ic-arrow-caret-up" />
-      <i v-else class="ic-arrow-caret-down" />
+      <i v-if="isShowing" class="zicon-caret-up" />
+      <i v-else class="zicon-caret-down" />
     </span>
     <div
       v-show="isShowing"
@@ -13,7 +13,7 @@
     >
       <div class="choose-modal" @click.stop="openDropdown">
         <div class="input-search">
-          <i class="ic-xiazai5" />
+          <i class="zicon-search" />
           <input v-model="input" type="text" placeholder="Search" />
         </div>
         <div class="choose-list">

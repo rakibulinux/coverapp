@@ -1,21 +1,29 @@
-import store from "@/store";
 import ApiClient from "@zsmartex/z-apiclient";
 import Vue from "vue";
+import TradeController from "@/controllers/trade";
+import VueCompositionAPI, { reactive } from "@vue/composition-api";
+
+Vue.use(VueCompositionAPI);
 
 export default class TradesManager {
-  updated?(): void;
-  // Header
-  headers = {
+  headers = reactive({
     page: 1,
     limit: 100,
     total: 0,
-  };
+  })
+  config = reactive({
+    market: "All",
+    ready: false,
+    loading: false,
+    realtime: true,
+  })
 
-  constructor() {
+  get trades() {
+    return TradeController.store.trades_history;
   }
 
-  get config() {
-    return store.state.exchange.mine_control["trades_history"].config;
+  set trades(val) {
+    TradeController.store.trades_history = val;
   }
 
   get market() {
@@ -48,14 +56,6 @@ export default class TradesManager {
 
   set realtime(realtime: boolean) {
     this.config.realtime = realtime;
-  }
-
-  get trades() {
-    return store.state.exchange.mine_control["trades_history"].data;
-  }
-
-  set trades(val) {
-    store.state.exchange.mine_control["trades_history"].data = val;
   }
 
   async getData(page = this.headers.page, limit = this.headers.limit) {

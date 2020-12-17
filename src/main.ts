@@ -8,13 +8,21 @@ import Vue from "vue";
 import Vue2TouchEvents from "vue2-touch-events";
 import "./registerServiceWorker";
 import(/* webpackPreload: true */ "@/assets/css/loading.scss");
+import { PublicController, TradeController, WebSocketController, UserController } from "@/controllers";
+import Fragment from "@grainrigi/vue-fragment";
 
+Vue.use(Fragment.Plugin)
 Vue.use(Vue2TouchEvents);
 Vue.use(vClickOutside);
 
 Vue.config.productionTip = false;
 Vue.config.performance = true;
 initProgress(router);
+
+Vue.prototype.PublicController = PublicController;
+Vue.prototype.TradeController = TradeController;
+Vue.prototype.UserController = UserController;
+Vue.prototype.WebSocketController = WebSocketController;
 
 new Vue({
   store,

@@ -32,6 +32,7 @@
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
 import sparkline from "@/components/desktop/home/sparkline";
+import { PublicController, TradeController } from '@/controllers';
 
 export default {
   components: {
@@ -56,9 +57,11 @@ export default {
       const nameArray = name.split("/");
       return nameArray.join("").toLowerCase();
     },
-    getTicker: ticker => helpers.getTicker(ticker),
-    getLastPrice(ticker) {
-      return this.getPrice(this.getTicker(ticker).last);
+    getTicker(market_id) {
+      return PublicController.tickers[market_id];
+    },
+    getLastPrice(market_id) {
+      return this.getPrice(this.getTicker(market_id).last);
     },
     getLastPriceUSD(ticker) {
       return helpers.getTickerPriceUSD(ticker, this.getLastPrice(ticker));
@@ -79,8 +82,9 @@ export default {
     },
     MarketJoin(ticker) {
       const marketArray = ticker.split("/");
-      const market = marketArray.join("_");
-      this.$store.commit("public/SYNC_EXCHANGE", { market });
+      const market_id = marketArray.join("").toLowerCase();
+
+      TradeController.open_exchange(market_id);
     }
   }
 };

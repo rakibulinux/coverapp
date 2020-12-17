@@ -5,13 +5,14 @@
 <script lang="ts">
 import uuid from "uuid/v4";
 import store from "@/store";
-import DataFeed from "@/library/DataFeed";
+import TradingViewDataFeed from "@/library/tradingview_datafeed";
 import config from "@/config";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { Vue, Component } from "vue-property-decorator";
 import night_theme from "@/assets/css/tradingview/night";
 import { cssjson, charting_library as TradingView } from "@/assets/js";
+import { PublicController, TradeController } from "@/controllers";
 
 @Component({
   components: {
@@ -22,13 +23,13 @@ export default class TradingViewChart extends Vue {
   element_id = uuid();
 
   public loading = false;
-  public isAsk = helpers.isAskSymbol();
-  public isBid = helpers.isBidSymbol();
+  public isAsk = TradeController.market.base_unit;
+  public isBid = TradeController.market.quote_unit;
   public symbol = [this.isAsk, this.isBid].join("/").toUpperCase();
   public widgetOptions = {
     debug: false,
     symbol: this.symbol,
-    datafeed: new DataFeed(store),
+    datafeed: new TradingViewDataFeed(),
     interval: localStorage.getItem("tradingview.resolution") || "15",
     container_id: this.element_id,
     library_path: "/charting_library/",
@@ -72,9 +73,9 @@ export default class TradingViewChart extends Vue {
     fullscreen: false,
     autosize: true,
     studies_overrides: helpers.getStudiesOverrides(
-      this.$store.state.exchange.theme
+      PublicController.theme
     ),
-    overrides: helpers.getOverrides(this.$store.state.exchange.theme)
+    overrides: helpers.getOverrides(PublicController.theme)
   };
   public studies = [];
   public tvWidget!: TradingView;
@@ -103,6 +104,7 @@ export default class TradingViewChart extends Vue {
   }
 
   public renderChart() {
+    TradeController.tradingview.ready = false;
     ZSmartModel.emit("tradingview-rending");
     this.tvWidget = new TradingView(this.widgetOptions);
     const buttons = [
@@ -127,6 +129,7 @@ export default class TradingViewChart extends Vue {
       this.toggleStudy(this.chartType);
       this.appendStyle();
       ZSmartModel.emit("tradingview-ready");
+      TradeController.tradingview.ready = true;
     });
   }
 
@@ -164,7 +167,7 @@ export default class TradingViewChart extends Vue {
           this.toggleStudy(config.chartType);
         }
         this.tvWidget.chart().setResolution(config.resolution);
-        store.commit("exchange/UPDATE_RESOLUTION", config.resolution);
+        TradeController.tradingview.resolution = config.resolution;
         localStorage.setItem("tradingview.chartType", config.chartType);
         button.parentElement.classList.add("actived");
       });

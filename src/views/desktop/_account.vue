@@ -4,8 +4,8 @@
       <ul class="setting-menu">
         <li class="avatar-user">
           <img src="@/assets/img/avatar.png" />
-          <p class="uid">UID: {{ $store.state.user.uid }}</p>
-          <div class="email">{{ $store.state.user.email }}</div>
+          <p class="uid">UID: {{ uid }}</p>
+          <div class="email">{{ email }}</div>
         </li>
         <router-link
           v-for="(data, index) in MENU"
@@ -25,34 +25,44 @@
 </template>
 
 <script lang="ts">
+import { EncryptEmail } from "@/mixins";
+import { UserController } from "@/controllers";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
 export default class Account extends Vue {
+  get uid() {
+    return UserController.uid;
+  }
+
+  get email() {
+    return EncryptEmail(UserController.email);
+  }
+
   get MENU() {
     return [
       {
-        icon: "ic-personal",
+        icon: "zicon-personal",
         text: this.$t("usercenter.account_information.title"),
         url: "/account/information"
       },
       {
-        icon: "ic-anquan",
+        icon: "zicon-anquan",
         text: this.$t("usercenter.account_security.title"),
         url: "/account/security"
       },
       {
-        icon: "ic-shenfen",
+        icon: "zicon-shenfen",
         text: this.$t("header.user.kyc_account_verification"),
         url: "/account/kyc"
       },
       {
-        icon: "ic-rili",
+        icon: "zicon-rili",
         text: this.$t("usercenter.login_history.title"),
         url: "/account/history"
       },
       {
-        icon: "ic-API",
+        icon: "zicon-API",
         text: this.$t("usercenter.api.title"),
         url: "/account/api"
       }

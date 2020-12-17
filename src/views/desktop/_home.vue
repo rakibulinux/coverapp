@@ -13,7 +13,7 @@ import { Vue, Component } from "vue-property-decorator";
 @Component({
   components: {
     preview: () => import("@/layouts/desktop/home/_preview.vue"),
-    "market-list": () => import("@/layouts/desktop/home/_market_list.vue"),
+    "market-list": () => import("@/layouts/desktop/home/market-list"),
     "feature-markets": () =>
       import("@/layouts/desktop/home/_feature_markets.vue"),
     advantages: () => import("@/layouts/desktop/home/_advantages.vue")

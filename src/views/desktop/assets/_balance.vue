@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { PublicController } from "@/controllers"
 import * as helpers from "@zsmartex/z-helpers";
 import _balance_row from "./modules/balance-row";
 
@@ -81,14 +82,14 @@ export default {
     },
     getTotalUSDT() {
       let value = 0;
-      const currencies = this.$store.getters["public/getAllCurrencies"];
+      const currencies = PublicController.currencies;
       currencies.forEach(currency => {
         value += Number(new helpers.Balance(currency.id).getTotalUSDT());
       });
       return value.toFixed(2);
     },
     getTotalUSD() {
-      const price = this.$store.getters["public/getGlobalPrice"].USDT;
+      const price = PublicController.global_price.USDT;
       if (price) return (price.USD * this.getTotalUSDT).toFixed(2);
       else return 0;
     }

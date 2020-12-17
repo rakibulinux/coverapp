@@ -5,6 +5,7 @@ import * as helpers from "@zsmartex/z-helpers";
 import Vue from "vue";
 import Router from "vue-router";
 import routes from "./routes";
+import { PublicController, TradeController, UserController } from "@/controllers";
 
 Vue.use(Router);
 
@@ -38,54 +39,55 @@ const PathToTitle = (path: string) => {
 const SetRouterByPath = (path: string) => {
   const page_title = PathToTitle(path);
 
-  store.commit("public/SET_ROUTER", path);
-  store.commit("public/SET_TITLE", config[page_title]);
+  PublicController.set_title(config[page_title]);
 };
 
 const PathHandle = (path: string) => {
+  if (document.location.pathname[document.location.pathname.length -1] == "/" && document.location.pathname.length > 1) {
+    document.location.pathname = document.location.pathname.slice(0, document.location.pathname.length - 1);
+  }
+
   if (path.includes("/exchange/")) {
-    const markets: string[] = store.getters["public/getAllMarkets"].map(
+    const markets: string[] = PublicController.markets.map(
       row => row.name
     );
     const market = path.replace("/exchange/", "").split("-");
     if (!markets.includes(market.join("/"))) {
       return router.push("/exchange");
     } else {
-      store.commit("public/SYNC_EXCHANGE", { market: market.join("_") });
+      TradeController.open_exchange(market.join("").toLowerCase());
     }
   }
 };
 
-const pre_fetch_list = [
-  { commit: "public/MARKETS", key: "markets", ready: false },
-  { commit: "public/CURRENCIES", key: "currencies", ready: false },
-  { commit: "public/TICKERS", key: "tickers", ready: false },
-  { commit: "public/TRADING_FEES", key: "trading_fees", ready: false },
-  { commit: "public/GLOBAL_PRICE", key: "global_price", ready: false }
-];
-
 router.beforeEach(async (to, from, next) => {
-  store.state.public.prev_path = from.fullPath;
   PathHandle(to.path);
 
-  if (!store.state.public.ready && first_route) {
+  if (!PublicController.page_ready && first_route) {
     first_route = false;
 
-    await store.dispatch("user/getLogged");
+    await Promise.all([
+      UserController.get_logged(),
+      PublicController.fetch_currencies(),
+      PublicController.fetch_markets(),
+      PublicController.fetch_tickers(),
+      PublicController.fetch_trading_fees(),
+      PublicController.fetch_global_price(),
+      PublicController.fetch_banners(),
+      PublicController.fetch_broadcasts()
+    ]);
     while (true) {
-      if (pre_fetch_list.filter(({ ready }) => ready === false).length == 0) {
-        store.commit("public/PAGE_READY");
+      if (
+        PublicController.currencies &&
+        PublicController.markets &&
+        PublicController.tickers &&
+        PublicController.trading_fees &&
+        PublicController.global_price &&
+        PublicController.banners &&
+        PublicController.broadcasts
+      ) {
+        PublicController.page_ready = true;
         break;
-      }
-
-      for (const index in pre_fetch_list.filter(
-        ({ ready }) => ready === false
-      )) {
-        const fetch = pre_fetch_list[index];
-        if ((window as any).z_cache[fetch.key].success == false)
-          location.reload();
-        store.commit(fetch.commit, (window as any).z_cache[fetch.key].data);
-        pre_fetch_list[index].ready = true;
       }
 
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -93,12 +95,12 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (
-    helpers.authStatus() == "pending" &&
+    UserController.state == "pending" &&
     !to.fullPath.includes("/confirmation/email")
   ) {
     next("/confirmation/email");
   } else if (
-    helpers.authStatus() != "pending" &&
+    UserController.state != "pending" &&
     to.fullPath.includes("/confirmation/email")
   ) {
     next("/");
@@ -107,11 +109,11 @@ router.beforeEach(async (to, from, next) => {
     !to.matched.some(record => record.meta.mobile)
   ) {
     next("/m");
-  } else if (to.matched.some(record => record.meta.guest) && helpers.isAuth()) {
+  } else if (to.matched.some(record => record.meta.guest) && UserController.state == "active") {
     next("/account/security");
   } else if (
     to.matched.some(record => record.meta.requiresAuth) &&
-    !helpers.isAuth()
+    !(UserController.state == "active")
   ) {
     if (helpers.isMobile()) {
       if (from.path === "/") {

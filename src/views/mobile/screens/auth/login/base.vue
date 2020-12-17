@@ -3,7 +3,7 @@
     <head-bar :left-disabled="true">
       <template v-slot:right>
         <div class="right-action">
-          <i class="ic-aui-icon-close" @click="destroy" />
+          <i class="zicon-aui-icon-close" @click="destroy" />
         </div>
       </template>
     </head-bar>
@@ -57,13 +57,15 @@
 import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Mixins, Component, Watch } from "vue-property-decorator";
-import AuthMixin from "../mixins";
+import { AuthMixin } from "@/mixins";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
+import { UserController } from "@/controllers";
 
 @Component({
   components: {
-    "panel-view": () => import("@/components/mobile/panel-view.vue"),
+    "auth-input": () => import("@/components/mobile/auth-input"),
+    "auth-button": () => import("@/components/mobile/auth-button"),
     "screen-verify-otp": () => import("@/views/mobile/screens/verify/totp.vue"),
     "screen-auth-signup": () => import("@/views/mobile/screens/auth/signup")
   }
@@ -73,18 +75,17 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     [key: string]: ScreenMixin;
   };
 
-  loading = false;
   email = "demo@zsmart.tech";
   password = "J\\=v<Sfn7>8%W6S6";
   otp_code = "";
   button_rules = ["loading", "email", "password"];
 
   get need2fa() {
-    return store.state.user.need2fa;
+    return UserController.need2fa;
   }
 
   set need2fa(value: boolean) {
-    store.state.user.need2fa = value;
+    UserController.need2fa = value;
   }
 
   panel_created(callback?: Function) {
@@ -109,29 +110,15 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   async callLogin() {
     const { email, password, otp_code } = this;
 
-    try {
-      this.loading = true;
-      await store.dispatch("user/LOGIN", {
-        payload: {
-          email,
-          password,
-          otp_code
-        }
-      });
-      this.loading = false;
-      this.need2fa = false;
+    await UserController.login({ email, password, otp_code }, "/m");
 
-      helpers.runNotice("success", "Logged in successfully");
-      this.$emit("login-success", "");
-      this.$router.push("/m");
+    if (UserController.state != "active") return;
 
-      this.$nextTick(() => {
-        this.destroy();
-      });
-    } catch (error) {
-      this.loading = false;
-      return error;
-    }
+    this.$emit("login-success", "");
+
+    this.$nextTick(() => {
+      this.destroy();
+    });
   }
 
   login(otp_code?: string) {

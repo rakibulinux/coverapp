@@ -53,6 +53,7 @@
 import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Vue, Component } from "vue-property-decorator";
+import { PublicController, UserController } from "@/controllers";
 
 @Component({
   components: {
@@ -80,11 +81,11 @@ export default class Assets extends Vue {
   };
 
   get user_otp() {
-    return store.state.user.otp;
+    return UserController.otp;
   }
 
   get currencies() {
-    return store.state.public.currencies;
+    return PublicController.currencies;
   }
 
   mounted() {

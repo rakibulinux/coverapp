@@ -34,11 +34,13 @@
           </div>
 
           <div class="note-step-icon qrcode">
-            <div class="qrcode-image"></div>
+            <div class="qrcode-image">
+              <qrcode :value="code.url" :size="110" level="L" />
+            </div>
             <div class="qrcode-content"></div>
           </div>
 
-          <button class="note-step-button">
+          <button class="note-step-button" @click="copy_secret">
             Copy Private Key
           </button>
 
@@ -50,8 +52,15 @@
       </template>
       <template v-if="step === 3">
         <auth-input
-          v-model="otp"
-          name="otp"
+          v-model="password"
+          name="password"
+          type="text"
+          title="Your password"
+          placeholder="Enter your password"
+        />
+        <auth-input
+          v-model="otp_code"
+          name="otp_code"
           type="number"
           maxlength="6"
           title="Google verification code"
@@ -62,7 +71,7 @@
       <button v-if="step < 3" class="button-next" type="submit" @click="step++">
         {{ button_content }}
       </button>
-      <auth-button v-else type="submit" :disabled="otp.length < 6">
+      <auth-button v-else type="submit" :disabled="otp_code.length < 6">
         {{ button_content }}
       </auth-button>
     </div>
@@ -70,11 +79,14 @@
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
+import UserController from "@/controllers/user";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {
+    qrcode: () => import("@/components/desktop/qrcode"),
     "auth-input": () => import("@/components/mobile/auth-input"),
     "auth-button": () => import("@/components/mobile/auth-button"),
     "z-step": () => import("@/components/mobile/z-step.vue")
@@ -82,7 +94,12 @@ import { Component, Mixins } from "vue-property-decorator";
 })
 export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
   step = 1;
-  otp = "";
+  password = "";
+  otp_code = "";
+  code = {
+    secret: "",
+    url: ""
+  };
 
   get STEP() {
     return [
@@ -110,8 +127,36 @@ export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
     }
   }
 
+  mounted() {
+    this.get_qrcode();
+  }
+
   before_panel_destroy() {
     this.step = 1;
+  }
+
+  async get_qrcode() {
+    const qrcode = await UserController.get_qrcode();
+    if (!qrcode) return;
+
+    let url = qrcode.url;
+    url = helpers.removeURLParam(url, "algorithm");
+    url = helpers.removeURLParam(url, "digits");
+    this.code = {
+      secret: helpers.getURLParam(url, "secret"),
+      url
+    };
+  }
+
+  copy_secret() {
+    helpers.copyText(this.code.secret);
+    helpers.runNotice("success", "Copy thanh cong");
+  }
+
+  enable_2fa() {
+    UserController.enable_2fa(this.password, this.otp_code, () => {
+      this.destroy();
+    });
   }
 }
 </script>
@@ -145,8 +190,13 @@ export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
           border-radius: 0;
         }
 
-        img,
-        canvas {
+        .qrcode-image {
+            canvas {
+              vertical-align: middle;
+            }
+          }
+
+        img {
           width: 50px;
           height: 50px;
         }

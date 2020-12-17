@@ -24,10 +24,10 @@
         Phone
       </setting-row>
 
-      <setting-row :value="user_info.email" :clickable="false">
+      <setting-row :value="UserController.email" :clickable="false">
         Email
       </setting-row>
-      <setting-row :value="user_info.uid" :clickable="false">
+      <setting-row :value="UserController.uid" :clickable="false">
         UID
       </setting-row>
     </div>
@@ -55,10 +55,6 @@ export default class SecurityScreen extends Mixins(ScreenMixin) {
   $refs!: {
     [key: string]: any;
   };
-
-  get user_info() {
-    return store.state.user;
-  }
 
   open_screen(screen: string) {
     setTimeout(() => {

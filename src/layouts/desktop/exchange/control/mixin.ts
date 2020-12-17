@@ -1,4 +1,4 @@
-import TradeController from "@/controllers/trade";
+import { TradeController, UserController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -8,8 +8,8 @@ export default class MineControlMixin extends Vue {
 
   name!: "open_orders" | "orders_history" | "trades_history";
 
-  isAsk = helpers.isAskSymbol().toUpperCase();
-  isBid = helpers.isBidSymbol().toUpperCase();
+  isAsk = TradeController.market.base_unit.toUpperCase();
+  isBid = TradeController.market.quote_unit.toUpperCase();
   price_precision = helpers.pricePrecision();
   amount_precision = helpers.amountPrecision();
   total_precision = helpers.totalPrecision();
@@ -19,26 +19,26 @@ export default class MineControlMixin extends Vue {
   }
 
   get checkSession() {
-    return helpers.isAuth();
+    return UserController.state == "active";
   }
 
-  public getDate(time) {
+  getDate(time) {
     return helpers.getDate(time);
   }
 
-  public getPrice(price) {
+  getPrice(price) {
     return Number(price).toFixed(this.price_precision);
   }
 
-  public getAmount(amount) {
+  getAmount(amount) {
     return Number(amount).toFixed(this.amount_precision);
   }
 
-  public getTotal(total) {
+  getTotal(total) {
     return Number(total).toFixed(this.total_precision);
   }
 
-  public getTrend(taker_type) {
+  getTrend(taker_type) {
     return helpers.trendType(taker_type);
   }
 }

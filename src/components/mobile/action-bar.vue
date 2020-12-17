@@ -1,7 +1,7 @@
 <template>
   <div :class="['action-bar']">
     <div v-if="!leftDisabled" class="back left-action">
-      <a-icon type="left" @click="$emit('back')" />
+      <i class="zicon-arrow-back1" @click="$emit('back')" />
     </div>
     <slot />
   </div>
@@ -28,9 +28,9 @@ export default class ActionBar extends Vue {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 16px;
+    font-size: 14px;
     i {
-      font-size: 18px;
+      font-size: 16px;
       color: var(--color-gray);
     }
   }

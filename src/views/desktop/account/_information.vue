@@ -29,6 +29,8 @@ import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import _modal_phone from "@/layouts/desktop/account/_modal_phone.vue";
 import Helpers from "./helpers";
+import { UserController } from "@/controllers";
+import { EncryptEmail } from "@/mixins";
 
 @Component({
   components: {
@@ -37,33 +39,29 @@ import Helpers from "./helpers";
   mixins: [Helpers]
 })
 export default class AccountInformation extends Vue {
-  get user_state() {
-    return store.state.user;
-  }
-
   get account_informations() {
     return [
       {
         name: "UID",
         type: "text",
         desc: ``,
-        value: this.user_state.uid
+        value: UserController.uid
       },
       {
         name: this.translation("account_information.rows.email.name"),
         type: "text",
         desc: this.translation("account_information.rows.email.desc"),
-        value: this.user_state.email
+        value: EncryptEmail(UserController.email)
       },
       {
         name: "Phone",
-        type: this.user_state.phone.validated ? "text" : "action",
+        type: UserController.phone.validated ? "text" : "action",
         desc: this.translation("account_information.rows.email.desc"),
-        value: this.user_state.phone.validated
-          ? "+" + this.user_state.phone.number
+        value: UserController.phone.validated
+          ? "+" + UserController.phone.number
           : "",
         action: {
-          allow: !this.user_state.phone.validated,
+          allow: !UserController.phone.validated,
           text: "Setting",
           runner: "phone"
         }

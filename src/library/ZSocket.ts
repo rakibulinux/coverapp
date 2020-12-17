@@ -1,7 +1,6 @@
-import TradeController from "@/controllers/trade";
 import ZSmartModel from "@zsmartex/z-eventbus";
-import { Store } from "vuex";
 import UserController from '@/controllers/user';
+import { PublicController, TradeController } from '@/controllers';
 
 class ZSocket {
   [key: string]: any;
@@ -10,17 +9,15 @@ class ZSocket {
   type: string;
   callback?: Function;
   socket!: WebSocket;
-  store: Store<RootState>;
 
   is_connected = false;
   allow_reconnect = true;
   channels: string[] = [];
 
-  constructor(url: string, store: Store<RootState>, callback?: Function, type = "public") {
+  constructor(url: string, callback?: Function, type = "public") {
     this.url = url;
     this.type = type;
     this.callback = callback;
-    this.store = store;
   }
 
   get is_open() {
@@ -92,6 +89,7 @@ class ZSocket {
         const klineMatch = routingKey.match(/([^.]*)\.kline-(.+)/);
         const tradesMatch = routingKey.match(/([^.]*)\.trades/);
         const depthUpdateMatch = routingKey.match(/([^.]*)\.depth/);
+        const balanceUpdateMatch = routingKey == "balance";
 
         if (subscribedMatch || unsubscribedMatch) {
           const channels: string[] = event["streams"];
@@ -99,13 +97,17 @@ class ZSocket {
           this.channels = channels;
         }
 
+        if (balanceUpdateMatch) {
+          UserController.add_update_balance(event as ZTypes.Balance);
+        }
+
         if (depthUpdateMatch) {
           const orderbook = TradeController.orderbook;
           const payload: { asks: string[][]; bids: string[][]; sequence: number } = event;
 
-          // if (orderbook.sequence >= payload.sequence) return;
+          if (orderbook.sequence >= payload.sequence) return;
 
-          // orderbook.sequence = payload.sequence;
+          orderbook.sequence = payload.sequence;
 
           (["asks", "bids"]).forEach((side: ZTypes.TakerType) => {
             if (!payload[side]) return;
@@ -124,23 +126,37 @@ class ZSocket {
         }
 
         if (klineMatch) {
-          const resolution = parseInt(String(routingKey).split("kline-")[1]);
-
-          if (resolution !== Number(localStorage.getItem("tradingview.resolution"))) return;
-
-          this.store.dispatch("exchange/dataFeed", { type: "kline", kline: event });
-          ZSmartModel.emit("new-kline", event);
+          TradeController.tradingview.add_update_chart({
+              time: event[0],
+              open: event[1],
+              high: event[2],
+              low: event[3],
+              close: event[4],
+              volume: event[5]
+            },
+            "kline"
+          );
         }
 
         if (tradesMatch) {
-          this.store.commit("exchange/ADD_TRADE", event);
-          this.store.dispatch("exchange/dataFeed", { type: "trades", trades: event.trades });
-          ZSmartModel.emit("new-trade", event);
+          for (const trade of (event.trades as ZTypes.PublicTrade[])) {
+            TradeController.add_trade(trade);
+
+            const lastBar = TradeController.tradingview.stream.lastBar;
+
+            TradeController.tradingview.add_update_chart({
+                time: (new Date(trade.created_at).getTime() / 1000).toFixedNumber(0),
+                close: Number(trade.price),
+                volume: Number(trade.amount)
+              },
+              "trade"
+            );
+          }
         }
 
         switch (routingKey) {
           case "global.tickers": {
-            this.store.commit("public/TICKERS", event);
+            PublicController.tickers = event;
             break;
           } case "order":{
             const order: ZTypes.Order = event;
@@ -159,6 +175,7 @@ class ZSocket {
             const balance: ZTypes.Balance = event;
 
             UserController.add_update_balance(balance);
+            break;
           }
         }
       }

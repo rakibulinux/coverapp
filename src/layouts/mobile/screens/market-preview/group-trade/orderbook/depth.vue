@@ -19,62 +19,61 @@
       </template>
     </div>
     <div class="z-table-content">
-      <div
-        v-for="order in depth()"
-        :key="order[0]"
-        :style="{
-          backgroundSize: ((order.key * order.data) / maxTotal) * 100 + '% 100%'
-        }"
-        :class="['z-table-row', 'depth-row']"
-      >
-        <span v-if="side === 'bids'" class="text-left">
-          {{ getAmount(order.amount) }}
-        </span>
-        <span v-if="side === 'bids'" class="text-right text-up">
-          {{ getPrice(order.price) }}
-        </span>
+      <depth-row
+        v-for="order in depth"
+        :key="order.price"
+        :maxTotal="maxTotal"
+        :price="order.price"
+        :amount="order.amount"
+        :side="side"
+        class="z-table-row"
+      />
 
-        <span v-if="side === 'asks'" class="text-left text-down">
-          {{ getPrice(order.price) }}
-        </span>
-        <span v-if="side === 'asks'" class="text-right">
-          {{ getAmount(order.amount) }}
-        </span>
-      </div>
+      <fake-depth-row
+        v-for="(fake, i) in fake_row"
+        :key="`fake-${i}`"
+        :side="side"
+        class="z-table-row"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import TradeController from "@/controllers/trade";
+import { PublicController, TradeController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
 import { MarketMixin } from "@/mixins/mobile";
 import { Mixins, Component, Prop } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    "depth-row": () => import("./depth-row.vue"),
+    "fake-depth-row": () => import("./fake-depth-row.vue")
+  }
+})
 export default class Depth extends Mixins(MarketMixin) {
-  @Prop() readonly market!: ZTypes.Market;
+  @Prop() readonly market_id!: string;
   @Prop() readonly side!: ZTypes.TakerType;
 
-  uuid_callback: string;
+  min_row = 15;
 
-  get orderbook() {
-    return TradeController.orderbook;
+  get depth() {
+    const depth = TradeController.orderbook.toArray(this.side, 15);
+
+    return depth;
+  }
+
+  get fake_row() {
+    return Array(Math.max(0, this.min_row - this.depth.length));
   }
 
   get maxTotal() {
     let total = 0;
-    this.depth().forEach(row => {
+    this.depth.forEach(row => {
       total += Number(row.price * row.amount);
     });
 
     return total;
-  }
-
-  depth() {
-    const depth = this.orderbook.toArray(this.side);
-
-    return depth.splice(0, 15);
   }
 
   trendType(value: ZTypes.OrderSide) {

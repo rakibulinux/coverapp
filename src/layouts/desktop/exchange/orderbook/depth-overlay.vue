@@ -34,7 +34,6 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class DepthOverLay extends Mixins(MarketMixin) {
-  @Prop() readonly market!: ZTypes.Market;
   @Prop() readonly side!: "asks" | "bids";
   @Prop() readonly depth: { price: number; amount: number }[];
   @Prop() orders_best_range?: (

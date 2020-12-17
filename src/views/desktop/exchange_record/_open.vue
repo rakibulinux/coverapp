@@ -43,7 +43,7 @@
           <p v-for="(data, index) in array.data" :key="index">
             <span v-text="getDate(data.created_at)" />
             <span
-              v-text="$store.getters['public/getAllTickers'][data.market].name"
+              v-text="PublicController.tickers[data.market].name"
             />
             <span :class="trendType(data.side)" v-text="data.side" />
             <span v-text="getPrice(data.price, data.market)" />
@@ -53,7 +53,7 @@
             <span class="text-right action">
               <i
                 v-if="data.state === 'wait' || data.state === 'pending'"
-                class="ic-aui-icon-close"
+                class="zicon-aui-icon-close"
                 @click="CloseOrder(data.id)"
               />
             </span>
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import TradeController from "@/controllers/trade";
+import { PublicController, TradeController } from "@/controllers";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
@@ -89,6 +89,9 @@ import Helpers from "./helpers";
 export default {
   mixins: [Helpers],
   computed: {
+    PublicController() {
+      return PublicController;
+    },
     TradeController() {
       return TradeController;
     },

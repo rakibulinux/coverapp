@@ -1,6 +1,6 @@
 <template>
   <div class="assets-withdraw">
-    <div v-if="$store.state.user.otp" class="assets-form">
+    <div v-if="UserController.otp" class="assets-form">
       <div class="form-row">
         <label class="form-label">{{ $t("assets.address") }}</label>
         <div class="form-control">
@@ -73,7 +73,7 @@
       </div>
       <div class="action">
         <button
-          v-if="$store.state.user.otp"
+          v-if="UserController.otp"
           type="submit"
           :disabled="button_disabled"
           @click="openTotp"
@@ -122,7 +122,7 @@ export default {
     }
   },
   mounted() {
-    if (!this.$store.state.user.otp)
+    if (!this.UserController.otp)
       helpers.runNotice("warning", this.$t("message.withdraw.enable2fa"));
   },
   methods: {

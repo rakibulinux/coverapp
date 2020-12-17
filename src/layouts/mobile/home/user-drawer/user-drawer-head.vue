@@ -6,9 +6,9 @@
       </div>
 
       <div class="user-info-title">
-        {{ user_info.email }}
+        {{ UserController.email }}
 
-        <div class="user-info-description">UID: {{ user_info.uid }}</div>
+        <div class="user-info-description">UID: {{ UserController.uid }}</div>
       </div>
     </div>
     <div v-else class="user-info-content" @click="$emit('login-click')">
@@ -43,6 +43,7 @@
 </template>
 
 <script lang="ts">
+import { UserController } from "@/controllers";
 import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
@@ -76,11 +77,7 @@ export default class UserDrawerHead extends Vue {
   ];
 
   get isAuth(): boolean {
-    return helpers.isAuth();
-  }
-
-  get user_info() {
-    return store.state.user;
+    return UserController.state == "active"
   }
 
   onActionClick(key: string) {

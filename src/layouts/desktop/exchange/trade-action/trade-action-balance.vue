@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { UserController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
 
 export default {
@@ -19,7 +20,7 @@ export default {
     currency: String
   },
   computed: {
-    isAuth: () => helpers.isAuth()
+    isAuth: () => UserController.state == "active"
   },
   methods: {
     balance() {

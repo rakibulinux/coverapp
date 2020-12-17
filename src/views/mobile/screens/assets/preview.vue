@@ -20,6 +20,7 @@
 import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
+import { PublicController } from "@/controllers";
 
 @Component({
   components: {
@@ -36,7 +37,7 @@ export default class AssetsPreviewScreen extends Mixins(ScreenMixin) {
     "assets-transaction": Element;
   };
 
-  currency = store.state.public.currencies[0];
+  currency = PublicController.currencies[0];
 
   assets_transaction_height = 0;
 

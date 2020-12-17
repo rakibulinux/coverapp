@@ -26,7 +26,7 @@
       />
       <a-dropdown :trigger="['click']" placement="bottomCenter">
         <a class="ant-dropdown-link" href="#">
-          {{ $t("action.exchange") }} <i class="ic-arrow-down" />
+          {{ $t("action.exchange") }} <i class="zicon-arrow-down" />
         </a>
         <a-menu slot="overlay">
           <a-menu-item
@@ -57,6 +57,7 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 import _deposit from "@/layouts/desktop/assets/_deposit.vue";
 import _withdraw from "@/layouts/desktop/assets/_withdraw.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
+import { PublicController, TradeController } from "@/controllers";
 
 @Component({
   components: {
@@ -72,9 +73,8 @@ export default class BalanceRow extends Vue {
 
   MARKET() {
     const { currency } = this;
-    const TICKER = store.getters["public/getAllMarkets"];
-    return TICKER.filter(ticker => {
-      if (ticker.base_unit === currency) return ticker;
+    return PublicController.markets.filter(market => {
+      if (market.base_unit == currency.id) return market;
     });
   }
 
@@ -111,8 +111,9 @@ export default class BalanceRow extends Vue {
 
   changeMarket($market) {
     const marketArray = $market.split("/");
-    const market = marketArray.join("_");
-    this.$store.commit("public/SYNC_EXCHANGE", { market: market });
+    const market_id = marketArray.join("").toLowerCase();
+
+    TradeController.open_exchange(market_id);
   }
 }
 </script>

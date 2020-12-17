@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { PublicController, TradeController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
 
 export default {
@@ -18,11 +19,7 @@ export default {
     getLastPrice: () => helpers.getMarketLastPrice(),
     getLastUSD: () => helpers.getMarketLastUSD(),
     getChange() {
-      const ticker = this.$store.getters["public/getAllTickers"][
-        helpers.isMarket()
-      ];
-
-      return ticker.price_change_percent;
+      return TradeController.ticker.price_change_percent;
     }
   },
   methods: {

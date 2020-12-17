@@ -7,7 +7,7 @@
             Email Verification
           </h3>
           <div class="desc">
-            We have sent an activation email to {{ $store.state.user.email }}.
+            We have sent an activation email to {{ UserController.email }}.
             Please follow click the link inside to complete your activation. If
             you have not received the email. Please Resend Email
           </div>
@@ -41,7 +41,7 @@ import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
-import UserController from "@/controllers/user";
+import { UserController } from "@/controllers";
 import { i18n } from "@/plugins";
 import ZSmartModel from "@zsmartex/z-eventbus";
 
@@ -69,11 +69,11 @@ export default class App extends Vue {
 
   // TODO: move sended_email from store to router meta data
   get sended() {
-    return this.$store.state.user.session.sended_email;
+    return UserController.session.sended_email;
   }
 
   set sended(value: boolean) {
-    this.$store.state.user.session.sended_email = value;
+    UserController.session.sended_email = value;
   }
 
   async mounted() {
@@ -109,7 +109,7 @@ export default class App extends Vue {
   public async reSendEmail() {
     try {
       await new ApiClient("auth").post("identity/users/email/generate_code", {
-        email: store.state.user.real_email
+        email: UserController.email
       });
       this.actionReSend();
       helpers.runNotice("success", "check email");

@@ -6,16 +6,17 @@
 import uuid from "uuid/v4";
 import TradeController from "@/controllers/trade";
 import * as helpers from "@zsmartex/z-helpers";
+import ResizeObserver from "resize-observer-polyfill";
 import { Chart } from "@/library/depth-chart";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class DepthChart extends Vue {
   @Prop() readonly market_id!: string;
   @Prop() readonly showing!: boolean;
+  resize_observer: ResizeObserver;
   element_id = uuid();
   chart!: Chart;
-  uuid_callback: string;
 
   get orderbook() {
     return TradeController.orderbook;
@@ -29,7 +30,7 @@ export default class DepthChart extends Vue {
     return helpers.amountPrecision(this.market_id);
   }
 
-  depth() {
+  get depth() {
     const SIDE = ["bids", "asks"];
     const data: Chart["depth_data"] = { buy: [], sell: [] };
 
@@ -64,13 +65,28 @@ export default class DepthChart extends Vue {
   mounted() {
     this.chart = new Chart(this.element_id);
     this.chart.init();
-    window.addEventListener("resize", () => {
-      //this.chart.resize();
+
+    this.resize_observer = new ResizeObserver(() => {
+      this.chart.resize();
     });
+    this.resize_observer.observe(this.$el);
+    if (this.chart.chart_ready && this.depth) {
+      this.chart.depth_data = this.depth;
+      this.chart.draw();
+    }
   }
 
   beforeDestroy() {
+    this.resize_observer.unobserve(this.$el);
     this.chart.destroy();
+  }
+
+  @Watch("depth")
+  onDepthChanged(depth) {
+    if (this.chart.chart_ready) {
+      this.chart.depth_data = depth;
+      this.chart.draw();
+    }
   }
 }
 </script>

@@ -27,8 +27,8 @@
       <span class="text-right favorite-action">
         <a-icon
           type="star"
-          :theme="checkFavorite(item.name) ? 'filled' : 'outlined'"
-          @click.stop="addOrRemoveFavorite(item.name)"
+          :theme="check_favorite(item.name) ? 'filled' : 'outlined'"
+          @click.stop="add_remove_favorite(item.name)"
         />
       </span>
     </template>

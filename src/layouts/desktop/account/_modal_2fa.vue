@@ -13,7 +13,7 @@
       @click="step--"
     >
       <span class="ant-modal-action-x">
-        <i class="ic-arrow-back" />
+        <i class="zicon-arrow-back" />
       </span>
     </button>
     <img src="@/assets/img/Google_Authenticator.png" class="logo-modal" />
@@ -55,14 +55,14 @@
           v-model="password"
           name="password"
           type="password"
-          :placeholder="$t('placeholder.password')"
+          :placeholder="$t('input.placeholder.password')"
           :placeholder-need="true"
         />
         <auth-input
           v-model="otp_code"
           name="otp_code"
           type="number"
-          :placeholder="$t('placeholder.2fa_code')"
+          :placeholder="$t('input.placeholder.2fa_code')"
           :placeholder-need="true"
           maxlength="6"
         />
@@ -85,14 +85,14 @@
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
-import qrcode from "@/components/desktop/qrcode";
 import ApiClient from "@zsmartex/z-apiclient";
 import Helpers from "./helpers";
 import store from "@/store";
+import UserController from "@/controllers/user";
 
 @Component({
   components: {
-    qrcode,
+    qrcode: () => import("@/components/desktop/qrcode"),
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
     "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
@@ -145,21 +145,11 @@ export default class App extends Mixins(Helpers) {
     }
   }
 
-  public async enable2FA() {
+  async enable2FA() {
     this.loading = true;
     const { password, otp_code } = this;
-    try {
-      await new ApiClient("auth").post("resource/otp/enable", {
-        password,
-        otp_code
-      });
-      store.commit("user/ENABLE_OTP");
-      this.loading = false;
-      this.delete();
-    } catch (error) {
-      this.loading = false;
-      return error;
-    }
+    await UserController.enable_2fa(password, otp_code);
+    this.loading = false;
   }
 }
 </script>

@@ -36,7 +36,7 @@
                     )
                   "
                 />
-                <i class="ic-cha" @click="openModal(data.kid, false, 'totp')" />
+                <i class="zicon-close" @click="openModal(data.kid, false, 'totp')" />
               </td>
             </tr>
           </tbody>

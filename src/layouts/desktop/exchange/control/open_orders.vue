@@ -2,7 +2,7 @@
   <z-table
     :columns="COLUMN"
     :loading="mine_control.loading"
-    :data="this.mine_control.orders"
+    :data="mine_control.orders"
     :hover="false"
     :border="false"
   >
@@ -41,7 +41,7 @@
     <template slot="action" slot-scope="{ item, column }">
       <span :class="['action', `text-${column.algin}`]">
         <i
-          class="ic-aui-icon-close"
+          class="zicon-aui-icon-close"
           @click="TradeController.stop_order(item.id)"
         />
       </span>

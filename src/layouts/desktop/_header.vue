@@ -14,7 +14,7 @@
         <a-dropdown placement="bottomCenter">
           <a class="ant-dropdown-link">
             {{ ORDERS_MENU.NAME }}
-            <i class="ic-arrow-down" />
+            <i class="zicon-arrow-down" />
           </a>
           <a-menu slot="overlay">
             <a-menu-item
@@ -31,16 +31,16 @@
         </a-dropdown>
         <a-dropdown placement="bottomCenter">
           <a class="ant-dropdown-link">
-            {{ $store.state.user.email }}
-            <i class="ic-arrow-down" />
+            {{ email }}
+            <i class="zicon-arrow-down" />
           </a>
           <a-menu slot="overlay" class="dropdown-user">
             <a-menu-item key="information" class="information">
               <router-link to="/account/information" tag="li">
                 <div class="email">
-                  {{ USER.email }}
+                  {{ email }}
                 </div>
-                <div class="uid" v-text="`UID: ${USER.uid}`" />
+                <div class="uid" v-text="`UID: ${uid}`" />
               </router-link>
             </a-menu-item>
             <a-menu-item
@@ -78,7 +78,7 @@
       <a-dropdown placement="bottomRight">
         <a class="ant-dropdown-link">
           {{ $t("name") }}
-          <i class="ic-arrow-down" />
+          <i class="zicon-arrow-down" />
         </a>
         <a-menu slot="overlay" @click="setLanguage">
           <a-menu-item
@@ -100,9 +100,19 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 import { i18n } from "@/plugins";
+import { UserController } from "@/controllers";
+import { EncryptEmail } from "@/mixins";
 
 @Component
 export default class App extends Vue {
+  get uid() {
+    return UserController.uid;
+  }
+
+  get email() {
+    return EncryptEmail(UserController.email);
+  }
+
   get BUTTON() {
     return [
       {
@@ -158,11 +168,7 @@ export default class App extends Vue {
   }
 
   get isAuth() {
-    return helpers.isAuth();
-  }
-
-  get USER() {
-    return this.$store.state.user;
+    return UserController.state == "active";
   }
 
   get locale() {
@@ -212,7 +218,7 @@ export default class App extends Vue {
   }
 
   public logout() {
-    this.$store.dispatch("user/LOGOUT");
+    UserController.logout();
   }
 
   public translation(message, data = {}) {

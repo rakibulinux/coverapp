@@ -25,7 +25,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { PublicController } from "@/controllers";
+import { MarketMixin } from "@/mixins/mobile";
+import { Vue, Component, Prop, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -33,8 +35,9 @@ import { Vue, Component, Prop } from "vue-property-decorator";
     "order-book": () => import("./orderbook")
   }
 })
-export default class GroupTrade extends Vue {
-  @Prop() readonly market!: ZTypes.Market;
+export default class GroupTrade extends Mixins(MarketMixin) {
+  @Prop() readonly market_id!: string;
+
   selected = "orderbook";
 
   tabs = [

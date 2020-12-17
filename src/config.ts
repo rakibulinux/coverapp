@@ -1,4 +1,3 @@
-import example_img from "@/assets/img/example_banner.jpg";
 import getUrl from "@/getUrl";
 import en from "@/plugins/locales/en";
 import vn from "@/plugins/locales/vn";
@@ -7,44 +6,13 @@ const nameEX = "NameEX";
 
 export default {
   nameEX,
-  default_market: () => {
-    const base_unit = "ETH";
-    const quote_unit = "USDT";
-    return base_unit + "_" + quote_unit;
-  },
+  "default_market": "ethusdt",
   "feature_markets": ["ETH/USDT", "ETH/USDT", "ETH/USDT", "ETH/USDT", "ETH/USDT"],
-  "list_bid1": ["USDT", "ETH", "BTC"],
-  "list_bid2": ["ETC", "USDC"],
+  "list_bid": ["USDT", "ETH", "BTC", "ETC", "USDC", "EXC"],
   "messages": {
     en,
     vn,
   },
-  "banners": [
-    [
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-    ],
-    [
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-    ],
-    [
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-    ],
-    [
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-      { img: example_img, link: "/#" },
-    ],
-  ],
   "api": {
     url: "/api/v2/",
     ws: {

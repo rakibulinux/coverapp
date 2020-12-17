@@ -1,31 +1,17 @@
 <template>
   <div class="preview">
     <swiper :options="swiperOption">
-      <swiper-slide>
-        <div class="preview-image-content">
-          <img src="@/assets/img/banner_home.png" />
-        </div>
-      </swiper-slide>
-      <swiper-slide>
-        <div class="preview-image-content">
-          <img src="@/assets/img/banner_home.png" />
-        </div>
-      </swiper-slide>
-      <swiper-slide>
-        <div class="preview-image-content">
-          <img src="@/assets/img/banner_home.png" />
-        </div>
-      </swiper-slide>
-      <swiper-slide>
-        <div class="preview-image-content">
-          <img src="@/assets/img/banner_home.png" />
-        </div>
+      <swiper-slide v-for="(banner, i) in banners" :key="i">
+        <a class="preview-image-content" :href="banner.url" target="_blank">
+          <img :src="banner.image" />
+        </a>
       </swiper-slide>
     </swiper>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { PublicController } from "@/controllers";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
@@ -49,6 +35,10 @@ export default class Preview extends Vue {
       disableOnInteraction: false
     }
   };
+
+  get banners() {
+    return PublicController.banners;
+  }
 }
 </script>
 

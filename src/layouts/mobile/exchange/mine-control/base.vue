@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts">
+import { UserController } from "@/controllers";
 import TradeController from "@/controllers/trade";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
@@ -45,16 +46,13 @@ export default class MineControl extends Vue {
   }
 
   get authorized() {
-    return helpers.isAuth();
+    return UserController.state == "active"
   }
 
   mounted() {
     if (!this.authorized) return;
 
     this.getOrders();
-    this.orders_history.updated = this.open_orders.updated = () => {
-      this.$forceUpdate();
-    };
   }
 
   getOrders() {

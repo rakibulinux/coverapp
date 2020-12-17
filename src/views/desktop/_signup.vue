@@ -51,6 +51,7 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
+import { UserController } from "@/controllers";
 
 @Component({
   components: {
@@ -59,12 +60,15 @@ import * as helpers from "@zsmartex/z-helpers";
   }
 })
 export default class SignUp extends Vue {
-  public loading = false;
   public email = "";
   public password = "";
   public confirm_password = "";
   public refid = "";
   public captcha_response = "";
+
+  get loading() {
+    return UserController.state == "loading"
+  }
 
   get buttonDisabled() {
     const { email, password, confirm_password, captcha_response } = this;
@@ -138,14 +142,12 @@ export default class SignUp extends Vue {
   public async register() {
     const { email, password, refid, captcha_response } = this;
 
-    this.loading = true;
-    await this.$store.dispatch("user/REGISTER", {
+    UserController.register({
       email,
       password,
       refid,
       captcha_response
-    });
-    this.loading = false;
+    })
   }
 }
 </script>

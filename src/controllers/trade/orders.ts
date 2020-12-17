@@ -1,4 +1,3 @@
-import config from "@/config";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 

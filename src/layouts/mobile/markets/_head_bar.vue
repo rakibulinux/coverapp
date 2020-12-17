@@ -26,7 +26,7 @@ export default class MarketsHeadBar extends Vue {
   selectedLabel = this.list_bid[1].label;
 
   get list_bid() {
-    return ["Favorites", ...config.list_bid1, ...config.list_bid2].map(bid => ({
+    return ["Favorites", ...config.list_bid].map(bid => ({
       label: bid
     }));
   }

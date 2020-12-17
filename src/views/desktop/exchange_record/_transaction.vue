@@ -66,7 +66,7 @@
           >
             <span v-text="getDate(data.created_at)" />
             <span
-              v-text="$store.getters['public/getAllTickers'][data.market].name"
+              v-text="PublicController.tickers[data.market].name"
             />
             <span :class="[trendType(data.side), 'type']" v-text="data.side" />
             <span v-text="getPrice(data.price, data.market)" />
@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import { PublicController, TradeController } from "@/controllers";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
@@ -107,6 +108,14 @@ export default {
     timeMoment: [],
     time: [null, null]
   }),
+  computed: {
+    PublicController() {
+      return PublicController;
+    },
+    TradeController() {
+      return TradeController;
+    }
+  },
   watch: {
     timeMoment() {
       const { timeMoment } = this;

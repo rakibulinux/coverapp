@@ -1,4 +1,3 @@
-import store from "@/store";
 import OrdersManager from "./orders_manager";
 import TradesManager from "./trades_manager";
 

@@ -93,7 +93,6 @@ const configWebPack = {
       new TransformModulesPlugin(),
       new PreloadWebpackPlugin(),
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
-      //new webpack.NormalModuleReplacementPlugin( /node_modules\/ant-design-vue\/lib\/style\/index\.less/, path.resolve(rootDir, 'src/myStylesReplacement.less') )
     ]
   }),
   productionSourceMap: false,
@@ -106,10 +105,11 @@ const configWebPack = {
         changeOrigin: true
       }
     },
+    inline:true,
+    disableHostCheck: true,
     host: "0.0.0.0",
     port: 3000,
-    https: false,
-    hot: true
+    https: false
   }
 };
 

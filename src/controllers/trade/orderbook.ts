@@ -1,8 +1,20 @@
-import store from "@/store";
 import TradeController from "@/controllers/trade";
 
 export default class OrderBook {
+  get book() {
+    return TradeController.store.depth;
+  }
+
+  get sequence() {
+    return this.book.sequence;
+  }
+
+  set sequence(sequence: number) {
+    this.book.sequence = sequence
+  }
+
   async fetch(market_id: string, limit?: number) {
+    
     try {
       const { data } = await TradeController.get_depth(market_id, limit);
       const depth: { [key in ZTypes.TakerType]: string[][] } = data;
@@ -22,18 +34,32 @@ export default class OrderBook {
   }
 
   add(price: number, amount: number, side: ZTypes.TakerType) {
-    store.commit("orderbook/add", { price, amount, side });
+    const index = this.book[side].findIndex(row => row.price === price);
+    if (index >= 0) {
+      this.book[side][index].amount = amount;
+    } else {
+      this.book[side].push({ price, amount });
+
+      this.book[side] = this.book[side].sort((a, b) => {
+        if (side == "asks") return a.price - b.price;
+        if (side == "bids") return b.price - a.price;
+      });
+    }
   }
 
   remove(price: number, side: ZTypes.TakerType) {
-    store.commit("orderbook/remove", { price, side });
+    const index = this.book[side].findIndex(row => row.price === price);
+
+    if (index >= 0) this.book[side].splice(index, 1);
   }
 
   toArray(side: ZTypes.TakerType, limit = 100) {
-    return store.state.orderbook[side];
+    return this.book[side];
   }
 
   clear() {
-    store.commit("orderbook/clear");
+    this.book.asks = [];
+    this.book.bids = [];
+    this.book.sequence = 0;
   }
 }

@@ -26,17 +26,17 @@ export default {
     return {
       MENU: [
         {
-          icon: "ic-view_list-",
+          icon: "zicon-view_list-",
           text: "Open Orders",
           url: "/exchange_record/open"
         },
         {
-          icon: "ic-rili",
+          icon: "zicon-rili",
           text: "Order History",
           url: "/exchange_record/history"
         },
         {
-          icon: "ic-rili",
+          icon: "zicon-rili",
           text: "Trade History",
           url: "/exchange_record/transaction"
         }

@@ -2,16 +2,14 @@
   <div class="preview">
     <div class="fixed">
       <h3>[NAME] - Your Great Choice</h3>
-      <div ref="banner" class="banner">
+      <div class="banners">
         <swiper class="slide_viewer" :options="swiperOption">
-          <swiper-slide v-for="(data, i) in banners" :key="i" class="slide">
+          <swiper-slide v-for="(banner, index) in banners" :key="index">
             <a
-              v-for="(dataV, index) in data"
-              :key="index"
               target="_blank"
-              :href="dataV.link"
+              :href="banner.url"
             >
-              <img :src="dataV.img" />
+              <img :src="banner.image" />
             </a>
           </swiper-slide>
           <div slot="pagination" class="swiper-pagination" />
@@ -19,32 +17,47 @@
       </div>
     </div>
     <canvas ref="canvas" />
-    <div class="news" />
+    <broadcasts />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import config from "@/config";
 import { canvas } from "@/assets/js";
+import { Vue, Component } from "vue-property-decorator";
+import { PublicController } from "@/controllers";
 
-export default {
-  data: () => ({
-    swiperOption: {
-      slidesPerView: 1,
-      loop: true,
-      spaceBetween: 30,
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true
-      }
+@Component({
+  components: {
+    broadcasts: () => import("./broadcasts.vue")
+  }
+})
+export default class Preview extends Vue {
+  swiperOption = {
+    slidesPerView: 4,
+    spaceBetween: 24,
+    freeMode: true,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true
     }
-  }),
-  computed: {
-    banners() {
-      return config.banners;
-    }
-  },
+  }
+
+  get banners() {
+    return PublicController.banners;
+  }
+
   mounted() {
+    this.draw_canvas();
+
+    window.addEventListener("resize", this.draw_canvas);
+  }
+
+  beforeDestroy() {
+    window.removeEventListener("resize", this.draw_canvas);
+  }
+
+  draw_canvas() {
     canvas(this.$refs["canvas"]);
   }
 };

@@ -97,6 +97,7 @@ export default class KlineChart extends Vue {
           display: false
         },
         tickText: {
+          position: "inside",
           margin: 6,
           color: "#728bb9",
           size: 8

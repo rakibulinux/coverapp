@@ -15,9 +15,9 @@
     </div>
     <div class="z-table z-table-hoverable">
       <div class="z-table-head">
-        <span class="text-left">{{ $t("table.price") }} ({{ isBid }})</span>
-        <span class="text-right">{{ $t("table.amount") }} ({{ isAsk }})</span>
-        <span class="text-right">{{ $t("table.sum") }} ({{ isBid }})</span>
+        <span class="text-left">{{ $t("table.price") }} ({{ market.quote_unit.toUpperCase() }})</span>
+        <span class="text-right">{{ $t("table.amount") }} ({{ market.base_unit.toUpperCase() }})</span>
+        <span class="text-right">{{ $t("table.sum") }} ({{ market.quote_unit.toUpperCase() }})</span>
       </div>
       <div :class="['z-table-content', type + '-type']">
         <depth-book ref="depth-asks" side="asks" />
@@ -41,6 +41,7 @@ import * as helpers from "@zsmartex/z-helpers";
 import book_asks_svg from "@/assets/img/book_asks.svg";
 import book_avg_svg from "@/assets/img/book_avg.svg";
 import book_bids_svg from "@/assets/img/book_bids.svg";
+import { PublicController } from "@/controllers";
 
 @Component({
   components: {
@@ -66,15 +67,11 @@ export default class App extends Vue {
   }
 
   get market() {
-    return helpers.isMarket();
+    return TradeController.market;
   }
 
-  get isBid() {
-    return helpers.isBidSymbol().toUpperCase();
-  }
-
-  get isAsk() {
-    return helpers.isAskSymbol().toUpperCase();
+  get ticker() {
+    return TradeController.ticker;
   }
 
   public getLastTrend() {
@@ -90,14 +87,7 @@ export default class App extends Vue {
   }
 
   public getChange() {
-    const ticker = this.$store.getters["public/getAllTickers"][
-      helpers.isMarket()
-    ];
-    if (ticker) {
-      return ticker.price_change_percent;
-    }
-
-    return "-.--%";
+    return this.ticker.price_change_percent;
   }
 
   public change_type(type) {

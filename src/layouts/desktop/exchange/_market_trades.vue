@@ -3,7 +3,7 @@
     <z-table
       :loading="loading"
       :columns="COLUMN"
-      :data="trade_data"
+      :data="trades"
       :border="false"
     >
       <template slot="price" slot-scope="{ column, item }">
@@ -35,23 +35,26 @@
 import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
+import { TradeController } from "@/controllers";
 
 @Component
 export default class MarketTrades extends Vue {
   loading = false;
-  isBid = helpers.isBidSymbol().toUpperCase();
-  isAsk = helpers.isAskSymbol().toUpperCase();
+  
+  get market() {
+    return TradeController.market;
+  }
 
   get COLUMN() {
     return [
       {
-        title: `${this.$t("table.price")} (${this.isBid})`,
+        title: `${this.$t("table.price")} (${this.market.quote_unit})`,
         key: "price",
         algin: "left",
         scopedSlots: true
       },
       {
-        title: `${this.$t("table.amount")} (${this.isAsk})`,
+        title: `${this.$t("table.amount")} (${this.market.base_unit})`,
         key: "amount",
         algin: "right",
         scopedSlots: true
@@ -66,9 +69,8 @@ export default class MarketTrades extends Vue {
     ];
   }
 
-  get trade_data() {
-    const { trades } = this.$store.state.exchange;
-    return trades;
+  get trades() {
+    return TradeController.trades;
   }
 
   get price_precision() {
@@ -85,7 +87,7 @@ export default class MarketTrades extends Vue {
 
   async get_trades() {
     this.loading = true;
-    await store.dispatch("exchange/getMarketTrades");
+    await TradeController.get_trades(this.market.id);
     this.loading = false;
   }
 
@@ -102,7 +104,7 @@ export default class MarketTrades extends Vue {
   }
 
   getDate(created_at: number) {
-    const date = new Date(created_at * 1000);
+    const date = new Date(created_at);
     return (
       ("00" + date.getHours()).slice(-2) +
       ":" +

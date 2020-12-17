@@ -209,17 +209,11 @@
     caret-color: var(--blue-color);
   }
   .group-left {
-    visibility: visible;
-    opacity: 1;
     width: 290px;
     transition: all 0.3s linear;
-    @media (max-width: 1600px) {
-      position: absolute;
-      z-index: 3;
-      -webkit-transform: translateX(-300px);
-      transform: translateX(-300px);
-      -webkit-transition: all 0.2s ease-in-out;
-      transition: all 0.2s ease-in-out;
+    &.hide {
+      width: 0;
+      transition: all 0.3s ease-in-out;
     }
   }
   .group-middle {

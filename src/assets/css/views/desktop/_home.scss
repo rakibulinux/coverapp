@@ -201,7 +201,7 @@
         text-align: center;
         color: #949cad;
       }
-      .banner {
+      .banners {
         width: 1200px;
         height: 213px;
         display: flex;
@@ -221,12 +221,13 @@
           width: 100%;
         }
 
-        .slide {
+        .swiper-slide {
           display: flex;
           &:first-child {
             display: flex;
           }
-          > a {
+          a {
+            width: 100%;
             margin: auto;
             cursor: pointer;
             transition: all 0.2s linear;
@@ -237,6 +238,7 @@
               margin-right: 0;
             }
             > img {
+              width: 100%;
               border-radius: 6px;
             }
             &:hover {
@@ -276,13 +278,6 @@
           }
         }
       }
-    }
-    .news {
-      position: absolute;
-      bottom: 0;
-      height: 40px;
-      width: 100%;
-      background: rgba(24, 39, 68, 0.4);
     }
   }
   .advantages {

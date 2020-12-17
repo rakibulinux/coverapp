@@ -1,6 +1,11 @@
 <template>
   <div class="ticker-info">
-    <span class="ticker-name">{{ isAsk }}/{{ isBid }}</span>
+    <a-icon
+      :class="['icon-hide-pairs', { 'active': hide_pairs_table }]"
+      type="arrow-left"
+      @click="update_hide_pairs_table"
+    />
+    <span class="ticker-name">{{ market.base_unit.toUpperCase() }}/{{ market.quote_unit.toUpperCase() }}</span>
     <div class="ticker-status">
       <div class="price">
         <span class="now-price" :class="getLastTrend" v-text="getLastPrice" />
@@ -31,17 +36,20 @@
 </template>
 
 <script lang="ts">
+import { PublicController, TradeController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class App extends Vue {
-  get isAsk() {
-    return helpers.isAskSymbol().toUpperCase();
+  @Prop() hide_pairs_table!: boolean;
+
+  get market() {
+    return TradeController.market;
   }
 
-  get isBid() {
-    return helpers.isBidSymbol().toUpperCase();
+  get ticker() {
+    return TradeController.ticker;
   }
 
   get getLastTrend() {
@@ -49,23 +57,19 @@ export default class App extends Vue {
   }
 
   get getChange() {
-    const ticker = this.$store.getters["public/getAllTickers"][
-      helpers.isMarket()
-    ];
-    return ticker.price_change_percent;
+    return this.ticker.price_change_percent;
   }
 
   get getLastPrice() {
     return helpers.getMarketLastPrice();
   }
+
   get getPrice_USD() {
     return helpers.getMarketLastUSD();
   }
 
   get getHighPrice() {
-    const ticker = this.$store.getters["public/getAllTickers"][
-      helpers.isMarket()
-    ];
+    const ticker = this.ticker
     const last_price = helpers.getMarketLastPrice();
     return last_price > Number(ticker.high)
       ? helpers.getMarketLastPrice()
@@ -73,42 +77,55 @@ export default class App extends Vue {
   }
 
   get getLowPrice() {
-    const ticker = this.$store.getters["public/getAllTickers"][
-      helpers.isMarket()
-    ];
+    const ticker = this.ticker
     return helpers.getMarketLastPrice() < Number(ticker.low)
       ? helpers.getMarketLastPrice()
       : Number(ticker.low).toFixed(helpers.pricePrecision());
   }
 
   get getAmount() {
-    const ticker = this.$store.getters["public/getAllTickers"][
-      helpers.isMarket()
-    ];
+    const ticker = this.ticker
     return (
       Number(
         Number(ticker.amount).toFixed(helpers.pricePrecision())
       ).toLocaleString() +
       " " +
-      this.isAsk.toUpperCase()
+      this.market.base_unit.toUpperCase()
     );
   }
 
   get getVolume() {
-    const ticker = this.$store.getters["public/getAllTickers"][
-      helpers.isMarket()
-    ];
+    const ticker = this.ticker
     return (
       Number(
         Number(ticker.volume).toFixed(helpers.pricePrecision())
       ).toLocaleString() +
       " " +
-      this.isBid.toUpperCase()
+     this.market.quote_unit.toUpperCase()
     );
   }
 
-  public translation(message, data = {}) {
+  update_hide_pairs_table() {
+    this.$emit("update-hide", !this.hide_pairs_table);
+  }
+
+  translation(message, data = {}) {
     return helpers.translation("exchange." + message, data);
   }
 }
 </script>
+
+<style lang="less">
+.icon-hide-pairs {
+  padding: 0 !important;
+  transition: 0.70s;
+
+  &.active {
+    transform: rotate(180deg);
+  }
+}
+
+.ticker-name {
+  margin-left: 12px !important;
+}
+</style>

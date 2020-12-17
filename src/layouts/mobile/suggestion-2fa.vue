@@ -8,7 +8,7 @@
           ZSmart
         </div>
         <div class="suggestion-2fa-item">
-          <i class="ic-gugeyanzheng" />
+          <i class="zicon-gugeyanzheng" />
           <span>Google Auth</span>
         </div>
       </div>

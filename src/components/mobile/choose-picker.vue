@@ -2,8 +2,8 @@
   <div class="choose-picker">
     <span class="text-selected" @click="changeDropdown">
       {{ selectedText || selected }}
-      <i v-if="isShowing" class="ic-arrow-caret-up" />
-      <i v-else class="ic-arrow-caret-down" />
+      <i v-if="isShowing" class="zicon-caret-up" />
+      <i v-else class="zicon-caret-down" />
     </span>
     <div
       v-show="isShowing"

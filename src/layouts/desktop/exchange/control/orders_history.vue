@@ -42,7 +42,7 @@
       <span :class="['action', `text-${column.algin}`]">
         <i
           v-if="item.state === 'wait'"
-          class="ic-aui-icon-close"
+          class="zicon-aui-icon-close"
           @click="TradeController.stop_order(item.id)"
         />
       </span>
@@ -104,12 +104,6 @@ export default class OrdersHistory extends Mixins(MineControlMixin) {
 
   get TradeController() {
     return TradeController;
-  }
-
-  mounted() {
-    this.mine_control.updated = () => {
-      this.$forceUpdate();
-    };
   }
 
   get orders_data() {

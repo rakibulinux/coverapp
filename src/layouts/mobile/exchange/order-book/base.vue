@@ -18,23 +18,24 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { TradeController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
-    depth: () => import("./depth"),
-    "ticker-status": () => import("./ticker-status")
+    depth: () => import("./depth.vue"),
+    "ticker-status": () => import("./ticker-status.vue")
   }
 })
 export default class Orderbook extends Vue {
   get is_ask() {
-    return helpers.isAskSymbol().toUpperCase();
+    return TradeController.market.base_unit.toUpperCase();
   }
 
   get is_bid() {
-    return helpers.isBidSymbol().toUpperCase();
+    return TradeController.market.quote_unit.toUpperCase();
   }
 }
 </script>

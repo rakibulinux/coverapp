@@ -1,27 +1,30 @@
 <template>
   <panel-view class="market-preview">
-    <head-bar :title="title" @back="destroy">
+    <head-bar @back="destroy">
+      <template v-slot:center>
+        <i class="zicon-exchange" /> {{ title }}
+      </template>
       <template v-slot:right>
         <div class="right-action">
           <i
-            v-if="checkFavorite(market.name)"
-            class="ic-star"
-            @click="addOrRemoveFavorite(market.name)"
+            v-if="check_favorite(market.id)"
+            class="zicon-star"
+            @click="add_remove_favorite(market.id)"
           />
           <i
             v-else
-            class="ic-no-star"
-            @click="addOrRemoveFavorite(market.name)"
+            class="zicon-no-star"
+            @click="add_remove_favorite(market.id)"
           />
         </div>
       </template>
     </head-bar>
     <div v-if="panel_ready" class="body-bar">
-      <ticker-status :market="market" />
-      <group-chart :market="market" />
-      <group-trade :market="market" />
+      <ticker-status :market_id="market.id" />
+      <group-chart :market_id="market.id" />
+      <group-trade :market_id="market.id" />
     </div>
-    <tab-bar :market="market" />
+    <tab-bar :market_id="market.id" />
   </panel-view>
 </template>
 
@@ -33,6 +36,7 @@ import { ScreenMixin, MarketMixin } from "@/mixins/mobile";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
 import store from "@/store";
+import { PublicController, WebSocketController } from "@/controllers";
 
 @Component({
   components: {
@@ -50,41 +54,36 @@ export default class MarketPreviewScreen extends Mixins(
   ScreenMixin,
   MarketMixin
 ) {
-  market: ZTypes.Market = store.state.public.markets[0];
-  widget = null;
+  market_id: string;
+  first_time_render = true;
 
   get title() {
     return this.market.name.replace("/", " / ");
   }
 
-  mounted() {
-    this.market = store.state.public.markets[0]; // For backup
-  }
-
   async before_panel_create(market: ZTypes.Market) {
-    this.market = market;
+    this.market_id = market.id;
 
     this.setTitle();
     TradeController.orderbook.clear();
 
-    await store.dispatch("exchange/getMarketTrades", this.market.id);
+    // await store.dispatch("exchange/getMarketTrades", this.market.id);
     MarketChannels(this.market.id).forEach(channel => {
-      store.commit("websocket/subscribe", channel);
+      WebSocketController.subscribe("public", channel);
     });
+    this.first_time_render = false;
   }
 
   before_panel_destroy() {
     TradeController.orderbook.clear();
     MarketChannels(this.market.id).forEach(channel => {
-      store.commit("websocket/unsubscribe", channel);
+      WebSocketController.unsubscribe("public", channel);
     });
   }
 
   setTitle() {
     document.title = `${helpers.getMarketLastPrice()} - ${(
-      helpers.isAskSymbol() +
-      "/" +
-      helpers.isBidSymbol()
+      TradeController.market.name
     ).toUpperCase()} - ${config.nameEX}`;
   }
 }

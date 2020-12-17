@@ -3,7 +3,7 @@
     <head-bar :left-disabled="true">
       <template v-slot:right>
         <div class="right-action">
-          <i class="ic-aui-icon-close" @click="destroy" />
+          <i class="zicon-aui-icon-close" @click="destroy" />
         </div>
       </template>
     </head-bar>
@@ -62,13 +62,17 @@
 
 <script lang="ts">
 import store from "@/store";
-import AuthMixin from "../mixins";
+import { AuthMixin } from "@/mixins";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    "auth-input": () => import("@/components/mobile/auth-input"),
+    "auth-button": () => import("@/components/mobile/auth-button"),
+  }
+})
 export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
-  loading = false;
   email = "";
   password = "";
   confirm_password = "";
@@ -80,14 +84,14 @@ export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
   async register() {
     const { email, password, refid, captcha_response } = this;
 
-    this.loading = true;
-    await store.dispatch("user/REGISTER", {
-      email,
-      password,
-      refid,
-      captcha_response
-    });
-    this.loading = false;
+    // this.loading = true;
+    // await store.dispatch("user/REGISTER", {
+    //   email,
+    //   password,
+    //   refid,
+    //   captcha_response
+    // });
+    // this.loading = false;
   }
 }
 </script>

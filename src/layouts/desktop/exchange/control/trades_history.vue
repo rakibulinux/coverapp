@@ -72,12 +72,6 @@ export default class TradesHistory extends Mixins(MineControlMixin) {
     ];
   }
 
-  mounted() {
-    this.mine_control.updated = () => {
-      this.$forceUpdate();
-    };
-  }
-
   get trades_data() {
     const orders = this.mine_control.trades;
 

@@ -34,8 +34,8 @@
               }
             ]"
           >
-            <i class="ic-arrow-caret-up" />
-            <i class="ic-arrow-caret-down" />
+            <i class="zicon-caret-up" />
+            <i class="zicon-caret-down" />
           </span>
         </span>
       </template>

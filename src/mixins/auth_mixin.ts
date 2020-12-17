@@ -1,10 +1,10 @@
+import { UserController } from '@/controllers';
 import * as helpers from "@zsmartex/z-helpers";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export class AuthMixin extends Vue {
   otp!: string;
-  loading!: boolean;
 
   // default auth
   email!: string;
@@ -17,6 +17,10 @@ export class AuthMixin extends Vue {
   new_password!: string;
 
   button_rules: string[] = [];
+
+  get loading() {
+    return UserController.state == "loading";
+  }
 
   get email_error() {
     const { email } = this;
@@ -65,7 +69,7 @@ export class AuthMixin extends Vue {
 
   get button_disabled() {
     return this.button_rules.map(rule => {
-      if (rule === "loading") return this.loading;
+      if (rule === "loading") return this["loading"];
       if (rule === "otp") return this.otp.length === 6;
       return !(!!(this[rule] as string).length && !this[`${rule}_error`]);
     }).reduce((a, b) => a || b, false);

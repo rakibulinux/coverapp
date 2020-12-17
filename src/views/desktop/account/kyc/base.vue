@@ -182,7 +182,7 @@ import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import store from "@/store";
-import UserController from "@/controllers/user";
+import { UserController } from "@/controllers";
 
 @Component({
   components: {
@@ -212,7 +212,7 @@ export default class AccountKYC extends Vue {
   }
 
   get is_uploaded_documents() {
-    return store.state.user.labels.find(
+    return UserController.labels.find(
       label => label.key === "document" && label.value !== "rejected"
     );
   }

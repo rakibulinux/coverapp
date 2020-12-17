@@ -1,4 +1,4 @@
-import TradeController from "@/controllers/trade";
+import { PublicController, UserController, TradeController } from '@/controllers';
 import store from "@/store";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
@@ -21,15 +21,15 @@ export class TradeActionMixin extends Vue {
   };
 
   get authorized() {
-    return helpers.isAuth();
+    return UserController.state == "active";
   }
 
   get currency() {
-    return this.side === "sell" ? helpers.isAskSymbol() : helpers.isBidSymbol();
+    return this.side === "sell" ? this.market.base_unit : this.market.quote_unit;
   }
 
   get market() {
-    return store.state.public.markets.find(market => market.id === helpers.isMarket());
+    return TradeController.market;
   }
 
   get min_amount() {
@@ -63,8 +63,8 @@ export class TradeActionMixin extends Vue {
     const ANY = "any";
     const total = this.total;
     const { total_precision } = this;
-    const { trading_fees } = store.state.public;
-    const user_role = store.state.user.role;
+    const trading_fees = PublicController.trading_fees;
+    const user_role = UserController.role;
 
     const trading_fee =
       trading_fees.find(trading_fee => {
@@ -137,7 +137,7 @@ export class TradeActionMixin extends Vue {
   }
 
   currency_by_side(side) {
-    return side === "sell" ? helpers.isAskSymbol() : helpers.isBidSymbol();
+    return TradeController.market[side === "sell" ? "base_unit" : "quote_unit"].toUpperCase();
   }
 
   translation(message, data = {}) {

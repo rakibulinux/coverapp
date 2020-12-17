@@ -69,7 +69,8 @@
   </a-modal>
 </template>
 
-<script>
+<script lang="ts">
+import { UserController } from "@/controllers";
 import store from "@/store";
 import { Component, Mixins } from "vue-property-decorator";
 import Helpers from "./helpers";
@@ -91,7 +92,7 @@ export default class App extends Mixins(Helpers) {
   }
 
   get otp_enabled() {
-    return store.state.user.otp;
+    return UserController.otp;
   }
 
   onCreate() {

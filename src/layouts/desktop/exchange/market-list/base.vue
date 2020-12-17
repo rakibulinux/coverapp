@@ -13,20 +13,36 @@
       <span
         class="page-trade-pairs-tab favorites"
         :class="{
-          'page-trade-pairs-tab-selected': tab_active_key === 'Favorites'
+          'page-trade-pairs-tab-selected': tab_active_key === 'Favorites',
         }"
         @click="change_tab('Favorites')"
       >
-        <i class="ic-star" />
+        <i class="zicon-star" />
       </span>
       <span
-        v-for="(data, index) in MARKET"
+        v-for="data in [...MARKET, tab_more_key]"
         class="page-trade-pairs-tab"
-        :key="index"
+        :key="data"
         :class="{ 'page-trade-pairs-tab-selected': tab_active_key === data }"
         @click="change_tab(data)"
         v-text="data"
       />
+      <span
+        class="page-trade-pairs-tab page-trade-pairs-tab-more"
+        @click="show_tab_more = !show_tab_more"
+      >
+        <a-icon type="caret-down" />
+      </span>
+      <div v-if="show_tab_more" class="page-trade-pairs-tab-more-table">
+        <li
+          v-for="data in MARKET_MORE.filter(market => market != tab_more_key)"
+          :key="data"
+          @click="change_tab_more(data)"
+        >
+          <a-icon type="line" />
+          <span>{{ data }}</span>
+        </li>
+      </div>
     </div>
     <z-table
       :columns="COLUMN"
@@ -43,11 +59,11 @@
           <span
             :class="[
               'favorite',
-              { 'favorite-selected': checkFavorite(item.id) }
+              { 'favorite-selected': check_favorite(item.id) },
             ]"
-            @click.stop="addOrRemoveFavorite(item.id)"
+            @click.stop="add_remove_favorite(item.id)"
           >
-            <i class="ic-star"></i>
+            <i class="zicon-star"></i>
           </span>
           <span>{{ item.base_unit.toUpperCase() }}</span>
         </span>
@@ -57,7 +73,7 @@
           :class="[
             'change',
             `text-${column.algin}`,
-            `text-${getMarketPriceChange(item.id) >= 0 ? 'up' : 'down'}`
+            `text-${getMarketPriceChange(item.id) >= 0 ? 'up' : 'down'}`,
           ]"
         >
           {{ item.price_change_percent }}
@@ -72,25 +88,43 @@ import { Vue, Component } from "vue-property-decorator";
 import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
+import { PublicController, TradeController } from "@/controllers";
 
 @Component
 export default class MarketList extends Vue {
-  public tab_active_key = helpers.isBidSymbol().toUpperCase();
-  public showing = false;
-  public search = "";
-  public totalRepeat = 0;
-  public sortBy = "";
-  public sortReverse = false;
-  public SORT = [
+  tab_active_key = this.market.quote_unit.toUpperCase();
+  tab_more_key = "";
+  show_tab_more = false;
+  search = "";
+  totalRepeat = 0;
+  sortBy = "";
+  sortReverse = false;
+  SORT = [
     {
       name: "currency",
       sortBy: "base_unit",
       enabled: false,
-      class: "text-left"
+      class: "text-left",
     },
     { name: "price", sortBy: "last", enabled: true, class: "text-right" },
-    { name: "change", sortBy: "change", enabled: true, class: "text-right" }
+    { name: "change", sortBy: "change", enabled: true, class: "text-right" },
   ];
+
+  get list_bid() {
+    return [...config.list_bid];
+  }
+
+  get MARKET() {
+    const { list_bid } = this;
+
+    return [...list_bid].splice(0, 3);
+  }
+
+  get MARKET_MORE() {
+    const { list_bid } = this;
+
+    return [...list_bid].splice(3, this.list_bid.length);
+  }
 
   get COLUMN() {
     return [
@@ -99,14 +133,14 @@ export default class MarketList extends Vue {
         key: "base_unit",
         class_name: "currency",
         algin: "left",
-        scopedSlots: true
+        scopedSlots: true,
       },
       {
         title: this.$t("table.price"),
         key: "last",
         class_name: "price",
         algin: "right",
-        sorter: true
+        sorter: true,
       },
       {
         title: this.$t("table.change"),
@@ -114,33 +148,19 @@ export default class MarketList extends Vue {
         class_name: "change",
         algin: "right",
         scopedSlots: true,
-        sorter: true
-      }
+        sorter: true,
+      },
     ];
   }
 
-  public MARKET = [...config.list_bid1, ...config.list_bid2];
-
-  get isAsk() {
-    return helpers.isAskSymbol();
-  }
-
-  get isBid() {
-    return helpers.isBidSymbol();
-  }
-
   get market() {
-    return helpers.isMarket();
-  }
-
-  get pricePrecision() {
-    return helpers.pricePrecision();
+    return TradeController.market;
   }
 
   get findTickers() {
     const { tab_active_key, search } = this;
 
-    let tickers = Object.values(store.state.public.tickers);
+    let tickers = Object.values(PublicController.tickers);
 
     tickers = helpers.findTickersBase(tickers, "market", tab_active_key, true);
     if (this.search) {
@@ -150,26 +170,34 @@ export default class MarketList extends Vue {
     return tickers;
   }
 
-  public getMarketPriceChange(market = null) {
+  mounted() {
+    this.tab_more_key = this.MARKET_MORE[0];
+  }
+
+  change_tab_more(market: string) {
+    this.tab_more_key = market;
+    this.tab_active_key = this.tab_more_key;
+    this.show_tab_more = false;
+  }
+
+  getMarketPriceChange(market = null) {
     return helpers.getMarketPriceChange(market);
   }
 
-  public checkFavorite(market) {
-    return helpers.checkFavorite(market);
+  check_favorite(market_id: string) {
+    return PublicController.helpers.check_favorite(market_id);
   }
 
-  public addOrRemoveFavorite(market) {
-    helpers.addOrRemoveFavorite(market);
+  add_remove_favorite(market_id: string) {
+    PublicController.helpers.add_remove_favorite(market_id);
   }
 
-  public getPrice(value) {
-    const { pricePrecision } = this;
-
-    return Number(value).toFixed(pricePrecision);
+  getPrice(value) {
+    return Number(value).toFixed(this.market.price_precision);
   }
 
-  public getNameCurrencies(name) {
-    const { currencies } = this.$store.state.public;
+  getNameCurrencies(name) {
+    const currencies = PublicController.currencies;
     for (const i in currencies) {
       if (currencies[i].id === name.toLowerCase()) {
         return currencies[i].name;
@@ -177,19 +205,14 @@ export default class MarketList extends Vue {
     }
   }
 
-  public change_tab(tab: string) {
+  change_tab(tab: string) {
     this.tab_active_key = tab;
   }
 
-  public on_table_click(item) {
-    if (this.market === item.id) {
-      return;
-    }
+  on_table_click(market) {
+    if (this.market === market.id) return;
 
-    const market = item.name.split("/").join("_");
-    store.commit("public/SYNC_EXCHANGE", {
-      market: market
-    });
+    TradeController.open_exchange(market.id);
   }
 }
 </script>
@@ -230,6 +253,7 @@ export default class MarketList extends Vue {
   }
 
   &-tabs {
+    position: relative;
     display: flex;
     height: 36px;
     line-height: 36px;
@@ -246,6 +270,44 @@ export default class MarketList extends Vue {
         font-size: 18px;
       }
 
+      &-more {
+        flex: 0;
+        padding: 0 2px;
+
+        i {
+          font-size: 12px;
+        }
+
+        &-table {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          width: 70px;
+          background: var(--bg-downdown-color);
+          z-index: 1;
+
+          > li {
+            display: block;
+            width: 100%;
+            padding-left: 8px;
+            font-size: 14px;
+            line-height: 26px;
+            text-align: left;
+            cursor: pointer;
+
+            &:hover {
+              background-color: var(--blue-color);
+            }
+
+            i {
+              font-size: 10px;
+              padding-right: 8px;
+            }
+
+          }
+        }
+      }
+
       &-selected {
         background: var(--blue-color);
       }
@@ -258,11 +320,7 @@ export default class MarketList extends Vue {
       line-height: 32px;
     }
   }
-}
-</style>
 
-<style lang="less">
-.page-trade-pairs {
   .z-table-row {
     border-left: 4px solid transparent;
     &-row {
@@ -298,3 +356,4 @@ export default class MarketList extends Vue {
   }
 }
 </style>
+

@@ -28,11 +28,7 @@ import { Component, Mixins, Prop } from "vue-property-decorator";
 
 @Component
 export default class FeatureMarket extends Mixins(MarketMixin) {
-  @Prop() readonly market!: ZTypes.Market;
-
-  get ticker() {
-    return helpers.getTicker(this.market.id);
-  }
+  @Prop() readonly market_id!: string;
 
   get last_usd() {
     return helpers

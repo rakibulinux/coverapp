@@ -1,27 +1,38 @@
-import store from "@/store";
 import ApiClient from "@zsmartex/z-apiclient";
 import Vue from "vue";
+import TradeController from "@/controllers/trade";
+import VueCompositionAPI, { reactive } from "@vue/composition-api";
+
+Vue.use(VueCompositionAPI);
 
 export default class OrdersManager {
-  updated?(): void;
+  state: ZTypes.OrderState | "All" = "All";
+  type : "open_orders" | "orders_history";
 
-  // Header
-  headers = {
+  headers = reactive({
     page: 1,
     limit: 100,
     total: 0,
-  };
+  })
 
-  state: ZTypes.OrderState | "All" = "All";
-  type : "open_orders" | "orders_history";
+  config = reactive({
+    market: "All",
+    ready: false,
+    loading: false,
+    realtime: true,
+  })
 
   constructor(type: OrdersManager["type"], state?: ZTypes.OrderState | "All") {
     this.type = type;
     if (state) this.state = state;
   }
 
-  get config() {
-    return store.state.exchange.mine_control["trades_history"].config;
+  get orders() {
+    return TradeController.store[this.type];
+  }
+
+  set orders(val) {
+    TradeController.store[this.type] = val;
   }
 
   get market() {
@@ -54,14 +65,6 @@ export default class OrdersManager {
 
   set realtime(realtime: boolean) {
     this.config.realtime = realtime;
-  }
-
-  get orders() {
-    return store.state.exchange.mine_control[this.type].data;
-  }
-
-  set orders(val) {
-    store.state.exchange.mine_control[this.type].data = val;
   }
 
   async getData(page = this.headers.page, limit = this.headers.limit) {
@@ -126,15 +129,11 @@ export default class OrdersManager {
     if (this.find(order.id)) {
       const index = this.findIndex(order.id);
 
-      if (index >= 0) Vue.set(this.orders, index, order);
+      if (index >= 0) this.orders[index] = order;
     } else {
-      let orders = this.orders;
-
-      orders.push(order);
-      orders = orders.sort((a, b) => b.id - a.id);
-      orders = orders.slice(0, 100);
-
-      Vue.set(this, "orders", orders);
+      this.orders.push(order);
+      this.orders = this.orders.sort((a, b) => b.id - a.id);
+      this.orders = this.orders.slice(0, 100);
     }
 
     return true;
@@ -148,6 +147,10 @@ export default class OrdersManager {
     };
   }
 
+  toArray() {
+    return this.orders;
+  }
+
   clear() {
     this.resetHeaders();
 
@@ -155,9 +158,5 @@ export default class OrdersManager {
     this.loading = false;
     this.realtime = false;
     this.orders = [];
-
-    if (typeof this.updated === "function") {
-      this.updated();
-    }
   }
 }

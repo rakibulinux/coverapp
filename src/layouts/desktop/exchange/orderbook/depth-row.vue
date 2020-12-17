@@ -25,7 +25,6 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class DepthRow extends Mixins(MarketMixin) {
-  @Prop() readonly market!: ZTypes.Market;
   @Prop() readonly side!: "asks" | "bids";
   @Prop() readonly maxSum!: number;
   @Prop() readonly order: { price: number; amount: number };
