@@ -20,12 +20,12 @@
     <button
       type="submit"
       :disabled="!selected"
-      @click="$emit('changeModal', selected)"
+      @click="$emit('change-modal', selected)"
     >
       Next
     </button>
     <div class="later-footer">
-      <span @click="closeModal">Maybe later</span>
+      <span @click="$emit('close-modal')">Maybe later</span>
     </div>
   </div>
 </template>
@@ -47,9 +47,6 @@ export default {
   methods: {
     actionChange(action) {
       this.selected = action;
-    },
-    closeModal() {
-      this.$emit("closeModal");
     }
   }
 };

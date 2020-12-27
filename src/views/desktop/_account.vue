@@ -57,7 +57,7 @@ export default class Account extends Vue {
         url: "/account/kyc"
       },
       {
-        icon: "zicon-rili",
+        icon: "zicon-date",
         text: this.$t("usercenter.login_history.title"),
         url: "/account/history"
       },

@@ -52,7 +52,8 @@
           position: absolute;
           left: 25px;
           font-size: 18px;
-          top: 0;
+          top: 50%;
+          transform: translateY(-50%);
         }
         &.selected {
           border-left-color: $user-border-selected-color;

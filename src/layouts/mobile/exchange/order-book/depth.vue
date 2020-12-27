@@ -1,23 +1,33 @@
 <template>
   <div class="depth" :class="[`depth-${side}`]">
     <div :style="style">
-      <p
+      <template v-if="side == 'asks'">
+        <fake-depth-row
+          v-for="(fake, i) in fake_row"
+          :key="`fake-${i}`"
+          :side="side"
+          class="z-table-row"
+        />
+      </template>
+      <depth-row
         v-for="(order, index) in depth"
         :key="index"
-        :style="{
-          backgroundSize:
-            (((order.price * order.amount) / maxTotal) * 100).toFixed(0) +
-            '% 100%'
-        }"
         class="z-table-row"
+        :price="order.price"
+        :amount="order.amount"
+        :side="side"
+        :max-total="maxTotal"
+        :market_id="market.id"
         @click="on_depth_clicked(order)"
-      >
-        <span
-          :class="['text-left', trendType(side)]"
-          v-text="getPrice(order.price)"
+      />
+      <template v-if="side == 'bids'">
+        <fake-depth-row
+          v-for="(fake, i) in fake_row"
+          :key="`fake-${i}`"
+          :side="side"
+          class="z-table-row"
         />
-        <span class="text-right" v-text="getAmount(order.amount)" />
-      </p>
+      </template>
     </div>
   </div>
 </template>
@@ -25,16 +35,24 @@
 <script lang="ts">
 import { TradeController } from "@/controllers";
 import store from "@/store";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
+import { MarketMixin } from "@/mixins/mobile";
 
-@Component
-export default class MarketDepth extends Vue {
+@Component({
+  components: {
+    "depth-row": () => import("./depth-row.vue"),
+    "fake-depth-row": () => import("./fake-depth-row.vue")
+  }
+})
+export default class MarketDepth extends Mixins(MarketMixin) {
   @Prop() readonly side!: "asks" | "bids";
 
-  get market() {
-    return TradeController.market;
+  min_row = 6;
+
+  get fake_row() {
+    return Array(Math.max(0, this.min_row - this.depth.length));
   }
 
   get orderbook() {

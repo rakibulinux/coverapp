@@ -31,12 +31,12 @@ export default {
           url: "/exchange_record/open"
         },
         {
-          icon: "zicon-rili",
+          icon: "zicon-date",
           text: "Order History",
           url: "/exchange_record/history"
         },
         {
-          icon: "zicon-rili",
+          icon: "zicon-date",
           text: "Trade History",
           url: "/exchange_record/transaction"
         }

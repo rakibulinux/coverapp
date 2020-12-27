@@ -11,7 +11,7 @@
   }
 
   .body-bar {
-    height: calc(100% - 90px);
+    height: calc(100% - 75px);
     overflow: auto;
   
     .ticker-status {
@@ -128,18 +128,35 @@
           padding: 0 10px;
         }
       }
-      .orderbook,
+
       .trades {
         display: flex;
         padding: 0 10px;
       }
 
       .orderbook {
-        .z-table {
-          margin: 0 2px;
+        &-head {
+          display: flex;
+          padding: 6px 5px;
 
+          span {
+            flex: 1;
+            font-size: 8px;
+            color: var(--color-gray);
+          }
+        }
+
+        &-content {
+          display: flex;
+        }
+
+        .z-table {
           &-content {
             height: 100%;
+          }
+
+          &-row {
+            padding: 0 5px;
           }
         }
 
@@ -154,6 +171,12 @@
         &-head, &-row {
           padding: 0;
         }
+      }
+
+      .length {
+        flex: 0.2 !important;
+        color: var(--color-gray);
+        font-size: 8px;
       }
     }
   }

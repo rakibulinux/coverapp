@@ -230,6 +230,7 @@ export class UserController {
         code: otp_code
       });
       store.commit("user/ENABLE_OTP");
+      this.otp = true;
       helpers.runNotice("success", "thanh cong");
       on_success();
     } catch (error) {

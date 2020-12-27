@@ -66,8 +66,9 @@ export default class MarketPreviewScreen extends Mixins(
 
     this.setTitle();
     TradeController.orderbook.clear();
+    TradeController.orderbook.fetch(market.id);
+    TradeController.get_trades(market.id);
 
-    // await store.dispatch("exchange/getMarketTrades", this.market.id);
     MarketChannels(this.market.id).forEach(channel => {
       WebSocketController.subscribe("public", channel);
     });

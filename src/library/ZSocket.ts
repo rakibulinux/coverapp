@@ -142,8 +142,6 @@ class ZSocket {
           for (const trade of (event.trades as ZTypes.PublicTrade[])) {
             TradeController.add_trade(trade);
 
-            const lastBar = TradeController.tradingview.stream.lastBar;
-
             TradeController.tradingview.add_update_chart({
                 time: (new Date(trade.created_at).getTime() / 1000).toFixedNumber(0),
                 close: Number(trade.price),

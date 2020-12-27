@@ -42,7 +42,7 @@
       <span :class="['action', `text-${column.algin}`]">
         <i
           v-if="item.state === 'wait'"
-          class="zicon-aui-icon-close"
+          class="zicon-close"
           @click="TradeController.stop_order(item.id)"
         />
       </span>

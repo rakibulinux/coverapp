@@ -105,11 +105,17 @@ export default class TradingView {
         volume: payload.volume
       }
     } else if (payload_type == "trade") {
+      if (lastBar.open == undefined) lastBar.open = payload.close;
+      if (lastBar.low == undefined) lastBar.low = payload.close;
+      if (lastBar.high == undefined) lastBar.high = payload.close;
+
       if (payload.close < lastBar.low) lastBar.low = payload.close;
       else if (payload.close > lastBar.high) lastBar.high = payload.close;
 
       lastBar.volume += payload.volume;
       lastBar.close = payload.close;
+
+      console.log(lastBar);
     }
 
     this.stream.lastBar = lastBar;

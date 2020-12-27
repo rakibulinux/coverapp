@@ -7,8 +7,8 @@
   >
     <need-security
       v-if="!otp_enabled"
-      @closeModal="this.delete"
-      @changeModal="changeModal"
+      @close-modal="closeModal"
+      @change-modal="changeModal"
     />
     <div v-else-if="step === 1">
       <img src="@/assets/img/Google_Authenticator.png" class="logo-modal" />

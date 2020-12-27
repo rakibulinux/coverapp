@@ -17,7 +17,7 @@
         :key="item.label"
         :label="item.label"
       >
-        <order-book v-if="item.label === 'orderbook'" :market="market" />
+        <order-book v-if="item.label === 'orderbook'" :market_id="market.id" />
         <trades v-else :market="market" />
       </cube-tab-panel>
     </cube-tab-panels>

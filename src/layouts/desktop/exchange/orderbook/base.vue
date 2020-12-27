@@ -147,6 +147,7 @@ export default class App extends Vue {
       opacity: 1;
       padding: 0;
       overflow: hidden;
+      transition: background-size 500ms linear;
 
       span {
         &:first-child {

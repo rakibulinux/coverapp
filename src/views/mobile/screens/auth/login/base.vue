@@ -3,7 +3,7 @@
     <head-bar :left-disabled="true">
       <template v-slot:right>
         <div class="right-action">
-          <i class="zicon-aui-icon-close" @click="destroy" />
+          <i class="zicon-close" @click="destroy" />
         </div>
       </template>
     </head-bar>

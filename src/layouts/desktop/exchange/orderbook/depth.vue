@@ -14,7 +14,7 @@
         :key="`${side}-${index}`"
         :side="side"
         :max-sum="maxSum"
-        :market="market"
+        :market_id="market.id"
         :order="order"
         :ref="`depth-row-${index}`"
         @click="on_depth_clicked(order)"

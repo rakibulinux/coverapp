@@ -1,30 +1,13 @@
 <template>
   <div class="z-table z-table-borderable z-table-no-scroll" :class="side">
-    <div class="z-table-head">
-      <template v-if="side === 'bids'">
-        <span class="text-left">
-          Amount({{ market.base_unit.toUpperCase() }})
-        </span>
-        <span class="text-right">
-          Price({{ market.quote_unit.toUpperCase() }})
-        </span>
-      </template>
-      <template v-else>
-        <span class="text-left">
-          Price({{ market.quote_unit.toUpperCase() }})
-        </span>
-        <span class="text-right">
-          Amount({{ market.base_unit.toUpperCase() }})
-        </span>
-      </template>
-    </div>
     <div class="z-table-content">
       <depth-row
-        v-for="order in depth"
+        v-for="(order, i) in depth"
         :key="order.price"
         :maxTotal="maxTotal"
         :price="order.price"
         :amount="order.amount"
+        :length="i"
         :side="side"
         class="z-table-row"
       />
@@ -32,6 +15,8 @@
       <fake-depth-row
         v-for="(fake, i) in fake_row"
         :key="`fake-${i}`"
+        :length="i"
+        :depth-size="depth.length"
         :side="side"
         class="z-table-row"
       />

@@ -54,99 +54,107 @@
         @change="onPageChange"
       />
     </div>
-    <modal-2fa ref="2fa" />
-    <modal-api ref="api" @changeModal="onClick" />
+    <modal-2fa ref="2fa" @success="onClick('api')" />
+    <modal-api ref="api" @change-modal="onClick" />
     <modal-totp ref="totp" @submit="onSubmitTotp" @close="modalClose" />
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Vue, Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
-import { mapState } from "vuex";
-import _modal_2fa from "@/layouts/desktop/account/_modal_2fa";
-import _modal_api from "@/layouts/desktop/account/_modal_api";
-import _modal_totp from "@/layouts/desktop/modal/_modal_totp";
 import Helpers from "./helpers";
+import store from "@/store";
 
-export default {
+@Component({
   components: {
-    "modal-2fa": _modal_2fa,
-    "modal-api": _modal_api,
-    "modal-totp": _modal_totp
-  },
-  mixins: [Helpers],
-  data: () => ({
-    payload_modal: {
-      kid: "",
-      state: "",
-      modal: ""
-    }
-  }),
-  computed: {
-    ...mapState("user", ["api_keys"]),
-    isLoading() {
-      return this.api_keys.loading;
-    }
-  },
+    "modal-2fa": () => import("@/layouts/desktop/account/_modal_2fa.vue"),
+    "modal-api": () => import("@/layouts/desktop/account/_modal_api.vue"),
+    "modal-totp": () => import("@/layouts/desktop/modal/_modal_totp.vue")
+  }
+})
+export default class ApiKeyPage extends Mixins(Helpers) {
+  payload_modal: {
+    kid: "",
+    state: "",
+    modal: ""
+  }
+
+  get api_keys() {
+    return store.state.user.api_keys;
+  }
+
+  get isLoading() {
+    return this.api_keys.loading;
+  }
+
   mounted() {
     if (!this.api_keys.loading)
       this.$store.dispatch("user/GET_API_KEYS", {
         page: 1,
         limit: 25
       });
-  },
-  methods: {
-    modalClose() {
-      const { kid } = this.payload_modal;
-      const index = this.getIndexApiKey(kid);
-      this.api_keys.array[index].loading = false;
-      this.api_keys.array[index].state += "_";
-    },
-    openModal(kid, state, modal) {
-      const index = this.getIndexApiKey(kid);
-      this.payload_modal = { kid, state, modal };
-      this.onClick(modal);
-      this.api_keys.array[index].loading = true;
-    },
-    getIndexApiKey(kid) {
-      return this.api_keys.array.findIndex(e => e.kid == kid);
-    },
-    onSubmitTotp(payload, totp_code) {
-      if (payload.modal === "totp") this.updateApiKey(payload, totp_code);
-      else this.removeApiKey(payload, totp_code);
-    },
-    async updateApiKey(payload, totp_code) {
-      const { kid, state } = payload;
-      try {
-        await this.$store.dispatch("user/UPDATE_API_KEYS", {
-          kid,
-          state_: state,
-          totp_code
-        });
-        this.$refs.totp.remove();
-      } catch (error) {
-        return error;
-      }
-    },
-    async removeApiKey(payload, totp_code) {
-      const { kid } = payload;
-      try {
-        await this.$store.dispatch("user/DELETE_API_KEYS", {
-          kid,
-          totp_code
-        });
-        this.$refs.totp.remove();
-      } catch (error) {
-        return error;
-      }
-    },
-    onPageChange($page) {
-      this.$store.dispatch("user/GET_API_KEYS", {
-        page: $page,
-        limit: 25
+  }
+
+  modalClose() {
+    const { kid } = this.payload_modal;
+    const index = this.getIndexApiKey(kid);
+    this.api_keys.array[index].loading = false;
+    this.api_keys.array[index].state += "_";
+  }
+
+  openModal(kid, state, modal) {
+    const index = this.getIndexApiKey(kid);
+    this.payload_modal = { kid, state, modal };
+    this.onClick(modal);
+    this.api_keys.array[index].loading = true;
+  }
+
+  getIndexApiKey(kid) {
+    return this.api_keys.array.findIndex(e => e.kid == kid);
+  }
+
+  onSubmitTotp(payload, totp_code) {
+    if (payload.modal === "totp") this.updateApiKey(payload, totp_code);
+    else this.removeApiKey(payload, totp_code);
+  }
+
+  async updateApiKey(payload, totp_code) {
+    const { kid, state } = payload;
+    try {
+      await this.$store.dispatch("user/UPDATE_API_KEYS", {
+        kid,
+        state_: state,
+        totp_code
       });
-    },
-    getDate: date => helpers.getDate(date, true)
+      this.$refs.totp.remove();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async removeApiKey(payload, totp_code) {
+    const { kid } = payload;
+    try {
+      await this.$store.dispatch("user/DELETE_API_KEYS", {
+        kid,
+        totp_code
+      });
+      this.$refs.totp.remove();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  onPageChange($page) {
+    this.$store.dispatch("user/GET_API_KEYS", {
+      page: $page,
+      limit: 25
+    });
+  }
+
+  getDate(date) {
+    return helpers.getDate(date, true)
   }
 };
 </script>

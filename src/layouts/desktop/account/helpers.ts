@@ -42,7 +42,7 @@ export default class App extends Vue {
   public changeModal(modal: string) {
     this.delete();
     this.$nextTick(() => {
-      this.$emit("changeModal", modal);
+      this.$emit("change-modal", modal);
     });
   }
 }

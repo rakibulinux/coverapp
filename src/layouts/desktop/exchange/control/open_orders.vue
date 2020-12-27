@@ -41,7 +41,7 @@
     <template slot="action" slot-scope="{ item, column }">
       <span :class="['action', `text-${column.algin}`]">
         <i
-          class="zicon-aui-icon-close"
+          class="zicon-close"
           @click="TradeController.stop_order(item.id)"
         />
       </span>

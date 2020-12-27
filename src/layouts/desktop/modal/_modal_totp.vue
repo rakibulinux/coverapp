@@ -41,13 +41,14 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
   }
 })
 export default class App extends Vue {
+  @Prop() private readonly payload!: any;
+  @Prop() private readonly loading!: boolean;
+
   private get valid2FA() {
     return this.totp_code.length === 6;
   }
 
   public modal_enabled = false;
-  @Prop() private readonly payload!: any;
-  @Prop() private readonly loading!: boolean;
   private totp_code = "";
 
   public create() {

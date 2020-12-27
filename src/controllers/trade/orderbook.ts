@@ -54,7 +54,7 @@ export default class OrderBook {
   }
 
   toArray(side: ZTypes.TakerType, limit = 100) {
-    return this.book[side];
+    return this.book[side].slice(0, limit);
   }
 
   clear() {

@@ -5,6 +5,7 @@
     :footer="null"
     :width="400"
   >
+    {{ step }}
     <button
       v-show="step > 1"
       type="button"
@@ -98,11 +99,11 @@ import UserController from "@/controllers/user";
   }
 })
 export default class App extends Mixins(Helpers) {
-  public loading = false;
-  public step = 1;
-  public otp_code = "";
-  public password = "";
-  public code = {
+  loading = false;
+  step = 1;
+  otp_code = "";
+  password = "";
+  code = {
     secret: "",
     url: ""
   };
@@ -150,6 +151,13 @@ export default class App extends Mixins(Helpers) {
     const { password, otp_code } = this;
     await UserController.enable_2fa(password, otp_code);
     this.loading = false;
+
+    if (UserController.otp) {
+      this.$emit("success");
+      this.delete();
+    } else {
+      this.$emit("failed");
+    }
   }
 }
 </script>

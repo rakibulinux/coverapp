@@ -46,7 +46,7 @@ export default class MineControl extends Vue {
   }
 
   get authorized() {
-    return UserController.state == "active"
+    return UserController.state == "active";
   }
 
   mounted() {

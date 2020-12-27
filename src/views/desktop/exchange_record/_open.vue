@@ -53,7 +53,7 @@
             <span class="text-right action">
               <i
                 v-if="data.state === 'wait' || data.state === 'pending'"
-                class="zicon-aui-icon-close"
+                class="zicon-close"
                 @click="CloseOrder(data.id)"
               />
             </span>

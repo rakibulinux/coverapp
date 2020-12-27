@@ -55,6 +55,7 @@ export default class Exchange extends Mixins(MarketMixin) {
   onLoad() {
     this.setTitle();
     TradeController.orderbook.clear();
+    TradeController.orderbook.fetch(this.market.id);
 
     MarketChannels(this.market.id).forEach(channel => {
       WebSocketController.subscribe("public", channel);

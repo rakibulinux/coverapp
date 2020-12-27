@@ -1,5 +1,6 @@
 <template>
-  <div class="order-row-circle-filled">
+  <div :class="['order-row-circle-filled', side]">
+    <div class="type-side">Limit sell</div>
     <a-progress
       type="circle"
       :percent="filled"
@@ -17,7 +18,7 @@ export default class CircleFilled extends Vue {
   @Prop() readonly filled: number;
   @Prop() readonly side: ZTypes.OrderSide;
 
-  width = 35;
-  strokeWidth = 5;
+  width = 25;
+  strokeWidth = 7;
 }
 </script>

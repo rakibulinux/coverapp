@@ -1710,10 +1710,10 @@
   resolved "https://npm.pkg.github.com/download/@zsmartex/klinecharts/5.3.7/c2681bb47059856c8d11b6a188eb407ee232220fa1b9a058916829535376a657#06a7fcbf6d38c90b19d579a49b0d8b42415dc689"
   integrity sha512-VDZgamW2gzyZI7yaPDAI7Fdlm6NACawD3lcmakRG11fJ9rylav/c04COU5goTNfnmLg3VNJgX3c9flJN5uTqzw==
 
-"@zsmartex/z-apiclient@^1.0.6":
-  version "1.0.6"
-  resolved "https://npm.pkg.github.com/download/@zsmartex/z-apiclient/1.0.6/2152dcb91a71749e1c9b1f05b6ad8dc3376857b184e0ecc9163fb3d89451f9bb#3b8fa5e0c2e578e5a0dcfbeb12c8d36f63158210"
-  integrity sha512-3La8yH8ZN45Z4OMQsNyWKFMb+K5hVhaefnzSExJhSKrILKHbZhmU/hHp1oNYmmDjRGMDu2nT6reTlYgsGdnp2w==
+"@zsmartex/z-apiclient@^1.0.7":
+  version "1.0.7"
+  resolved "https://npm.pkg.github.com/download/@zsmartex/z-apiclient/1.0.7/e5bce0998c13e622780d8b72ea16995cf53bc254271908415d17625be4c5a89a#a33e8a8dee5b03efb45fa6881f710d0fafd3316a"
+  integrity sha512-izctuv4GPzVV5vB2tWB7i5Uv2srJ2Dv+a9kMEa5hMVwsnmebTcs2fw0bXMmXx9nAdZh47xqZi2mD+yhDfQpGWA==
   dependencies:
     "@zsmartex/z-eventbus" "^1.0.2"
     axios "^0.19.2"
