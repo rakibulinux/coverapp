@@ -36,7 +36,7 @@ export class PublicController {
     try {
       const { data } = await new ApiClient("trade").get("public/markets/tickers");
 
-      this.tickers = data;
+      this.tickers = data.map(ticker => ticker.ticker);
     } catch (error) {
       return error;
     }

@@ -114,8 +114,6 @@ export default class TradingView {
 
       lastBar.volume += payload.volume;
       lastBar.close = payload.close;
-
-      console.log(lastBar);
     }
 
     this.stream.lastBar = lastBar;

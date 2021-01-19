@@ -48,13 +48,13 @@ export default class MarketTrades extends Vue {
   get COLUMN() {
     return [
       {
-        title: `${this.$t("table.price")} (${this.market.quote_unit})`,
+        title: `${this.$t("table.price")} (${this.market.quote_unit.toUpperCase()})`,
         key: "price",
         algin: "left",
         scopedSlots: true
       },
       {
-        title: `${this.$t("table.amount")} (${this.market.base_unit})`,
+        title: `${this.$t("table.amount")} (${this.market.base_unit.toUpperCase()})`,
         key: "amount",
         algin: "right",
         scopedSlots: true
