@@ -41,6 +41,7 @@ import store from "@/store";
 import UserController from "@/controllers/user";
 import { i18n } from "@/plugins";
 import ZSmartModel from "@zsmartex/z-eventbus";
+import { runNotice } from "@/mixins";
 
 @Component({
   components: {
@@ -108,7 +109,7 @@ export default class ResetPassword extends Vue {
       await UserController.check_code_reset_password(
         this.confirmation_reset_password_token
       );
-      helpers.runNotice("success", "Mời bạn thay mk");
+      runNotice("success", "Mời bạn thay mk");
     } catch (error) {
       this.$router.push("/");
       return error;

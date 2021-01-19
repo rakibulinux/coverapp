@@ -44,6 +44,7 @@ import * as helpers from "@zsmartex/z-helpers";
 import { UserController } from "@/controllers";
 import { i18n } from "@/plugins";
 import ZSmartModel from "@zsmartex/z-eventbus";
+import { runNotice } from "@/mixins";
 
 @Component
 export default class App extends Vue {
@@ -112,7 +113,7 @@ export default class App extends Vue {
         email: UserController.email
       });
       this.actionReSend();
-      helpers.runNotice("success", "check email");
+      runNotice("success", "check email");
     } catch (error) {
       return error;
     }

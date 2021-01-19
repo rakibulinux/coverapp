@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { runNotice } from "@/mixins";
 import ApiClient from "@zsmartex/z-apiclient";
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
@@ -73,7 +74,7 @@ export default class ForgotPassword extends Vue {
       );
       this.loading = false;
       this.set_wait_interval();
-      helpers.runNotice("success", this.$t("message.password.forgot"));
+      runNotice("success", this.$t("message.password.forgot"));
     } catch (error) {
       this.loading = false;
       return error;

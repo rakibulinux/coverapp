@@ -1,3 +1,4 @@
+import { runNotice } from "@/mixins";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 
@@ -10,7 +11,7 @@ export default abstract class OrdersController {
         price: price,
         volume: amount
       });
-      helpers.runNotice("success", "Order has been placed");
+      runNotice("success", "Order has been placed");
 
       return response.data;
     } catch (error) {
@@ -21,7 +22,7 @@ export default abstract class OrdersController {
   async stop_order(id_or_uuid: number | string) {
     try {
       await new ApiClient("finex").post("market/orders/cancel/#{id}".replace("#{id}", id_or_uuid.toString()));
-      helpers.runNotice("success", helpers.translation("message.order.canceled").toString());
+      runNotice("success", helpers.translation("message.order.canceled").toString());
     } catch (error) {
       return error;
     }
@@ -30,7 +31,7 @@ export default abstract class OrdersController {
   async stop_orders(market_id?: string, side?: ZTypes.OrderSide) {
     try {
       await new ApiClient("finex").post("market/orders/cancel", { market: market_id, side: side });
-      helpers.runNotice("success", "All market #{market} orders have been canceled".replace("#{market}", market_id));
+      runNotice("success", "All market #{market} orders have been canceled".replace("#{market}", market_id));
     } catch (error) {
       return error;
     }

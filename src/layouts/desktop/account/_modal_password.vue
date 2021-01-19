@@ -80,6 +80,7 @@ import { Vue, Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import ApiClient from "@zsmartex/z-apiclient";
+import { runNotice } from "@/mixins";
 
 @Component({
   components: {
@@ -124,7 +125,7 @@ export default class App extends Mixins(Helpers) {
         password: this.old_password
       });
       this.step++;
-      helpers.runNotice("warning", "U need enter otp code to continue");
+      runNotice("warning", "U need enter otp code to continue");
       this.loading = true;
     } catch (error) {
       this.loading = false;
@@ -144,7 +145,7 @@ export default class App extends Mixins(Helpers) {
       });
       this.loading = false;
       this.delete();
-      helpers.runNotice("success", "Password changed");
+      runNotice("success", "Password changed");
     } catch (error) {
       this.loading = false;
       return error;

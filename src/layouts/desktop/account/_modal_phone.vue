@@ -80,6 +80,7 @@ import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import phone from "phone";
 import { UserController } from "@/controllers";
+import { runNotice } from "@/mixins";
 
 @Component({
   components: {
@@ -143,7 +144,7 @@ export default class App extends Mixins(Helpers) {
         { phone_number: "+" + phone_number }
       );
       this.step++;
-      helpers.runNotice("success", "Code was sent successfully");
+      runNotice("success", "Code was sent successfully");
       this.loading = false;
     } catch (error) {
       this.loading = false;
@@ -157,7 +158,7 @@ export default class App extends Mixins(Helpers) {
     const payload = { phone_number, verification_code };
     try {
       await new ApiClient("auth").post("resource/phones/verify", payload);
-      helpers.runNotice("success", "Phone was verified successfully");
+      runNotice("success", "Phone was verified successfully");
       this.loading = false;
       this.delete();
     } catch (error) {

@@ -83,6 +83,7 @@ import * as helpers from "@zsmartex/z-helpers";
 import UserController from "@/controllers/user";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
+import { runNotice } from "@/mixins";
 
 @Component({
   components: {
@@ -150,7 +151,7 @@ export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
 
   copy_secret() {
     helpers.copyText(this.code.secret);
-    helpers.runNotice("success", "Copy thanh cong");
+    runNotice("success", "Copy thanh cong");
   }
 
   enable_2fa() {

@@ -183,6 +183,7 @@ import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import store from "@/store";
 import { UserController } from "@/controllers";
+import { runNotice } from "@/mixins";
 
 @Component({
   components: {
@@ -283,7 +284,7 @@ export default class AccountKYC extends Vue {
         formData,
         config
       );
-      helpers.runNotice("success", "Documents upload was successful");
+      runNotice("success", "Documents upload was successful");
       await UserController.get_labels();
     } catch (error) {
       return error;

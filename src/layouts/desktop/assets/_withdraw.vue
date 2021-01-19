@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { runNotice } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
 import ApiClient from "@zsmartex/z-apiclient";
 import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
@@ -123,7 +124,7 @@ export default {
   },
   mounted() {
     if (!this.UserController.otp)
-      helpers.runNotice("warning", this.$t("message.withdraw.enable2fa"));
+      runNotice("warning", this.$t("message.withdraw.enable2fa"));
   },
   methods: {
     place_all_available() {
@@ -136,7 +137,7 @@ export default {
       this.loading = true;
       try {
         await new ApiClient("trade").post("account/withdraws", payload);
-        helpers.runNotice("success", this.$t("message.withdraw.success"));
+        runNotice("success", this.$t("message.withdraw.success"));
         this.loading = false;
         this.closeTotp();
       } catch (error) {

@@ -7,6 +7,7 @@ import Store, { IStore } from "./store";
 import GettersSetters from "./getters_setters";
 import { applyMixins } from '../mixins';
 import ZSmartModel from "@zsmartex/z-eventbus";
+import { runNotice } from "@/mixins";
 
 export class UserController {
   store = Store;
@@ -26,7 +27,7 @@ export class UserController {
         router.push({ path: "/" });
       }
   
-      helpers.runNotice("success", "LOG OUT");
+      runNotice("success", "LOG OUT");
     })
   }
 
@@ -62,7 +63,7 @@ export class UserController {
 
       this.auth_success(data, "login", data.state == "active" && router.currentRoute.fullPath != url_callback ? url_callback : null);
       if (data.state == "active") { 
-        helpers.runNotice("success", "Login successfuly");
+        runNotice("success", "Login successfuly");
       } else if (data.state == "pending") {
         ZSmartModel.emit("user/WAIT_EMAIL");
         this.session.sended_email = false;
@@ -91,7 +92,7 @@ export class UserController {
 
       ZSmartModel.emit("user/WAIT_EMAIL");
       this.session.sended_email = true;
-      helpers.runNotice("warning", "Check Your Email NOW");
+      runNotice("warning", "Check Your Email NOW");
 
     } catch (error) {
       return error;
@@ -160,9 +161,9 @@ export class UserController {
       await new ApiClient("auth").post("identity/users/email/confirm_code", { token });
       store.state.user.state = "active";
       router.push("/account/security");
-      helpers.runNotice("success", "Confirmation email successfuly");
+      runNotice("success", "Confirmation email successfuly");
     } catch (error) {
-      helpers.runNotice("error", "Wrong confirmation token");
+      runNotice("error", "Wrong confirmation token");
       return error;
     }
   }
@@ -170,7 +171,7 @@ export class UserController {
   async confirm_reset_password(token: string, password: string, confirm_password: string) {
     try {
       await new ApiClient("auth").post("identity/users/password/confirm_code", { reset_password_token: token, password, confirm_password });
-      helpers.runNotice(
+      runNotice(
         "success",
         helpers.translation("message.password.changed").toString()
       );
@@ -231,7 +232,7 @@ export class UserController {
       });
       store.commit("user/ENABLE_OTP");
       this.otp = true;
-      helpers.runNotice("success", "thanh cong");
+      runNotice("success", "thanh cong");
       on_success();
     } catch (error) {
       return;
