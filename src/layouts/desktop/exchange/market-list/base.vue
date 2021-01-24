@@ -51,7 +51,7 @@
       :hover="true"
       :scroll="true"
       :border="false"
-      :selected="{ key: 'id', value: market }"
+      :selected="{ key: 'id', value: market.id }"
       @click="on_table_click"
     >
       <template slot="base_unit" slot-scope="{ item, column }">
@@ -85,7 +85,6 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
 import { PublicController, TradeController } from "@/controllers";
@@ -133,14 +132,14 @@ export default class MarketList extends Vue {
         key: "base_unit",
         class_name: "currency",
         algin: "left",
-        scopedSlots: true,
+        scopedSlots: true
       },
       {
         title: this.$t("table.price"),
         key: "last",
         class_name: "price",
         algin: "right",
-        sorter: true,
+        sorter: true
       },
       {
         title: this.$t("table.change"),
@@ -148,7 +147,7 @@ export default class MarketList extends Vue {
         class_name: "change",
         algin: "right",
         scopedSlots: true,
-        sorter: true,
+        sorter: true
       },
     ];
   }

@@ -61,7 +61,7 @@
       </ul>
     </div>
     <div class="bottom-footer">
-      &copy; 2019-2020
+      &copy; 2019-2021
       <a :href="copyright.link" target="_blank" v-text="copyright.name" />. All
       rights reserved.
     </div>

@@ -1,5 +1,8 @@
 <template>
   <div class="depth" :class="side">
+    <a-spin v-if="loading" class="z-table-loading-wrapper">
+      <a-icon slot="indicator" type="loading" spin />
+    </a-spin>
     <depth-overlay
       ref="overlay"
       :market="market"
@@ -57,12 +60,16 @@ export default class MarketDepth extends Vue {
     return TradeController.orderbook;
   }
 
+  get loading() {
+    return this.orderbook.loading;
+  }
+
   get overlay_mouse_event() {
     return this.$refs["overlay"].mouse_event;
   }
 
   get market() {
-    return TradeController.market
+    return TradeController.market;
   }
 
   get maxSum() {
@@ -83,7 +90,7 @@ export default class MarketDepth extends Vue {
   depth() {
     let depth = this.orderbook.toArray(this.side);
     depth = depth.filter(order => order.price > 0 && order.amount > 0);
-    depth = depth.splice(0, 50);
+    depth = depth.splice(0, 35);
 
     return this.side === "bids" ? depth : depth.reverse();
   }

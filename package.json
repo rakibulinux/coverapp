@@ -15,7 +15,7 @@
     "@grainrigi/vue-fragment": "^1.5.1",
     "@types/uuid": "^8.0.0",
     "@vue/composition-api": "^1.0.0-beta.18",
-    "@zsmartex/z-apiclient": "git+https://gitlab.com/zsmartex/z-apiclient.git",
+    "@zsmartex/z-apiclient": "git+https://gitlab.com/zsmartex/z-apiclient.git#8e75ce3fbbd5307660fbab3f50a33252436ded32",
     "@zsmartex/z-eventbus": "git+https://gitlab.com/zsmartex/z-eventbus.git",
     "@zsmartex/z-helpers": "git+https://gitlab.com/zsmartex/z-helpers.git",
     "@zsmartex/z-store": "git+https://gitlab.com/zsmartex/z-store.git",

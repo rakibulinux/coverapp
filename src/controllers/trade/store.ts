@@ -14,6 +14,7 @@ export interface IStore {
 			price: number,
 			amount: number
 		}[];
+		loading: boolean;
 		sequence: number;
 	};
 	trades: ZTypes.PublicTrade[];
@@ -28,6 +29,7 @@ class Store {
 		depth: {
 			asks: [],
 			bids: [],
+			loading: false,
 			sequence: 0
 		},
 		trades: [],

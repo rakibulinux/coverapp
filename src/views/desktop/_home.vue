@@ -12,14 +12,17 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
+    "z-pagination": () => import("@/components/desktop/z-pagination.vue"),
     preview: () => import("@/layouts/desktop/home/_preview.vue"),
     "market-list": () => import("@/layouts/desktop/home/market-list"),
     "feature-markets": () =>
       import("@/layouts/desktop/home/_feature_markets.vue"),
-    advantages: () => import("@/layouts/desktop/home/_advantages.vue")
-  }
+    advantages: () => import("@/layouts/desktop/home/_advantages.vue"),
+  },
 })
 export default class Home extends Vue {
+  page = 1;
+
   created() {
     if (localStorage.getItem("favorites") === null)
       localStorage.setItem("favorites", "");

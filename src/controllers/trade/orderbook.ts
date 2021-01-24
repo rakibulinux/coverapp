@@ -13,12 +13,22 @@ export default class OrderBook {
     this.book.sequence = sequence
   }
 
+  get loading() {
+    return this.book.loading;
+  }
+
+  set loading(loading: boolean) {
+    this.book.loading = loading;
+  }
+
   async fetch(market_id: string, limit?: number) {
-    
+    this.loading = true;
+
     try {
+      this.clear();
       const { data } = await TradeController.get_depth(market_id, limit);
       const depth: { [key in ZTypes.TakerType]: string[][] } = data;
-      this.clear();
+      this.loading = false;
 
       ["asks", "bids"].forEach((side: ZTypes.TakerType) => {
         depth[side].forEach(row => {
@@ -29,11 +39,14 @@ export default class OrderBook {
         })
       })
     } catch (error) {
+      this.loading = false;
+
       return error;
     }
   }
 
   add(price: number, amount: number, side: ZTypes.TakerType) {
+    if (this.loading) return;
     const index = this.book[side].findIndex(row => row.price === price);
     if (index >= 0) {
       this.book[side][index].amount = amount;
@@ -48,6 +61,8 @@ export default class OrderBook {
   }
 
   remove(price: number, side: ZTypes.TakerType) {
+    if (this.loading) return;
+
     const index = this.book[side].findIndex(row => row.price === price);
 
     if (index >= 0) this.book[side].splice(index, 1);

@@ -41,7 +41,6 @@ import * as helpers from "@zsmartex/z-helpers";
 import book_asks_svg from "@/assets/img/book_asks.svg";
 import book_avg_svg from "@/assets/img/book_avg.svg";
 import book_bids_svg from "@/assets/img/book_bids.svg";
-import { PublicController } from "@/controllers";
 
 @Component({
   components: {

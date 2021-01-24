@@ -1710,9 +1710,9 @@
   version "5.3.0"
   resolved "git+https://github.com/zsmartex/KLineChart.git#84f9c700dc1ae58a6fd114b5f820aa156b364a6c"
 
-"@zsmartex/z-apiclient@git+https://gitlab.com/zsmartex/z-apiclient.git":
+"@zsmartex/z-apiclient@git+https://gitlab.com/zsmartex/z-apiclient.git#8e75ce3fbbd5307660fbab3f50a33252436ded32":
   version "1.0.7"
-  resolved "git+https://gitlab.com/zsmartex/z-apiclient.git#9ee4bd8e3e08b7d3d110b34b367873dd8f12970a"
+  resolved "git+https://gitlab.com/zsmartex/z-apiclient.git#8e75ce3fbbd5307660fbab3f50a33252436ded32"
   dependencies:
     "@zsmartex/z-eventbus" "git+https://gitlab.com/zsmartex/z-eventbus.git"
     axios "^0.21.1"
