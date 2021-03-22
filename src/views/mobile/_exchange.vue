@@ -21,13 +21,11 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
 import { Mixins, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import { MarketMixin } from "@/mixins/mobile";
-import { PublicController, TradeController, WebSocketController } from "@/controllers";
 
 @Component({
   components: {
@@ -37,7 +35,7 @@ import { PublicController, TradeController, WebSocketController } from "@/contro
     "head-bar": () => import("@/views/mobile/modules/head-bar.vue")
   }
 })
-export default class Exchange extends Mixins(MarketMixin) {
+export default class PageExchange extends Mixins(MarketMixin) {
   mounted() {
     this.onLoad();
   }
@@ -48,24 +46,22 @@ export default class Exchange extends Mixins(MarketMixin) {
 
   removeLoad() {
     MarketChannels(this.market.id).forEach(channel => {
-      WebSocketController.unsubscribe("public", channel);
+      this.WebSocketController.unsubscribe("public", channel);
     });
   }
 
   onLoad() {
     this.setTitle();
-    TradeController.orderbook.clear();
-    TradeController.orderbook.fetch(this.market.id);
+    this.TradeController.orderbook.clear();
+    this.TradeController.orderbook.fetch(this.market.id);
 
     MarketChannels(this.market.id).forEach(channel => {
-      WebSocketController.subscribe("public", channel);
+      this.WebSocketController.subscribe("public", channel);
     });
   }
 
   setTitle() {
-    document.title = `${helpers.getMarketLastPrice()} - ${(
-      TradeController.market.name
-    ).toUpperCase()} - ${config.nameEX}`;
+    document.title = `${helpers.getMarketLastPrice()} - ${(this.TradeController.market.name).toUpperCase()} - ${config.nameEX}`;
   }
 }
 </script>

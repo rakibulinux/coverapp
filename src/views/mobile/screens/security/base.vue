@@ -12,11 +12,15 @@
         Login Password
       </setting-row>
 
-      <setting-row value="Disabled" @click="open_screen('otp')" ripple>
+      <setting-row
+        :value="UserController.otp ? 'Enabled' : 'Disabled'"
+        @click="open_screen('otp')"
+        ripple
+      >
         Google Verification
       </setting-row>
       <setting-row
-        value="Disabled"
+        :value="UserController.level >= 2 ? 'Enabled' : 'Disabled'"
         @click="open_screen('phone')"
         style="margin-bottom: 8px"
         ripple
@@ -39,7 +43,6 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 

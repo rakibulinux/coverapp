@@ -1,38 +1,90 @@
 <template>
-  <div :class="['order-row', `order-row-${order.side}`]">
-    <circle-filled :filled="filled_percent" :side="order.side" />
-    
-    <div class="order-row-info">
-      <div class="market-name">{{ market.name }}</div>
-      <div class="order-price-volume">
-        <span>
-          <div class="title">Volume</div>
-          <div class="title">Price</div>
-        </span>
-        <span>
-          <div class="value">
-            <span class="executed">{{ getAmount(order.origin_volume - order.remaining_volume) }}</span>
-            <span class="origin">/ {{ getAmount(order.origin_volume) }}</span>
+  <fragment v-if="is_wait">
+    <div :class="['order-row', `order-row-${order.side}`, 'order-row-wait']">
+      <circle-filled :filled="filled_percent" :side="order.side" />
+      <div class="order-row-content">
+        <div class="order-row-line">
+          <div class="market-name">{{ market.name }}</div>
+          <div class="created_at">{{ getDate(order.created_at, true) }}</div>
+        </div>
+        <div class="order-row-line">
+          <div class="order-price-volume">
+            <span>
+              <div class="title">Volume</div>
+              <div class="title">Price</div>
+            </span>
+            <span>
+              <div class="value">
+                <span
+                  class="executed"
+                  v-text="filled ? getAmount(filled) : '--'"
+                />
+                <span
+                  class="origin"
+                  style="color: var(--color-gray);"
+                  v-text="'/ ' + getAmount(order.origin_volume)"
+                />
+              </div>
+              <div class="value">{{ getPrice(order.price) }}</div>
+            </span>
           </div>
-          <div class="value">{{ getPrice(order.price) }}</div>
-        </span>
-      </div>
-    </div>
 
-    <div class="order-row-action text-right">
-      <div class="created_at">{{ getDate(order.created_at, true) }}</div>
-      <div class="action-cancel">
-        <button @click="cancel_order">Cancel</button>
+          <button @click="cancel_order" class="order-row-action">Cancel</button>
+        </div>
       </div>
     </div>
-  </div>
+  </fragment>
+  <fragment v-else>
+    <div
+      :class="[
+        'order-row',
+        `order-row-${order.side}`,
+        `order-row-${order.state}`
+      ]"
+    >
+      <div class="order-row-content">
+        <div class="order-row-line">
+          <div class="market-name">{{ market.name }}</div>
+          <div class="created_at">{{ getDate(order.created_at, true) }}</div>
+        </div>
+        <div class="order-row-line">
+          <div :class="['order-type', trendType(order.side)]">
+            {{ $t(`market.orders.ord_type.${order.ord_type}`) }}
+          </div>
+          <div :class="['order-state', `order-state-${order.state}`]">
+            {{ $t(`market.orders.state.${order.state}`) }}
+          </div>
+        </div>
+
+        <div class="order-row-line order-price-volume">
+          <span>
+            <div class="title">Volume</div>
+            <div class="title">Price</div>
+          </span>
+          <span>
+            <div class="value">
+              <span
+                class="executed"
+                v-text="filled ? getAmount(filled) : '--'"
+              />
+              <span
+                class="origin"
+                style="color: var(--color-gray);"
+                v-text="'/' + getAmount(order.origin_volume)"
+              />
+            </div>
+            <div class="value">{{ getPrice(order.price) }}</div>
+          </span>
+        </div>
+      </div>
+    </div>
+  </fragment>
 </template>
 
 <script lang="ts">
 import { TradeController } from "@/controllers";
 import { MarketMixin } from "@/mixins/mobile";
-import * as helpers from "@zsmartex/z-helpers";
-import { Vue, Component, Prop, Mixins } from "vue-property-decorator";
+import { Component, Prop, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -44,6 +96,16 @@ export default class OrderRow extends Mixins(MarketMixin) {
 
   get market_id() {
     return this.order.market;
+  }
+
+  get filled() {
+    return (
+      Number(this.order.origin_volume) - Number(this.order.remaining_volume)
+    );
+  }
+
+  get is_wait() {
+    return this.order.state == "wait";
   }
 
   get filled_percent() {
@@ -64,14 +126,77 @@ export default class OrderRow extends Mixins(MarketMixin) {
 <style lang="less">
 .order-row {
   position: relative;
-  display: flex;
+  display: block;
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 0;
   border-bottom: 1px solid var(--border-color);
   font-weight: 500;
 
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &-line {
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    > * {
+      display: inline-block;
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+
+  .title {
+    color: var(--color-gray);
+    font-size: 9px;
+    font-weight: normal;
+  }
+
+  .created_at {
+    font-size: 8px;
+    color: var(--color-gray);
+    font-weight: normal;
+  }
+
+  .order-type {
+    font-size: 10px;
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+
+  .order-state {
+    color: var(--color-gray);
+    font-size: 8px;
+    background-color: var(--bg-card-head-color);
+    border-radius: 2px;
+    height: 14px;
+    line-height: 14px;
+    padding: 0 4px;
+  }
+
+  .order-price-volume {
+    display: flex;
+    line-height: 14px;
+    width: 100%;
+    font-size: 9px;
+    margin-top: 4px;
+
+    > span {
+      flex: 1;
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+
   .order-row-circle-filled {
     position: relative;
+    display: inline-block;
     margin-right: 12px;
     text-align: center;
 
@@ -97,50 +222,21 @@ export default class OrderRow extends Mixins(MarketMixin) {
     }
   }
 
-  &-info {
-    flex: 1;
-
-    .title {
-      color: var(--color-gray);
-      font-size: 9px;
-    }
-
-    .order-price-volume {
-      display: flex;
-      line-height: 14px;
-
-      span { 
-        margin-right: 8px;
-      }
-
-      .executed {
-        color: var(--color-gray);
-        margin-right: 2px;
-      }
-
-      .origin {
-
-      }
-    }
-  }
-
   &-action {
-    position: relative;
-    .created_at {
-      font-size: 9px;
-      color: var(--color-gray);
-    }
+    position: absolute;
+    bottom: 0;
+    right: 0;
 
-    button {
-      position: absolute;
-      bottom: 0;
-      right: 0;
+    background-color: var(--border-color);
+    border-radius: 2px;
+    font-size: 8px;
+    height: 16px;
+    padding: 0 8px;
 
-      background-color: var(--border-color);
-      border-radius: 2px;
-      font-size: 8px;
-      height: 16px;
-      width: 40px;
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: var(--disabled-color);
     }
   }
 
@@ -154,6 +250,29 @@ export default class OrderRow extends Mixins(MarketMixin) {
     .ant-progress-circle-path {
       stroke: var(--down-color) !important;
     }
+  }
+
+  &-wait {
+    display: flex;
+
+    .order-price-volume {
+      .title {
+        width: 50px;
+      }
+
+      > span {
+        flex: none;
+        text-align: left !important;
+      }
+    }
+
+    .order-price-volume span {
+      margin-right: 4px !important;
+    }
+  }
+
+  &-wait &-content {
+    width: 100%;
   }
 }
 </style>

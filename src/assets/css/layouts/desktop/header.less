@@ -1,26 +1,24 @@
 .ant-layout-header {
-  background: #131e33;
+  display: flex;
+  align-items: center;
   min-width: 1200px;
   padding: 0 10px;
   height: 48px;
   line-height: 48px;
   font-size: 14px;
+  background: #131e33;
   color: var(--header-text-color);
+
   &:not(.no-border) {
     border-bottom: 1px solid rgba(49, 58, 86, 0.5);
   }
 
   .logo {
-    width: 125px;
-    height: 40px;
-    background-image: url("~@/assets/img/rectangular_logo.png");
-    background-repeat: no-repeat;
-    background-size: 125px 40px;
-    border-radius: 3px;
-    float: left;
-    position: relative;
-    top: 5px;
     cursor: pointer;
+
+    img {
+      height: 40px;
+    }
   }
 
   .action-group {
@@ -31,12 +29,11 @@
     }
 
     &.left {
-      float: left;
       margin-left: 15px;
     }
 
     &.right {
-      float: right;
+      margin-left: auto;
     }
 
     a {

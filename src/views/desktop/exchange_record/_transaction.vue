@@ -6,9 +6,13 @@
         <div class="form-row">
           <label class="form-label">{{ $t("table.market") }}:</label>
           <div class="form-control">
-            <a-select v-model="market" style="width:115px">
-              <a-select-option v-for="data in MARKET" :key="data" :value="data">
-                {{ data }}
+            <a-select v-model="market" style="width: 115px">
+              <a-select-option
+                v-for="market in PublicController.markets"
+                :key="market.id"
+                :value="market.id"
+              >
+                {{ market.name }}
               </a-select-option>
             </a-select>
           </div>
@@ -16,7 +20,7 @@
         <div class="form-row">
           <label class="form-label">{{ $t("table.type") }}:</label>
           <div class="form-control">
-            <a-select v-model="type" style="width:115px">
+            <a-select v-model="type" style="width: 115px">
               <a-select-option v-for="data in TYPE" :key="data">
                 {{ data }}
               </a-select-option>
@@ -40,9 +44,7 @@
         </div>
         <div class="form-row">
           <div class="form-control">
-            <button type="submit" @click="getData()">
-              Query
-            </button>
+            <button type="submit" @click="getData()">Query</button>
           </div>
         </div>
       </div>
@@ -56,107 +58,88 @@
           <span v-text="$t('table.total')" />
         </dt>
         <dd :class="{ empty: !array.data.length }">
-          <p v-if="!array.data.length">
-            <span v-text="$t('orders.transaction.empty')" />
-          </p>
           <p
             v-for="(data, index) in array.data"
             :key="index"
             :removing="!!data.removing"
           >
             <span v-text="getDate(data.created_at)" />
-            <span
-              v-text="PublicController.tickers[data.market].name"
-            />
+            <span v-text="PublicController.tickers[data.market].name" />
             <span :class="[trendType(data.side), 'type']" v-text="data.side" />
             <span v-text="getPrice(data.price, data.market)" />
             <span v-text="getAmount(data.amount, data.market)" />
             <span v-text="getTotal(data.total, data.market)" />
           </p>
-          <a-spin v-if="loading" size="large">
-            <a-icon
-              slot="indicator"
-              type="loading"
-              style="font-size: 24px"
-              spin
-            />
-          </a-spin>
+          <z-loading v-if="loading" />
+          <p v-else-if="!array.data.length">
+            <span v-text="$t('orders.transaction.empty')" />
+          </p>
+
+          <z-pagination
+            v-model="array.page"
+            :loading="loading"
+            size="small"
+            class="text-right"
+            :page-size="25"
+            :count-row="array.data.length"
+            @change="getData"
+          />
         </dd>
       </div>
-      <a-pagination
-        v-model="array.page"
-        size="small"
-        class="text-right"
-        :page-size="25"
-        :total="array.max"
-        @change="getData"
-      />
     </div>
   </div>
 </template>
 
-<script>
-import { PublicController, TradeController } from "@/controllers";
-import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
-import Helpers from "./helpers";
+<script lang="ts">
+import { Moment } from "moment";
+import { Mixins, Component } from "vue-property-decorator";
+import ExchangeRecordMixins from "./mixins";
 
-export default {
-  components: {},
-  mixins: [Helpers],
-  data: () => ({
-    timeMoment: [],
-    time: [null, null]
-  }),
-  computed: {
-    PublicController() {
-      return PublicController;
-    },
-    TradeController() {
-      return TradeController;
+@Component
+export default class OpenOrdersExchangeRecord extends Mixins(
+  ExchangeRecordMixins
+) {
+  timeMoment: Moment[] = [];
+
+  get time() {
+    return this.timeMoment.map((row) => row.toDate().getTime() / 1000);
+  }
+
+  getCurrentStyle(current) {
+    const style: { [key: string]: string } = {};
+    if (current.date() === 1) {
+      style.border = "1px solid var(--blue-color)";
+      style.borderRadius = "50%";
     }
-  },
-  watch: {
-    timeMoment() {
-      const { timeMoment } = this;
-      this.time = timeMoment.map(row => new Date(row._d) / 1000);
-    }
-  },
-  methods: {
-    getCurrentStyle(current, today) {
-      const style = {};
-      if (current.date() === 1) {
-        style.border = "1px solid var(--blue-color)";
-        style.borderRadius = "50%";
-      }
-      return style;
-    },
-    async getData(page = 1, limit = 25) {
-      this.loading = true;
-      const market =
-        this.market != "All"
-          ? helpers.getTickerID(this.market).toLowerCase()
-          : "";
-      const payload = {
-        market,
-        type: this.type != "All" ? this.type.toLowerCase() : "",
-        time_from: this.time[0] ? new Date(this.time[0]).getTime() / 1000 : "",
-        time_to: this.time[1] ? new Date(this.time[1]).getTime() / 1000 : "",
+    return style;
+  }
+
+  async getData(page = 1, limit = 25) {
+    this.loading = true;
+    try {
+      const response = await this.TradeController.get_trades({
+        market: this.market != "All" ? this.market : null,
+        type:
+          this.type != "All"
+            ? (this.type.toLowerCase() as ZTypes.OrderSide)
+            : null,
+        time_from:
+          this.time.length >= 1
+            ? parseInt((new Date(this.time[0]).getTime() / 1000).toString())
+            : null,
+        time_to:
+          this.time.length >= 2
+            ? parseInt((new Date(this.time[1]).getTime() / 1000).toString())
+            : null,
         limit,
-        page
-      };
-      try {
-        const response = await new ApiClient("trade").get(
-          "market/trades",
-          payload
-        );
-        this.array.data = response.data;
-        this.array.max = Number(response.headers.total);
-        this.loading = false;
-      } catch (error) {
-        return error;
-      }
+        page,
+      });
+      this.array.data = response.data;
+      this.array.max = Number(response.headers.total);
+      this.loading = false;
+    } catch (error) {
+      return error;
     }
   }
-};
+}
 </script>

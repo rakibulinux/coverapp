@@ -12,7 +12,6 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
-    "z-pagination": () => import("@/components/desktop/z-pagination.vue"),
     preview: () => import("@/layouts/desktop/home/_preview.vue"),
     "market-list": () => import("@/layouts/desktop/home/market-list"),
     "feature-markets": () =>

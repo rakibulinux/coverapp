@@ -11,13 +11,13 @@
       <div class="assets-action">
         <div
           class="assets-action-item"
-          @click="open_assets_search_screen('deposit')"
+          @click="open_assets_currency_picker_screen('deposit')"
         >
           Deposit
         </div>
         <div
           class="assets-action-item"
-          @click="open_assets_search_screen('withdraw')"
+          @click="open_assets_currency_picker_screen('withdraw')"
         >
           Withdraw
         </div>
@@ -41,16 +41,16 @@
     />
     <screen-assets-deposit ref="screen-assets-deposit" />
     <screen-assets-withdraw ref="screen-assets-withdraw" />
-    <screen-assets-search
-      ref="screen-assets-search"
+    <screen-assets-currency-picker
+      ref="screen-assets-currency-picker"
       @click="open_screen_by_type_and_currency"
     />
+    <screen-assets-history ref="screen-assets-history" />
     <warning-modal ref="warning-modal" />
   </div>
 </template>
 
 <script lang="tsx">
-import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Vue, Component } from "vue-property-decorator";
 import { PublicController, UserController } from "@/controllers";
@@ -64,8 +64,10 @@ import { PublicController, UserController } from "@/controllers";
       import("@/views/mobile/screens/assets/deposit.vue"),
     "screen-assets-withdraw": () =>
       import("@/views/mobile/screens/assets/withdraw.vue"),
-    "screen-assets-search": () =>
-      import("@/views/mobile/screens/assets/search.vue"),
+    "screen-assets-currency-picker": () =>
+      import("@/views/mobile/screens/assets/currency-picker.vue"),
+    "screen-assets-history": () =>
+      import("@/views/mobile/screens/assets/history"),
     "warning-modal": () => import("@/layouts/mobile/assets/warning-modal.vue")
   }
 })
@@ -122,12 +124,16 @@ export default class Assets extends Vue {
     }
   }
 
-  open_assets_search_screen(type: string) {
+  open_assets_currency_picker_screen(type: string) {
     if (this.user_otp) {
-      this.open_screen("search", type);
+      this.open_screen("currency-picker", type);
     } else {
       this.open_warning_modal();
     }
+  }
+
+  open_assets_history_screen(type: string) {
+    this.$refs["screen-assets-history"].create(type);
   }
 
   open_warning_modal() {
@@ -211,6 +217,21 @@ export default class Assets extends Vue {
     .assets-row {
       margin: 4px 0;
       cursor: pointer;
+    }
+  }
+}
+
+.screen-assets {
+  &-notice {
+    padding: 8px;
+    color: var(--color-gray);
+
+    &-title {
+      font-weight: 500;
+    }
+
+    &-content {
+      margin-top: 4px;
     }
   }
 }

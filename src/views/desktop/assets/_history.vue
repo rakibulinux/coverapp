@@ -52,7 +52,8 @@
           <history-row
             v-for="(data, index) in history.data"
             :key="index"
-            :data="data"
+            :type="type.toLowerCase()"
+            :record="data"
           />
           <a-spin v-if="loading" size="large">
             <a-icon
@@ -65,76 +66,85 @@
         </dd>
       </div>
     </div>
+    <modal-confirm-withdrawal ref="modal-confirm-withdrawal" />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
-import _history_row from "./modules/history-row";
+import { Vue, Component } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
-    "history-row": _history_row
-  },
-  data: () => ({
-    TYPE: ["Deposit", "Withdrawal"],
-    currency: "All",
-    type: "Deposit",
-    history: {
-      data: [],
-      page: 1,
-      max: 0
-    },
-    loading: false
-  }),
-  computed: {
-    CURRENCY: () => helpers.CURRENCY()
-  },
+    "history-row": () => import("./modules/history-row.vue"),
+    "modal-confirm-withdrawal": () => import("./modules/modal-confirm-withdrawal.vue")
+  }
+})
+export default class AssetsHistory extends Vue {
+  TYPE = ["Deposit", "Withdraw"];
+  currency = "All";
+  type = "Deposit";
+
+  history = {
+    data: [],
+    page: 1,
+    max: 0
+  };
+
+  loading = false;
+
+  get CURRENCY() {
+    return helpers.CURRENCY();
+  }
+
   mounted() {
     this.getData();
-  },
-  methods: {
-    setCurrency(currency) {
-      this.currency = currency;
-      this.getData();
-    },
-    setType(type) {
-      this.type = type;
-      this.getData();
-    },
-    async getData() {
-      const payload = this.buildPayload();
-      const type = this.type === this.TYPE[0] ? "deposits" : "withdraws";
-      this.history.data = [];
-      this.loading = true;
+  }
 
-      try {
-        const response = await new ApiClient("trade").get(
-          "account/" + type,
-          payload
-        );
-        this.history.data = response.data;
-        this.history.max = response.headers.total;
-        this.loading = false;
-      } catch (error) {
-        this.loading = false;
-        return error;
-      }
-    },
-    buildPayload() {
-      return {
-        currency: this.currency != "All" ? this.currency.toLowerCase() : "",
-        limit: 25,
-        page: this.history.page
-      };
-    },
-    filterOption(input, option) {
-      const value = option.componentOptions.children[0].text;
-      if (value === "All") return false;
+  setCurrency(currency) {
+    this.currency = currency;
+    this.getData();
+  }
 
-      return value.toUpperCase().includes(input.toUpperCase());
+  setType(type) {
+    this.type = type;
+    this.getData();
+  }
+
+  async getData() {
+    const payload = this.buildPayload();
+    const type = this.type === this.TYPE[0] ? "deposits" : "withdraws";
+    this.history.data = [];
+    this.loading = true;
+
+    try {
+      const response = await new ApiClient("trade").get(
+        "account/" + type,
+        payload
+      );
+      this.history.data = response.data;
+      this.history.max = response.headers.total;
+      this.loading = false;
+    } catch (error) {
+      this.loading = false;
+      return error;
     }
   }
-};
+
+  buildPayload() {
+    return {
+      currency: this.currency != "All" ? this.currency.toLowerCase() : "",
+      limit: 25,
+      page: this.history.page
+    };
+  }
+
+  filterOption(input, option) {
+    const value = option.componentOptions.children[0].text;
+    if (value === "All") return false;
+
+    return value.toUpperCase().includes(input.toUpperCase());
+  }
+}
 </script>

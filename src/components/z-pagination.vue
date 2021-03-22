@@ -1,5 +1,11 @@
 <template>
-  <div :class="['z-pagination', { 'z-pagination-loading': loading }]">
+  <div
+    :class="[
+      'z-pagination',
+      { 'z-pagination-loading': loading },
+      { 'z-pagination-small': size == 'small' }
+    ]"
+  >
     <div
       :class="[
         'z-pagination-item',
@@ -26,7 +32,7 @@
       </a>
     </div>
     <div
-      v-if="countRow == size"
+      v-if="countRow == pageSize"
       class="z-pagination-item"
       @click="change(current_page + 1)"
     >
@@ -37,7 +43,7 @@
     <div
       :class="[
         'z-pagination-item',
-        { 'z-pagination-item-disabled': countRow != size },
+        { 'z-pagination-item-disabled': countRow != pageSize }
       ]"
       @click="change(current_page + 1)"
     >
@@ -53,10 +59,11 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class ZPagination extends Vue {
+  @Prop({ default: "big" }) readonly size!: "big" | "small";
   @Prop() readonly loading!: boolean;
-  @Prop() readonly size!: number;
+  @Prop() readonly pageSize!: number;
   @Prop() readonly value?: number;
-  @Prop() readonly page?: number;
+  @Prop({ default: 1 }) readonly page?: number;
   @Prop() readonly total?: number;
   @Prop() readonly countRow?: number;
 
@@ -68,6 +75,9 @@ export default class ZPagination extends Vue {
   }
 
   change(page) {
+    if (this.loading) return;
+    if (this.pageSize != this.countRow) return;
+
     this.$emit("input", page);
     this.$emit("change", page);
   }
@@ -82,6 +92,7 @@ export default class ZPagination extends Vue {
     display: inline-block;
     width: 35px;
     height: 35px;
+    color: var(--color-gray);
     border: 1px solid var(--border-color);
     border-radius: 4px;
     text-align: center;
@@ -105,19 +116,25 @@ export default class ZPagination extends Vue {
     &-active {
       color: var(--blue-color);
       border-color: var(--blue-color);
-    }
 
-    &-disabled {
-      color: var(--disabled-color);
-      border-color: var(--disabled-color);
-      cursor: not-allowed;
+      a {
+        color: var(--blue-color);
+      }
     }
   }
 
-  &-loading &-item {
-    color: var(--disabled-color);
-    border-color: var(--disabled-color);
+  &-loading &-item,
+  &-item-disabled {
+    color: var(--disabled-color) !important;
+    border-color: var(--disabled-color) !important;
     cursor: not-allowed;
+  }
+
+  &-small &-item {
+    width: 30px;
+    height: 30px;
+    margin: 0 2px;
+    border: none;
   }
 }
 </style>

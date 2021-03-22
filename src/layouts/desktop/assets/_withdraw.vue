@@ -13,7 +13,7 @@
           <p class="label-right">
             <span>
               {{ $t("assets.withdraw.available") }}
-              <a @click="place_all_available" v-text="available" />
+              <a @click="amount = available.toString()" v-text="available" />
             </span>
           </p>
         </label>
@@ -54,7 +54,7 @@
     </div>
     <div v-else class="assets-2fa">
       {{ $t("message.withdraw.enable2fa") }}
-      <button @click="openModal('2fa')" v-text="'ENABLE 2FA'" />
+      <button @click="open_modal('2fa')" v-text="'ENABLE 2FA'" />
     </div>
     <div class="assets-action">
       <div class="assets-note">
@@ -76,95 +76,85 @@
           v-if="UserController.otp"
           type="submit"
           :disabled="button_disabled"
-          @click="openTotp"
+          @click="withdraw()"
           v-text="$t('assets.withdraw.submit')"
         />
       </div>
     </div>
-    <modal-totp ref="totp" :loading="loading" @submit="onSubmitTotp" />
+    <modal-totp ref="totp" :loading="loading" @submit="withdraw" />
     <modal-2fa ref="2fa" />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { runNotice } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
-import ApiClient from "@zsmartex/z-apiclient";
 import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
-import _modal_totp from "@/layouts/desktop/modal/_modal_totp";
+import _modal_totp from "@/layouts/desktop/modal/_modal_totp.vue";
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
     "modal-2fa": _modal_2fa,
     "modal-totp": _modal_totp
-  },
-  props: {
-    available: String,
-    currency: Object
-  },
-  computed: {
-    button_disabled() {
-      const { address } = this;
-      const amount = Number(this.amount);
-      const available = Number(this.available);
+  }
+})
+export default class AssetsWithdraw extends Vue {
+  $refs!: {
+    "modal-2fa": _modal_2fa;
+    "modal-totp": _modal_totp;
+  };
 
-      return !address || amount <= 0 || amount > available;
-    }
-  },
-  data: () => ({
-    loading: false,
-    address: "",
-    amount: "",
-    otp_code: ""
-  }),
-  watch: {
-    amount() {
-      this.amount = helpers.inputOnlyNumber(this.amount, 8);
-    }
-  },
+  @Prop() readonly available!: number;
+  @Prop() readonly currency!: ZTypes.Currency;
+
+  loading = false;
+  address = "";
+  amount = "";
+
+  get button_disabled() {
+    const { address } = this;
+    const amount = Number(this.amount);
+    const available = Number(this.available);
+
+    return !address || amount <= 0 || amount > available;
+  }
+
   mounted() {
     if (!this.UserController.otp)
       runNotice("warning", this.$t("message.withdraw.enable2fa"));
-  },
-  methods: {
-    place_all_available() {
-      this.amount = this.available;
-    },
-    async withdraw() {
-      const { rid, currency, amount, otp_code } = this;
-      const payload = { rid, currency, amount, otp: otp_code };
-
-      this.loading = true;
-      try {
-        await new ApiClient("trade").post("account/withdraws", payload);
-        runNotice("success", this.$t("message.withdraw.success"));
-        this.loading = false;
-        this.closeTotp();
-      } catch (error) {
-        this.loading = false;
-        return error;
-      }
-    },
-    onSubmitTotp(otp_code) {
-      this.otp_code = otp_code;
-      this.withdraw();
-    },
-    openTotp() {
-      const modal = "totp";
-
-      this.openModal(modal);
-    },
-    closeTotp() {
-      this.closeModal("totp");
-    },
-    openModal(modal) {
-      this.$refs[modal].create();
-    },
-    closeModal(modal) {
-      this.$refs[modal].delete();
-    }
   }
-};
+
+  async withdraw(otp_code?: string) {
+    if (!otp_code) return this.open_modal("totp");
+
+    this.loading = true;
+
+    await this.TradeController.create_withdrawal(
+      this.currency.id,
+      this.address,
+      Number(this.amount),
+      otp_code,
+      () => {
+        this.close_modal("totp");
+      }
+    );
+    this.loading = false;
+  }
+
+  open_modal(modal: string) {
+    this.$refs[modal].create();
+  }
+
+  close_modal(modal: string) {
+    this.$refs[modal].delete();
+  }
+
+  @Watch("amount")
+  onAmountChanged(amount: string) {
+    this.amount = helpers.inputOnlyNumber(amount, 8);
+  }
+}
 </script>
 
 <style lang="less">

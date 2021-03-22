@@ -49,23 +49,14 @@
           :key="item.label"
           :label="item.label"
         >
-          <cube-scroll
-            :data="findTickers('market', item.label)"
-            nest-mode="native"
-            :options="{
-              disableTouch: true,
-              directionLockThreshold: 0
-            }"
-          >
-            <div class="z-table-content">
-              <market-row
-                v-for="market in findTopMarkets(item.label === 'gainers')"
-                :key="market.id"
-                :market_id="market.id"
-                @click="$emit('click', market)"
-              />
-            </div>
-          </cube-scroll>
+          <div class="z-table-content">
+            <market-row
+              v-for="market in findTopMarkets(item.label === 'gainers')"
+              :key="market.id"
+              :market_id="market.id"
+              @click="$emit('click', market)"
+            />
+          </div>
         </cube-slide-item>
       </cube-slide>
     </div>

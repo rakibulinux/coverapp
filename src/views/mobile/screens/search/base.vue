@@ -15,7 +15,7 @@
         Cancel
       </span>
     </div>
-    <div class="search-screen-content">
+    <div v-if="!hidden" class="search-screen-content">
       <div class="z-table">
         <div v-if="headText.length" class="z-table-head">
           {{ headText }}
@@ -47,6 +47,7 @@ export default class SearchScreen extends Mixins(ScreenMixin) {
   @Prop() readonly value!: string;
   @Prop({ default: "" }) readonly headText!: string;
   @Prop() readonly data!: any[];
+  @Prop({ default: false }) readonly hidden!: boolean;
 
   mounted() {
     (this.$parent as any).SearchScreen = this;

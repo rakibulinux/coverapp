@@ -166,9 +166,23 @@ export default {
     },
     history: {
       state: {
-        completed: "Completed",
-        processing: "Processing ({confirmations}/{min_confirmations})",
+        submitted: "Submitted",
+        aml_processing: "Aml Processing",
+        aml_suspicious: "Aml Suspicious",
+        collected: "Collected",
+        fee_processing: "Fee Processing",
+        prepared: "Prepared",
+        canceled: "Canceled",
+        accepted: "Accepted",
+        skipped: "Skipped",
+        to_reject: "To Reject",
+        rejected: "Rejected",
+        processing: "Processing",
+        succeed: "Succeed",
         failed: "Failed",
+        errored: "Errored",
+        confirming: "Confirming",
+        completed: "Completed",
       },
     },
   },
@@ -226,4 +240,23 @@ export default {
   ...backend,
   message,
   modal,
+  market: {
+    side: {
+      buy: "Buy",
+      sell: "Sell"
+    },
+    orders: {
+      ord_type: {
+        limit: "Limit",
+        market: "Market"
+      },
+      state: {
+        wait: "Wait",
+        cancel: "Canceled",
+        done: "Done",
+        reject: "Rejected",
+        rejected: "Rejected",
+      }
+    }
+  }
 };

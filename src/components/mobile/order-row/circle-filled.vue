@@ -1,6 +1,6 @@
 <template>
   <div :class="['order-row-circle-filled', side]">
-    <div class="type-side">Limit sell</div>
+    <div class="type-side">Limit {{ side }}</div>
     <a-progress
       type="circle"
       :percent="filled"
@@ -22,3 +22,9 @@ export default class CircleFilled extends Vue {
   strokeWidth = 7;
 }
 </script>
+
+<style lang="less">
+.order-row-circle-filled {
+  width: 50px;
+}
+</style>

@@ -8,23 +8,27 @@ import GettersSetters from "./getters_setters";
 import { applyMixins } from '../mixins';
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { runNotice } from "@/mixins";
+import { isMobile } from "@zsmartex/z-helpers";
 
 export class UserController {
   store = Store;
 
   constructor() {
     ZSmartModel.on("user/LOGIN", () => {
-      this.get_balance();
       this.keep_session();
+
+      if (this.state == "active") {
+        this.get_balance();
+      }
     });
 
     ZSmartModel.on("user/LOGOUT", () => {
       this.auth_error();
 
       if (helpers.isMobile()) {
-        router.push({ path: "/m" });
+        if (router.currentRoute.fullPath != "/m") router.push({ path: "/m" });
       } else {
-        router.push({ path: "/" });
+        if (router.currentRoute.fullPath != "/") router.push({ path: "/" });
       }
   
       runNotice("success", "LOG OUT");
@@ -56,16 +60,25 @@ export class UserController {
     },
     url_callback?: string
   ) {
-    this.state = "loading";
+    this.auth_loading();
 
     try {
       const { data } = await new ApiClient("auth").post("identity/sessions", payload);
 
-      this.auth_success(data, "login", data.state == "active" && router.currentRoute.fullPath != url_callback ? url_callback : null);
+      if (data.state == "deleted") {
+        runNotice("error", "Your account has been deleted");
+        return
+      }
+
+      if (!isMobile()) {
+        this.auth_success(data, "login", data.state == "active" ? url_callback : "/confirmation/email");
+      } else {
+        this.auth_success(data, "login");
+      }
+
       if (data.state == "active") { 
         runNotice("success", "Login successfuly");
       } else if (data.state == "pending") {
-        ZSmartModel.emit("user/WAIT_EMAIL");
         this.session.sended_email = false;
       }
     } catch (error) {
@@ -80,21 +93,27 @@ export class UserController {
       refid?: string;
       captcha_response?: string;
       lang?: string;
-    }
+    },
+    url_callback?: string
   ) {
+    this.auth_loading();
+
     if (!payload.refid) delete payload.refid;
     payload.lang = "en";
 
     try {
       const { data } = await new ApiClient("auth").post("identity/users", payload);
 
-      this.auth_success(data, "register");
+      this.auth_success(data, "register", url_callback);
 
-      ZSmartModel.emit("user/WAIT_EMAIL");
       this.session.sended_email = true;
       runNotice("warning", "Check Your Email NOW");
 
+      if (isMobile()) return;
+
+      router.push("/confirmation/email");
     } catch (error) {
+      this.auth_error();
       return error;
     }
   }
@@ -109,7 +128,7 @@ export class UserController {
   }
 
   async get_logged() {
-    this.state = "loading";
+    this.auth_loading();
 
     try {
       const { data } = await this.get_session();
@@ -143,8 +162,13 @@ export class UserController {
     if (payload.csrf_token) localStorage.setItem("csrf_token", payload.csrf_token);
 
     ZSmartModel.emit("user/LOGIN");
+    if (this.state == "pending") ZSmartModel.emit("user/WAIT_EMAIL");
 
     if (url_callback) router.push({ path: url_callback });
+  }
+
+  private auth_loading() {
+    this.state = "loading";
   }
 
   private auth_error() {
@@ -156,33 +180,75 @@ export class UserController {
     return new ApiClient("auth").get(`resource/users/activity/${topic}`, { action, page, limit });
   }
 
-  async confirm_email(token) {
+  async resend_email(email: string, callback?: () => void) {
     try {
-      await new ApiClient("auth").post("identity/users/email/confirm_code", { token });
-      store.state.user.state = "active";
-      router.push("/account/security");
-      runNotice("success", "Confirmation email successfuly");
+      const response = await new ApiClient("auth").post("identity/users/email/generate_code", {
+        email: email
+      });
+
+      runNotice("success", "check email");
+      if (callback) callback();
+
+      return response;
     } catch (error) {
-      runNotice("error", "Wrong confirmation token");
       return error;
     }
   }
 
-  async confirm_reset_password(token: string, password: string, confirm_password: string) {
+  async forgot_password(email: string, captcha_response: string, callback?: () => void) {
     try {
-      await new ApiClient("auth").post("identity/users/password/confirm_code", { reset_password_token: token, password, confirm_password });
+      await new ApiClient("auth").post("/identity/users/password/generate_code", { email, captcha_response });
+      runNotice("success", helpers.translation("message.password.forgot"));
+      if (callback) callback();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async confirm_email(code: string, callback?: () => void) {
+    try {
+      const { data } = await new ApiClient("auth").post("identity/users/email/confirm_code", { email: this.email, code });
+      this.state = data.state;
+      localStorage.setItem("csrf_token", data.csrf_token);
+      runNotice("success", "Confirmation email successfuly");
+      if (callback) callback();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async confirm_reset_password(email: string, code: string, password: string, confirm_password: string, callback?: () => void) {
+    try {
+      await new ApiClient("auth").post("identity/users/password/confirm_code", { email, code, password, confirm_password });
       runNotice(
         "success",
         helpers.translation("message.password.changed").toString()
       );
-      router.push("/signin");
+      if (callback) callback();
     } catch (error) {
       return error;
     }
   }
 
-  check_code_reset_password(token: string) {
-    return new ApiClient("auth").post("identity/users/password/check_code", { token });
+  async check_code_reset_password(email: string, code: string, callback?: () => void) {
+    try {
+      await new ApiClient("auth").post("identity/users/password/check_code", { email, code });
+      runNotice("success", "Mời bạn thay mk");
+      if (callback) callback();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async change_password(old_password: string, new_password: string, confirm_password: string, callback?: () => void) {
+    try {
+      await new ApiClient("auth").put("resource/users/password", { old_password, new_password, confirm_password });
+
+      runNotice("success", "Password changed successfuly");
+      if (callback) callback();
+    } catch (error) {
+      return error;
+    }
   }
 
   async get_balance() {

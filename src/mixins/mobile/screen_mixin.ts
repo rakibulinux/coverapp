@@ -48,6 +48,11 @@ export class ScreenMixin extends Vue {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  /**
+   * To create screen
+   *
+   * @param {any} payload anything you want to add to method `before_panel_create(payload: any)` and `panel_created(payload: any)`
+  **/
   create(payload?: any) {
     if (!this.PanelView) throw "PanelView is not ready";
     if (this.panel_rending) throw "PanelView rending";
@@ -67,6 +72,11 @@ export class ScreenMixin extends Vue {
     });
   }
 
+  /**
+   * To destroy current screen
+   *
+   * @param {any} payload anything you want to add to method `panel_destroyed(payload: any)`
+  **/
   destroy(payload?: any) {
     if (!this.PanelView) throw "PanelView is not ready";
     if (this.panel_rending) throw "PanelView rending";

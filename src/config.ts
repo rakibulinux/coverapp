@@ -27,6 +27,8 @@ export default {
   },
   "timeZone": "UTC",
   "SESSION_KEY": "ALLOW-ALL", // For use on exchange
+  /** default **/
+  "titlePage.default": `Bitcoin Exchange | Cryptocurrency Exchange | ${nameEX}`,
   /** 404 **/
   "titlePage.404": `404`,
   /**  public **/

@@ -30,12 +30,9 @@
 
 <script lang="ts">
 import TradeController from "@/controllers/trade";
-import store from "@/store";
 import DepthOverLay from "./depth-overlay.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
-import { PublicController } from "@/controllers";
 
 interface MouseEvent {
   side?: MarketDepth["side"];

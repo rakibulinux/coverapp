@@ -87,7 +87,7 @@ export default class TradesManager {
   }
 
   private getTrades(market?: string, page?: number, limit?: number) {
-    return new ApiClient("trade").get("market/trades", {
+    return TradeController.get_trades({
       market: market !== "All" ? market : undefined,
       page,
       limit
@@ -124,7 +124,6 @@ export default class TradesManager {
 
       trades.push(trade);
       trades = trades.sort((a, b) => b.id - a.id);
-      trades = trades.slice(0, 100);
 
       Vue.set(this, "trades", trades);
     }

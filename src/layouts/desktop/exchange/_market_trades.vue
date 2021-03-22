@@ -82,12 +82,12 @@ export default class MarketTrades extends Vue {
   }
 
   mounted() {
-    this.get_trades();
+    this.get_public_trades();
   }
 
-  async get_trades() {
+  async get_public_trades() {
     this.loading = true;
-    await TradeController.get_trades(this.market.id);
+    await TradeController.get_public_trades(this.market.id);
     this.loading = false;
   }
 

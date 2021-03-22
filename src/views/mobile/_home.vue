@@ -64,7 +64,7 @@ export default class Home extends Mixins(MarketMixin) {
   }
 
   open_market_preview_screen(market: ZTypes.Market) {
-    this.$refs["screen-market-preview"].create(market);
+    this.$refs["screen-market-preview"].create(market.id);
   }
 }
 </script>

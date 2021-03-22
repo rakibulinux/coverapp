@@ -39,27 +39,30 @@
           <p class="screen-auth-action-item signup">
             <a @click="open_signup_screen">Sign Up</a>
           </p>
-          <a class="screen-auth-action-item">Forgot password</a>
+          <a
+            class="screen-auth-action-item"
+            @click="open_forgot_password_screen"
+          >
+            Forgot password
+          </a>
         </div>
       </form>
     </div>
-
     <screen-auth-signup ref="screen-auth-signup" />
     <screen-verify-otp
       ref="screen-verify-otp"
+      :loading="loading"
       @submit="login"
       @cancel="need2fa = false"
     />
+    <screen-auth-forgot-password ref="screen-auth-forgot-password" />
   </panel-view>
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Mixins, Component, Watch } from "vue-property-decorator";
 import { AuthMixin } from "@/mixins";
-import ZSmartModel from "@zsmartex/z-eventbus";
-import * as helpers from "@zsmartex/z-helpers";
 import { UserController } from "@/controllers";
 
 @Component({
@@ -67,7 +70,9 @@ import { UserController } from "@/controllers";
     "auth-input": () => import("@/components/mobile/auth-input"),
     "auth-button": () => import("@/components/mobile/auth-button"),
     "screen-verify-otp": () => import("@/views/mobile/screens/verify/totp.vue"),
-    "screen-auth-signup": () => import("@/views/mobile/screens/auth/signup")
+    "screen-auth-signup": () => import("@/views/mobile/screens/auth/signup"),
+    "screen-auth-forgot-password": () =>
+      import("@/views/mobile/screens/auth/forgot_password")
   }
 })
 export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
@@ -94,12 +99,12 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     });
   }
 
-  before_panel_destroy() {
-    ZSmartModel.remove("wait-email");
-  }
-
   open_signup_screen() {
     this.$refs["screen-auth-signup"].create();
+  }
+
+  open_forgot_password_screen() {
+    this.$refs["screen-auth-forgot-password"].create();
   }
 
   onTotpSubmit(otp_code: string) {
@@ -112,7 +117,7 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
 
     await UserController.login({ email, password, otp_code }, "/m");
 
-    if (UserController.state != "active") return;
+    if (!["pending", "active"].includes(UserController.state)) return;
 
     this.$emit("login-success", "");
 
@@ -122,6 +127,7 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   }
 
   login(otp_code?: string) {
+    if (this.loading) return;
     if (otp_code) this.otp_code = otp_code;
 
     if (this.need2fa) {
@@ -133,8 +139,17 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
 
   @Watch("need2fa")
   onNeed2FAChanged(need2fa: boolean) {
-    this.$refs["screen-verify-otp"][`${need2fa ? "create" : "destroy"}`]();
-    this.otp_code = "";
+    if (need2fa) {
+      this.$refs["screen-verify-otp"][`${need2fa ? "create" : "destroy"}`]();
+      this.otp_code = "";
+    }
+  }
+
+  @Watch("UserController.state")
+  onUserStateChanged(state: string) {
+    if ((state == "active" || state == "pending") && this.isActive) {
+      this.destroy();
+    }
   }
 }
 </script>

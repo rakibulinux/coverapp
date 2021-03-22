@@ -27,7 +27,6 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import config from "@/config";
 import { PublicController } from "@/controllers";

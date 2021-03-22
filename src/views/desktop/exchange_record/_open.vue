@@ -7,9 +7,13 @@
         <div class="form-row">
           <label class="form-label">{{ $t("table.market") }}:</label>
           <div class="form-control">
-            <a-select v-model="market" style="width:115px">
-              <a-select-option v-for="data in MARKET" :key="data" :value="data">
-                {{ data }}
+            <a-select v-model="market" style="width: 115px">
+              <a-select-option
+                v-for="market in PublicController.markets"
+                :key="market.id"
+                :value="market.id"
+              >
+                {{ market.name }}
               </a-select-option>
             </a-select>
           </div>
@@ -17,9 +21,9 @@
         <div class="form-row">
           <label class="form-label">{{ $t("table.type") }}:</label>
           <div class="form-control">
-            <a-select v-model="type" style="width:115px">
-              <a-select-option v-for="data in TYPE" :key="data">
-                {{ data }}
+            <a-select v-model="type" style="width: 115px">
+              <a-select-option v-for="type in TYPE" :key="type" :value="type">
+                {{ type }}
               </a-select-option>
             </a-select>
           </div>
@@ -37,14 +41,9 @@
           <span class="text-right action" v-text="$t('table.action')" />
         </dt>
         <dd :class="{ empty: !array.data.length }">
-          <p v-if="!array.data.length">
-            <span v-text="$t('orders.open.empty')" />
-          </p>
           <p v-for="(data, index) in array.data" :key="index">
             <span v-text="getDate(data.created_at)" />
-            <span
-              v-text="PublicController.tickers[data.market].name"
-            />
+            <span v-text="PublicController.tickers[data.market].name" />
             <span :class="trendType(data.side)" v-text="data.side" />
             <span v-text="getPrice(data.price, data.market)" />
             <span v-text="getAmount(data.origin_volume, data.market)" />
@@ -58,79 +57,73 @@
               />
             </span>
           </p>
-          <a-spin v-if="loading" size="large">
-            <a-icon
-              slot="indicator"
-              type="loading"
-              style="font-size: 24px"
-              spin
-            />
-          </a-spin>
+          <z-loading v-if="loading" />
+          <p v-else-if="!array.data.length">
+            <span v-text="$t('orders.open.empty')" />
+          </p>
+
+          <z-pagination
+            v-model="array.page"
+            :loading="loading"
+            size="small"
+            class="text-right"
+            :page-size="25"
+            :count-row="array.data.length"
+            @change="getData"
+          />
         </dd>
       </div>
-      <a-pagination
-        v-model="array.page"
-        size="small"
-        class="text-right"
-        :page-size="25"
-        :total="array.max"
-        @change="getData"
-      />
     </div>
   </div>
 </template>
 
-<script>
-import { PublicController, TradeController } from "@/controllers";
-import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
-import Helpers from "./helpers";
+<script lang="ts">
+import { Mixins, Component, Watch } from "vue-property-decorator";
+import ExchangeRecordMixins from "./mixins";
 
-export default {
-  mixins: [Helpers],
-  computed: {
-    PublicController() {
-      return PublicController;
-    },
-    TradeController() {
-      return TradeController;
-    },
-  },
-  methods: {
-    async getData(page = 1) {
-      this.loading = true;
-      const payload = {
-        market:
-          this.market != "All"
-            ? helpers.getTickerID(this.market).toLowerCase()
-            : "",
+@Component
+export default class OpenOrdersExchangeRecord extends Mixins(
+  ExchangeRecordMixins
+) {
+  async getData(page = 1) {
+    this.loading = true;
+    try {
+      const response = await this.TradeController.get_orders({
+        market: this.market != "All" ? this.market : "",
         state: "wait",
-        limit: "25",
-        type: this.type != "All" ? this.type.toLowerCase() : "",
+        limit: 25,
+        type:
+          this.type != "All"
+            ? (this.type.toLowerCase() as ZTypes.OrderSide)
+            : null,
         page
-      };
-      try {
-        const response = await new ApiClient("trade").get(
-          "market/orders",
-          payload
-        );
-        this.array.data = response.data;
-        this.array.max = Number(response.headers.total);
-        this.loading = false;
-      } catch (error) {
-        return error;
-      }
-    },
-    async CloseOrder(id) {
-      try {
-        await TradeController.stop_order(id)
-        const index = this.array.data.findIndex(row => row.id === id);
-        this.array.data.splice(index, 1);
-        this.array.max--;
-      } catch (error) {
-        return error;
-      }
+      });
+
+      this.array.data = response.data;
+      this.loading = false;
+    } catch (error) {
+      return error;
     }
   }
-};
+
+  async CloseOrder(id) {
+    const error = await this.TradeController.stop_order(id);
+
+    if (error) return;
+
+    const index = this.array.data.findIndex(order => order.id === id);
+
+    this.array.data.splice(index, 1);
+  }
+
+  @Watch("market")
+  onMarketChanged() {
+    this.getData();
+  }
+
+  @Watch("type")
+  onTypeChanged() {
+    this.getData();
+  }
+}
 </script>

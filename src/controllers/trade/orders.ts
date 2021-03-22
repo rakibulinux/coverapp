@@ -23,8 +23,10 @@ export default abstract class OrdersController {
     try {
       await new ApiClient("finex").post("market/orders/cancel/#{id}".replace("#{id}", id_or_uuid.toString()));
       runNotice("success", helpers.translation("message.order.canceled").toString());
+
+      return true;
     } catch (error) {
-      return error;
+      return false;
     }
   }
 
@@ -32,8 +34,24 @@ export default abstract class OrdersController {
     try {
       await new ApiClient("finex").post("market/orders/cancel", { market: market_id, side: side });
       runNotice("success", "All market #{market} orders have been canceled".replace("#{market}", market_id));
+
+      return true;
     } catch (error) {
-      return error;
+      return false;
     }
+  }
+
+  async get_orders(payload: { market: string; state?: ZTypes.OrderState; type?: ZTypes.OrderSide | ""; page?: number; limit?: number; time_from?: number; time_to?: number }) {
+    if (!payload.page) payload.page = 1;
+    if (!payload.limit) payload.limit = 100;
+
+    return new ApiClient("finex").get("market/orders", payload);
+  }
+
+  async get_trades(payload: { market: string; type?: ZTypes.OrderSide; page?: number; limit?: number; time_from?: number; time_to?: number }) {
+    if (!payload.page) payload.page = 1;
+    if (!payload.limit) payload.limit = 100;
+
+    return new ApiClient("trade").get("market/trades", payload);
   }
 }

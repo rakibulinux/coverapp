@@ -15,9 +15,15 @@
     </div>
     <div class="z-table z-table-hoverable">
       <div class="z-table-head">
-        <span class="text-left">{{ $t("table.price") }} ({{ market.quote_unit.toUpperCase() }})</span>
-        <span class="text-right">{{ $t("table.amount") }} ({{ market.base_unit.toUpperCase() }})</span>
-        <span class="text-right">{{ $t("table.sum") }} ({{ market.quote_unit.toUpperCase() }})</span>
+        <span class="text-left">
+          {{ $t("table.price") }} ({{ market.quote_unit.toUpperCase() }})
+        </span>
+        <span class="text-right">
+          {{ $t("table.amount") }} ({{ market.base_unit.toUpperCase() }})
+        </span>
+        <span class="text-right">
+          {{ $t("table.sum") }} ({{ market.quote_unit.toUpperCase() }})
+        </span>
       </div>
       <div :class="['z-table-content', type + '-type']">
         <depth-book ref="depth-asks" side="asks" />

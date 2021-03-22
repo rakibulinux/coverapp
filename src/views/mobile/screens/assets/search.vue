@@ -34,7 +34,6 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Mixins, Component } from "vue-property-decorator";
 import { PublicController } from "@/controllers";
@@ -53,10 +52,6 @@ export default class AssetsSearchScreens extends Mixins(ScreenMixin) {
 
   panel_created(type: string) {
     this.type = type;
-  }
-
-  on_table_click(currency: ZTypes.Currency) {
-    this.$router.push(`/m/assets/${this.type}/${currency.id}`);
   }
 }
 </script>

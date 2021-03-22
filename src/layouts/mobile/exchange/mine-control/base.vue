@@ -21,7 +21,6 @@
 import { UserController } from "@/controllers";
 import TradeController from "@/controllers/trade";
 import ZSmartModel from "@zsmartex/z-eventbus";
-import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({
@@ -45,6 +44,10 @@ export default class MineControl extends Vue {
     return TradeController.orders_history;
   }
 
+  get trades_history() {
+    return TradeController.trades_history;
+  }
+
   get authorized() {
     return UserController.state == "active";
   }
@@ -56,12 +59,12 @@ export default class MineControl extends Vue {
   }
 
   getOrders() {
-    ["open_orders", "orders_history"].forEach(
-      async (type: "open_orders" | "orders_history") => {
+    ["open_orders", "orders_history", "trades_history"].forEach(
+      async (type: "open_orders" | "orders_history" | "trades_history") => {
         this[type].clear();
 
-        this[type].market = this.market.id;
-        await this[type].getData();
+        this[type].market = "All";
+        await this[type].getData(1, 500);
 
         this[type].realtime = true;
         this.$nextTick(() => {

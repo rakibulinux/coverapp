@@ -17,7 +17,6 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 import { PublicController } from "@/controllers";
@@ -109,17 +108,6 @@ export default class AssetsPreviewScreen extends Mixins(ScreenMixin) {
 
     .ant-empty {
       margin-top: 35px;
-
-      &-image {
-        height: 75px;
-      }
-
-      &-description {
-        font-size: 10px;
-        line-height: 1;
-        color: var(--color-gray);
-        font-weight: 500;
-      }
     }
   }
 

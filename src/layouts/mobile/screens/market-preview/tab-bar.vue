@@ -25,7 +25,7 @@ export default class MarketPreviewTabBar extends Mixins(MarketMixin) {
 
     ZSmartModel.emit("close-panel-view");
     setTimeout(() => {
-      TradeController.open_exchange(this.market.id, type)
+      TradeController.open_exchange(this.market.id, type);
     }, 300);
   }
 }

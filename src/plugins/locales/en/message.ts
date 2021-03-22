@@ -19,6 +19,8 @@ export default {
   email_confirmed: "Your email address has been successfully confirmed",
   withdraw: {
     enable2fa: "To withdraw you have to enable 2FA",
-    success: "Your withdrawal request has been received"
+    created: "Your withdrawal request has been received",
+    confirmed: "Your withdrawal request has been confirmed",
+    canceled: "Your withdraw request has been canceled"
   }
 };

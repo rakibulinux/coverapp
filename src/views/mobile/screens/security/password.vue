@@ -1,7 +1,10 @@
 <template>
   <panel-view class="security-password-screen">
     <head-bar title="Change Password" @back="destroy" />
-    <form class="security-password-screen-content" @submit.prevent="onSubmit">
+    <form
+      class="security-password-screen-content"
+      @submit.prevent="change_password"
+    >
       <auth-input
         v-model="old_password"
         name="old_password"
@@ -27,7 +30,7 @@
         :error="confirm_password_error"
       />
 
-      <auth-button type="submit" :disabled="button_disabled">
+      <auth-button type="submit" :loading="loading" :disabled="button_disabled">
         Change
       </auth-button>
     </form>
@@ -38,6 +41,7 @@
 import { AuthMixin } from "@/mixins";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
+import { UserController } from "@/controllers";
 
 @Component({
   components: {
@@ -59,8 +63,19 @@ export default class SecurityPasswordScreen extends Mixins(
   new_password = "";
   confirm_password = "";
 
-  onSubmit() {
-    return;
+  async change_password() {
+    this.loading = true;
+
+    await UserController.change_password(
+      this.old_password,
+      this.new_password,
+      this.confirm_password,
+      () => {
+        this.destroy();
+      }
+    );
+
+    this.loading = false;
   }
 }
 </script>

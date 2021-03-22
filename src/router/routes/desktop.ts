@@ -99,8 +99,7 @@ export default [
     name: "Confirmation Email",
     component: () => import("@/views/desktop/confirmation_email.vue"),
     meta: {
-      requiresAuth: true,
-      onlyWait: true
+      requiresAuthStatePending: true
     }
   },
   {
@@ -109,14 +108,6 @@ export default [
     component: () => import("@/views/desktop/_forgotpassword.vue"),
     meta: {
       guest: true
-    }
-  },
-  {
-    path: "/confirmation/reset_password",
-    name: "Confirmation ResetPassword",
-    component: () => import("@/views/desktop/confirmation_reset_password.vue"),
-    meta: {
-      requiresTokenReset: true
     }
   }
 ];

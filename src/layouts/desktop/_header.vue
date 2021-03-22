@@ -1,6 +1,9 @@
 <template>
   <div class="ant-layout-header">
-    <router-link to="/" class="logo" />
+    <router-link to="/" class="logo">
+      <img src="@/assets/img/rectangular_logo.png" />
+    </router-link>
+
     <div class="action-group left">
       <router-link to="/exchange">
         {{ translation("exchange") }}
@@ -22,7 +25,7 @@
               :key="data.url"
               :title="data.name"
               :class="{
-                'ant-dropdown-menu-item-selected': path.includes(data.url)
+                'ant-dropdown-menu-item-selected': path.includes(data.url),
               }"
             >
               <router-link :to="data.url" v-text="data.name" />
@@ -49,7 +52,7 @@
               :title="data.name"
               :class="[
                 'ink',
-                { 'ant-dropdown-menu-item-selected': path.includes(data.url) }
+                { 'ant-dropdown-menu-item-selected': path.includes(data.url) },
               ]"
             >
               <router-link :to="data.url" v-text="data.name" />
@@ -117,9 +120,9 @@ export default class App extends Vue {
     return [
       {
         name: this.translation("sign_in"),
-        url: "/signin"
+        url: "/signin",
       },
-      { name: this.translation("sign_up"), url: "/signup" }
+      { name: this.translation("sign_up"), url: "/signup" },
     ];
   }
 
@@ -129,17 +132,17 @@ export default class App extends Vue {
       MENU: [
         {
           name: this.translation("open_orders"),
-          url: "/exchange_record/open"
+          url: "/exchange_record/open",
         },
         {
           name: this.translation("orders_history"),
-          url: "/exchange_record/history"
+          url: "/exchange_record/history",
         },
         {
           name: this.translation("trades_history"),
-          url: "/exchange_record/transaction"
-        }
-      ]
+          url: "/exchange_record/transaction",
+        },
+      ],
     };
   }
 
@@ -148,18 +151,18 @@ export default class App extends Vue {
       MENU: [
         {
           name: this.translation("user.account_security"),
-          url: "/account/security"
+          url: "/account/security",
         },
         {
           name: this.translation("user.kyc_account_verification"),
-          url: "/account/kyc"
+          url: "/account/kyc",
         },
         {
           name: this.translation("user.login_history"),
-          url: "/account/history"
+          url: "/account/history",
         },
-        { name: this.translation("user.api"), url: "/account/api" }
-      ]
+        { name: this.translation("user.api"), url: "/account/api" },
+      ],
     };
   }
 
@@ -168,7 +171,7 @@ export default class App extends Vue {
   }
 
   get isAuth() {
-    return UserController.state == "active";
+    return ["active", "pending"].includes(UserController.state);
   }
 
   get locale() {
@@ -184,7 +187,7 @@ export default class App extends Vue {
     const account_path = {
       main: "/account",
       path: ["security", "kyc", "history", "api"],
-      name: "ORDERS_MENU"
+      name: "ORDERS_MENU",
     };
 
     if (path.includes(account_path.main)) {

@@ -1,10 +1,13 @@
 <template>
   <z-content :key="identifier" class="page-exchange">
-    <div class="group-left" :class="{ 'hide': hide_pairs_table }">
+    <div class="group-left" :class="{ hide: hide_pairs_table }">
       <market-list />
     </div>
     <div class="group-middle">
-      <ticker-status :hide_pairs_table="hide_pairs_table" @update-hide="(val) => hide_pairs_table = val" />
+      <ticker-status
+        :hide_pairs_table="hide_pairs_table"
+        @update-hide="val => (hide_pairs_table = val)"
+      />
       <chart />
       <mine-control />
     </div>
@@ -24,7 +27,6 @@ import { Vue, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
-import store from "@/store";
 import config from "@/config";
 
 @Component({
@@ -84,9 +86,9 @@ export default class Exchange extends Vue {
   }
 
   setTitle() {
-    document.title = `${helpers.getMarketLastPrice()} - ${(
-      TradeController.market.name
-    ).toUpperCase()} - ${config.nameEX}`;
+    document.title = `${helpers.getMarketLastPrice()} - ${TradeController.market.name.toUpperCase()} - ${
+      config.nameEX
+    }`;
   }
 }
 </script>

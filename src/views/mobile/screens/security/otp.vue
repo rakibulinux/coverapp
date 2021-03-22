@@ -54,7 +54,7 @@
         <auth-input
           v-model="password"
           name="password"
-          type="text"
+          type="password"
           title="Your password"
           placeholder="Enter your password"
         />
@@ -71,7 +71,13 @@
       <button v-if="step < 3" class="button-next" type="submit" @click="step++">
         {{ button_content }}
       </button>
-      <auth-button v-else type="submit" :disabled="otp_code.length < 6">
+      <auth-button
+        v-else
+        type="submit"
+        :loading="loading"
+        :disabled="otp_code.length < 6"
+        @click="enable_2fa"
+      >
         {{ button_content }}
       </auth-button>
     </div>
@@ -94,6 +100,7 @@ import { runNotice } from "@/mixins";
   }
 })
 export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
+  loading = false;
   step = 1;
   password = "";
   otp_code = "";
@@ -151,13 +158,17 @@ export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
 
   copy_secret() {
     helpers.copyText(this.code.secret);
-    runNotice("success", "Copy thanh cong");
+    runNotice("success", "Copy success");
   }
 
-  enable_2fa() {
-    UserController.enable_2fa(this.password, this.otp_code, () => {
+  async enable_2fa() {
+    this.loading = true;
+
+    await UserController.enable_2fa(this.password, this.otp_code, () => {
       this.destroy();
     });
+
+    this.loading = false;
   }
 }
 </script>

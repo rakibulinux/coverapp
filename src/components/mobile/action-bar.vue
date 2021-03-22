@@ -1,7 +1,14 @@
 <template>
   <div :class="['action-bar']">
-    <div v-if="!leftDisabled" class="back left-action">
-      <i class="zicon-arrow-back1" @click="$emit('back')" />
+    <div v-if="$slots['head']" class="action-bar-head">
+      <div class="back">
+        <i
+          v-if="!leftDisabled"
+          class="zicon-arrow-back1"
+          @click="$emit('back')"
+        />
+      </div>
+      <slot name="head" />
     </div>
     <slot />
   </div>
@@ -22,26 +29,25 @@ export default class ActionBar extends Vue {
   position: relative;
   height: 35px;
 
-  .left-action,
-  .center-action,
-  .right-action {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 14px;
-    i {
-      font-size: 16px;
-      color: var(--color-gray);
-    }
+  &-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 35px;
+    padding: 0 8px;
   }
 
-  .left-action {
-    left: 8px;
+  i {
+    font-size: 16px;
+    color: var(--color-gray);
+    line-height: 35px;
+    vertical-align: middle;
   }
 
   .center-action {
+    position: absolute;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%);
 
     .title {
       white-space: nowrap;
@@ -51,6 +57,8 @@ export default class ActionBar extends Vue {
 
   .right-action {
     right: 8px;
+    font-size: 10px;
+    color: var(--color-gray);
   }
 
   .loading i {

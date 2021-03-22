@@ -9,6 +9,10 @@
     <header-exchange v-if="!isMobile" />
     <router-view />
     <auth-login-screen v-if="isMobile" ref="auth-login-screen" />
+    <auth-confirm-email-screen
+      v-if="isMobile"
+      ref="auth-confirm-email-screen"
+    />
     <tab-bar v-if="isMobile" />
 
     <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
@@ -22,7 +26,8 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component, Watch } from "vue-property-decorator";
 import colors from "@/colors";
-import { PublicController, UserController } from "./controllers";
+import { PublicController } from "./controllers";
+import { wait_and_callback } from "@/mixins";
 
 @Component({
   components: {
@@ -31,17 +36,14 @@ import { PublicController, UserController } from "./controllers";
     "panel-view": () => import("@/components/mobile/panel-view.vue"),
     "tab-bar": () => import("@/layouts/mobile/_tab_bar.vue"),
     "loading-page": () => import("@/layouts/loading-page.vue"),
-    "auth-login-screen": () => import("@/views/mobile/screens/auth/login")
+    "auth-login-screen": () => import("@/views/mobile/screens/auth/login"),
+    "auth-confirm-email-screen": () => import("@/views/mobile/screens/auth/confirm_email")
   }
 })
 export default class App extends Vue {
   public $refs!: {
     [key: string]: any;
   };
-
-  get isAuth() {
-    return UserController.state == "active";
-  }
 
   get isMobile() {
     return helpers.isMobile();
@@ -68,12 +70,12 @@ export default class App extends Vue {
   }
 
   mounted() {
-    if (this.isMobile) document.body.classList.add("mobile-view");
     this.setTheme();
 
     if (this.isMobile) {
       let first_time = true;
 
+      document.body.classList.add("mobile-view");
       this.$router.afterEach(() => {
         if (!first_time) return;
 
@@ -88,20 +90,29 @@ export default class App extends Vue {
           history.pushState(null, document.title, location.href);
         });
       });
+
+      ZSmartModel.on("user/WAIT_EMAIL", () => {
+        wait_and_callback(
+          () => this.page_ready && this.$refs["auth-confirm-email-screen"],
+          () => {
+            this.$refs["auth-confirm-email-screen"].create();
+          }
+        );
+      });
     }
   }
 
-  public openPanel(panel: string, callback?: Function) {
+  openPanel(panel: string, callback?: Function) {
     this.$refs[panel].create(callback);
   }
 
-  public setTheme() {
+  setTheme() {
     new setTheme().setTheme(colors);
   }
 
   @Watch("page_ready")
   on_page_ready(page_ready: boolean) {
-    document.querySelector("body>.page-loading").remove();
+    if (page_ready) document.querySelector("body>.page-loading").remove();
   }
 }
 </script>

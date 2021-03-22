@@ -28,26 +28,14 @@
         :key="item.label"
         :label="item.label"
       >
-        <cube-scroll
-          :data="findTickers('market', item.label)"
-          nest-mode="native"
-          :options="{
-            disableTouch: true,
-            stopPropagation: true,
-            directionLockThreshold: 0,
-            pullDownRefresh: false,
-            pullUpLoad: false
-          }"
-        >
-          <div class="z-table-content">
-            <market-row
-              v-for="market in findTickers('market', item.label)"
-              :key="market.id"
-              :market="market"
-              @click="$emit('click', market)"
-            />
-          </div>
-        </cube-scroll>
+        <div class="z-table-content">
+          <market-row
+            v-for="market in findTickers('market', item.label)"
+            :key="market.id"
+            :market_id="market.id"
+            @click="$emit('click', market)"
+          />
+        </div>
       </cube-slide-item>
     </cube-slide>
   </div>
@@ -77,7 +65,7 @@ export default class MarketList extends Mixins(MarketMixin) {
     return this.$parent.$children.find(children => children.$refs["tab-nav"]);
   }
 
-  get list_bid() {
+  get list_bid(): { label: string }[] {
     return this.head_bar.list_bid;
   }
 
@@ -90,10 +78,12 @@ export default class MarketList extends Mixins(MarketMixin) {
   }
 
   scroll(pos) {
+    const index = this.initialIndex;
+    const tab_width: number = this.tab_nav.tabs[index].$el.offsetWidth;
     const x = Math.abs(pos.x);
     const tabItemWidth = this.tab_nav.$el.clientWidth;
     const slideScrollerWidth = this.$refs.slide.slide.scrollerWidth;
-    const deltaX = (x / slideScrollerWidth) * tabItemWidth;
+    const deltaX = (x / slideScrollerWidth) * tabItemWidth + tab_width / 2 - 8;
 
     this.tab_nav.setSliderTransform(deltaX);
   }

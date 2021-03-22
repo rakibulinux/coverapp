@@ -21,7 +21,8 @@ import {
   Spin,
   Switch,
   Tabs,
-  Tooltip
+  Tooltip,
+  Steps
 } from "ant-design-vue";
 import Vue from "vue";
 
@@ -44,5 +45,7 @@ Vue.use(Tabs);
 Vue.use(Slider);
 Vue.use(Drawer);
 Vue.use(Progress);
+Vue.use(Steps);
+
 Vue.component("z-content", zContent);
 Vue.component("z-card", zCard);

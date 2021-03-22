@@ -2,7 +2,10 @@
   <z-content class="page-auth">
     <div class="auth-box">
       <div>
-        <form class="confirm-email" @submit.prevent="reSendEmail">
+        <form
+          class="confirm-email"
+          @submit.prevent="confirm_email(confirmation_code)"
+        >
           <h3 class="title">
             Email Verification
           </h3>
@@ -11,9 +14,33 @@
             Please follow click the link inside to complete your activation. If
             you have not received the email. Please Resend Email
           </div>
-          <div class="icon-email">
-            <img src="@/assets/img/email_icon.png" />
-          </div>
+
+          <auth-input
+            v-model="confirmation_code"
+            name="confirmation_code"
+            placeholder="E-mail verification code"
+            :placeholder-need="true"
+            style="margin-top: 20px; margin-bottom: 8px;"
+            maxlength="6"
+          >
+            <template slot="right-action">
+              <button :disabled="cooldown > 0" @click.prevent="resend_email">
+                <span v-if="this.loading_resend">
+                  Sending...
+                </span>
+                <span v-else>{{ this.cooldown ? "Resend" : "Send Code" }}</span>
+                <span v-if="cooldown">({{ cooldown }})</span>
+              </button>
+            </template>
+          </auth-input>
+          <auth-button
+            type="submit"
+            :loading="loading"
+            :disabled="confirmation_code.length < 6"
+          >
+            Submit
+          </auth-button>
+
           <div class="not-receive-note">
             <h3>If you haven't received the email for a long time, please：</h3>
             <ul>
@@ -26,10 +53,6 @@
               <li>• Make sure your email is functioning normally.</li>
             </ul>
           </div>
-          <button type="submit" :disabled="button_disabled">
-            <span>{{ button_content }}</span>
-            <span v-if="sended && wait != 0">({{ wait }})</span>
-          </button>
         </form>
       </div>
     </div>
@@ -37,38 +60,17 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
-import { Vue, Component } from "vue-property-decorator";
-import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
+import { Component, Mixins } from "vue-property-decorator";
 import { UserController } from "@/controllers";
-import { i18n } from "@/plugins";
-import ZSmartModel from "@zsmartex/z-eventbus";
-import { runNotice } from "@/mixins";
+import { ConfirmationMixin } from "@/mixins";
 
-@Component
-export default class App extends Vue {
-  wait = 0;
-  WaitInterval?: NodeJS.Timeout;
-  confirming = false;
-
-  get confirmation_token() {
-    return this.$route.query["confirmation_token"];
+@Component({
+  components: {
+    "auth-input": () => import("@/components/desktop/auth-input.vue"),
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
-
-  get button_disabled() {
-    let allow = true;
-    const { sended, wait } = this;
-
-    allow = !sended && wait === 0;
-    return !allow;
-  }
-
-  get button_content() {
-    return this.confirming ? "Confirming Email" : "Resend Email";
-  }
-
-  // TODO: move sended_email from store to router meta data
+})
+export default class ConfirmationEmail extends Mixins(ConfirmationMixin) {
   get sended() {
     return UserController.session.sended_email;
   }
@@ -77,46 +79,25 @@ export default class App extends Vue {
     UserController.session.sended_email = value;
   }
 
-  async mounted() {
-    if (this.confirmation_token) {
-      const lang = this.$route.query["lang"] as string;
-      if (lang) {
-        localStorage.setItem("LANGUAGE_HASH", lang);
-        i18n.locale = lang;
-        ZSmartModel.emit("change-language");
-      }
+  async resend_email() {
+    this.loading_resend = true;
 
-      this.confirming = true;
+    await UserController.resend_email(
+      UserController.email,
+      this.start_cooldown
+    );
 
-      await UserController.confirm_email(this.confirmation_token);
-      this.confirming = false;
-    }
-    if (this.sended) this.actionReSend();
+    this.loading_resend = false;
   }
 
-  public actionReSend() {
-    this.sended = true;
-    this.wait = 60;
-    setTimeout(() => {
-      clearInterval(this.WaitInterval);
-      this.sended = false;
-      this.wait = 0;
-    }, 60000);
-    this.WaitInterval = setInterval(() => {
-      this.wait--;
-    }, 1000);
-  }
+  async confirm_email() {
+    this.loading = true;
 
-  public async reSendEmail() {
-    try {
-      await new ApiClient("auth").post("identity/users/email/generate_code", {
-        email: UserController.email
-      });
-      this.actionReSend();
-      runNotice("success", "check email");
-    } catch (error) {
-      return error;
-    }
+    await UserController.confirm_email(this.confirmation_code, () => {
+      this.$router.push("/account/security");
+    });
+
+    this.loading = false;
   }
 }
 </script>

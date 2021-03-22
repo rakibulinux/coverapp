@@ -96,7 +96,7 @@ export default class OrdersManager {
   }
 
   private getOrders(market?: string, state?: ZTypes.OrderState | "All", page?: number, limit?: number) {
-    return new ApiClient("trade").get("market/orders", {
+    return TradeController.get_orders({
       market: market !== "All" ? market : undefined,
       state: state !== "All" ? state : undefined,
       page,
@@ -133,7 +133,6 @@ export default class OrdersManager {
     } else {
       this.orders.push(order);
       this.orders = this.orders.sort((a, b) => b.id - a.id);
-      this.orders = this.orders.slice(0, 100);
     }
 
     return true;

@@ -23,10 +23,10 @@
           maxlength="6"
           type="number"
         />
-        <button type="submit" :disabled="!valid2FA || !loading">
+        <auth-button type="submit" :disabled="totp_code.length < 6">
           <a-icon v-if="loading" type="loading" style="font-size: 24px" spin />
           {{ $t("auth.confirm") }}
-        </button>
+        </auth-button>
       </form>
     </div>
   </a-modal>
@@ -37,16 +37,13 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
-    "auth-input": () => import("@/components/desktop/auth-input.vue")
+    "auth-input": () => import("@/components/desktop/auth-input.vue"),
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
 })
 export default class App extends Vue {
   @Prop() private readonly payload!: any;
   @Prop() private readonly loading!: boolean;
-
-  private get valid2FA() {
-    return this.totp_code.length === 6;
-  }
 
   public modal_enabled = false;
   private totp_code = "";

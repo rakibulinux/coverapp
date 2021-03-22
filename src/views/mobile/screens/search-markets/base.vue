@@ -4,9 +4,10 @@
     v-model="value"
     :data="findTickers('search', value)"
     :head-text="value ? 'Search result' : ''"
+    :hidden="!value"
     @click="open_market_preview_screen"
   >
-    <template v-if="value" slot-scope="{ item }">
+    <template slot-scope="{ item }">
       <span class="text-left name">{{ item.name }}</span>
       <span class="text-left last">
         <span class="price" v-text="item.last" />

@@ -68,9 +68,29 @@
       }
     }
 
+    .pairs-choose {
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border-color);
+
+      i {
+        color: var(--color-gray);
+        vertical-align: middle;
+        line-height: 1;
+        margin-right: 2px;
+        font-size: 12px;
+      }
+
+      &-hide {
+        i {
+          color: var(--blue-color);
+        }
+      }
+    }
+
     &-content {
       overflow-y: auto;
       scrollbar-width: none;
+      padding: 0 12px;
 
       &::-webkit-scrollbar {
         width: 0;

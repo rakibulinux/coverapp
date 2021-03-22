@@ -1,60 +1,76 @@
 <template>
-  <panel-view class="screen-assets-deposit assets-deposit">
-    <head-bar title="Deposit" @back="destroy" />
+  <panel-view class="screen-assets screen-assets-deposit assets-deposit">
+    <head-bar :title="`Deposit ${currency.id.toUpperCase()}`" @back="destroy">
+      <template slot="right">
+        <span @click="open_deposit_history_screen">History</span>
+      </template>
+    </head-bar>
 
-    <deposit-currency-picker :currency="currency" @click="open_search_screen" />
+    <currency-picker
+      :currency="currency"
+      @click="open_currency_picker_screen"
+    />
     <deposit-address-box
       :currency="currency"
       :deposit_address="deposit_address"
     />
-    <deposit-notice :currency="currency" />
+
+    <div class="screen-assets-notice">
+      <div class="screen-assets-notice-title">Notice:</div>
+      <div class="screen-assets-notice-content">
+        • Deposit to the above address requires
+        {{ this.currency.min_confirmations }} confirmations
+      </div>
+    </div>
   </panel-view>
 </template>
 
 <script lang="ts">
-import store from "@/store";
-import ApiClient from "@zsmartex/z-apiclient";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Mixins, Component } from "vue-property-decorator";
-import { PublicController } from "@/controllers";
+import { PublicController, TradeController } from "@/controllers";
 
 @Component({
   components: {
-    "deposit-currency-picker": () =>
+    "currency-picker": () =>
       import("@/layouts/mobile/screens/assets/deposit/currency-picker.vue"),
     "deposit-address-box": () =>
-      import("@/layouts/mobile/screens/assets/deposit/address-box.vue"),
-    "deposit-notice": () =>
-      import("@/layouts/mobile/screens/assets/deposit/notice.vue")
+      import("@/layouts/mobile/screens/assets/deposit/address-box.vue")
   }
 })
 export default class DepositScreen extends Mixins(ScreenMixin) {
   loading = false;
-  deposit_address = "NCJTG2MSZCS5KI4YJRLQATOKQNTC4NMUWQ5EBMXN";
+  deposit_address = "Loading";
   currency = PublicController.currencies[0];
 
   before_panel_create(currency: ZTypes.Currency) {
+    this.deposit_address = "Loading";
     this.currency = currency;
+    this.get_deposit_address();
   }
 
-  open_search_screen() {
-    this.$router.push({ path: "/m/assets/search", query: { type: "deposit" } });
+  open_currency_picker_screen() {
+    (this.$parent as any).open_assets_currency_picker_screen("deposit");
   }
 
   async get_deposit_address() {
     this.loading = true;
-    try {
-      const { data } = await new ApiClient("trade").get(
-        `account/deposit_address/${this.currency.id}`
-      );
 
-      this.deposit_address =
-        data.address || "NCJTG2MSZCS5KI4YJRLQATOKQNTC4NMUWQ5EBMXN";
-      this.loading = false;
+    try {
+      const payment_address = await TradeController.get_deposit_address(
+        this.currency.id
+      );
+      this.deposit_address = payment_address.address || "Error";
     } catch (error) {
-      this.loading = false;
+      this.deposit_address = "Error";
       return error;
+    } finally {
+      this.loading = false;
     }
+  }
+
+  open_deposit_history_screen() {
+    (this.$parent as any).open_assets_history_screen("deposit");
   }
 }
 </script>
@@ -172,21 +188,6 @@ export default class DepositScreen extends Mixins(ScreenMixin) {
         border: 1px solid;
         padding: 0 12px;
       }
-    }
-  }
-
-  &-notice {
-    padding: 8px;
-    color: var(--color-gray);
-
-    &-title {
-    }
-
-    &-content {
-      margin-top: 8px;
-    }
-
-    &-item {
     }
   }
 }

@@ -12,6 +12,9 @@
       @blur="onInputBlur"
       @input="onInputChange"
     />
+    <div v-if="$slots['right-action']" class="z-auth-input-right-action">
+      <slot name="right-action" />
+    </div>
     <span
       v-if="placeholder"
       :class="[
@@ -101,6 +104,7 @@ export default class App extends Vue {
 
 <style lang="less">
 @input-prefix-cls: ~"z-auth-input";
+@input-height: 50px;
 
 .@{input-prefix-cls} {
   position: relative;
@@ -110,7 +114,7 @@ export default class App extends Vue {
   }
 
   input {
-    height: 50px;
+    height: @input-height;
     width: 100%;
     border: 1px solid;
     border-color: #314362;
@@ -127,6 +131,24 @@ export default class App extends Vue {
     }
   }
 
+  &-right-action {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+
+    button {
+      background-color: var(--color-gray);
+      border-radius: 4px;
+
+      &:disabled {
+        cursor: not-allowed;
+        background-color: var(--disabled-color);
+      }
+    }
+  }
+
   &-placeholder {
     position: absolute;
     left: 8px;
@@ -137,6 +159,7 @@ export default class App extends Vue {
     color: var(--color-gray);
     transition: all 0.2s;
     z-index: 0;
+    cursor: text;
 
     &-on {
       top: 0;

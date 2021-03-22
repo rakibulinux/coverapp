@@ -4,6 +4,7 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export class AuthMixin extends Vue {
+  private _loading = false;
   otp!: string;
 
   // default auth
@@ -19,7 +20,11 @@ export class AuthMixin extends Vue {
   button_rules: string[] = [];
 
   get loading() {
-    return UserController.state == "loading";
+    return this._loading || UserController.state == "loading";
+  }
+
+  set loading(loading: boolean) {
+    this._loading = loading;
   }
 
   get email_error() {

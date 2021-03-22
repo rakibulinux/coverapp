@@ -7,13 +7,13 @@
         <div class="form-row">
           <label class="form-label">{{ $t("table.market") }}:</label>
           <div class="form-control">
-            <a-select
-              v-model="market"
-              style="width:115px"
-              @change="($value) => (market = $value)"
-            >
-              <a-select-option v-for="data in MARKET" :key="data" :value="data">
-                {{ data }}
+            <a-select v-model="market" style="width: 115px">
+              <a-select-option
+                v-for="market in PublicController.markets"
+                :key="market.id"
+                :value="market.id"
+              >
+                {{ market.name }}
               </a-select-option>
             </a-select>
           </div>
@@ -22,8 +22,8 @@
         <div class="form-row">
           <label class="form-label">{{ $t("table.status") }}:</label>
           <div class="form-control">
-            <a-select v-model="status" style="width:115px">
-              <a-select-option v-for="data in STATUS" :key="data">
+            <a-select v-model="status" style="width: 115px">
+              <a-select-option v-for="data in STATUS" :key="data" :value="data">
                 {{ data }}
               </a-select-option>
             </a-select>
@@ -33,7 +33,7 @@
         <div class="form-row">
           <label class="form-label">{{ $t("table.type") }}:</label>
           <div class="form-control">
-            <a-select v-model="type" style="width:115px">
+            <a-select v-model="type" style="width: 115px">
               <a-select-option v-for="data in TYPE" :key="data">
                 {{ data }}
               </a-select-option>
@@ -55,18 +55,13 @@
           <span class="text-right action" v-text="$t('table.action')" />
         </dt>
         <dd :class="{ empty: !array.data.length }">
-          <p v-if="!array.data.length">
-            <span v-text="$t('orders.history.empty')" />
-          </p>
           <p
             v-for="(data, index) in array.data"
             :key="index"
             :removing="!!data.removing"
           >
             <span v-text="getDate(data.created_at)" />
-            <span
-              v-text="PublicController.tickers[data.market].name"
-            />
+            <span v-text="PublicController.tickers[data.market].name" />
             <span :class="[trendType(data.side), 'type']" v-text="data.side" />
             <span v-text="getPrice(data.price, data.market)" />
             <span v-text="getAmount(data.origin_volume, data.market)" />
@@ -80,86 +75,88 @@
               />
             </span>
           </p>
-          <a-spin v-if="loading" size="large">
-            <a-icon
-              slot="indicator"
-              type="loading"
-              style="font-size: 24px"
-              spin
-            />
-          </a-spin>
+          <z-loading v-if="loading" />
+          <p v-else-if="!array.data.length">
+            <span v-text="$t('orders.history.empty')" />
+          </p>
+
+          <z-pagination
+            v-model="array.page"
+            :loading="loading"
+            size="small"
+            class="text-right"
+            :page-size="25"
+            :count-row="array.data.length"
+            @change="getData"
+          />
         </dd>
       </div>
-      <!---->
-      <a-pagination
-        v-model="array.page"
-        size="small"
-        class="text-right"
-        :page-size="25"
-        :total="array.max"
-        @change="getData"
-      />
     </div>
   </div>
 </template>
 
-<script>
-import { TradeController, PublicController } from "@/controllers";
-import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
-import Helpers from "./helpers";
+<script lang="ts">
+import { Mixins, Component, Watch } from "vue-property-decorator";
+import ExchangeRecordMixins from "./mixins";
 
-export default {
-  mixins: [Helpers],
-  data: () => ({
-    status: "All",
-  }),
-  computed: {
-    PublicController() {
-      return PublicController;
-    },
-    TradeController() {
-      return TradeController;
-    },
-  },
-  methods: {
-    vaildStatus(status) {
-      if (status === "Waiting") {
-        return "wait";
-      } else if (status === "Filled") {
-        return "done";
-      } else {
-        return "cancel";
-      }
-    },
-    async getData(page = 1, limit = 25) {
-      this.loading = true;
-      const payload = {
-        market:
-          this.market != "All"
-            ? helpers.getTickerID(this.market).toLowerCase()
-            : "",
-        state: this.status != "All" ? this.vaildStatus(this.status) : "",
-        type: this.type != "All" ? this.type.toLowerCase() : "",
+@Component
+export default class OpenOrdersExchangeRecord extends Mixins(
+  ExchangeRecordMixins
+) {
+  status = "All";
+
+  vaildStatus(status) {
+    if (status === "Waiting") {
+      return "wait";
+    } else if (status === "Filled") {
+      return "done";
+    } else {
+      return "cancel";
+    }
+  }
+
+  async getData(page = 1, limit = 25) {
+    this.loading = true;
+
+    try {
+      const response = await this.TradeController.get_orders({
+        market: this.market != "All" ? this.market : "",
+        state:
+          this.status != "All"
+            ? (this.vaildStatus(this.status) as ZTypes.OrderState)
+            : null,
+        type:
+          this.type != "All"
+            ? (this.type.toLowerCase() as ZTypes.OrderSide)
+            : null,
         limit,
         page,
-      };
+      });
+      this.array.data = response.data;
 
-      try {
-        const response = await new ApiClient("trade").get(
-          "market/orders",
-          payload
-        );
-        this.array.data = response.data;
-        this.array.max = Number(response.headers.total);
-        this.loading = false;
-      } catch (error) {
-        return error;
-      }
-    },
-    CloseOrder(id) {
-      TradeController.stop_order(id);
-    },
-  },
-};
+      this.loading = false;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  CloseOrder(id) {
+    this.TradeController.stop_order(id);
+  }
+
+  @Watch("market")
+  onMarketChanged() {
+    this.getData();
+  }
+
+  @Watch("status")
+  onStatusChanged() {
+    this.getData();
+  }
+
+  @Watch("type")
+  onTypeChanged() {
+    this.getData();
+  }
+}
 </script>

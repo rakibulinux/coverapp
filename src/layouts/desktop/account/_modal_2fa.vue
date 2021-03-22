@@ -5,7 +5,6 @@
     :footer="null"
     :width="400"
   >
-    {{ step }}
     <button
       v-show="step > 1"
       type="button"
@@ -76,7 +75,7 @@
         </auth-button>
       </form>
     </div>
-    <button v-if="step < 3" @click="step++" v-text="translation('next')" />
+    <auth-button v-if="step < 3" @click="step++" v-text="translation('next')" />
     <div v-if="step === 2" class="later-footer">
       <span @click="modal.enabled = false" v-text="translation('later')" />
     </div>
@@ -88,7 +87,6 @@ import { Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import ApiClient from "@zsmartex/z-apiclient";
 import Helpers from "./helpers";
-import store from "@/store";
 import UserController from "@/controllers/user";
 
 @Component({

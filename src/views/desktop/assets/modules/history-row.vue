@@ -1,104 +1,164 @@
 <template>
-  <dl :class="{ selected: showBox }">
+  <dl :class="{ selected: txid_box_opening }">
     <span
-      v-if="checkCompleted(data.state) === 'done'"
-      class="status"
-      v-text="$t('assets.history.state.completed')"
-    />
-    <span
-      v-else-if="checkCompleted(data.state) === 'wait'"
-      class="status loading"
+      :class="[
+        'status',
+        {
+          loading: ['processing', 'confirming'].includes(record.state),
+          error: ['errored', 'rejected', 'failed', 'to_reject'].includes(
+            record.state
+          ),
+          success: ['succeed', 'completed', 'accepted'].includes(record.state)
+        }
+      ]"
     >
-      {{
-        $t("assets.history.state.processing", {
-          confirmations: data.confirmations,
-          min_confirmations: currencyArray(data.currency).min_confirmations
-        })
-      }}
+      {{ $t(`assets.history.state.${record.state}`) }}
+      <span v-if="record.state == 'processing' || record.state == 'confirming'">
+        ({{ record.confirmations }}/{{ currency.min_confirmations }})
+      </span>
     </span>
-    <span v-else class="status">Failed</span>
-    <span class="coin" v-text="data.currency.toUpperCase()" />
-    <span class="amount" v-text="Number(data.amount).toFixed(8)" />
-    <span class="date" v-text="getDate(data.created_at)" />
+    <span class="coin" v-text="record.currency.toUpperCase()" />
+    <span class="amount" v-text="Number(record.amount).toFixed(8)" />
+    <span class="date" v-text="getDate(record.created_at)" />
     <span class="infomation">
       <div class="address">
         <span class="title">{{ $t("assets.address") }}:</span>
         <a
-          v-if="showBox"
-          :href="
-            currencyArray(data.currency).explorer_address.replace(
-              '#{address}',
-              data.address
-            )
-          "
+          v-if="txid_box_opening"
+          :href="currency.explorer_address.replace('#{address}', record.rid)"
           target="_blank"
-          v-text="data.address"
+          v-text="record.rid"
         />
-        <span v-else v-text="data.address" />
+        <span v-else v-text="record.rid" />
       </div>
-      <div class="txid" :class="[showBox ? 'show' : 'hide']">
+      <div class="txid" :class="[txid_box_opening ? 'show' : 'hide']">
         <span class="title">{{ $t("assets.txid") }}:</span>
         <a
           :href="
-            currencyArray(data.currency).explorer_transaction.replace(
+            currency.explorer_transaction.replace(
               '#{txid}',
-              data.txid
+              record.blockchain_txid
             )
           "
           target="_blank"
-          v-text="data.txid"
+          v-text="record.blockchain_txid"
         />
       </div>
     </span>
     <span class="action text-right">
-      <i class="zicon-arrow-down" @click="changeBox" />
+      <i
+        v-if="type == 'deposit'"
+        class="zicon-arrow-down"
+        @click="change_txid_box"
+      />
+      <i
+        v-if="record.state != 'prepared' && type == 'withdraw'"
+        class="zicon-arrow-down"
+        @click="change_txid_box"
+      />
+      <template v-if="record.state == 'prepared' && type == 'withdraw'">
+        <button @click="open_confirm_modal">Confirm</button>
+        <a-icon type="close" @click="cancel_withdrawal()" />
+      </template>
     </span>
+
+    <modal-totp
+      ref="totp"
+      :loading="cancel_loading"
+      @submit="cancel_withdrawal"
+    />
   </dl>
 </template>
 
-<script>
+<script lang="ts">
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { PublicController } from "@/controllers";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-export default {
-  props: {
-    data: Object
-  },
-  data: () => ({
-    showBox: false
-  }),
-  mounted() {
-    ZSmartModel.on("open-box", this.closeBox);
-  },
-  methods: {
-    getDate: date => helpers.getDate(date, true),
-    checkCompleted(state) {
-      const doneValue = ["accepted", "skipped", "collected", "succeed"];
-      const waitValue = ["submitted", "confirming"];
-      if (doneValue.includes(state)) return "done";
-      else if (waitValue.includes(state)) return "wait";
-      else return "fail";
-    },
-    currencyArray(currency) {
-      const currencies = PublicController.currencies;
-      for (const i in currencies) {
-        if (currencies[i].id === currency) return currencies[i];
-      }
-    },
-    openBox() {
-      ZSmartModel.emit("open-box");
-      this.$nextTick(() => {
-        this.showBox = true;
-      });
-    },
-    closeBox() {
-      this.showBox = false;
-    },
-    changeBox() {
-      if (!this.showBox) this.openBox();
-      else this.closeBox();
-    }
+@Component({
+  components: {
+    "modal-totp": () => import("@/layouts/desktop/modal/_modal_totp.vue")
   }
-};
+})
+export default class AssetsHistoryRow extends Vue {
+  @Prop() readonly record!: ZTypes.Withdraw | ZTypes.Deposit;
+  @Prop() readonly type!: "deposit" | "withdraw";
+
+  cancel_loading = false;
+  txid_box_opening = false;
+
+  get currency() {
+    return PublicController.currencies.find(
+      currency => currency.id == this.record.currency
+    );
+  }
+
+  mounted() {
+    ZSmartModel.on("open-txid-box", () => {
+      this.close_txid_box();
+    });
+  }
+
+  beforeDestroy() {
+    ZSmartModel.remove("open-txid-box", () => {
+      this.close_txid_box();
+    });
+  }
+
+  getDate(date) {
+    return helpers.getDate(date, true);
+  }
+
+  open_txid_box() {
+    ZSmartModel.emit("open-txid-box");
+    this.$nextTick(() => {
+      this.txid_box_opening = true;
+    });
+  }
+
+  close_txid_box() {
+    this.txid_box_opening = false;
+  }
+
+  change_txid_box() {
+    this.txid_box_opening ? this.close_txid_box() : this.open_txid_box();
+  }
+
+  open_confirm_modal() {
+    (this.$parent.$refs["modal-confirm-withdrawal"] as any).create(this.record);
+  }
+
+  async cancel_withdrawal(otp_code?: string) {
+    if (!otp_code) {
+      (this.$refs["totp"] as any).create();
+      return;
+    }
+
+    this.cancel_loading = true;
+
+    await this.TradeController.cancel_withdrawal(
+      this.record.tid,
+      otp_code,
+      () => {
+        (this.$refs["totp"] as any).delete();
+
+        const withdraws: ZTypes.Withdraw[] = (this.$parent as any).history.data;
+
+        const index = withdraws.findIndex(
+          withdraw => withdraw.tid == this.record.tid
+        );
+
+        if (index >= 0) {
+          const withdraw = withdraws[index];
+          withdraw.state = "canceled";
+
+          withdraws[index] = withdraw;
+        }
+      }
+    );
+
+    this.cancel_loading = false;
+  }
+}
 </script>

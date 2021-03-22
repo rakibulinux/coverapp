@@ -40,7 +40,6 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
-import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import ModalTotp from "@/layouts/desktop/modal/_modal_totp.vue";
 import { UserController } from "@/controllers";
@@ -111,11 +110,13 @@ export default class SignIn extends Vue {
     const { email, password, otp_code, captcha_response } = this;
 
     await UserController.login({
-      email,
-      password,
-      otp_code,
-      captcha_response
-    }, "/account/security");
+        email,
+        password,
+        otp_code,
+        captcha_response
+      },
+      "/account/security"
+    );
   }
 
   public login() {

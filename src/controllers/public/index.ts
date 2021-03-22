@@ -35,8 +35,16 @@ export class PublicController {
   async fetch_tickers() {
     try {
       const { data } = await new ApiClient("trade").get("public/markets/tickers");
+      const tickers = {};
 
-      this.tickers = data.map(ticker => ticker.ticker);
+      for (const id in data) {
+        const ticker = data[id].ticker;
+
+        tickers[id] = ticker;
+      }
+
+      this.tickers = tickers;
+
     } catch (error) {
       return error;
     }

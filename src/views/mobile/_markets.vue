@@ -67,7 +67,7 @@ export default class Markets extends Vue {
   }
 
   open_market_preview_screen(market: ZTypes.Market) {
-    this.$refs["screen-market-preview"].create(market);
+    this.$refs["screen-market-preview"].create(market.id);
   }
 
   open_search_screen() {
@@ -101,21 +101,6 @@ export default class Markets extends Vue {
     &-row {
       padding-left: 16px;
       padding-right: 16px;
-    }
-  }
-
-  .cube-scroll-wrapper {
-    overflow-y: auto;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      width: 0;
-      height: 0;
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: transparent;
     }
   }
 }

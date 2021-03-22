@@ -10,9 +10,7 @@
     <div class="body-bar">
       <form class="screen-auth-box" @submit.prevent="register">
         <div class="screen-auth-logo" />
-        <div class="screen-auth-title">
-          Sign Up
-        </div>
+        <div class="screen-auth-title">Sign Up</div>
 
         <auth-input
           v-model="email"
@@ -61,16 +59,16 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import { AuthMixin } from "@/mixins";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
+import ZSmartModel from "@zsmartex/z-eventbus";
 
 @Component({
   components: {
     "auth-input": () => import("@/components/mobile/auth-input"),
     "auth-button": () => import("@/components/mobile/auth-button"),
-  }
+  },
 })
 export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
   email = "";
@@ -81,17 +79,27 @@ export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
 
   button_rules = ["loading", "email", "password", "confirm_password"];
 
-  async register() {
-    const { email, password, refid, captcha_response } = this;
+  before_panel_create() {
+    ZSmartModel.on("user/WAIT_EMAIL", () => {
+      this.destroy();
+    });
+  }
 
-    // this.loading = true;
-    // await store.dispatch("user/REGISTER", {
-    //   email,
-    //   password,
-    //   refid,
-    //   captcha_response
-    // });
-    // this.loading = false;
+  beforeDestroy() {
+    ZSmartModel.remove("user/WAIT_EMAIL", () => {
+      this.destroy();
+    });
+  }
+
+  async register() {
+    if (this.loading) return;
+
+    await this.UserController.register({
+      email: this.email,
+      password: this.password,
+      refid: this.refid,
+      captcha_response: this.captcha_response
+    });
   }
 }
 </script>

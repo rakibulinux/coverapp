@@ -29,50 +29,32 @@
           background-position: left 0;
         }
       }
-      button {
-        width: 100%;
-        margin: 20px 0;
-        height: 50px;
-        line-height: 50px;
-        background: $selected-blue-color;
-        color: $text-default-color;
-        text-align: center;
-        font-size: 18px;
-        &:hover {
-          background: #1580cc;
-        }
-        &:disabled {
-          background: rgb(98, 102, 111) !important;
-        }
-      }
       form {
         width: 450px;
         margin-top: 25px;
-        &.confirm-email {
-          .desc {
+        .desc {
+          font-size: 14px;
+          margin: 0 auto;
+          line-height: 20px;
+        }
+        .icon-email {
+          margin: 0 auto;
+          margin-top: 25px;
+          text-align: center;
+        }
+        .not-receive-note {
+          margin-top: 25px;
+          color: $header-text-color;
+          h3 {
             font-size: 14px;
-            margin: 0 auto;
+            font-weight: normal;
+          }
+          li {
+            font-size: 12px;
             line-height: 20px;
           }
-          .icon-email {
-            margin: 0 auto;
+          &+div {
             margin-top: 25px;
-            text-align: center;
-          }
-          .not-receive-note {
-            margin-top: 25px;
-            color: $header-text-color;
-            h3 {
-              font-size: 14px;
-              font-weight: normal;
-            }
-            li {
-              font-size: 12px;
-              line-height: 20px;
-            }
-            &+div {
-              margin-top: 25px;
-            }
           }
         }
         > div {

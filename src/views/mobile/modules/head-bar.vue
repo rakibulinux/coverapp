@@ -4,16 +4,21 @@
     :left-disabled="leftDisabled"
     @back="$emit('back')"
   >
-    <div v-if="$slots.center" class="center-action">
-      <slot name="center" />
-    </div>
-    <div v-else class="center-action">
-      <span v-if="loading" class="title loading">
-        Loading <a-icon type="loading" />
-      </span>
-      <span v-else class="title">{{ title }}</span>
-    </div>
-    <slot name="right" />
+    <template slot="head">
+      <div v-if="$slots.center" class="center-action">
+        <slot name="center" />
+      </div>
+      <div v-else class="center-action">
+        <span v-if="loading" class="title loading">
+          Loading <a-icon type="loading" />
+        </span>
+        <span v-else class="title">{{ title }}</span>
+      </div>
+      <div class="right-action">
+        <slot name="right" />
+      </div>
+    </template>
+    <slot />
   </action-bar>
 </template>
 

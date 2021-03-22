@@ -51,7 +51,6 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import _deposit from "@/layouts/desktop/assets/_deposit.vue";

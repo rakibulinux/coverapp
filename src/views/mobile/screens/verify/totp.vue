@@ -1,5 +1,5 @@
 <template>
-  <panel-view class="screen-verify-otp verify-otp">
+  <panel-view class="screen-verify screen-verify-otp verify-otp">
     <head-bar @back="$emit('cancel')" />
 
     <form class="screen-verify-box" @submit.prevent="onSubmit">
@@ -33,7 +33,7 @@ export default class VerifyOTPScreen extends Mixins(ScreenMixin, VerifyMixin) {
   otp_code = "";
 
   get button_disabled() {
-    return !(this.otp_code.length === 6);
+    return !(this.otp_code.length === 6) || this.loading;
   }
 
   panel_created() {
@@ -41,6 +41,8 @@ export default class VerifyOTPScreen extends Mixins(ScreenMixin, VerifyMixin) {
   }
 
   onSubmit() {
+    if (this.button_disabled) return;
+
     this.$emit("submit", this.otp_code);
   }
 

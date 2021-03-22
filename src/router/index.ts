@@ -6,6 +6,8 @@ import Vue from "vue";
 import Router from "vue-router";
 import routes from "./routes";
 import { PublicController, TradeController, UserController } from "@/controllers";
+import { isMobile } from "@zsmartex/z-helpers";
+import { runNotice } from "@/mixins";
 
 Vue.use(Router);
 
@@ -18,6 +20,7 @@ try {
 }
 
 let first_route = true;
+let first_route_handler = true;
 
 const router = new Router({
   mode: "history",
@@ -39,7 +42,7 @@ const PathToTitle = (path: string) => {
 const SetRouterByPath = (path: string) => {
   const page_title = PathToTitle(path);
 
-  PublicController.set_title(config[page_title]);
+  PublicController.set_title(config[page_title] || config["titlePage.default"]);
 };
 
 const PathHandle = (path: string) => {
@@ -96,12 +99,15 @@ router.beforeEach(async (to, from, next) => {
 
   if (
     UserController.state == "pending" &&
-    !to.fullPath.includes("/confirmation/email")
+    !to.matched.some(record => record.meta.requiresAuthStatePending) &&
+    !isMobile()
   ) {
-    next("/confirmation/email");
+    if (!isMobile()) {
+      next("/confirmation/email");
+    }
   } else if (
     UserController.state != "pending" &&
-    to.fullPath.includes("/confirmation/email")
+    to.matched.some(record => record.meta.requiresAuthStatePending)
   ) {
     next("/");
   } else if (
@@ -128,14 +134,34 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next("/signin");
     }
-  } else if (
-    to.matched.some(record => record.meta.requiresTokenReset) &&
-    !to.query["confirmation_token"]
-  ) {
-    next("/signin");
+  } else if (UserController.state == "active" && to.path == "/confirmation/withdrawal") {
+    const tid = to.query["tid"] as string;
+    const confirmation_code = to.query["confirmation_code"] as string;
+    const action = to.query["action"] as string;
+
+    if (!["confirm", "cancel"].includes(action)) {
+      runNotice("error", "Invalid withdrawal action");
+      next(helpers.isMobile() ? "/m" : "/");
+    }
+
+    PublicController.page_ready = false;
+
+    await TradeController.confirm_withdrawal(tid, confirmation_code);
+
+    if (first_route_handler) {
+      next(helpers.isMobile() ? "/m" : "/");
+    }
+
+    PublicController.page_ready = true;
+  } else if (UserController.state != "active" && to.path == "/confirmation/withdrawal") {
+    runNotice("warning", "You must login first");
+
+    next(helpers.isMobile() ? "/m" : "/");
   } else {
     next();
   }
+
+  first_route_handler = false;
 });
 
 router.afterEach(to => {

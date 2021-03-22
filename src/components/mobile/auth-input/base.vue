@@ -16,7 +16,9 @@
         @blur="onInputBlur"
         @input="onInputChange"
       />
-      <slot v-if="$slots.suffix" name="suffix" />
+      <div v-if="$slots.suffix" class="z-auth-input-suffix">
+        <slot name="suffix" />
+      </div>
       <div class="z-auth-input-action">
         <div
           v-if="type === 'password' && value.length"
@@ -159,6 +161,10 @@ export default class AuthInput extends Vue {
     color: var(--color-gray);
     font-weight: 500;
     border-color: var(--border-color);
+
+    > * {
+      height: 100%;
+    }
   }
 
   &-suffix-action {

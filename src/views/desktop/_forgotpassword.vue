@@ -1,9 +1,14 @@
 <template>
-  <z-content class="page-auth">
+  <z-content class="page-auth forgot-password">
     <div class="auth-box">
-      <div>
-        <h3 class="title">Forgot Password</h3>
+      <div v-if="step == 1">
         <form @submit.prevent="forgot_password">
+          <a-steps :current="step - 1" size="small">
+            <a-step title="Enter Email" />
+            <a-step title="Confirm" />
+            <a-step title="Reset Password" />
+          </a-steps>
+          <h3 class="title">Forgot Password</h3>
           <auth-input
             v-model="email"
             name="email"
@@ -11,22 +16,93 @@
             :placeholder-need="true"
             :error="email_error"
           />
-          <button type="submit" :loading="loading" :disabled="button_disabled">
-            <span>{{ $t("auth.forgot_password") }}</span>
-            <span v-if="sended && wait != 0">({{ wait }})</span>
-          </button>
+          <auth-button
+            type="submit"
+            :loading="loading"
+            :disabled="!email || email_error"
+          >
+            {{ $t("auth.forgot_password") }}
+          </auth-button>
+        </form>
+      </div>
+      <div v-else-if="step == 2">
+        <form @submit.prevent="check_token">
+          <a-steps :current="step - 1" size="small">
+            <a-step title="Enter Email" />
+            <a-step title="Confirm" />
+            <a-step title="Reset Password" />
+          </a-steps>
+          <h3 class="title">Security verification</h3>
+          <div class="desc">
+            To secure your account, please complete the following verification.
+          </div>
+
+          <auth-input
+            v-model="confirmation_code"
+            name="confirmation_code"
+            placeholder="E-mail verification code"
+            :placeholder-need="true"
+          >
+            <template slot="right-action">
+              <button :disabled="cooldown > 0" @click.prevent="forgot_password">
+                <span>{{ this.cooldown ? "Resend" : "Send Code" }}</span>
+                <span v-if="cooldown">({{ cooldown }})</span>
+              </button>
+            </template>
+          </auth-input>
+
+          <auth-button
+            type="submit"
+            :loading="loading"
+            :disabled="confirmation_code.length < 6"
+          >
+            Submit
+          </auth-button>
+        </form>
+      </div>
+      <div v-else>
+        <form @submit.prevent="reset_password">
+          <a-steps :current="step - 1" size="small">
+            <a-step title="Enter Email" />
+            <a-step title="Confirm" />
+            <a-step title="Reset Password" />
+          </a-steps>
+          <h3 class="title">Reset Password</h3>
+
+          <auth-input
+            v-model="password"
+            name="password"
+            type="password"
+            :placeholder="$t('input.placeholder.password')"
+            :placeholder-need="true"
+            :error="password_error"
+          />
+          <auth-input
+            v-model="confirm_password"
+            name="confirm_password"
+            type="password"
+            :placeholder="$t('input.placeholder.confirm_password')"
+            :placeholder-need="true"
+            :error="confirm_password_error"
+          />
+          <auth-button
+            type="submit"
+            :loading="loading"
+            :disabled="password_error || confirm_password_error"
+          >
+            Reset Password
+          </auth-button>
         </form>
       </div>
     </div>
   </z-content>
 </template>
 
-<script>
-import { runNotice } from "@/mixins";
-import ApiClient from "@zsmartex/z-apiclient";
-import { Vue, Component } from "vue-property-decorator";
+<script lang="ts">
+import { Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
-import { setTimeout, setInterval } from "timers";
+import { ConfirmationMixin } from "@/mixins";
+import { UserController } from "@/controllers";
 
 @Component({
   components: {
@@ -34,14 +110,14 @@ import { setTimeout, setInterval } from "timers";
     "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
 })
-export default class ForgotPassword extends Vue {
+export default class ForgotPassword extends Mixins(ConfirmationMixin) {
+  step = 1;
   loading = false;
   sended = false;
   email = "";
   captcha_response = "";
-  loading = false;
-  wait = 0;
-  WaitInterval = null;
+  password = "";
+  confirm_password = "";
 
   get email_error() {
     const { email } = this;
@@ -54,44 +130,77 @@ export default class ForgotPassword extends Vue {
     }
   }
 
-  get button_disabled() {
-    if (this.email_error || this.email.length === 0) return true;
-    if (this.sended) return true;
-    if (this.wait !== 0) return true;
-  }
+  get password_error() {
+    const { password } = this;
+    if (!password.length) {
+      return false;
+    }
 
-  async forgot_password() {
-    const { email, captcha_response } = this;
-
-    this.loading = true;
-    try {
-      await new ApiClient("auth").post(
-        "/identity/users/password/generate_code",
-        {
-          email,
-          captcha_response
-        }
-      );
-      this.loading = false;
-      this.set_wait_interval();
-      runNotice("success", this.$t("message.password.forgot"));
-    } catch (error) {
-      this.loading = false;
-      return error;
+    if (!helpers.validPassword(password)) {
+      return "Incorrect email address. Please enter again.";
     }
   }
 
-  set_wait_interval() {
-    this.sended = true;
-    this.wait = 60;
-    setTimeout(() => {
-      clearInterval(this.WaitInterval);
-      this.sended = false;
-      this.wait = 0;
-    }, 60000);
-    this.WaitInterval = setInterval(() => {
-      this.wait--;
-    }, 1000);
+  get confirm_password_error() {
+    const { password, confirm_password } = this;
+    if (!confirm_password.length) {
+      return false;
+    }
+
+    if (confirm_password !== password) {
+      return "Incorrect email address. Please enter again.";
+    }
+  }
+
+  async forgot_password() {
+    this.loading = true;
+
+    await UserController.forgot_password(
+      this.email,
+      this.captcha_response,
+      () => {
+        this.start_cooldown();
+        this.step++;
+      }
+    );
+
+    this.loading = false;
+  }
+
+  async check_token() {
+    this.loading = true;
+    await UserController.check_code_reset_password(
+      this.email,
+      this.confirmation_code,
+      () => {
+        this.step++;
+      }
+    );
+    this.loading = false;
+  }
+
+  async reset_password() {
+    this.loading = true;
+    await UserController.confirm_reset_password(
+      this.email,
+      this.confirmation_code,
+      this.password,
+      this.confirm_password,
+      () => {
+        this.$router.push("/login");
+      }
+    );
+    this.loading = false;
   }
 }
 </script>
+
+<style lang="less">
+@import "~@/assets/css/views/desktop/auth";
+
+.forgot-password {
+  .ant-steps {
+    margin-bottom: 20px;
+  }
+}
+</style>

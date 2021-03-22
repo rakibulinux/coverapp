@@ -67,7 +67,7 @@ export default class SignUp extends Vue {
   public captcha_response = "";
 
   get loading() {
-    return UserController.state == "loading"
+    return UserController.state == "loading";
   }
 
   get buttonDisabled() {
@@ -139,15 +139,15 @@ export default class SignUp extends Vue {
     }
   }
 
-  public async register() {
-    const { email, password, refid, captcha_response } = this;
+  async register() {
+    if (this.loading) return;
 
-    UserController.register({
-      email,
-      password,
-      refid,
-      captcha_response
-    })
+    await UserController.register({
+      email: this.email,
+      password: this.password,
+      refid: this.refid,
+      captcha_response: this.captcha_response
+    });
   }
 }
 </script>

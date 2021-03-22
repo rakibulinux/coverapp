@@ -23,6 +23,8 @@ export default class AuthButton extends Vue {
   @Prop() readonly disabled!: boolean;
 
   onSubmit($event) {
+    if (this.loading || this.disabled) return;
+
     this.$emit("click", $event);
   }
 }

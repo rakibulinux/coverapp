@@ -76,6 +76,19 @@
       }
     }
   }
+
+  .ant-empty {
+    &-image {
+      height: 75px;
+    }
+
+    &-description {
+      font-size: 10px;
+      line-height: 1;
+      color: var(--color-gray);
+      font-weight: 500;
+    }
+  }
 }
 
 .panel-view .body-bar,
@@ -90,5 +103,46 @@
 
   &::-webkit-scrollbar-thumb {
     background: transparent;
+  }
+}
+
+.cube-pulldown-wrapper {
+  color: var(--color-gray);
+
+  .before-trigger {
+    font-size: 30px;
+    line-height: 30px;
+    align-self: flex-end;
+    text-align: center;
+
+    p {
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .after-trigger {
+      .refresh-text {
+        color: grey;
+      }
+    }
+  }
+
+  .anticon {
+    color: var(--blue-color);
+    font-size: 30px;
+  }
+}
+
+.cube-pullup-wrapper {
+  color: var(--color-gray);
+
+  .loading {
+    display: flex;
+
+    i {
+      color: var(--blue-color);
+      font-size: 16px;
+      margin-right: 6px;
+    }
   }
 }

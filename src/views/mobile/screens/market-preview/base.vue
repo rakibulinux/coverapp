@@ -35,8 +35,7 @@ import { MarketChannels } from "@/mixins";
 import { ScreenMixin, MarketMixin } from "@/mixins/mobile";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
-import store from "@/store";
-import { PublicController, WebSocketController } from "@/controllers";
+import { WebSocketController } from "@/controllers";
 
 @Component({
   components: {
@@ -54,20 +53,20 @@ export default class MarketPreviewScreen extends Mixins(
   ScreenMixin,
   MarketMixin
 ) {
-  market_id: string;
+  market_id = "";
   first_time_render = true;
 
   get title() {
     return this.market.name.replace("/", " / ");
   }
 
-  async before_panel_create(market: ZTypes.Market) {
-    this.market_id = market.id;
+  async before_panel_create(market_id: string) {
+    this.market_id = market_id;
 
     this.setTitle();
     TradeController.orderbook.clear();
-    TradeController.orderbook.fetch(market.id);
-    TradeController.get_trades(market.id);
+    TradeController.orderbook.fetch(this.market.id);
+    TradeController.get_public_trades(this.market.id);
 
     MarketChannels(this.market.id).forEach(channel => {
       WebSocketController.subscribe("public", channel);
@@ -83,9 +82,9 @@ export default class MarketPreviewScreen extends Mixins(
   }
 
   setTitle() {
-    document.title = `${helpers.getMarketLastPrice()} - ${(
-      TradeController.market.name
-    ).toUpperCase()} - ${config.nameEX}`;
+    document.title = `${helpers.getMarketLastPrice()} - ${TradeController.market.name.toUpperCase()} - ${
+      config.nameEX
+    }`;
   }
 }
 </script>

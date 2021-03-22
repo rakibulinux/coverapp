@@ -17,37 +17,40 @@
         <span class="action" :class="{ selected: selected === index }" />
       </p>
     </div>
-    <button
+    <auth-button
       type="submit"
       :disabled="!selected"
       @click="$emit('change-modal', selected)"
     >
       Next
-    </button>
+    </auth-button>
     <div class="later-footer">
       <span @click="$emit('close-modal')">Maybe later</span>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import example_action_logo from "@/assets/img/example_modal_logo.jpg";
+import { Vue, Component } from "vue-property-decorator";
 
-export default {
-  data: () => ({
-    actions: {
-      "2fa": {
-        enabled: false,
-        logo: example_action_logo,
-        name: "Google Authenticator"
-      }
-    },
-    selected: ""
-  }),
-  methods: {
-    actionChange(action) {
-      this.selected = action;
-    }
+@Component({
+  components: {
+    "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
-};
+})
+export default class NeedSecurity extends Vue {
+  actions = {
+    "2fa": {
+      enabled: false,
+      logo: example_action_logo,
+      name: "Google Authenticator"
+    }
+  };
+  selected = "";
+
+  actionChange(action) {
+    this.selected = action;
+  }
+}
 </script>
