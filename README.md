@@ -1,24 +1,7 @@
-# coverapp-fix
+# Coverapp
 
-## Project setup
-```
-yarn install
-```
+How to build in docker?
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+`export NPM_TOKEN=000-000-000000-000000` # 000-000-000000-000000 is your token
 
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+`docker build --build-arg NPM_TOKEN=${NPM_TOKEN} .`
