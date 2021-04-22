@@ -5,6 +5,13 @@
     :footer="null"
     :width="400"
   >
+    <a-icon type="warning" class="logo-modal" />
+    <div class="title">
+      Confirmation Code
+    </div>
+    <div class="desc">
+      Enter the confirmation code from your email.
+    </div>
     <form @submit.prevent="confirm_withdrawal">
       <auth-input
         v-model="confirmation_code"
@@ -65,19 +72,6 @@ export default class ModalConfirmWithdrawal extends Mixins(
       this.confirmation_code,
       () => {
         this.delete();
-
-        const withdraws: ZTypes.Withdraw[] = (this.$parent as any).history.data;
-
-        const index = withdraws.findIndex(
-          withdraw => withdraw.tid == this.withdraw.tid
-        );
-
-        if (index >= 0) {
-          const withdraw = withdraws[index];
-          withdraw.state = "processing";
-
-          withdraws[index] = withdraw;
-        }
       }
     );
 

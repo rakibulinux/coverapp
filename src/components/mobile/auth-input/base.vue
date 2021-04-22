@@ -3,9 +3,13 @@
     <div v-if="title" class="z-auth-input-title">
       {{ title }}
     </div>
-    <div class="z-auth-input-content">
+    <div class="z-auth-input-content" @click="open_select_screen">
       <slot v-if="$slots.prefix" name="prefix" />
+      <div v-if="input_type == 'select'" class="z-auth-input-select-value">
+        {{ value }}
+      </div>
       <input
+        v-else
         :value="value"
         :name="name"
         :type="input_type"
@@ -16,7 +20,10 @@
         @blur="onInputBlur"
         @input="onInputChange"
       />
-      <div v-if="$slots.suffix" class="z-auth-input-suffix">
+      <div v-if="input_type == 'select'" class="z-auth-input-select-action">
+        <a-icon type="caret-down" />
+      </div>
+      <div v-else-if="$slots.suffix" class="z-auth-input-suffix">
         <slot name="suffix" />
       </div>
       <div class="z-auth-input-action">
@@ -42,13 +49,30 @@
     <div v-if="error" class="z-auth-input-error-content">
       {{ error }}
     </div>
+
+    <search-screen
+      v-if="input_type == 'select'"
+      ref="select-screen"
+      v-model="search"
+      :data="findList(search)"
+      @click="on_search_click"
+    >
+      <template slot-scope="{ item }">
+        <span class="text-left">{{ item.name }}</span>
+      </template>
+    </search-screen>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    "select-screen": () => import("./select-screen.vue"),
+    "search-screen": () => import("@/views/mobile/screens/search")
+  }
+})
 export default class AuthInput extends Vue {
   @Prop({ default: "" }) readonly value!: string;
   @Prop() readonly name!: string;
@@ -57,6 +81,10 @@ export default class AuthInput extends Vue {
   @Prop() readonly maxlength!: string | number;
   @Prop() readonly type!: string;
   @Prop() readonly error!: string;
+  @Prop() readonly list!: any[];
+  @Prop() readonly filter_keys!: string[];
+
+  search = "";
 
   input_focus = false;
   showing_password = false;
@@ -102,6 +130,35 @@ export default class AuthInput extends Vue {
       this.$forceUpdate();
     });
   }
+
+  findList(value: string) {
+    if (!value) return this.list;
+
+    return Object.fromEntries(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      Object.entries(this.list).filter(([key, item]) => {
+        for (const filter_key of this.filter_keys) {
+          console.log(item[filter_key].includes(value.toLowerCase()));
+          if (item[filter_key].toLowerCase().includes(value.toLowerCase()))
+            return true;
+        }
+
+        return false;
+      })
+    );
+  }
+
+  open_select_screen() {
+    if (this.input_type != "select") return;
+
+    (this.$refs["select-screen"] as any).create();
+  }
+
+  on_search_click(_key) {
+    this.$emit("change", _key);
+
+    (this.$refs["select-screen"] as any).destroy();
+  }
 }
 </script>
 
@@ -127,20 +184,46 @@ export default class AuthInput extends Vue {
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-color);
     border-radius: 4px;
+
+    > input {
+      display: inline-block;
+      width: 100%;
+      height: @auth-input-height;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: normal;
+
+      &::placeholder {
+        font-size: 11px;
+        font-weight: 500;
+        color: #979ca5;
+      }
+    }
   }
 
-  input {
-    display: inline-block;
-    width: 100%;
-    height: @auth-input-height;
-    padding: 0 8px;
-    font-size: 11px;
-    font-weight: normal;
-
-    &::placeholder {
+  &-select {
+    &-value {
       font-size: 11px;
+      line-height: @auth-input-height;
+      height: @auth-input-height;
+      padding: 0 8px;
+      width: 100%;
+    }
+
+    &-action {
+      position: absolute;
+      right: 0;
+      top: -1px;
+      display: inline-block;
+      height: @auth-input-height + 2px;
+      line-height: @auth-input-height + 2px;
+      color: var(--color-gray);
       font-weight: 500;
-      color: #979ca5;
+      background-color: var(--disabled-color);
+      border-radius: 0px 4px 4px 0px;
+      i {
+        color: rgba(255, 255, 255, 0.5);
+      }
     }
   }
 

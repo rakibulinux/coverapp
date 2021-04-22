@@ -70,6 +70,10 @@ export default class App extends Vue {
   }
 
   mounted() {
+    (window as any).coverapp_version = "1.0.1-beta";
+    (window as any).helpers = helpers;
+    (window as any).ZSmartModel = ZSmartModel;
+
     this.setTheme();
 
     if (this.isMobile) {

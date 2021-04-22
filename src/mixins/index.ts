@@ -27,6 +27,23 @@ export const wait_and_callback = (reason: () => boolean, callback: () => any) =>
   }
 }
 
+export const assets_state_color = (state: string) => {
+  const loading_state = [
+    "aml_processing",
+    "fee_processing",
+    "processing",
+    "confirming"
+  ];
+  const done_state = ["collected", "completed", "succeed"];
+  const warning_state = ["canceled"];
+  const error_state = ["errored", "to_reject", "rejected", "failed"];
+
+  if (loading_state.includes(state)) return "color-loading";
+  if (done_state.includes(state)) return "color-success";
+  if (warning_state.includes(state)) return "color-warning";
+  if (error_state.includes(state)) return "color-error";
+}
+
 export * from "./auth_mixin";
 export * from "./market_channels";
 export * from "./trade-action";

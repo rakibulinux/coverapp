@@ -135,7 +135,7 @@ export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
     }
   }
 
-  mounted() {
+  before_panel_create() {
     this.get_qrcode();
   }
 

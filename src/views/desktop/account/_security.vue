@@ -25,7 +25,6 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
 import _modal_password from "@/layouts/desktop/account/_modal_password.vue";
@@ -48,7 +47,7 @@ export default class AccountSecurity extends Vue {
         desc: this.translation("account_security.rows.psw.desc"),
         action: {
           allow: true,
-          text: this.translation("account_security.rows.psw.action"),
+          text: this.translation("action.change_password"),
           runner: "password"
         }
       },
@@ -58,7 +57,7 @@ export default class AccountSecurity extends Vue {
         desc: this.translation("account_security.rows.otp.desc"),
         action: {
           allow: !UserController.otp,
-          text: this.translation("account_security.rows.otp.action"),
+          text: this.translation("action.setting"),
           runner: "2fa"
         }
       }

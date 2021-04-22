@@ -78,18 +78,34 @@ export class TradeController {
     this.trades.splice(100, 1);
   }
 
+  get_deposits(payload?: { currency?: string; state?: string; time_from?: string; time_to?: string; limit?: number; page?: number; }) {
+    if (!payload) payload = {};
+    if (!payload.page) payload.page = 1;
+    if (!payload.limit) payload.limit = 100;
+
+    return new ApiClient("trade").get("account/deposits", payload);
+  }
+
+  get_withdraws(payload?: { currency?: string; state?: string; time_from?: string; time_to?: string; limit?: number; page?: number; }) {
+    if (!payload) payload = {};
+    if (!payload.page) payload.page = 1;
+    if (!payload.limit) payload.limit = 100;
+
+    return new ApiClient("trade").get("account/withdraws", payload);
+  }
+
   async get_deposit_address(currency_id: string) {
     const { data } = await new ApiClient("trade").get(`account/deposit_address/${currency_id}`)
 
     return data;
   }
 
-  async create_withdrawal(currency_id: string, address: string, amount: number, otp_code: string, callback?: () => void) {
+  async create_withdrawal(currency_id: string, address: string, amount: number, otp_code: string, callback?: (payload?: any) => void) {
     try {
-      await new ApiClient("applogic").post("account/withdraws", { address, currency: currency_id, amount, otp_code });
+      const { data } = await new ApiClient("applogic").post("account/withdraws", { address, currency: currency_id, amount, otp_code });
       runNotice("success", helpers.translation("message.withdraw.created"));
 
-      if (callback) callback();
+      if (callback) callback(data);
     } catch (error) {
       return error;
     }

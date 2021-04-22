@@ -71,7 +71,6 @@
 
 <script lang="ts">
 import { UserController } from "@/controllers";
-import store from "@/store";
 import { Component, Mixins } from "vue-property-decorator";
 import Helpers from "./helpers";
 
@@ -107,17 +106,21 @@ export default class App extends Mixins(Helpers) {
   async create_api_key() {
     this.loading = true;
     try {
-      const { kid, secret } = await store.dispatch("user/CREATE_API_KEYS", {
-        algorithm: "HS256",
-        totp_code: this.otp_code
-      });
-      this.loading = false;
+      const { data } = await this.UserController.create_api_key(
+        "HS256",
+        this.otp_code
+      );
+      const { kid, secret } = data;
+
       this.api_key = kid;
       this.api_secret = secret;
       this.step++;
+
+      this.$emit("success");
     } catch (error) {
-      this.loading = false;
       return error;
+    } finally {
+      this.loading = false;
     }
   }
 }

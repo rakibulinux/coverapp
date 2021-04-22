@@ -6,7 +6,7 @@
     </span>
 
     <router-link class="trade-action-balance-action" to="/assets/balance">
-      Deposit
+      {{ $t("action.deposit") }}
     </router-link>
   </div>
 </template>

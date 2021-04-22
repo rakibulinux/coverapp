@@ -23,6 +23,7 @@
         directionLockThreshold: 0
       }"
       @scroll="scroll"
+      @change="onPageChange"
     >
       <cube-slide-item v-for="slide in slide_items" :key="slide.value">
         <slot :name="slide.value" />
@@ -78,6 +79,10 @@ export default class ZPageSlide extends Vue {
 
   onTabBarChange(value) {
     this.$emit("input", value);
+  }
+
+  onPageChange(index) {
+    this.$emit("input", this.slide_items[index].value);
   }
 }
 </script>

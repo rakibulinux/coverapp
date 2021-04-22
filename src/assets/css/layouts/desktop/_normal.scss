@@ -74,9 +74,6 @@ button {
   .form-label {
     color: $footer-text-color;
   }
-  .form-control {
-    width: 100%;
-  }
 }
 
 .bg-down {
@@ -84,6 +81,30 @@ button {
 }
 .bg-up {
   background-color: var(--up-color) !important;
+}
+
+.color-loading {
+  color: var(--blue-color) !important;
+  background-color: var(--blue-color) !important;
+  border-color: var(--blue-color) !important;
+}
+
+.color-warning {
+  color: var(--warning-color) !important;
+  background-color: var(--warning-color) !important;
+  border-color: var(--warning-color) !important;
+}
+
+.color-success {
+  color: var(--up-color) !important;
+  background-color: var(--up-color) !important;
+  border-color: var(--up-color) !important;
+}
+
+.color-error {
+  color: var(--down-color) !important;
+  background-color: var(--down-color) !important;
+  border-color: var(--down-color) !important;
 }
 
 .text-up {

@@ -128,7 +128,7 @@ export default class App extends Vue {
 
   get ORDERS_MENU() {
     return {
-      NAME: "Orders",
+      NAME: this.translation("orders"),
       MENU: [
         {
           name: this.translation("open_orders"),

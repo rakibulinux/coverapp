@@ -41,7 +41,7 @@ export default class SearchMarketScreen extends Mixins(SearchScreenMixin) {
     });
   }
 
-  on_search_click(country) {
+  on_search_click(_key, country) {
     this.$emit("click", country.dial_code);
 
     this.destroy();

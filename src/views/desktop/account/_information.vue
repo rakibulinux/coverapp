@@ -25,7 +25,6 @@
 
 <script lang="ts">
 import * as helpers from "@zsmartex/z-helpers";
-import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import _modal_phone from "@/layouts/desktop/account/_modal_phone.vue";
 import Helpers from "./helpers";
@@ -62,7 +61,7 @@ export default class AccountInformation extends Vue {
           : "",
         action: {
           allow: !UserController.phone.validated,
-          text: "Setting",
+          text: this.translation("action.setting"),
           runner: "phone"
         }
       }

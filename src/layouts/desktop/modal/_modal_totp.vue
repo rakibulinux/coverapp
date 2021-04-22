@@ -45,27 +45,27 @@ export default class App extends Vue {
   @Prop() private readonly payload!: any;
   @Prop() private readonly loading!: boolean;
 
-  public modal_enabled = false;
-  private totp_code = "";
+  modal_enabled = false;
+  totp_code = "";
 
-  public create() {
+  create() {
     this.modal_enabled = true;
   }
 
-  public delete() {
+  delete() {
     this.modal_enabled = false;
   }
 
-  private submit() {
+  submit() {
     this.$emit("submit", this.totp_code);
   }
 
-  private onMaskClick() {
+  onMaskClick() {
     this.$emit("close");
   }
 
   @Watch("totp_code")
-  private onTotpChanged(totp_code: string) {
+  onTotpChanged(totp_code: string) {
     if (totp_code.length === 6) {
       this.submit();
     }

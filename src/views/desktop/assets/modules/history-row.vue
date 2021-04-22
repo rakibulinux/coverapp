@@ -57,7 +57,6 @@
         @click="change_txid_box"
       />
       <template v-if="record.state == 'prepared' && type == 'withdraw'">
-        <button @click="open_confirm_modal">Confirm</button>
         <a-icon type="close" @click="cancel_withdrawal()" />
       </template>
     </span>

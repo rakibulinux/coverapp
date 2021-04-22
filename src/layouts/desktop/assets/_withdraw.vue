@@ -83,6 +83,7 @@
     </div>
     <modal-totp ref="totp" :loading="loading" @submit="withdraw" />
     <modal-2fa ref="2fa" />
+    <modal-confirm-withdrawal ref="modal-confirm-withdrawal" />
   </div>
 </template>
 
@@ -91,12 +92,14 @@ import { runNotice } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
 import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
 import _modal_totp from "@/layouts/desktop/modal/_modal_totp.vue";
+import _modal_confirm_withdrawal from "@/layouts/desktop/modal/modal-confirm-withdrawal.vue";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   components: {
     "modal-2fa": _modal_2fa,
-    "modal-totp": _modal_totp
+    "modal-totp": _modal_totp,
+    "modal-confirm-withdrawal": _modal_confirm_withdrawal
   }
 })
 export default class AssetsWithdraw extends Vue {
@@ -135,15 +138,17 @@ export default class AssetsWithdraw extends Vue {
       this.address,
       Number(this.amount),
       otp_code,
-      () => {
+      withdraw => {
         this.close_modal("totp");
+
+        this.open_modal("modal-confirm-withdrawal", withdraw);
       }
     );
     this.loading = false;
   }
 
-  open_modal(modal: string) {
-    this.$refs[modal].create();
+  open_modal(modal: string, payload?: any) {
+    this.$refs[modal].create(payload);
   }
 
   close_modal(modal: string) {

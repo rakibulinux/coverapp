@@ -10,8 +10,7 @@ export default {
   "feature_markets": ["ETH/USDT", "ETH/USDT", "ETH/USDT", "ETH/USDT", "ETH/USDT"],
   "list_bid": ["USDT", "ETH", "BTC", "ETC", "USDC", "EXC"],
   "messages": {
-    en,
-    vn,
+    en
   },
   "api": {
     url: "/api/v2/",

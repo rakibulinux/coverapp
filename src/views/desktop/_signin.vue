@@ -19,7 +19,7 @@
             :placeholder-need="true"
             :error="password_error"
           />
-          <auth-button type="submit" :disabled="button_disabled">
+          <auth-button type="submit" :loading="loading" :disabled="button_disabled">
             {{ $t("auth.login") }}
           </auth-button>
           <div>
@@ -34,7 +34,12 @@
         </form>
       </div>
     </div>
-    <modal-totp ref="modal-totp" :loading="loading" @submit="onSubmitTotp" />
+    <modal-totp
+      ref="modal-totp"
+      :loading="loading"
+      @submit="onSubmitTotp"
+      @close="modalClose"
+    />
   </z-content>
 </template>
 
@@ -62,7 +67,7 @@ export default class SignIn extends Vue {
   public payload_modal = {};
 
   get loading() {
-    return UserController.state == "loading"
+    return UserController.state == "loading";
   }
 
   get button_disabled() {
@@ -109,7 +114,8 @@ export default class SignIn extends Vue {
   public async callLogin() {
     const { email, password, otp_code, captcha_response } = this;
 
-    await UserController.login({
+    await UserController.login(
+      {
         email,
         password,
         otp_code,

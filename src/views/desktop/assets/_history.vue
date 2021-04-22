@@ -66,7 +66,6 @@
         </dd>
       </div>
     </div>
-    <modal-confirm-withdrawal ref="modal-confirm-withdrawal" />
   </div>
 </template>
 
@@ -78,7 +77,6 @@ import { Vue, Component } from "vue-property-decorator";
 @Component({
   components: {
     "history-row": () => import("./modules/history-row.vue"),
-    "modal-confirm-withdrawal": () => import("./modules/modal-confirm-withdrawal.vue")
   }
 })
 export default class AssetsHistory extends Vue {

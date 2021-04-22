@@ -70,7 +70,7 @@ export default class BalanceRow extends Vue {
   type = "";
   showBox = false;
 
-  MARKET() {
+  get MARKET() {
     const { currency } = this;
     return PublicController.markets.filter(market => {
       if (market.base_unit == currency.id) return market;

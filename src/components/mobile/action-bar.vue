@@ -50,6 +50,8 @@ export default class ActionBar extends Vue {
     transform: translateX(-50%);
 
     .title {
+      font-size: 12px;
+      font-weight: 500;
       white-space: nowrap;
       text-overflow: ellipsis;
     }

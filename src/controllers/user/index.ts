@@ -77,7 +77,7 @@ export class UserController {
       }
 
       if (data.state == "active") { 
-        runNotice("success", "Login successfuly");
+        runNotice("success", "Login successfully");
       } else if (data.state == "pending") {
         this.session.sended_email = false;
       }
@@ -150,7 +150,7 @@ export class UserController {
     this.otp = payload.otp;
 
     if (payload.phones.length) {
-      const phone = payload.phone[payload.phone.length];
+      const phone = payload.phones[payload.phones.length - 1];
 
       this.phone.number = phone.number;
       this.phone.country = phone.country;
@@ -210,7 +210,7 @@ export class UserController {
       const { data } = await new ApiClient("auth").post("identity/users/email/confirm_code", { email: this.email, code });
       this.state = data.state;
       localStorage.setItem("csrf_token", data.csrf_token);
-      runNotice("success", "Confirmation email successfuly");
+      runNotice("success", "Confirmation email successfully");
       if (callback) callback();
     } catch (error) {
       return error;
@@ -244,7 +244,7 @@ export class UserController {
     try {
       await new ApiClient("auth").put("resource/users/password", { old_password, new_password, confirm_password });
 
-      runNotice("success", "Password changed successfuly");
+      runNotice("success", "Password changed successfully");
       if (callback) callback();
     } catch (error) {
       return error;
@@ -275,7 +275,7 @@ export class UserController {
     try {
       const { data } = await new ApiClient("auth").get("resource/labels");
 
-      store.state.user.labels = data;
+      this.labels = data;
     } catch (error) {
       return error;
     }
@@ -298,11 +298,34 @@ export class UserController {
       });
       store.commit("user/ENABLE_OTP");
       this.otp = true;
-      runNotice("success", "thanh cong");
+      runNotice("success", "OTP enabled successfully");
       on_success();
     } catch (error) {
       return;
     }
+  }
+
+  async update_profile(
+    first_name: string,
+    last_name: string,
+    dob: string,
+    address: string,
+    postcode: string,
+    city: string,
+    country: string
+  ) {
+    try {
+      await new ApiClient("auth").post("resource/profiles", { first_name, last_name, dob, address, postcode, city, country, confirm: true });
+      await this.get_labels();
+
+      runNotice("success", "successfully upload your profile")
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async create_api_key(algorithm: string, totp_code: string) {
+    return new ApiClient("auth").post("resource/api_keys", { algorithm, totp_code });
   }
 }
 

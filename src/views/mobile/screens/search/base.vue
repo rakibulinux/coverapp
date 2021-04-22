@@ -25,10 +25,10 @@
           :style="!headText.length ? 'height: 100%;' : ''"
         >
           <div
-            v-for="(item, index) in data"
-            :key="index"
+            v-for="(item, key) in data"
+            :key="key"
             class="z-table-row"
-            @click="$emit('click', item)"
+            @click="$emit('click', key, item)"
           >
             <slot :item="item" />
           </div>

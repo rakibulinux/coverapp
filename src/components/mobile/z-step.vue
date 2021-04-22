@@ -4,7 +4,7 @@
       v-for="(step, index) in steps"
       :key="index"
       class="z-step-item"
-      :class="{ 'z-step-item-active': value >= index + 1 }"
+      :class="[{ 'z-step-item-active': step.done }]"
     >
       <div class="z-step-item-icon">
         <span>{{ index + 1 }}</span>
@@ -22,20 +22,19 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 interface Step {
   text: string;
   done: boolean;
+  loading: boolean;
 }
 
 @Component
 export default class ZStep extends Vue {
   @Prop() readonly steps!: Step[];
-  @Prop() readonly value!: number;
 }
 </script>
 
 <style lang="less">
 .z-step {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  height: 35px;
 
   &-item {
     flex: 1;
@@ -45,21 +44,20 @@ export default class ZStep extends Vue {
 
     &-icon {
       position: relative;
-      width: 16px;
-      height: 16px;
+      width: 17px;
+      height: 17px;
       margin: auto;
       border: 1px solid;
-      border-radius: 16px;
-      font-size: 10px;
+      border-radius: 17px;
+      font-size: 9px;
       font-weight: 500;
       background-color: var(--bg-card-color);
 
       > span {
-        width: 16px;
-        height: 16px;
-        line-height: 16px;
-        position: relative;
-        top: -1px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
       }
     }
 

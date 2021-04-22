@@ -39,18 +39,18 @@
     </div>
 
     <security-screen ref="security-screen" />
+    <kyc-screen ref="kyc-screen" />
   </div>
 </template>
 
 <script lang="ts">
 import { UserController } from "@/controllers";
-import store from "@/store";
-import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
-    "security-screen": () => import("@/views/mobile/screens/security")
+    "security-screen": () => import("@/views/mobile/screens/security"),
+    "kyc-screen": () => import("@/views/mobile/screens/kyc")
   }
 })
 export default class UserDrawerHead extends Vue {
@@ -90,6 +90,9 @@ export default class UserDrawerHead extends Vue {
     switch (key) {
       case "security":
         this.$refs["security-screen"].create();
+        break;
+      case "kyc":
+        this.$refs["kyc-screen"].create();
         break;
       default:
         break;

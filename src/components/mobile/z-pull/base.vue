@@ -82,8 +82,6 @@ export default class ZPull extends Vue {
 
   latest_update = new Date();
 
-  buil
-
   get scrollOptions() {
     return {
       pullDownRefresh: this.pullDownRefresh

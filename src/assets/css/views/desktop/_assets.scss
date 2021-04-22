@@ -119,11 +119,11 @@
               }
             }
             &.action {
+              display: flex;
               width: 250px;
               padding-right: 20px;
+              justify-content: space-between;
               a {
-                display: inline-block;
-                margin: 0 10px;
                 position: relative;
                 &.selected {
                   &:after {

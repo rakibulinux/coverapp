@@ -1,9 +1,10 @@
 <template>
   <panel-view class="screen-assets screen-assets-withdraw">
-    <head-bar
-      :title="`Withdraw ${currency.id.toUpperCase()}`"
-      @back="destroy"
-    />
+    <head-bar :title="`Withdraw ${currency.id.toUpperCase()}`" @back="destroy">
+      <template slot="right">
+        <span @click="open_withdrawal_history_screen">History</span>
+      </template>
+    </head-bar>
 
     <currency-picker
       :currency="currency"
@@ -107,6 +108,10 @@ export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
 
   open_currency_picker_screen() {
     (this.$parent as any).open_assets_currency_picker_screen("withdraw");
+  }
+
+  open_withdrawal_history_screen() {
+    (this.$parent as any).open_assets_history_screen("withdrawal");
   }
 
   open_verify_otp_screen() {

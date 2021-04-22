@@ -1,7 +1,7 @@
 <template>
   <div class="trade-action-part">
-    <action-balance :currency="currency" />
-    <action-input
+    <trade-action-balance :currency="currency" />
+    <trade-action-input
       class="price"
       v-model="price"
       :prefix="translation('price')"
@@ -12,7 +12,7 @@
       "
       :error="price_error"
     />
-    <action-input
+    <trade-action-input
       class="amount"
       v-model="amount"
       :prefix="translation('amount')"
@@ -57,11 +57,11 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
 
 @Component({
   components: {
-    "action-balance": () => import("./trade-action-balance.vue"),
-    "action-input": () => import("./trade-action-input.vue")
+    "trade-action-balance": () => import("./trade-action-balance.vue"),
+    "trade-action-input": () => import("./trade-action-input.vue")
   }
 })
-export default class App extends Mixins(TradeActionMixin) {
+export default class TradeActionPart extends Mixins(TradeActionMixin) {
   @Prop() readonly side!: ZTypes.OrderSide;
 
   get slider_disabled() {

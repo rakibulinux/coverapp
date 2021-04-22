@@ -54,8 +54,7 @@ export class ScreenMixin extends Vue {
    * @param {any} payload anything you want to add to method `before_panel_create(payload: any)` and `panel_created(payload: any)`
   **/
   create(payload?: any) {
-    if (!this.PanelView) throw "PanelView is not ready";
-    if (this.panel_rending) throw "PanelView rending";
+    if (!this.PanelView || this.panel_rending) return;
     if (typeof this.before_panel_create === "function") {
       this.before_panel_create(payload);
     }
@@ -78,8 +77,7 @@ export class ScreenMixin extends Vue {
    * @param {any} payload anything you want to add to method `panel_destroyed(payload: any)`
   **/
   destroy(payload?: any) {
-    if (!this.PanelView) throw "PanelView is not ready";
-    if (this.panel_rending) throw "PanelView rending";
+    if (!this.PanelView || this.panel_rending) return;
     if (typeof this.before_panel_destroy === "function") {
       this.before_panel_destroy(payload);
     }

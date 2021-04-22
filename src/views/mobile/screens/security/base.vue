@@ -14,7 +14,7 @@
 
       <setting-row
         :value="UserController.otp ? 'Enabled' : 'Disabled'"
-        @click="open_screen('otp')"
+        @click="UserController.otp ? null : open_screen('otp')"
         ripple
       >
         Google Verification

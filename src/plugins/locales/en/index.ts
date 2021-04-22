@@ -28,10 +28,16 @@ export default {
       logout: "Logout",
     },
   },
+  title: {
+    deposit: "Deposit",
+    withdrawal: "Withdrawal",
+  },
   history: {
     succeed: "success",
     failed: "failure",
     login: "Login",
+    "login::2fa": "Login 2FA",
+    logout: "Logout"
   },
   input: {
     placeholder: {
@@ -93,13 +99,12 @@ export default {
     "locked": "Locked",
     "btc_val": "BTC Valuation",
     "search": "Search",
-    "kid": "Kid",
-    "created": "Created",
+    "kid": "Kid"
   },
   action: {
     deposit: "Deposit",
     withdrawal: "Withdrawal",
-    exchange: "Exchange",
+    exchange: "Exchange"
   },
   market_list: {
     favorite: "Favorite",
@@ -202,6 +207,10 @@ export default {
     empty_second: "Go to the Trade tab and make your order!",
   },
   usercenter: {
+    action: {
+      setting: "Settings",
+      change_password: "Change password",
+    },
     account_information: {
       title: "Account information",
       rows: {
@@ -218,12 +227,10 @@ export default {
         psw: {
           name: "Login Password",
           desc: `Used for account login.`,
-          action: "Change password",
         },
         otp: {
           name: "Google Authenticator",
           desc: `Recommended to be used for withdrawal & password & security settings modifications.`,
-          action: "Setting",
         },
       },
     },

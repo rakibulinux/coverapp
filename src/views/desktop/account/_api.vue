@@ -7,15 +7,13 @@
       </button>
     </div>
     <div class="setting-body">
-      <table class="table table-head">
-        <thead>
-          <th class="text-left" v-text="$t('table.kid')" />
-          <th class="text-center" v-text="$t('table.created')" />
-          <th class="text-right" v-text="$t('table.action')" />
-        </thead>
-      </table>
       <div class="table-content">
         <table class="table">
+          <thead>
+            <th class="text-left" v-text="$t('table.kid')" />
+            <th class="text-center" v-text="$t('table.date')" />
+            <th class="text-right" v-text="$t('table.action')" />
+          </thead>
           <tbody>
             <tr
               v-for="data in api_keys.array"
@@ -36,7 +34,10 @@
                     )
                   "
                 />
-                <i class="zicon-close" @click="openModal(data.kid, false, 'totp')" />
+                <i
+                  class="zicon-close"
+                  @click="openModal(data.kid, false, 'totp')"
+                />
               </td>
             </tr>
           </tbody>
@@ -55,13 +56,17 @@
       />
     </div>
     <modal-2fa ref="2fa" @success="onClick('api')" />
-    <modal-api ref="api" @change-modal="onClick" />
+    <modal-api
+      ref="api"
+      @change-modal="onClick"
+      @success="onNewApiKeyCreated"
+    />
     <modal-totp ref="totp" @submit="onSubmitTotp" @close="modalClose" />
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Mixins } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import store from "@/store";
@@ -74,11 +79,12 @@ import store from "@/store";
   }
 })
 export default class ApiKeyPage extends Mixins(Helpers) {
+  page = 1;
   payload_modal: {
-    kid: "",
-    state: "",
-    modal: ""
-  }
+    kid: "";
+    state: "";
+    modal: "";
+  };
 
   get api_keys() {
     return store.state.user.api_keys;
@@ -146,15 +152,24 @@ export default class ApiKeyPage extends Mixins(Helpers) {
     }
   }
 
-  onPageChange($page) {
+  onNewApiKeyCreated() {
     this.$store.dispatch("user/GET_API_KEYS", {
-      page: $page,
+      page: this.page,
+      limit: 25
+    });
+  }
+
+  onPageChange($page) {
+    this.page = $page;
+
+    this.$store.dispatch("user/GET_API_KEYS", {
+      page: this.page,
       limit: 25
     });
   }
 
   getDate(date) {
-    return helpers.getDate(date, true)
+    return helpers.getDate(date, true);
   }
-};
+}
 </script>

@@ -52,7 +52,7 @@ export default class SearchMarketScreen extends Mixins(
 ) {
   value = "";
 
-  open_market_preview_screen(market: ZTypes.Market) {
+  open_market_preview_screen(_key, market: ZTypes.Market) {
     this.$emit("click", market);
   }
 

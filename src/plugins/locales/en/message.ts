@@ -9,7 +9,7 @@ export default {
   password: {
     changed: "Password was changed",
     forgot: "Password reset link has been sent to your email",
-    changed_successfuly: "Password was changed"
+    changed_successfully: "Password was changed"
   },
   phone: {
     send: "Verification code was sent to your phone",

@@ -7,7 +7,7 @@ export default {
   'success.otp.disabled': '2FA was disabled',
   'success.password.changed': 'Password was changed',
   'success.password.forgot': 'Password reset link has been sent to your email',
-  'success.password.changed.successfuly': 'Password was changed',
+  'success.password.changed.successfully': 'Password was changed',
   'success.order.cancelling': 'Order is being cancelled',
   'success.order.canceled': 'Order was cancelled',
   'success.order.canceled.all': 'All orders were cancelled',
