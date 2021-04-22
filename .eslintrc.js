@@ -29,6 +29,7 @@ module.exports = {
     "@typescript-eslint/interface-name-prefix": "off",
     
     "no-constant-condition": "off",
-    "getter-return": "off"
+    "getter-return": "off",
+    'prettier/prettier': process.env.NODE_ENV === "production" ? "warn" : "off",
   }
 };
