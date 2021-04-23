@@ -73,6 +73,9 @@ export default class App extends Vue {
     (window as any).coverapp_version = "1.0.1-beta";
     (window as any).helpers = helpers;
     (window as any).ZSmartModel = ZSmartModel;
+    (window as any).PublicController = this.PublicController;
+    (window as any).TradeController = this.TradeController;
+    (window as any).UserController = this.UserController;
 
     this.setTheme();
 

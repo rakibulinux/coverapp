@@ -39,15 +39,11 @@ export default {
     sparkline
   },
   computed: {
-    feature_markets: () => config.feature_markets,
-    pricePrecision: () => helpers.pricePrecision(),
-    totalPrecision: () => helpers.totalPrecision()
+    feature_markets: () => config.feature_markets
   },
   methods: {
-    getPrice(value) {
-      const { pricePrecision } = this;
-
-      return Number(value).toFixed(pricePrecision);
+    getPrice(value, market_id) {
+      return Number(value).toFixed(helpers.pricePrecision(market_id));
     },
     reWorkName(name) {
       const nameArray = name.split("/");
@@ -61,16 +57,14 @@ export default {
       return PublicController.tickers[market_id];
     },
     getLastPrice(market_id) {
-      return this.getPrice(this.getTicker(market_id).last);
+      return this.getPrice(this.getTicker(market_id).last, market_id);
     },
     getLastPriceUSD(ticker) {
       return helpers.getTickerPriceUSD(ticker, this.getLastPrice(ticker));
     },
     getVolume(ticker) {
-      const { totalPrecision } = this;
-
       return Number(
-        Number(this.getTicker(ticker).volume).toFixed(totalPrecision)
+        Number(this.getTicker(ticker).volume).toFixed(helpers.totalPrecision(ticker))
       ).toLocaleString();
     },
     getTrend(price_change_percent, bg = false) {
