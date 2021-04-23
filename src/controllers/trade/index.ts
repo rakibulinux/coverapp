@@ -12,7 +12,6 @@ import { runNotice } from "@/mixins";
 import TradingView from "./tradingview";
 import * as helpers from "@zsmartex/z-helpers";
 import router from '@/router';
-import config from "@/config";
 
 export class TradeController {
   constructor() {
