@@ -5,7 +5,7 @@ import * as helpers from "@zsmartex/z-helpers";
 export default abstract class OrdersController {
   async create_order(market_id: string, side: ZTypes.OrderSide, ord_type: ZTypes.OrdType = "limit", price: number, amount: number): Promise<ZTypes.Order> {
     try {
-      const response = await new ApiClient("finex").post("market/orders", {
+      const response = await new ApiClient(config.finex ? "finex" : "trade").post("market/orders", {
         market: market_id,
         side: side,
         price: price,
@@ -21,7 +21,7 @@ export default abstract class OrdersController {
 
   async stop_order(id_or_uuid: number | string) {
     try {
-      await new ApiClient("finex").post("market/orders/cancel/#{id}".replace("#{id}", id_or_uuid.toString()));
+      await new ApiClient(config.finex ? "finex" : "trade").post((config.finex ? "market/orders/cancel/#{id}" : "market/orders/#{id}/cancel").replace("#{id}", id_or_uuid.toString()));
       runNotice("success", helpers.translation("message.order.canceled").toString());
 
       return true;
@@ -32,7 +32,7 @@ export default abstract class OrdersController {
 
   async stop_orders(market_id?: string, side?: ZTypes.OrderSide) {
     try {
-      await new ApiClient("finex").post("market/orders/cancel", { market: market_id, side: side });
+      await new ApiClient(config.finex ? "finex" : "trade").post("market/orders/cancel", { market: market_id, side: side });
       runNotice("success", "All market #{market} orders have been canceled".replace("#{market}", market_id));
 
       return true;
@@ -45,7 +45,7 @@ export default abstract class OrdersController {
     if (!payload.page) payload.page = 1;
     if (!payload.limit) payload.limit = 100;
 
-    return new ApiClient("finex").get("market/orders", payload);
+    return new ApiClient(config.finex ? "finex" : "trade").get("market/orders", payload);
   }
 
   async get_trades(payload: { market: string; type?: ZTypes.OrderSide; page?: number; limit?: number; time_from?: number; time_to?: number }) {

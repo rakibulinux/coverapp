@@ -62,7 +62,7 @@ export class PublicController {
 
   async fetch_global_price() {
     try {
-      const { data } = await new ApiClient("finex").get("public/global_price");
+      const { data } = await new ApiClient(config.finex ? "finex" : "trade").get("public/global_price");
 
       this.global_price = data;
     } catch (error) {

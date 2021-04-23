@@ -51,7 +51,7 @@ export class TradeController {
   }
 
   get_depth(market_id: string, limit = 100) {
-    return new ApiClient("finex").get("public/markets/" + market_id + "/depth", { limit: limit });
+    return new ApiClient(config.finex ? "finex" : "trade").get("public/markets/" + market_id + "/depth", { limit: limit });
   }
 
   async get_public_trades(market_id: string, limit = 100) {
