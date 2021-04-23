@@ -1,6 +1,7 @@
 import { runNotice } from "@/mixins";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
+import config from "@/config";
 
 export default abstract class OrdersController {
   async create_order(market_id: string, side: ZTypes.OrderSide, ord_type: ZTypes.OrdType = "limit", price: number, amount: number): Promise<ZTypes.Order> {

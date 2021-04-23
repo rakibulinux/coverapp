@@ -3,6 +3,7 @@ import { applyMixins } from "../mixins";
 import Store, { IStore } from "./store";
 import Helpers from "./helpers";
 import GettersSetters from './getters_setters';
+import config from "@/config";
 
 export class PublicController {
   store = Store;
