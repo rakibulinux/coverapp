@@ -1,6 +1,7 @@
 import ZSmartModel from "@zsmartex/z-eventbus";
 import UserController from '@/controllers/user';
 import { PublicController, TradeController } from '@/controllers';
+import config from "@/config";
 
 class ZSocket {
   [key: string]: any;
@@ -109,12 +110,28 @@ class ZSocket {
 
           orderbook.sequence = payload.sequence;
 
-          (["asks", "bids"]).forEach((side: ZTypes.TakerType) => {
-            if (!payload[side]) return;
+          if (config.finex) {
+            (["asks", "bids"]).forEach((side: ZTypes.TakerType) => {
+              if (!payload[side]) return;
+              if (!payload[side].length) return;
 
-            payload[side].forEach((order: string[]) => {
-              const order_price = Number(order[0]);
-              const order_amount = Number(order[1]);
+              payload[side].forEach((order: string[]) => {
+                const order_price = Number(order[0]);
+                const order_amount = Number(order[1]);
+
+                if (order_amount > 0) {
+                  orderbook.add(order_price, order_amount, side);
+                } else {
+                  orderbook.remove(order_price, side);
+                }
+              })
+            })
+          } else {
+           (["asks", "bids"]).forEach((side: ZTypes.TakerType) => {
+              if (!payload[side]) return;
+
+              const order_price = Number(payload[side][0]);
+              const order_amount = Number(payload[side][1]);
 
               if (order_amount > 0) {
                 orderbook.add(order_price, order_amount, side);
@@ -122,7 +139,7 @@ class ZSocket {
                 orderbook.remove(order_price, side);
               }
             })
-          })
+          }
         }
 
         if (klineMatch) {
