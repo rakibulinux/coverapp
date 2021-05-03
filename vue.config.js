@@ -97,11 +97,15 @@ const configWebPack = {
   devServer: {
     proxy: {
       "^/api": {
-        target: "http://exchange.smartchainers.in",
+        target: "https://exchange.smartchainers.in",
         ws: true,
-        changeOrigin: true
+        changeOrigin: true,
+        onError(err) {
+          console.log('Suppressing WDS proxy upgrade error:', err);
+        },
       }
     },
+    hot: true,
     inline: true,
     disableHostCheck: true,
     host: "0.0.0.0",

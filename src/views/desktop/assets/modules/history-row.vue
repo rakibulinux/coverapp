@@ -25,11 +25,11 @@
         <span class="title">{{ $t("assets.address") }}:</span>
         <a
           v-if="txid_box_opening"
-          :href="currency.explorer_address.replace('#{address}', record.rid)"
+          :href="currency.explorer_address.replace('#{address}', record.from_addresses[0] || record.rid)"
           target="_blank"
-          v-text="record.rid"
+          v-text="record.from_addresses[0] || record.rid"
         />
-        <span v-else v-text="record.rid" />
+        <span v-else v-text="record.from_addresses[0] || record.rid" />
       </div>
       <div class="txid" :class="[txid_box_opening ? 'show' : 'hide']">
         <span class="title">{{ $t("assets.txid") }}:</span>
@@ -37,11 +37,11 @@
           :href="
             currency.explorer_transaction.replace(
               '#{txid}',
-              record.blockchain_txid
+              record.txid || record.blockchain_txid
             )
           "
           target="_blank"
-          v-text="record.blockchain_txid"
+          v-text="record.txid || record.blockchain_txid"
         />
       </div>
     </span>
