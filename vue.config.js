@@ -98,6 +98,7 @@ const configWebPack = {
     proxy: {
       "^/api": {
         target: "https://exchange.smartchainers.in",
+        secure: false,
         ws: true,
         changeOrigin: true,
         onError(err) {
@@ -105,11 +106,10 @@ const configWebPack = {
         },
       }
     },
-    hot: true,
-    inline: true,
-    disableHostCheck: true,
     host: "0.0.0.0",
-    port: 3000
+    port: 3000,
+    hot: true,
+    disableHostCheck: true
   }
 };
 
