@@ -7,8 +7,8 @@ const nameEX = "NameEX";
 export default {
   nameEX,
   "default_market": "ethusd",
-  "feature_markets": ["ETH/USD", "ETH/USD", "ETH/USD", "ETH/USD", "ETH/USD"],
-  "list_bid": ["USDT", "ETH", "BTC", "ETC", "USDC", "EXC"],
+  "feature_markets": ["ETH/USDT", "BTC/USDT", "ETH/USDT", "BTC/USDT", "ETH/USDT"],
+  "list_bid": ["USDT", "ETH", "BTC", "ETC", "USDC", "USDB"],
   "messages": {
     en
   },
@@ -21,7 +21,7 @@ export default {
         "/api/v2/websocket/private?stream=order&stream=trade&stream=balance",
     },
   },
-  "finex": false,
+  "finex": true,
   "recaptcha": {
     sitekey: "6LcrA5wUAAAAABY8KW-beaUOjShGC_U2va3kJEJt",
   },
