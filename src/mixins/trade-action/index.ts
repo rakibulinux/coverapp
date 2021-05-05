@@ -93,7 +93,7 @@ export class TradeActionMixin extends Vue {
       return false;
     }
     if (Number(this.price) < this.min_price) {
-      return "Giá được đặt quá thấp";
+      return "Price too low";
     }
   }
 
@@ -102,7 +102,7 @@ export class TradeActionMixin extends Vue {
       return false;
     }
     if (Number(this.amount) < this.min_amount) {
-      return "Số lượng được đặt quá thấp";
+      return "Amount too low";
     }
   }
 
