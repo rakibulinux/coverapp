@@ -6,7 +6,7 @@ const nameEX = "NameEX";
 
 export default {
   nameEX,
-  "default_market": "ethusd",
+  "default_market": "ethusdt",
   "feature_markets": ["ETH/USDT", "BTC/USDT", "ETH/USDT", "BTC/USDT", "ETH/USDT"],
   "list_bid": ["USDT", "ETH", "BTC", "ETC", "USDC", "USDB"],
   "messages": {
