@@ -10,10 +10,12 @@ import "./registerServiceWorker";
 import(/* webpackPreload: true */ "@/assets/css/loading.scss");
 import { PublicController, TradeController, WebSocketController, UserController } from "@/controllers";
 import Fragment from "@grainrigi/vue-fragment";
+import Wave from "./library/wave";
 
 Vue.use(Fragment.Plugin)
 Vue.use(Vue2TouchEvents);
 Vue.use(vClickOutside);
+Vue.use(Wave);
 
 Vue.config.productionTip = false;
 Vue.config.performance = true;

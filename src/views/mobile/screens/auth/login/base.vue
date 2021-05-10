@@ -139,10 +139,8 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
 
   @Watch("need2fa")
   onNeed2FAChanged(need2fa: boolean) {
-    if (need2fa) {
-      this.$refs["screen-verify-otp"][`${need2fa ? "create" : "destroy"}`]();
-      this.otp_code = "";
-    }
+    this.$refs["screen-verify-otp"][`${need2fa ? "create" : "destroy"}`]();
+    this.otp_code = "";
   }
 
   @Watch("UserController.state")

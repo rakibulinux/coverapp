@@ -166,6 +166,8 @@ class ZSocket {
               },
               "trade"
             );
+
+            ZSmartModel.emit("new-trade", trade);
           }
         }
 

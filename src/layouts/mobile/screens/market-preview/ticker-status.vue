@@ -13,7 +13,7 @@
           <div class="ticker-status-roi-title">
             High
           </div>
-          <div class="ticker-status-roi-value">
+          <div class="ticker-status-roi-value text-up">
             {{ high_price }}
           </div>
         </div>
@@ -21,7 +21,7 @@
           <div class="ticker-status-roi-title">
             Low
           </div>
-          <div class="ticker-status-roi-value">
+          <div class="ticker-status-roi-value text-down">
             {{ low_price }}
           </div>
         </div>

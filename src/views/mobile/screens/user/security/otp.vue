@@ -112,13 +112,16 @@ export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
   get STEP() {
     return [
       {
-        text: "Download APP"
+        text: "Download APP",
+        done: this.step == 1
       },
       {
-        text: "Copy Private Key"
+        text: "Copy Private Key",
+        done: this.step == 2
       },
       {
-        text: "Enable Google Verification"
+        text: "Enable Google Verification",
+        done: this.step == 3
       }
     ];
   }

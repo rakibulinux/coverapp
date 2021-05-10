@@ -1,14 +1,13 @@
 <template>
   <z-content class="page-home-m pull-content">
     <head-bar
-      @user-click="open_user_drawer"
+      @user-click="open_user_screen"
       @search-click="open_search_market_screen"
     />
     <preview />
     <feature-markets @click="open_market_preview_screen" />
     <trend-top @click="open_market_preview_screen" />
-
-    <user-drawer :allowTouch="allowTouch" ref="user-drawer" />
+    <screen-user ref="screen-user" />
     <screen-search-markets
       ref="screen-search-markets"
       @click="open_market_preview_screen"
@@ -18,6 +17,7 @@
 </template>
 
 <script lang="ts">
+import ZSmartModel from "@zsmartex/z-eventbus";
 import { MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 
@@ -27,7 +27,7 @@ import { Component, Mixins } from "vue-property-decorator";
     preview: () => import("@/layouts/mobile/home/preview.vue"),
     "feature-markets": () => import("@/layouts/mobile/home/feature-markets"),
     "trend-top": () => import("@/layouts/mobile/home/trend-top.vue"),
-    "user-drawer": () => import("@/layouts/mobile/home/user-drawer"),
+    "screen-user": () => import("@/views/mobile/screens/user"),
     "screen-market-preview": () =>
       import("@/views/mobile/screens/market-preview"),
     "screen-search-markets": () =>
@@ -39,24 +39,14 @@ export default class Home extends Mixins(MarketMixin) {
     [key: string]: any;
   };
 
-  allowTouch() {
-    if (
-      !this.$refs["screen-search-markets"] ||
-      !this.$refs["screen-market-preview"]
-    )
-      return true;
-
-    if (
-      this.$refs["screen-search-markets"].isActive ||
-      this.$refs["screen-market-preview"].isActive
-    )
-      return false;
-
-    return true;
+  get isAuth() {
+    return this.UserController.state == "active"
   }
 
-  open_user_drawer() {
-    this.$refs["user-drawer"].create();
+  open_user_screen() {
+    this.isAuth ? this.$refs["screen-user"].create() : ZSmartModel.emit("need-login", () => { 
+      this.$refs["screen-user"].create();
+     });
   }
 
   open_search_market_screen() {

@@ -324,6 +324,25 @@ export class UserController {
     }
   }
 
+  async update_document(doc_type: string, doc_number: string, front_upload: File, back_upload: File, in_hand_upload: File) {
+    const config = { headers: { "Content-Type": "multipart/form-data" } };
+    const formData = new FormData();
+
+    formData.set("doc_type", doc_type);
+    formData.set("doc_number", doc_number);
+    formData.append("upload[]", front_upload);
+    formData.append("upload[]", back_upload);
+    formData.append("upload[]", in_hand_upload);
+
+    try {
+      await new ApiClient("auth").post("resource/documents", formData, config);
+      await this.get_labels();
+      runNotice("success", "Documents upload was successful");
+    } catch (error) {
+      return error;
+    }
+  }
+
   async create_api_key(algorithm: string, totp_code: string) {
     return new ApiClient("auth").post("resource/api_keys", { algorithm, totp_code });
   }

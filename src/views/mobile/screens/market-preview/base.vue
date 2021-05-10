@@ -20,11 +20,11 @@
       </template>
     </head-bar>
     <div v-if="panel_ready" class="body-bar">
-      <ticker-status :market_id="market.id" />
-      <group-chart :market_id="market.id" />
-      <group-trade :market_id="market.id" />
+      <ticker-status :market_id="market_id" />
+      <group-chart :market_id="market_id" />
+      <group-trade :market_id="market_id" />
     </div>
-    <tab-bar :market_id="market.id" />
+    <tab-bar :market_id="market_id" />
   </panel-view>
 </template>
 

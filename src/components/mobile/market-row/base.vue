@@ -19,8 +19,8 @@
       <div
         class="market-row-change"
         :class="[
-          getTrend(market.price_change_percent),
-          getTrend(market.price_change_percent, true)
+          getTrend(ticker.price_change_percent),
+          getTrend(ticker.price_change_percent, true)
         ]"
       >
         {{ ticker.price_change_percent }}

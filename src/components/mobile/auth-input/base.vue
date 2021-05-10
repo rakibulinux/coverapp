@@ -5,7 +5,10 @@
     </div>
     <div class="z-auth-input-content" @click="open_select_screen">
       <slot v-if="$slots.prefix" name="prefix" />
-      <div v-if="input_type == 'select'" class="z-auth-input-select-value">
+      <div v-if="input_type == 'fake'" :class="['z-auth-input-fake', { 'z-auth-input-fake-disabled': !value }]" @click="$emit('click')">
+        {{ value || placeholder }}
+      </div>
+      <div v-else-if="input_type == 'select'" class="z-auth-input-select-value">
         {{ value }}
       </div>
       <input
@@ -58,7 +61,7 @@
       @click="on_search_click"
     >
       <template slot-scope="{ item }">
-        <span class="text-left">{{ item.name }}</span>
+        <span class="text-left">{{ list_key ? item[list_key] : item }}</span>
       </template>
     </search-screen>
   </div>
@@ -83,6 +86,7 @@ export default class AuthInput extends Vue {
   @Prop() readonly error!: string;
   @Prop() readonly list!: any[];
   @Prop() readonly filter_keys!: string[];
+  @Prop() readonly list_key!: string;
 
   search = "";
 
@@ -138,7 +142,6 @@ export default class AuthInput extends Vue {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       Object.entries(this.list).filter(([key, item]) => {
         for (const filter_key of this.filter_keys) {
-          console.log(item[filter_key].includes(value.toLowerCase()));
           if (item[filter_key].toLowerCase().includes(value.toLowerCase()))
             return true;
         }
@@ -154,8 +157,9 @@ export default class AuthInput extends Vue {
     (this.$refs["select-screen"] as any).create();
   }
 
-  on_search_click(_key) {
-    this.$emit("change", _key);
+  on_search_click(key) {
+    this.$emit("change", key);
+    this.$emit("input", this.list[key]);
 
     (this.$refs["select-screen"] as any).destroy();
   }
@@ -224,6 +228,22 @@ export default class AuthInput extends Vue {
       i {
         color: rgba(255, 255, 255, 0.5);
       }
+    }
+  }
+
+  &-fake {
+    display: inline-block;
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: normal;
+
+    &-disabled {
+      font-size: 11px;
+      font-weight: 500;
+      color: #979ca5;
     }
   }
 

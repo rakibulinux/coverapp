@@ -64,7 +64,8 @@ export class MarketMixin extends Vue {
 
   getTrend(value: string | number, bg = false) {
     if (typeof value === "string") {
-      if (value.includes("%")) value = parseFloat(value.toString());
+      value = value.replace("%", "");
+      value = Number(value);
     }
 
     return helpers.getTrend(value, bg);

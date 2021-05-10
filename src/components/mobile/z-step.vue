@@ -7,7 +7,8 @@
       :class="[{ 'z-step-item-active': step.done }]"
     >
       <div class="z-step-item-icon">
-        <span>{{ index + 1 }}</span>
+        <a-icon type="loading" v-if="step.loading" />
+        <span v-else>{{ index + 1 }}</span>
       </div>
       <div class="z-step-item-content">
         <span>{{ step.text }}</span>

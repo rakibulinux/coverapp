@@ -3,7 +3,7 @@
     <form-row
       label="Type of certificate"
       type="select"
-      :rows="['Passport', 'Identity card', 'Driver license', 'Utility Bill']"
+      :rows="TYPES"
       v-model="doc_type"
     />
     <form-row
@@ -92,7 +92,7 @@
     <div class="form-row">
       <div class="form-label" />
       <div class="form-control">
-        <button type="submit" :disabled="loading">
+        <button type="submit" :disabled="button_disabled">
           Submit
           <a-icon v-if="loading" type="loading" />
         </button>
@@ -102,10 +102,8 @@
 </template>
 
 <script lang="ts">
-import ApiClient from "@zsmartex/z-apiclient";
-import { runNotice } from "@/mixins";
-import { Vue, Component } from "vue-property-decorator";
-import { UserController } from "@/controllers";
+import { Mixins, Component } from "vue-property-decorator";
+import { DocumentMixins } from "@/mixins/kyc";
 
 @Component({
   components: {
@@ -113,51 +111,5 @@ import { UserController } from "@/controllers";
     "auto-complete": () => import("@/components/desktop/AutoComplete.vue"),
   }
 })
-export default class DocumentForm extends Vue {
-  loading = false;
-  doc_type = "Passport";
-  doc_number = "";
-  front_upload_data?: string | ArrayBuffer = null;
-  back_upload_data?: string | ArrayBuffer = null;
-  in_hand_upload_data?: string | ArrayBuffer = null;
-  front_upload?: File;
-  back_upload?: File;
-  in_hand_upload: File;
-
-  onFileChange($event: Event, type: "front" | "back" | "in_hand") {
-    const files = ($event.target as any).files as File[];
-    if (!["front", "back", "in_hand"].includes(type)) return;
-    if (!files.length) return;
-    const file = files[0];
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    this[`${type}_upload`] = file;
-    reader.onload = e => (this[`${type}_upload_data`] = e.target.result);
-  }
-
-  async onSubmit() {
-    const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const formData = new FormData();
-
-    formData.set("doc_type", this.doc_type);
-    formData.set("doc_number", this.doc_number);
-    formData.append("upload[]", this.front_upload);
-    formData.append("upload[]", this.back_upload);
-    formData.append("upload[]", this.in_hand_upload);
-
-    this.loading = true;
-
-    try {
-      await new ApiClient("auth").post("resource/documents", formData, config);
-      await UserController.get_labels();
-      runNotice("success", "Documents upload was successful");
-    } catch (error) {
-      return error;
-    } finally {
-      this.loading = false;
-    }
-  }
-}
+export default class DocumentForm extends Mixins(DocumentMixins) {}
 </script>

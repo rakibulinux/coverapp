@@ -1,7 +1,7 @@
 <template>
-  <div class="setting-row" @click="$emit('click')">
+  <div class="setting-row" v-wave="clickable" @click="$emit('click')">
     <div class="setting-row-content">
-      <a-icon v-if="icon" :type="icon" theme="filled" />
+      <a-icon v-if="icon" :type="icon" />
       <span class="setting-row-title">
         <slot />
       </span>
@@ -33,11 +33,11 @@ export default class SettingRow extends Vue {
   height: 40px;
   line-height: 40px;
   width: 100%;
+  padding: 0 12px;
   display: block;
-  padding: 0 8px;
-  border-bottom: 1px solid var(--bg-color);
   justify-content: space-between;
   align-items: center;
+  background-color: var(--bg-card-color);
 
   &-content {
     font-size: 10px;
@@ -66,48 +66,7 @@ export default class SettingRow extends Vue {
   i {
     color: var(--color-gray);
     vertical-align: text-bottom;
-  }
-}
-</style>
-
-<style lang="less">
-.setting-row {
-  background-color: var(--bg-card-color);
-}
-
-[ripple] .ripple--container .ripple--body {
-  will-change: transform, opacity, auto;
-  zoom: 1;
-  overflow: hidden;
-  transform: scale(0);
-  border-radius: 100%;
-  position: absolute;
-  opacity: 0.5;
-  background-color: rgba(255, 255, 255, 0.05);
-  animation: rippler 500ms;
-}
-@-webkit-keyframes rippler {
-  to {
-    opacity: 0;
-    transform: scale(2);
-  }
-}
-@-moz-keyframes rippler {
-  to {
-    opacity: 0;
-    transform: scale(2);
-  }
-}
-@-o-keyframes rippler {
-  to {
-    opacity: 0;
-    transform: scale(2);
-  }
-}
-@keyframes rippler {
-  to {
-    opacity: 0;
-    transform: scale(2);
+    font-size: 16px;
   }
 }
 </style>
