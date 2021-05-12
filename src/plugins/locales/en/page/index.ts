@@ -58,6 +58,10 @@ export default {
   "page.global.placeholder.refid": "Referral uid",
   "page.global.placeholder.confirmation_code": "Confirmation code",
   "page.global.placeholder.e-confirmation_code": "E-mail verification code",
+  "page.global.placeholder.2fa_code": "2FA Code",
+  "page.global.placeholder.address": "Address",
+  "page.global.placeholder.amount": "Amount",
+  "page.global.placeholder.fee": "Fee",
 
   // Header
   "page.global.header.exchange": "Exchange",
@@ -93,6 +97,7 @@ export default {
   "page.global.action.reset_password": "Reset Password",
   "page.global.action.sending": "Sending...",
   "page.global.action.resend": "Resend",
+  "page.global.action.copy": "Copy",
 
   ...Home,
   ...Account,

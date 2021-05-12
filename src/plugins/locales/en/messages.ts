@@ -28,7 +28,7 @@ export default {
   "success.otp.disabled": "2FA was disabled",
 
   // Password
-  "warning.password.need2fa": "You need enter otp code to continue",
+  "warning.password.need2fa": "To withdraw you have to enable 2FA",
   "success.password.change": "Please change your password",
   "success.password.forgot": "Password reset link has been sent to your email",
   "success.password.changed": "Password was changed",

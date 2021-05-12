@@ -2,17 +2,17 @@
   <div class="assets-withdraw">
     <div v-if="UserController.otp" class="assets-form">
       <div class="form-row">
-        <label class="form-label">{{ $t("assets.address") }}</label>
+        <label class="form-label">{{ $t("page.global.placeholder.address") }}</label>
         <div class="form-control">
           <input v-model="address" type="text" autocomplete="off" />
         </div>
       </div>
       <div class="form-row">
         <label class="form-label">
-          {{ $t("assets.withdraw.amount") }}
+          {{ $t("page.global.placeholder.amount") }}
           <p class="label-right">
             <span>
-              {{ $t("assets.withdraw.available") }}
+              {{ $t("page.global.table.available") }}
               <a @click="amount = available.toString()" v-text="available" />
             </span>
           </p>
@@ -29,7 +29,7 @@
       </div>
       <div class="form-row-container">
         <div class="form-row">
-          <label class="form-label">{{ $t("assets.withdraw.fee") }}</label>
+          <label class="form-label">{{ $t("page.global.placeholder.fee") }}</label>
           <div class="form-control">
             <input
               type="text"
@@ -53,16 +53,16 @@
       </div>
     </div>
     <div v-else class="assets-2fa">
-      {{ $t("message.withdraw.enable2fa") }}
+      {{ $t("warning.password.need2fa") }}
       <button @click="open_modal('2fa')" v-text="'ENABLE 2FA'" />
     </div>
     <div class="assets-action">
       <div class="assets-note">
-        <h3 v-text="$t('assets.instructions')" />
+        <h3 v-text="$t('page.assets.instructions')" />
         <fix-i18n
           tag="p"
           class="desc"
-          path="assets.withdraw.note"
+          path="page.assets.withdraw.note"
           :places="{
             currency: currency.id.toUpperCase(),
             min_withdraw_amount: currency.min_withdraw_amount
@@ -77,7 +77,7 @@
           type="submit"
           :disabled="button_disabled"
           @click="withdraw()"
-          v-text="$t('assets.withdraw.submit')"
+          v-text="$t('page.global.action.submit')"
         />
       </div>
     </div>

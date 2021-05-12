@@ -55,14 +55,14 @@
           v-model="password"
           name="password"
           type="password"
-          :placeholder="$t('input.placeholder.password')"
+          :placeholder="$t('page.global.placeholder.password')"
           :placeholder-need="true"
         />
         <auth-input
           v-model="otp_code"
           name="otp_code"
           type="number"
-          :placeholder="$t('input.placeholder.2fa_code')"
+          :placeholder="$t('page.global.placeholder.2fa_code')"
           :placeholder-need="true"
           maxlength="6"
         />

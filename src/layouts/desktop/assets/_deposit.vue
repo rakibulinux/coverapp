@@ -4,11 +4,11 @@
       <div class="address-box">
         <label
           class="address-label"
-          v-text="$t('assets.deposit.deposit_address')"
+          v-text="$t('page.assets.deposit.deposit_address')"
         />
         <div class="address-form">
           <input type="text" :value="deposit_address || 'LOADING'" readonly />
-          <a @click="copy_address" v-text="$t('assets.deposit.copy')" />
+          <a @click="copy_address" v-text="$t('page.global.action.copy')" />
           <a
             v-click-outside:mousedown.capture="show_qr_code"
             v-click-outside.capture="show_qr_code"
@@ -37,11 +37,11 @@
       </a>
     </div>
     <div class="assets-note">
-      <h3 v-text="$t('assets.instructions')" />
+      <h3 v-text="$t('page.assets.instructions')" />
       <fix-i18n
         tag="p"
         class="desc"
-        path="assets.deposit.note"
+        path="page.assets.deposit.note"
         :places="{
           currency: currency.id.toUpperCase(),
           min_deposit_amount: currency.min_deposit_amount,
