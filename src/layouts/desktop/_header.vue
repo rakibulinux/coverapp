@@ -1,12 +1,12 @@
 <template>
   <div class="ant-layout-header">
     <router-link to="/" class="logo">
-      <img src="@/assets/img/rectangular_logo.png" />
+      <img src="@/assets/img/logo-1.png" />
     </router-link>
 
     <div class="action-group left">
       <router-link to="/exchange">
-        {{ translation("exchange") }}
+        XUM{{ translation("exchange") }}
       </router-link>
     </div>
     <div class="action-group right">

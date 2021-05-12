@@ -3,7 +3,7 @@
     <div class="menu-footer">
       <ul>
         <li class="title">
-          <img src="@/assets/img/rectangular_logo.png" />
+          <img src="@/assets/img/logo-1.png" />
         </li>
         <li class="m">
           <a href="#" class="icon-link">
@@ -56,7 +56,7 @@
         <li class="m" v-text="`Business: ${contactus.business}`" />
         <li class="m">
           Facebook:
-          <a :href="contactus.facebook" target="_blank">Hữu Hà</a>
+          <a :href="contactus.facebook" target="_blank">smartchainers</a>
         </li>
       </ul>
     </div>
@@ -74,14 +74,14 @@ import { Vue, Component } from "vue-property-decorator";
 @Component
 export default class App extends Vue {
   public contactus = {
-    service: "business@zsmart.tech",
-    business: "business@zsmart.tech",
-    facebook: "https://fb.com/huuhait"
+    service: "smartchainers.com",
+    business: "smartchainers.com",
+    facebook: "https://fb.com/smartchainers"
   };
 
   public copyright = {
-    name: "ZSmart",
-    link: "https://www.zsmart.tech/"
+    name: "XUMExchange",
+    link: "https://www.smartchainers.com/"
   };
 }
 </script>

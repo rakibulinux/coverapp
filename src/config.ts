@@ -2,7 +2,7 @@ import getUrl from "@/getUrl";
 import en from "@/plugins/locales/en";
 import vn from "@/plugins/locales/vn";
 
-const nameEX = "NameEX";
+const nameEX = "XUM Exchange";
 
 export default {
   nameEX,
@@ -28,12 +28,12 @@ export default {
   "timeZone": "UTC",
   "SESSION_KEY": "ALLOW-ALL", // For use on exchange
   /** default **/
-  "titlePage.default": `Bitcoin Exchange | Cryptocurrency Exchange | ${nameEX}`,
+  "titlePage.default": `XUM Exchange | Cryptocurrency Exchange | ${nameEX}`,
   /** 404 **/
   "titlePage.404": `404`,
   /**  public **/
-  "titlePage.main": `Bitcoin Exchange | Cryptocurrency Exchange | ${nameEX}`,
-  "titlePage.exchange": `Bitcoin Exchange | Cryptocurrency Exchange | ${nameEX}`,
+  "titlePage.main": `XUM Exchange | Cryptocurrency Exchange | ${nameEX}`,
+  "titlePage.exchange": `XUM Exchange | Cryptocurrency Exchange | ${nameEX}`,
   /**  unauth **/
   "titlePage.signin": `Log In - ${nameEX}`,
   "titlePage.signup": `Sign Up - ${nameEX}`,
