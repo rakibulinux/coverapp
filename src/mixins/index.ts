@@ -1,6 +1,7 @@
 import { isMobile } from "@zsmartex/z-helpers";
 import { notification } from "@/plugins/antd/custom";
-import { TranslateResult } from "vue-i18n";
+import VueI18n, { TranslateResult } from "vue-i18n";
+import { i18n } from "@/plugins";
 
 export function EncryptEmail(email: string) {
   let email_name = email.split("@")[0];
@@ -11,10 +12,14 @@ export function EncryptEmail(email: string) {
   return [email_name, email_domain].join("@");
 }
 
-export const runNotice = (type: ZTypes.NoticeType, message: string | TranslateResult) => {
+export const runNotice = (type: ZTypes.NoticeType | "t-success" | "t-info" | "t-warning" | "t-error", message: string | TranslateResult, config?: VueI18n.Values) => {
   if (!message) return;
 
-  notification[type]({ message, placement: isMobile() ? "bottomCenter" : "topRight" });
+  if (type.includes("t-")) {
+    return notification[type.replace("t-", "")]({ message: message, placement: isMobile() ? "bottomCenter" : "topRight" });
+  } else {
+    return notification[type]({ message: i18n.t(`${type}.${message}`, config), placement: isMobile() ? "bottomCenter" : "topRight" });
+  }
 };
 
 export const wait_and_callback = (reason: () => boolean, callback: () => any) => {

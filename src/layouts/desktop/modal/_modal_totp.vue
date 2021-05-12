@@ -9,10 +9,10 @@
     <div>
       <img src="@/assets/img/Google_Authenticator.png" class="logo-modal" />
       <div class="title">
-        OTP Code
+        {{ translation("title") }}
       </div>
       <div class="desc">
-        Enter the authentication code from the app below.
+        {{ translation("desc") }}
       </div>
       <form @submit.prevent="submit">
         <auth-input
@@ -25,7 +25,7 @@
         />
         <auth-button type="submit" :disabled="totp_code.length < 6">
           <a-icon v-if="loading" type="loading" style="font-size: 24px" spin />
-          {{ $t("auth.confirm") }}
+          {{ $t("page.global.action.confirm") }}
         </auth-button>
       </form>
     </div>
@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
@@ -62,6 +63,10 @@ export default class App extends Vue {
 
   onMaskClick() {
     this.$emit("close");
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("modal.totp." + message, data);
   }
 
   @Watch("totp_code")

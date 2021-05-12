@@ -20,23 +20,23 @@
     <div v-if="step === 1" class="step">
       <div
         class="desc"
-        v-text="translation(`modal_2fa[${step.toString()}].desc`)"
+        v-text="translation('steps.1.desc')"
       />
     </div>
     <div v-else-if="step === 2" class="step">
       <div
         class="title"
-        v-text="translation(`modal_2fa[${step.toString()}].title`)"
+        v-text="translation('steps.2.title')"
       />
       <div class="box">
         <qrcode :value="code.url" :size="110" level="L" />
         <div class="info-qr">
           <p
             class="info"
-            v-text="translation(`modal_2fa[${step.toString()}].info`)"
+            v-text="translation('steps.2.info')"
           />
           <p class="secret">
-            {{ translation(`modal_2fa[${step}].key`) }}: {{ code.secret }}
+            {{ translation('steps.2.key') }}: {{ code.secret }}
           </p>
         </div>
       </div>
@@ -44,11 +44,11 @@
     <div v-else-if="step === 3" class="step">
       <div
         class="title"
-        v-text="translation(`modal_2fa[${step.toString()}].title`)"
+        v-text="translation('steps.3.title')"
       />
       <div
         class="desc"
-        v-text="translation(`modal_2fa[${step.toString()}].desc`)"
+        v-text="translation('steps.3.desc')"
       />
       <form @submit.prevent="enable2FA">
         <auth-input
@@ -71,13 +71,13 @@
           :loading="loading"
           :disabled="button_disabled"
         >
-          {{ $t("auth.confirm") }}
+          {{ $t("page.global.action.confirm") }}
         </auth-button>
       </form>
     </div>
-    <auth-button v-if="step < 3" @click="step++" v-text="translation('next')" />
+    <auth-button v-if="step < 3" @click="step++" v-text="$t('page.global.action.next')" />
     <div v-if="step === 2" class="later-footer">
-      <span @click="modal.enabled = false" v-text="translation('later')" />
+      <span @click="modal.enabled = false" v-text="$t('page.global.action.later')" />
     </div>
   </a-modal>
 </template>
@@ -156,6 +156,10 @@ export default class App extends Mixins(Helpers) {
     } else {
       this.$emit("failed");
     }
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("modal.2fa." + message, data);
   }
 }
 </script>

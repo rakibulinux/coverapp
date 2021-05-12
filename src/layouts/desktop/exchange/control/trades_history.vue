@@ -45,26 +45,26 @@ export default class TradesHistory extends Mixins(MineControlMixin) {
   get COLUMN() {
     return [
       {
-        title: this.$t("table.date"),
+        title: this.$t("page.global.table.date"),
         key: "created_at",
         algin: "left",
         scopedSlots: true
       },
       {
-        title: this.$t("table.side"),
+        title: this.$t("page.global.table.side"),
         key: "side",
         algin: "left",
         scopedSlots: true,
       },
       { title: "Price", key: "price", algin: "center", scopedSlots: true },
       {
-        title: `Amount (${this.isAsk})`,
+        title: `${this.$t("page.global.table.amount")} (${this.isAsk})`,
         key: "amount",
         algin: "right",
         scopedSlots: true,
       },
       {
-        title: `Total (${this.isBid})`,
+        title: `${this.$t("page.global.table.total")} (${this.isBid})`,
         key: "total",
         algin: "right",
         scopedSlots: true

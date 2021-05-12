@@ -140,7 +140,7 @@ router.beforeEach(async (to, from, next) => {
     const action = to.query["action"] as string;
 
     if (!["confirm", "cancel"].includes(action)) {
-      runNotice("error", "Invalid withdrawal action");
+      runNotice("error", "withdraw.action.invalid");
       next(helpers.isMobile() ? "/m" : "/");
     }
 
@@ -154,7 +154,7 @@ router.beforeEach(async (to, from, next) => {
 
     PublicController.page_ready = true;
   } else if (UserController.state != "active" && to.path == "/confirmation/withdrawal") {
-    runNotice("warning", "You must login first");
+    runNotice("warning", "withdraw.needlogin");
 
     next(helpers.isMobile() ? "/m" : "/");
   } else {

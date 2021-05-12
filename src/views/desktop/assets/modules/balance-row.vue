@@ -15,18 +15,18 @@
           selected: showBox && type === 'deposit'
         }"
         @click="changeAssets('deposit')"
-        v-text="$t('action.deposit')"
+        v-text="$t('page.global.action.deposit')"
       />
       <a
         :class="{
           selected: showBox && type === 'withdraw'
         }"
         @click="changeAssets('withdraw')"
-        v-text="$t('action.withdrawal')"
+        v-text="$t('page.global.action.withdrawal')"
       />
       <a-dropdown :trigger="['click']" placement="bottomCenter">
         <a class="ant-dropdown-link" href="#">
-          {{ $t("action.exchange") }} <i class="zicon-arrow-down" />
+          {{ $t("page.global.action.exchange") }} <i class="zicon-arrow-down" />
         </a>
         <a-menu slot="overlay">
           <a-menu-item

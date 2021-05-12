@@ -7,10 +7,10 @@
   >
     <a-icon type="warning" class="logo-modal" />
     <div class="title">
-      Confirmation Code
+      {{ translation("title") }}
     </div>
     <div class="desc">
-      Enter the confirmation code from your email.
+      {{ translation("desc") }}
     </div>
     <form @submit.prevent="confirm_withdrawal">
       <auth-input
@@ -36,13 +36,14 @@
         :loading="loading"
         :disabled="confirmation_code.length < 6"
       >
-        {{ $t("auth.confirm") }}
+        {{ $t("page.global.action.confirm") }}
       </auth-button>
     </form>
   </a-modal>
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
 import { ConfirmationMixin, ModalMixin } from "@/mixins";
 import { Mixins, Component } from "vue-property-decorator";
 
@@ -89,6 +90,10 @@ export default class ModalConfirmWithdrawal extends Mixins(
     );
 
     this.loading_resend = false;
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("modal.withdraw." + message, data);
   }
 }
 </script>

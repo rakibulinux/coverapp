@@ -1,5 +1,4 @@
 import { PublicController, UserController, TradeController } from '@/controllers';
-import store from "@/store";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
 import { Component, Vue, Watch } from "vue-property-decorator";
@@ -141,7 +140,7 @@ export class TradeActionMixin extends Vue {
   }
 
   translation(message, data = {}) {
-    return helpers.translation("exchange.trade-action." + message, data);
+    return helpers.translation("page.exchange.trade_action." + message, data);
   }
 
   amount_with_balance(default_price = true) {

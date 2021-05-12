@@ -2,14 +2,12 @@
   <z-content class="page-auth">
     <div class="auth-box">
       <div>
-        <h3 class="title">
-          Sign Up
-        </h3>
+        <h3 class="title" v-text="$t('page.auth.sign_up')" />
         <form autocomplete="off" @submit.prevent="register">
           <auth-input
             v-model="email"
             name="email"
-            :placeholder="$t('input.placeholder.email')"
+            :placeholder="$t('page.global.placeholder.email')"
             :placeholder-need="true"
             :error="email_error"
           />
@@ -17,7 +15,7 @@
             v-model="password"
             name="password"
             type="password"
-            :placeholder="$t('input.placeholder.password')"
+            :placeholder="$t('page.global.placeholder.password')"
             :placeholder-need="true"
             :error="password_error"
           />
@@ -25,14 +23,14 @@
             v-model="confirm_password"
             name="confirm_password"
             type="password"
-            :placeholder="$t('input.placeholder.confirm_password')"
+            :placeholder="$t('page.global.placeholder.confirm_password')"
             :placeholder-need="true"
             :error="confirm_password_error"
           />
           <auth-input
             v-model="refid"
             name="refid"
-            :placeholder="$t('input.placeholder.refid')"
+            :placeholder="$t('page.global.placeholder.refid')"
             :error="refid_error"
           />
           <auth-button
@@ -40,7 +38,7 @@
             :loading="loading"
             :disabled="buttonDisabled"
           >
-            {{ $t("auth.register") }}
+            {{ $t("page.global.action.sign_up") }}
           </auth-button>
         </form>
       </div>

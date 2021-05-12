@@ -125,7 +125,7 @@ export default class AssetsWithdraw extends Vue {
 
   mounted() {
     if (!this.UserController.otp)
-      runNotice("warning", this.$t("message.withdraw.enable2fa"));
+      runNotice("warning", "withdraw.need2fa");
   }
 
   async withdraw(otp_code?: string) {

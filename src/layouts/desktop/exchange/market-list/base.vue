@@ -3,7 +3,7 @@
     <div class="page-trade-pairs-search-wrapper">
       <input
         v-model="search"
-        :placeholder="$t('input.placeholder.search')"
+        :placeholder="$t('page.global.table.search')"
         maxlength="9"
         type="text"
       />
@@ -128,21 +128,21 @@ export default class MarketList extends Vue {
   get COLUMN() {
     return [
       {
-        title: this.$t("table.currency"),
+        title: this.$t("page.global.table.currency"),
         key: "base_unit",
         class_name: "currency",
         algin: "left",
         scopedSlots: true
       },
       {
-        title: this.$t("table.price"),
+        title: this.$t("page.global.table.price"),
         key: "last",
         class_name: "price",
         algin: "right",
         sorter: true
       },
       {
-        title: this.$t("table.change"),
+        title: this.$t("page.global.table.change"),
         key: "price_change_percent",
         class_name: "change",
         algin: "right",

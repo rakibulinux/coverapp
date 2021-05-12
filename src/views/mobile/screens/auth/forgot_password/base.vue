@@ -43,9 +43,9 @@
                 @click.prevent="forgot_password"
               >
                 <span v-if="this.loading_resend">
-                  Sending...
+                  {{ $t("page.global.action.sending") }}
                 </span>
-                <span v-else>{{ this.cooldown ? "Resend" : "Send Code" }}</span>
+                <span v-else>{{ this.cooldown ? $t("page.global.action.resend") : $t("page.global.action.send_code") }}</span>
                 <span v-if="cooldown">({{ cooldown }})</span>
               </button>
             </template>

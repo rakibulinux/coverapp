@@ -1,7 +1,7 @@
 <template>
   <div class="setting-main security">
     <div class="setting-head">
-      {{ $t("usercenter.account_security.title") }}
+      {{ translation("title") }}
     </div>
     <div class="setting-body">
       <table class="table">
@@ -43,21 +43,21 @@ export default class AccountSecurity extends Vue {
     return [
       {
         status: true,
-        name: this.translation("account_security.rows.psw.name"),
-        desc: this.translation("account_security.rows.psw.desc"),
+        name: this.$t("page.global.table.password"),
+        desc: this.translation("password.desc"),
         action: {
           allow: true,
-          text: this.translation("action.change_password"),
+          text: this.$t("page.global.action.change_password"),
           runner: "password"
         }
       },
       {
         status: UserController.otp,
-        name: this.translation("account_security.rows.otp.name"),
-        desc: this.translation("account_security.rows.otp.desc"),
+        name: this.$t("page.global.table.otp"),
+        desc: this.translation("otp.desc"),
         action: {
           allow: !UserController.otp,
-          text: this.translation("action.setting"),
+          text: this.$t("page.global.action.settings"),
           runner: "2fa"
         }
       }
@@ -65,7 +65,7 @@ export default class AccountSecurity extends Vue {
   }
 
   translation(message: string, data?: {}) {
-    return helpers.translation("usercenter." + message, data);
+    return helpers.translation("page.account.account_security." + message, data);
   }
 }
 </script>

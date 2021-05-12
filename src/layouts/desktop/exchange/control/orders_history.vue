@@ -62,38 +62,38 @@ export default class OrdersHistory extends Mixins(MineControlMixin) {
   get COLUMN() {
     return [
       {
-        title: this.$t("table.date"),
+        title: this.$t("page.global.table.date"),
         key: "created_at",
         algin: "left",
         scopedSlots: true,
       },
-      { title: this.$t("table.type"), key: "ord_type", algin: "left" },
+      { title: this.$t("page.global.table.type"), key: "ord_type", algin: "left" },
       {
-        title: this.$t("table.side"),
+        title: this.$t("page.global.table.side"),
         key: "side",
         algin: "left",
         scopedSlots: true,
       },
       {
-        title: this.$t("table.price"),
+        title: this.$t("page.global.table.price"),
         key: "price",
         algin: "center",
         scopedSlots: true,
       },
       {
-        title: `${this.$t("table.amount")} (${this.isAsk})`,
+        title: `${this.$t("page.global.table.amount")} (${this.isAsk})`,
         key: "amount",
         algin: "right",
         scopedSlots: true,
       },
       {
-        title: this.$t("table.filled"),
+        title: this.$t("page.global.table.filled"),
         key: "filled",
         algin: "right",
         scopedSlots: true,
       },
       {
-        title: `${this.$t("table.total")} (${this.isBid})`,
+        title: `${this.$t("page.global.table.total")} (${this.isBid})`,
         key: "total",
         algin: "right",
         scopedSlots: true,

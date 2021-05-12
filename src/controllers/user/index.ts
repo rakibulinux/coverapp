@@ -31,7 +31,7 @@ export class UserController {
         if (router.currentRoute.fullPath != "/") router.push({ path: "/" });
       }
   
-      runNotice("success", "LOG OUT");
+      runNotice("success", "logout");
     })
   }
 
@@ -66,7 +66,7 @@ export class UserController {
       const { data } = await new ApiClient("auth").post("identity/sessions", payload);
 
       if (data.state == "deleted") {
-        runNotice("error", "Your account has been deleted");
+        runNotice("error", "login.deleted_account");
         return
       }
 
@@ -77,7 +77,7 @@ export class UserController {
       }
 
       if (data.state == "active") { 
-        runNotice("success", "Login successfully");
+        runNotice("success", "login");
       } else if (data.state == "pending") {
         this.session.sended_email = false;
       }
@@ -107,7 +107,7 @@ export class UserController {
       this.auth_success(data, "register", url_callback);
 
       this.session.sended_email = true;
-      runNotice("warning", "Check Your Email NOW");
+      runNotice("warning", "email.created");
 
       if (isMobile()) return;
 
@@ -198,7 +198,7 @@ export class UserController {
   async forgot_password(email: string, captcha_response: string, callback?: () => void) {
     try {
       await new ApiClient("auth").post("/identity/users/password/generate_code", { email, captcha_response });
-      runNotice("success", helpers.translation("message.password.forgot"));
+      runNotice("success", "password.forgot");
       if (callback) callback();
     } catch (error) {
       return error;
@@ -210,7 +210,7 @@ export class UserController {
       const { data } = await new ApiClient("auth").post("identity/users/email/confirm_code", { email: this.email, code });
       this.state = data.state;
       localStorage.setItem("csrf_token", data.csrf_token);
-      runNotice("success", "Confirmation email successfully");
+      runNotice("success", "email.confirmed");
       if (callback) callback();
     } catch (error) {
       return error;
@@ -220,10 +220,7 @@ export class UserController {
   async confirm_reset_password(email: string, code: string, password: string, confirm_password: string, callback?: () => void) {
     try {
       await new ApiClient("auth").post("identity/users/password/confirm_code", { email, code, password, confirm_password });
-      runNotice(
-        "success",
-        helpers.translation("message.password.changed").toString()
-      );
+      runNotice("success", "password.changed");
       if (callback) callback();
     } catch (error) {
       return error;
@@ -233,7 +230,7 @@ export class UserController {
   async check_code_reset_password(email: string, code: string, callback?: () => void) {
     try {
       await new ApiClient("auth").post("identity/users/password/check_code", { email, code });
-      runNotice("success", "Mời bạn thay mk");
+      runNotice("success", "password.change");
       if (callback) callback();
     } catch (error) {
       return error;
@@ -244,7 +241,7 @@ export class UserController {
     try {
       await new ApiClient("auth").put("resource/users/password", { old_password, new_password, confirm_password });
 
-      runNotice("success", "Password changed successfully");
+      runNotice("success", "password.changed");
       if (callback) callback();
     } catch (error) {
       return error;
@@ -298,7 +295,7 @@ export class UserController {
       });
       store.commit("user/ENABLE_OTP");
       this.otp = true;
-      runNotice("success", "OTP enabled successfully");
+      runNotice("success", "otp.enabled");
       on_success();
     } catch (error) {
       return;
@@ -318,7 +315,7 @@ export class UserController {
       await new ApiClient("auth").post("resource/profiles", { first_name, last_name, dob, address, postcode, city, country, confirm: true });
       await this.get_labels();
 
-      runNotice("success", "successfully upload your profile")
+      runNotice("success", "profile.updated")
     } catch (error) {
       return error;
     }
@@ -337,7 +334,7 @@ export class UserController {
     try {
       await new ApiClient("auth").post("resource/documents", formData, config);
       await this.get_labels();
-      runNotice("success", "Documents upload was successful");
+      runNotice("success", "document.updated");
     } catch (error) {
       return error;
     }

@@ -1,11 +1,11 @@
 <template>
   <div class="order-main">
-    <div class="order-head" v-text="$t('orders.open.title')" />
+    <div class="order-head" v-text="$t('page.global.header.orders.open_orders')" />
     <div class="order-body">
       <div class="select">
         <!---->
         <div class="form-row">
-          <label class="form-label">{{ $t("table.market") }}:</label>
+          <label class="form-label">{{ $t("page.global.table.market") }}:</label>
           <div class="form-control">
             <a-select v-model="market" style="width: 115px">
               <a-select-option
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="form-row">
-          <label class="form-label">{{ $t("table.type") }}:</label>
+          <label class="form-label">{{ $t("page.global.table.type") }}:</label>
           <div class="form-control">
             <a-select v-model="type" style="width: 115px">
               <a-select-option v-for="type in TYPE" :key="type" :value="type">
@@ -31,14 +31,14 @@
       </div>
       <div class="table-content">
         <dt>
-          <span v-text="$t('table.date')" />
-          <span v-text="$t('table.pair')" />
-          <span v-text="$t('table.type')" />
-          <span v-text="$t('table.price')" />
-          <span v-text="$t('table.amount')" />
-          <span v-text="$t('table.executed')" />
-          <span v-text="$t('table.unexecuted')" />
-          <span class="text-right action" v-text="$t('table.action')" />
+          <span v-text="$t('page.global.table.date')" />
+          <span v-text="$t('page.global.table.pair')" />
+          <span v-text="$t('page.global.table.type')" />
+          <span v-text="$t('page.global.table.price')" />
+          <span v-text="$t('page.global.table.amount')" />
+          <span v-text="$t('page.global.table.executed')" />
+          <span v-text="$t('page.global.table.unexecuted')" />
+          <span class="text-right action" v-text="$t('page.global.table.action')" />
         </dt>
         <dd :class="{ empty: !array.data.length }">
           <p v-for="(data, index) in array.data" :key="index">
@@ -59,7 +59,7 @@
           </p>
           <z-loading v-if="loading" />
           <p v-else-if="!array.data.length">
-            <span v-text="$t('orders.open.empty')" />
+            <span v-text="$t('page.orders.open_orders.empty')" />
           </p>
 
           <z-pagination

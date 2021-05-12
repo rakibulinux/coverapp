@@ -1,19 +1,19 @@
 <template>
   <form class="document-form" @submit.prevent="onSubmit">
     <form-row
-      label="Type of certificate"
+      :label="translation('form.type.label')"
       type="select"
       :rows="TYPES"
       v-model="doc_type"
     />
     <form-row
-      label="ID Number"
+      :label="translation('form.id_number.label')"
       type="input"
-      placeholder="Please enter your ID Number"
+      :placeholder="translation('form.id_number.placeholder')"
       v-model="doc_number"
     />
     <div class="form-row">
-      <label class="form-label">ID photo：</label>
+      <label class="form-label">{{ translation('form.id_photo.label') }}：</label>
       <div class="form-control upload-photos">
         <ul class="photos-list">
           <li class="front">
@@ -28,12 +28,12 @@
               </div>
               <div v-else class="upload-area">
                 <img src="@/assets/img/action_add.png" />
-                <p>Click to upload the front side of the ID photo</p>
+                <p>{{ translation('form.id_photo.front.placeholder') }}</p>
               </div>
             </div>
             <img src="@/assets/img/kyc_example.png" class="thumbnail-box" />
             <div class="upload-notice">
-              Avatar, ID number, gender, address, etc. need to be clear
+              {{ translation('form.id_photo.front.desc') }}
             </div>
           </li>
           <li class="back">
@@ -48,12 +48,12 @@
               </div>
               <div v-else class="upload-area">
                 <img src="@/assets/img/action_add.png" />
-                <p>Click to upload the back side of the ID photo</p>
+                <p>{{ translation('form.id_photo.back.placeholder') }}</p>
               </div>
             </div>
             <img src="@/assets/img/kyc_example.png" class="thumbnail-box" />
             <div class="upload-notice">
-              Issuing authority, the effective date need to be clear
+              {{ translation('form.id_photo.back.desc') }}
             </div>
           </li>
           <li class="in-hand">
@@ -68,23 +68,11 @@
               </div>
               <div v-else class="upload-area">
                 <img src="@/assets/img/action_add.png" />
-                <p>Upload a hand-held ID photo</p>
+                <p>{{ translation('form.id_photo.in_hand.placeholder') }}</p>
               </div>
             </div>
             <img src="@/assets/img/kyc_example.png" class="thumbnail-box" />
-            <div class="upload-notice">
-              Hand-held ID photo standards:
-              <br />
-              1. The character avatar is clear;
-              <br />
-              2. The identity document information is clear;
-              <br />
-              3. A paper with the words "[NAMEEXCHANGE]+ application date"
-              displayed next to the ID certificate;
-              <br />
-              4. Does not support certificate certification for people over 60
-              over 60 years old.
-            </div>
+            <div class="upload-notice" v-html="translation('form.id_photo.in_hand.desc')" />
           </li>
         </ul>
       </div>
@@ -93,8 +81,8 @@
       <div class="form-label" />
       <div class="form-control">
         <button type="submit" :disabled="button_disabled">
-          Submit
           <a-icon v-if="loading" type="loading" />
+          {{ $t('page.global.action.submit') }}
         </button>
       </div>
     </div>
@@ -102,6 +90,7 @@
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
 import { Mixins, Component } from "vue-property-decorator";
 import { DocumentMixins } from "@/mixins/kyc";
 
@@ -111,5 +100,9 @@ import { DocumentMixins } from "@/mixins/kyc";
     "auto-complete": () => import("@/components/desktop/AutoComplete.vue"),
   }
 })
-export default class DocumentForm extends Mixins(DocumentMixins) {}
+export default class DocumentForm extends Mixins(DocumentMixins) {
+  translation(message: string, data?: {}) {
+    return helpers.translation("page.account.kyc_account_verification." + message, data);
+  }
+}
 </script>
