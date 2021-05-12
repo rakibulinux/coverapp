@@ -21,7 +21,7 @@ export default {
         "/api/v2/websocket/private?stream=order&stream=trade&stream=balance",
     },
   },
-  "finex": true,
+  "finex": false,
   "recaptcha": {
     sitekey: "6LcrA5wUAAAAABY8KW-beaUOjShGC_U2va3kJEJt",
   },
