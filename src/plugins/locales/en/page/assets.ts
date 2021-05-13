@@ -5,10 +5,17 @@ export default {
   "page.assets.deposit.qr_code": "QR Code",
   "page.assets.deposit.deposit_address": "Deposit Address",
   "page.assets.instructions": "Instructions:",
-  "page.assets.deposit.note": `
+  "page.assets.deposit.coin.note": `
     • Min. Deposit Amount: {min_deposit_amount} {currency}
     {0}
     • {min_confirmations} network confirmations are required to deposit, send only {currency} to this address.Sending any other currency to this address may result in the loss of your deposit.
+    {0}
+    • Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.
+  `,
+  "page.assets.deposit.fiat.note": `
+    • Your deposit will be reflected in your account within 2 business days
+    {0}
+    • Min. Deposit Amount: {min_deposit_amount} {currency}
     {0}
     • Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.
   `,

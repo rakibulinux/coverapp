@@ -43,7 +43,6 @@ export default class GettersSetters {
   }
 
   set currencies(currencies: ZTypes.Currency[]) {
-    currencies[1].type = "fiat";
     this.store.currencies = currencies;
   }
 

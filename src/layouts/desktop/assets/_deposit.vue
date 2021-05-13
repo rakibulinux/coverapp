@@ -41,7 +41,7 @@
         <fix-i18n
           tag="p"
           class="desc"
-          path="page.assets.deposit.note"
+          path="page.assets.deposit.coin.note"
           :places="{
             currency: currency.id.toUpperCase(),
             min_deposit_amount: currency.min_deposit_amount,
@@ -53,15 +53,45 @@
       </div>
     </template>
     <template v-else>
-      {{ $t("page.assets.deposit.fiat.bank_name.title") }}: {{ $t(`page.assets.deposit.fiat.bank_name.value.${currency.id}`) }}
-      <br>
-      {{ $t("page.assets.deposit.fiat.account_number.title") }}: {{ $t(`page.assets.deposit.fiat.account_number.value.${currency.id}`) }}
-      <br>
-      {{ $t("page.assets.deposit.fiat.account_name.title") }}: {{ $t(`page.assets.deposit.fiat.account_name.value.${currency.id}`) }}
-      <br>
-      {{ $t("page.assets.deposit.fiat.phone_numer.title") }}: {{ $t(`page.assets.deposit.fiat.phone_numer.value.${currency.id}`) }}
-      <br>
-      {{ $t("page.assets.deposit.fiat.reference_code.title") }}: {{ UserController.uid }}
+      <div class="assets-form">
+        <div class="bank-info-box">
+          <h1 class="bank-info-title">Deposit using bank transfer</h1>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.bank_name.title") }}: </span>
+            {{ $t(`page.assets.deposit.fiat.bank_name.value.${currency.id}`) }}
+          </div>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.account_number.title") }}: </span>
+            {{ $t(`page.assets.deposit.fiat.account_number.value.${currency.id}`) }}
+          </div>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.account_name.title") }}: </span>
+            {{ $t(`page.assets.deposit.fiat.account_name.value.${currency.id}`) }}
+          </div>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.phone_numer.title") }}: </span>
+            {{ $t(`page.assets.deposit.fiat.phone_numer.value.${currency.id}`) }}
+          </div>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.reference_code.title") }}: </span>
+            {{ UserController.uid }}
+          </div>
+        </div>
+      </div>
+      <div class="assets-note">
+        <h3 v-text="$t('page.assets.instructions')" />
+        <fix-i18n
+          tag="p"
+          class="desc"
+          path="page.assets.deposit.fiat.note"
+          :places="{
+            currency: currency.id.toUpperCase(),
+            min_deposit_amount: currency.min_deposit_amount
+          }"
+        >
+          <br />
+        </fix-i18n>
+      </div>
     </template>
   </div>
 </template>
@@ -116,6 +146,18 @@ export default class DepositBox extends Vue {
 <style lang="less">
 .assets-deposit {
   padding: 20px 0;
+
+  .bank-info {
+    &-box {
+      line-height: 30px;
+      font-size: 14px;
+    }
+
+    &-title {
+      color: var(--color-gray);
+    }
+  }
+
   .address-box {
     display: flex;
     width: 556px;

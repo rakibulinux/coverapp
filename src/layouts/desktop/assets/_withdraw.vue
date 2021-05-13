@@ -3,6 +3,7 @@
     <div v-if="UserController.otp" class="assets-form">
       <div class="form-row">
         <span
+          v-if="currency.type == 'coin'"
           :class="[
             'assets-withdraw-address-type',
             { 'assets-withdraw-address-type-active': type == 'address' }
@@ -188,7 +189,6 @@ import modal_confirm_withdrawal from "@/layouts/desktop/modal/modal-confirm-with
 import modal_confirm_beneficiary from "@/layouts/desktop/modal/modal-confirm-beneficiary.vue";
 import modal_create_beneficiary from "@/layouts/desktop/modal/modal-create-beneficiary.vue";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import { type } from "@/library/sparkline/share/type";
 
 @Component({
   components: {
@@ -217,7 +217,7 @@ export default class AssetsWithdraw extends Vue {
   address_book_dropdown = false;
   selected_beneficiary?: ZTypes.Beneficiary = null;
 
-  type = "address";
+  type = this.currency.type == "coin" ? "address" : "book";
   address = "";
   amount = "";
   beneficiaries: ZTypes.Beneficiary[] = [];
@@ -249,6 +249,8 @@ export default class AssetsWithdraw extends Vue {
   }
 
   change_address_book_dropdown(show: boolean) {
+    if (this.beneficiaries.length == 0) return;
+
     this.address_book_box_info_hover = false;
     this.address_book_dropdown = show;
   }
