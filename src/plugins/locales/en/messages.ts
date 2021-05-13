@@ -47,5 +47,11 @@ export default {
   "success.login": "Login successfully",
 
   // logout
-  "success.logout": "Logout was successfully"
+  "success.logout": "Logout was successfully",
+
+  // Address Book
+  "success.address_book.created": "Address book was created",
+  "success.address_book.deleted": "Address book was deleted",
+  "success.address_book.resend": "Confirmation code was sent to your email",
+  "success.address_book.confirmed": "Address book was confirmed",
 };

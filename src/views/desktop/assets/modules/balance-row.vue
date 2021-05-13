@@ -90,7 +90,7 @@ export default class BalanceRow extends Vue {
   }
 
   beforeDestroy() {
-    ZSmartModel.remove("assets-box-open");
+    ZSmartModel.remove("assets-box-open", this.clearShowBox);
   }
 
   clearShowBox() {
@@ -103,9 +103,13 @@ export default class BalanceRow extends Vue {
   }
 
   changeAssets(type) {
-    this.beforeOpenBox();
-    this.type = type;
-    this.showBox = true;
+    if (this.type == type && this.showBox) {
+      this.clearShowBox();
+    } else {
+      this.beforeOpenBox();
+      this.type = type;
+      this.showBox = true;
+    }
   }
 
   changeMarket($market) {

@@ -6,7 +6,7 @@ export class ModalMixin extends Vue {
   loading = false;
   modal_enabled = false;
   onCreate?(payload?: any): void;
-  onDelete?(): void;
+  onDelete?(payload?: any): void;
 
   create(payload?: any) {
     this.modal_enabled = true;
@@ -15,10 +15,10 @@ export class ModalMixin extends Vue {
     }
   }
 
-  delete() {
+  delete(payload?: any) {
     this.modal_enabled = false;
     if (typeof this.onDelete === "function") {
-      this.onDelete();
+      this.onDelete(payload);
     }
   }
 

@@ -60,8 +60,17 @@ export default {
   "page.global.placeholder.e-confirmation_code": "E-mail verification code",
   "page.global.placeholder.2fa_code": "2FA Code",
   "page.global.placeholder.address": "Address",
+  "page.global.placeholder.txid": "TxID",
   "page.global.placeholder.amount": "Amount",
   "page.global.placeholder.fee": "Fee",
+  "page.global.placeholder.receive_amount": "Receive Amount",
+  "page.global.placeholder.name": "Name",
+  "page.global.placeholder.account_number": "Account number",
+  "page.global.placeholder.bank_name": "Bank name",
+  "page.global.placeholder.bank_swift_code": "Bank swift code",
+  "page.global.placeholder.full_name": "Full name",
+  "page.global.placeholder.intermediary_bank_name": "Intermediary bank name",
+  "page.global.placeholder.intermediary_bank_swift_code": "Intermediary bank swift code",
 
   // Header
   "page.global.header.exchange": "Exchange",

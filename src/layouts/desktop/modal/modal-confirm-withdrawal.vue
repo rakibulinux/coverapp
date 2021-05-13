@@ -16,7 +16,7 @@
       <auth-input
         v-model="confirmation_code"
         name="confirmation_code"
-        placeholder="Confirmation Code"
+        :placeholder="$t('page.global.placeholder.confirmation_code')"
         :placeholder-need="true"
         maxlength="6"
         type="number"

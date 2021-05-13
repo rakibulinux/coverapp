@@ -2,9 +2,99 @@
   <div class="assets-withdraw">
     <div v-if="UserController.otp" class="assets-form">
       <div class="form-row">
-        <label class="form-label">{{ $t("page.global.placeholder.address") }}</label>
+        <span
+          :class="[
+            'assets-withdraw-address-type',
+            { 'assets-withdraw-address-type-active': type == 'address' }
+          ]"
+          @click="type = 'address'"
+        >
+          {{ $t("page.assets.withdraw.new_address") }}
+        </span>
+        <span
+          :class="[
+            'assets-withdraw-address-type',
+            { 'assets-withdraw-address-type-active': type != 'address' }
+          ]"
+          @click="type = 'book'"
+        >
+          {{ $t("page.assets.withdraw.address_book") }}
+        </span>
+      </div>
+      <div class="form-row">
+        <label class="form-label">{{ $t(type == "address" ? "page.global.placeholder.address" : "page.assets.withdraw.address_book") }}</label>
         <div class="form-control">
-          <input v-model="address" type="text" autocomplete="off" />
+          <input v-if="type == 'address'" v-model="address" type="text" autocomplete="off" />
+          <div v-else class="address-book-box" @click="change_address_book_dropdown(!address_book_dropdown)" v-click-outside.capture="hide_address_book_dropdown">
+            <z-loading v-if="loading_beneficiaries" />
+            <template v-else>
+              <template v-if="beneficiaries.length">
+                <span class="address-book-name">
+                  <span class="address-book-name-title">Name: </span>
+                  {{ selected_beneficiary.name }}
+                </span>
+                <span class="address-book-info">
+                  <span class="address-book-state">{{ selected_beneficiary.state }}</span>
+                  <a-icon
+                    type="info-circle"
+                    theme="filled"
+                    style="margin-right: 12px;"
+                    @mouseover="change_address_book_box_info_hover(true)"
+                    @mouseleave="change_address_book_box_info_hover(false)"
+                    @click.prevent="() => false"
+                  />
+                  <span class="address-book-select">
+                    <span>Select</span>
+                    <a-icon type="down" />
+                  </span>
+                  <div v-if="address_book_box_info_hover" class="address-book-info-box">
+                    <div>
+                      <span class="address-book-name-title">Name: </span>
+                      {{ selected_beneficiary.name }}
+                    </div>
+                    <div>
+                      <span class="address-book-address-title">Address: </span>
+                      <a
+                        :href="currency.explorer_address.replace('#{address}', selected_beneficiary.data.address)"
+                        target="blockchain-address"
+                      >
+                        {{ selected_beneficiary.data.address }}
+                      </a>
+                    </div>
+                  </div>
+                </span>
+              </template>
+              <div v-else class="empty-address-book" @click.prevent="open_modal_create_beneficiary">
+                Add Address
+                <a-icon type="plus" />
+              </div>
+            </template>
+            <div v-if="address_book_dropdown" class="address-book-box-dropdown">
+              <div
+                v-for="(beneficiary, index) in beneficiaries"
+                :key="index"
+                class="address-book-box-dropdown-row"
+                @click.stop="beneficiary.state == 'active' ? change_beneficiary(beneficiary) : open_modal_confirm_beneficiary(beneficiary)"
+              >
+                <span>
+                  <div class="address-book-name-title">
+                    Name:
+                  </div>
+                  <div>
+                    {{ beneficiary.name }}
+                  </div>
+                </span>
+                <span class="text-right">
+                  <span class="address-book-state">{{ beneficiary.state }}</span>
+                  <a-icon type="close" @click.stop="delete_beneficiary(beneficiary)" />
+                </span>
+              </div>
+              <div class="address-book-box-dropdown-row add-new" @click.stop="open_modal_create_beneficiary">
+                Add Address
+                <a-icon type="plus" class="text-right" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="form-row">
@@ -40,7 +130,7 @@
         </div>
         <div class="form-row">
           <label class="form-label">
-            {{ $t("assets.withdraw.receive_amount") }}
+            {{ $t("page.global.placeholder.receive_amount") }}
           </label>
           <div class="form-control">
             <input
@@ -84,48 +174,129 @@
     <modal-totp ref="totp" :loading="loading" @submit="withdraw" />
     <modal-2fa ref="2fa" />
     <modal-confirm-withdrawal ref="modal-confirm-withdrawal" />
+    <modal-create-beneficiary ref="modal-create-beneficiary" />
+    <modal-confirm-beneficiary ref="modal-confirm-beneficiary" />
   </div>
 </template>
 
 <script lang="ts">
 import { runNotice } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
-import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
-import _modal_totp from "@/layouts/desktop/modal/_modal_totp.vue";
-import _modal_confirm_withdrawal from "@/layouts/desktop/modal/modal-confirm-withdrawal.vue";
+import modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
+import modal_totp from "@/layouts/desktop/modal/_modal_totp.vue";
+import modal_confirm_withdrawal from "@/layouts/desktop/modal/modal-confirm-withdrawal.vue";
+import modal_confirm_beneficiary from "@/layouts/desktop/modal/modal-confirm-beneficiary.vue";
+import modal_create_beneficiary from "@/layouts/desktop/modal/modal-create-beneficiary.vue";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { type } from "@/library/sparkline/share/type";
 
 @Component({
   components: {
-    "modal-2fa": _modal_2fa,
-    "modal-totp": _modal_totp,
-    "modal-confirm-withdrawal": _modal_confirm_withdrawal
+    "modal-2fa": modal_2fa,
+    "modal-totp": modal_totp,
+    "modal-create-beneficiary": modal_create_beneficiary,
+    "modal-confirm-beneficiary": modal_confirm_beneficiary,
+    "modal-confirm-withdrawal": modal_confirm_withdrawal
   }
 })
 export default class AssetsWithdraw extends Vue {
   $refs!: {
-    "modal-2fa": _modal_2fa;
-    "modal-totp": _modal_totp;
+    "modal-2fa":  modal_2fa;
+    "modal-totp": modal_totp;
+    "modal-create-beneficiary": modal_create_beneficiary;
+    "modal-confirm-beneficiary": modal_confirm_beneficiary;
+    "modal-confirm-withdrawal": modal_confirm_withdrawal;
   };
 
   @Prop() readonly available!: number;
   @Prop() readonly currency!: ZTypes.Currency;
 
+  loading_beneficiaries = false;
   loading = false;
+  address_book_box_info_hover = false;
+  address_book_dropdown = false;
+  selected_beneficiary?: ZTypes.Beneficiary = null;
+
+  type = "address";
   address = "";
   amount = "";
+  beneficiaries: ZTypes.Beneficiary[] = [];
 
   get button_disabled() {
     const { address } = this;
     const amount = Number(this.amount);
     const available = Number(this.available);
 
-    return !address || amount <= 0 || amount > available;
+
+    if (amount > available) return true;
+    if (amount <= 0) return true;
+    if (!address && this.type == "address") return true;
+    if (!this.selected_beneficiary && this.type == "book") return true;
+    if (this.selected_beneficiary.state != "active" && this.type == "book") return true;
   }
 
   mounted() {
-    if (!this.UserController.otp)
+    if (!this.UserController.otp) {
       runNotice("warning", "withdraw.need2fa");
+    } else {
+      this.get_beneficiaries();
+      this.$refs["modal-create-beneficiary"].onDelete = this.$refs["modal-confirm-beneficiary"].onDelete = (message?: string) => {
+        if (message != "success") return;
+
+        this.get_beneficiaries();
+      }
+    }
+  }
+
+  change_address_book_dropdown(show: boolean) {
+    this.address_book_box_info_hover = false;
+    this.address_book_dropdown = show;
+  }
+
+  hide_address_book_dropdown() {
+    this.change_address_book_dropdown(false);
+  }
+
+  change_address_book_box_info_hover(hover: boolean) {
+    if (this.address_book_dropdown) return;
+
+    this.address_book_box_info_hover = hover;
+  }
+
+  async get_beneficiaries() {
+    try {
+      this.loading_beneficiaries = true;
+      const { data } = await this.UserController.get_beneficiaries(this.currency.id);
+
+      this.beneficiaries = data;
+      if (data.length) {
+        this.selected_beneficiary = this.beneficiaries.find(beneficiary => beneficiary.state == "active") || this.beneficiaries[0];
+      }
+    } catch (error) {
+      return error;
+    } finally {
+      this.loading_beneficiaries = false;
+    }
+  }
+
+  async delete_beneficiary(beneficiary: ZTypes.Beneficiary) {
+    this.loading = true;
+    await this.UserController.delete_beneficiary(beneficiary.id);
+    await this.get_beneficiaries();
+    this.loading = false;
+  }
+
+  change_beneficiary(beneficiary: ZTypes.Beneficiary) {
+    this.address_book_dropdown = false;
+    this.selected_beneficiary = beneficiary;
+  }
+
+  open_modal_confirm_beneficiary(beneficiary: ZTypes.Beneficiary) {
+    this.open_modal("modal-confirm-beneficiary", beneficiary);
+  }
+
+  open_modal_create_beneficiary() {
+    this.open_modal("modal-create-beneficiary", this.currency);
   }
 
   async withdraw(otp_code?: string) {
@@ -135,9 +306,10 @@ export default class AssetsWithdraw extends Vue {
 
     await this.TradeController.create_withdrawal(
       this.currency.id,
-      this.address,
       Number(this.amount),
       otp_code,
+      this.type == "address" ? this.address : null,
+      this.type == "book" && this.selected_beneficiary ? this.selected_beneficiary.id.toString() : null,
       withdraw => {
         this.close_modal("totp");
 
@@ -165,5 +337,148 @@ export default class AssetsWithdraw extends Vue {
 <style lang="less">
 .assets-withdraw {
   padding: 20px 0;
+
+  &-address-type {
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 12px;
+    color: var(--color-gray);
+
+    &-active {
+      color: var(--blue-color);
+    }
+  }
+
+  .address-book {
+    &-box {
+      display: flex;
+      position: relative;
+      width: 100%;
+      color: #e1e7ef;
+      font-size: 16px;
+      border: 1px solid var(--border-color);
+      padding: 0 20px;
+      line-height: 45px;
+      height: 45px;
+      cursor: pointer;
+
+      > * {
+        flex: 1;
+      }
+
+      &-dropdown {
+        position: absolute;
+        top: calc(100% + 3px);
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        border: 1px solid #3b4d6b;
+        background-color: var(--bg-downdown-color);
+        box-shadow: 0 1px 6px 0 hsl(0deg 0% 100% / 10%);
+        padding: 12px 0;
+        border-radius: 4px;
+
+        &-row {
+          position: relative;
+          display: flex;
+          width: 100%;
+          height: 50px;
+          padding: 0 12px;
+          line-height: 1.5;
+          font-size: 14px;
+          align-items: center;
+          cursor: pointer;
+
+          > * {
+            position: relative;
+            flex: 1;
+          }
+
+          &.add-new {
+            height: 35px;
+          }
+
+          &:hover {
+            background-color: var(--bg-card-color);
+          }
+
+          .address-book-state {
+            padding: 12px;
+
+            & + i {
+              position: absolute;
+              top: 25%;
+              right: 0px;
+              font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+
+    &-name, &-address {
+      &-title {
+        font-size: 14px;
+        color: var(--color-gray);
+      }
+    }
+
+    &-info {
+      position: relative;
+      margin-right: 12px;
+      text-align: right;
+
+      .anticon-info-circle:hover {
+        color: var(--blue-color);
+        transition: color 0.3s;
+      }
+
+      &-box {
+        position: absolute;
+        top: 40px;
+        z-index: 1;
+        left: -14px;
+        width: 500px;
+        background-color: var(--bg-downdown-color);
+        padding: 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 30px;
+
+        .address-book-name-title, .address-book-address-title {
+          font-size: 12px;
+        }
+      }
+    }
+
+    &-state {
+      color: var(--blue-color);
+      margin-right: 12px;
+    }
+
+    &-select {
+      font-size: 14px;
+      color: var(--color-gray);
+
+      i {
+        margin-left: 12px;
+      }
+    }
+  }
+
+  .empty-address-book {
+    i {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+    }
+  }
+
+  i {
+    font-size: 14px;
+    color: var(--color-gray);
+    line-height: 1;
+  }
 }
 </style>

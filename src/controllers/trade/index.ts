@@ -100,9 +100,9 @@ export class TradeController {
     return data;
   }
 
-  async create_withdrawal(currency_id: string, address: string, amount: number, otp_code: string, callback?: (payload?: any) => void) {
+  async create_withdrawal(currency_id: string, amount: number, otp_code: string, address?: string, beneficiary_id?: string, callback?: (payload?: any) => void) {
     try {
-      const { data } = await new ApiClient("applogic").post("account/withdraws", { address, currency: currency_id, amount, otp_code });
+      const { data } = await new ApiClient("applogic").post("account/withdraws", { address, beneficiary_id: beneficiary_id.toString(), currency: currency_id, amount, otp_code });
       runNotice("warning", "withdraw.created");
 
       if (callback) callback(data);

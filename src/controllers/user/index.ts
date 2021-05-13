@@ -340,8 +340,51 @@ export class UserController {
     }
   }
 
-  async create_api_key(algorithm: string, totp_code: string) {
+  create_api_key(algorithm: string, totp_code: string) {
     return new ApiClient("auth").post("resource/api_keys", { algorithm, totp_code });
+  }
+
+  get_beneficiaries(currency: string) {
+    return new ApiClient("trade").get("account/beneficiaries", { currency_id: currency });
+  }
+
+  async create_beneficiary(currency: string, name: string, data: string, callback?: () => void) {
+    try {
+      await new ApiClient("trade").post("account/beneficiaries", { currency, name, data });
+      runNotice("success", "address_book.created");
+      if (callback) callback();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async delete_beneficiary(beneficiary_id: number) {
+    try {
+      await new ApiClient("trade").delete("account/beneficiaries/#{beneficiary_id}".replace("#{beneficiary_id}", beneficiary_id.toString()));
+      runNotice("success", "address_book.deleted");
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async resend_pin_beneficiary(beneficiary_id: number, callback?: () => void) {
+    try {
+      await new ApiClient("trade").patch("account/beneficiaries/#{beneficiary_id}/resend_pin".replace("#{beneficiary_id}", beneficiary_id.toString()));
+      runNotice("success", "address_book.resend");
+      if (callback) callback();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async confirm_beneficiary(beneficiary_id: number, pin: number, callback?: () => void) {
+    try {
+      await new ApiClient("trade").patch("account/beneficiaries/#{beneficiary_id}/activate".replace("#{beneficiary_id}", beneficiary_id.toString()), { pin });
+      runNotice("success", "address_book.confirmed");
+      if (callback) callback();
+    } catch (error) {
+      return error;
+    }
   }
 }
 
