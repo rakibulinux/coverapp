@@ -6,7 +6,7 @@
 
     <div class="action-group left">
       <router-link to="/exchange">
-        XUM{{ translation("exchange") }}
+        {{ translation("exchange") }}
       </router-link>
     </div>
     <div class="action-group right">

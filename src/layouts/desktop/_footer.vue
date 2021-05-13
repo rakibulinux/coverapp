@@ -74,14 +74,14 @@ import { Vue, Component } from "vue-property-decorator";
 @Component
 export default class App extends Vue {
   public contactus = {
-    service: "smartchainers.com",
-    business: "smartchainers.com",
+    service: "Xumchain.com",
+    business: "Xumchain.com",
     facebook: "https://fb.com/smartchainers"
   };
 
   public copyright = {
     name: "XUMExchange",
-    link: "https://www.smartchainers.com/"
+    link: "https://www.Xumchain.com/"
   };
 }
 </script>
