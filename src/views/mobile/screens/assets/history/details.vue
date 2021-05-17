@@ -116,7 +116,7 @@ export default class AssetsHistoryDetails extends Mixins(ScreenMixin) {
 
   copy_txid() {
     copyText(this.txid);
-    runNotice("success", "Copy successfully");
+    runNotice("success", "copy");
   }
 }
 </script>

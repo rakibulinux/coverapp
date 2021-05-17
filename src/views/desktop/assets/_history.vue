@@ -5,7 +5,7 @@
       <div class="select">
         <!---->
         <div class="form-row">
-          <label class="form-label">{{ $t("table.coin") }}:</label>
+          <label class="form-label">{{ $t("page.global.table.coin") }}:</label>
           <div class="form-control">
             <a-select
               v-model="currency"
@@ -24,7 +24,7 @@
         </div>
         <!---->
         <div class="form-row">
-          <label class="form-label">{{ $t("table.type") }}:</label>
+          <label class="form-label">{{ $t("page.global.table.type") }}:</label>
           <div class="form-control">
             <a-select v-model="type" style="width:115px" @change="setType">
               <a-select-option v-for="data in TYPE" :key="data">
@@ -37,17 +37,17 @@
       </div>
       <div class="table-content">
         <dl class="head">
-          <span class="status" v-text="$t('table.status')" />
-          <span class="coin" v-text="$t('table.coin')" />
-          <span class="amount" v-text="$t('table.amount')" />
-          <span class="date" v-text="$t('table.date')" />
-          <span class="infomation" v-text="$t('table.infomation')" />
-          <span class="action text-right" v-text="$t('table.action')" />
+          <span class="status" v-text="$t('page.global.table.status')" />
+          <span class="coin" v-text="$t('page.global.table.coin')" />
+          <span class="amount" v-text="$t('page.global.table.amount')" />
+          <span class="date" v-text="$t('page.global.table.date')" />
+          <span class="infomation" v-text="$t('page.global.table.infomation')" />
+          <span class="action text-right" v-text="$t('page.global.table.action')" />
         </dl>
         <dd :class="{ loading: loading, empty: !history.data.length }">
           <dl
             v-if="!history.data.length"
-            v-text="'u not have any transaction'"
+            v-text="translation('history.empty')"
           />
           <history-row
             v-for="(data, index) in history.data"
@@ -143,6 +143,10 @@ export default class AssetsHistory extends Vue {
     if (value === "All") return false;
 
     return value.toUpperCase().includes(input.toUpperCase());
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("page.assets." + message, data);
   }
 }
 </script>

@@ -1,18 +1,18 @@
 <template>
   <div class="setting-main history">
     <div class="setting-head">
-      <span v-text="$t('usercenter.api.title')" />
+      <span v-text="translation('title')" />
       <button @click="onClick('api')">
-        {{ $t("usercenter.api.header.button") }}
+        {{ $t("page.global.action.create_new") }}
       </button>
     </div>
     <div class="setting-body">
       <div class="table-content">
         <table class="table">
           <thead>
-            <th class="text-left" v-text="$t('table.kid')" />
-            <th class="text-center" v-text="$t('table.date')" />
-            <th class="text-right" v-text="$t('table.action')" />
+            <th class="text-left" v-text="$t('page.global.table.kid')" />
+            <th class="text-center" v-text="$t('page.global.table.date')" />
+            <th class="text-right" v-text="$t('page.global.table.action')" />
           </thead>
           <tbody>
             <tr
@@ -170,6 +170,10 @@ export default class ApiKeyPage extends Mixins(Helpers) {
 
   getDate(date) {
     return helpers.getDate(date, true);
+  }
+
+  translation(message: string, data?: {}) {
+    return helpers.translation("page.account.api." + message, data);
   }
 }
 </script>

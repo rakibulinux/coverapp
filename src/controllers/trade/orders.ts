@@ -12,7 +12,7 @@ export default abstract class OrdersController {
         price: price,
         volume: amount
       });
-      runNotice("success", "Order has been placed");
+      runNotice("success", "order.created");
 
       return response.data;
     } catch (error) {
@@ -23,7 +23,7 @@ export default abstract class OrdersController {
   async stop_order(id_or_uuid: number | string) {
     try {
       await new ApiClient(config.finex ? "finex" : "trade").post((config.finex ? "market/orders/cancel/#{id}" : "market/orders/#{id}/cancel").replace("#{id}", id_or_uuid.toString()));
-      runNotice("success", helpers.translation("message.order.canceled").toString());
+      runNotice("success", "order.canceled");
 
       return true;
     } catch (error) {
@@ -34,7 +34,7 @@ export default abstract class OrdersController {
   async stop_orders(market_id?: string, side?: ZTypes.OrderSide) {
     try {
       await new ApiClient(config.finex ? "finex" : "trade").post("market/orders/cancel", { market: market_id, side: side });
-      runNotice("success", "All market #{market} orders have been canceled".replace("#{market}", market_id));
+      runNotice("success", "order.canceled.all", { market: market_id });
 
       return true;
     } catch (error) {

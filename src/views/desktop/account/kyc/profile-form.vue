@@ -1,56 +1,56 @@
 <template>
   <form class="profile-form" @submit.prevent="update_profile">
     <form-row
-      label="Country / Region"
+      :label="translation('form.country.label')"
       type="select"
       :rows="COUNTRY"
       v-model="country"
     />
     <form-row
-      label="First name"
+      :label="translation('form.first_name.label')"
       type="input"
-      placeholder="Please enter your first name"
+      :placeholder="translation('form.first_name.placeholder')"
       v-model="first_name"
     />
     <form-row
-      label="Last name"
+      :label="translation('form.last_name.label')"
       type="input"
-      placeholder="Please enter your last name"
+      :placeholder="translation('form.last_name.placeholder')"
       v-model="last_name"
     />
 
     <div class="form-row">
-      <div class="form-label">Birthday:</div>
+      <div class="form-label">{{ translation('form.birthday.label') }}:</div>
       <div class="form-control">
         <a-date-picker
           @change="onDatePickerChange"
-          placeholder="Your birthday"
+          :placeholder="translation('form.birthday.placeholder')"
         />
       </div>
     </div>
 
     <form-row
-      label="Address"
+      :label="translation('form.address.label')"
       type="input"
-      placeholder="Please enter your address"
+      :placeholder="translation('form.address.placeholder')"
       v-model="address"
     />
     <div class="flex-form-row">
       <form-row
-        label="Postcode"
+        :label="translation('form.postcode.label')"
         type="input"
-        placeholder="Postcode"
+        :placeholder="translation('form.postcode.label')"
         v-model="postcode"
       />
-      <form-row label="City" type="input" placeholder="City" v-model="city" />
+      <form-row :label="translation('form.city.label')" type="input" :placeholder="translation('form.city.label')" v-model="city" />
     </div>
 
     <div class="form-row">
       <div class="form-label"></div>
       <div class="form-control">
         <button type="submit" :disabled="button_disabled">
-          Submit
           <a-icon v-if="loading" type="loading" />
+          {{ $t('page.global.action.submit') }}
         </button>
       </div>
     </div>
@@ -113,6 +113,10 @@ export default class ProfileForm extends Vue {
     );
 
     this.loading = false;
+  }
+
+  translation(message: string, data?: {}) {
+    return helpers.translation("page.account.kyc_account_verification." + message, data);
   }
 }
 </script>

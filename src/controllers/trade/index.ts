@@ -100,10 +100,10 @@ export class TradeController {
     return data;
   }
 
-  async create_withdrawal(currency_id: string, address: string, amount: number, otp_code: string, callback?: (payload?: any) => void) {
+  async create_withdrawal(currency_id: string, amount: number, otp_code: string, address?: string, beneficiary_id?: string, callback?: (payload?: any) => void) {
     try {
-      const { data } = await new ApiClient("applogic").post("account/withdraws", { address, currency: currency_id, amount, otp_code });
-      runNotice("success", helpers.translation("message.withdraw.created"));
+      const { data } = await new ApiClient("applogic").post("account/withdraws", { address, beneficiary_id: beneficiary_id.toString(), currency: currency_id, amount, otp_code });
+      runNotice("warning", "withdraw.created");
 
       if (callback) callback(data);
     } catch (error) {
@@ -114,7 +114,7 @@ export class TradeController {
   async confirm_withdrawal(tid: string, confirmation_code: string, callback?: () => void) {
     try {
       await new ApiClient("applogic").post("account/withdraws/confirm", { tid, confirmation_code });
-      runNotice("success", helpers.translation("message.withdraw.confirmed"));
+      runNotice("success", "withdraw.confirmed");
 
       if (callback) callback();
     } catch (error) {
@@ -125,7 +125,7 @@ export class TradeController {
   async generate_withdrawal_code(tid: string, callback?: () => void) {
     try {
       await new ApiClient("applogic").post("account/withdraws/generate_code", { tid });
-      runNotice("success", helpers.translation("message.withdraw.code"));
+      runNotice("success", "withdraw.code");
 
       if (callback) callback();
     } catch (error) {
@@ -136,7 +136,7 @@ export class TradeController {
   async cancel_withdrawal(tid: string, otp_code: string, callback?: () => void) {
     try {
       await new ApiClient("applogic").post("account/withdraws/cancel", { tid, otp_code });
-      runNotice("success", helpers.translation("message.withdraw.canceled"));
+      runNotice("success", "withdraw.canceled");
 
       if (callback) callback();
     } catch (error) {

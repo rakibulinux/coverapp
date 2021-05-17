@@ -43,27 +43,27 @@ export default class Account extends Vue {
     return [
       {
         icon: "zicon-personal",
-        text: this.$t("usercenter.account_information.title"),
+        text: this.$t("page.account.account_information.title"),
         url: "/account/information"
       },
       {
         icon: "zicon-anquan",
-        text: this.$t("usercenter.account_security.title"),
+        text: this.$t("page.account.account_security.title"),
         url: "/account/security"
       },
       {
         icon: "zicon-shenfen",
-        text: this.$t("header.user.kyc_account_verification"),
+        text: this.$t("page.account.kyc_account_verification.title"),
         url: "/account/kyc"
       },
       {
         icon: "zicon-date",
-        text: this.$t("usercenter.login_history.title"),
+        text: this.$t("page.account.login_history.title"),
         url: "/account/history"
       },
       {
         icon: "zicon-API",
-        text: this.$t("usercenter.api.title"),
+        text: this.$t("page.account.api.title"),
         url: "/account/api"
       }
     ];

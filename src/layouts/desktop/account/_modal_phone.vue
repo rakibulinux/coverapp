@@ -19,11 +19,10 @@
     <div v-if="step === 1">
       <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
       <div class="title">
-        Phone number
+        {{ translation("steps.1.title") }}
       </div>
       <div class="desc">
-        Enter your phone number so we can send you an SMS with the
-        authentication code.
+        {{ translation("steps.1.desc") }}
       </div>
       <form v-if="UserController.phone" @submit.prevent="sendCode">
         <div class="phone-number">
@@ -42,18 +41,17 @@
           :loading="loading"
           :disabled="button_disabled"
         >
-          Send Code
+          {{ $t("page.global.action.send_code") }}
         </auth-button>
       </form>
     </div>
     <div v-else>
       <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
       <div class="title">
-        Authentication
+        {{ translation("steps.2.title") }}
       </div>
       <div class="desc">
-        Please enter the SMS verification code below +{{ phone_number }} . Enter
-        below.
+        {{ translation("steps.2.desc", { phone_number: phone_number }) }}
       </div>
       <form @submit.prevent="verifyCode">
         <auth-input
@@ -65,7 +63,7 @@
           maxlength="5"
         />
         <auth-button type="submit" :disabled="button_disabled">
-          Confirm
+          {{ $t("page.global.action.confirm") }}
         </auth-button>
       </form>
     </div>
@@ -73,8 +71,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Mixins } from "vue-property-decorator";
-import store from "@/store";
+import { Component, Mixins } from "vue-property-decorator";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
@@ -89,9 +86,9 @@ import { runNotice } from "@/mixins";
   }
 })
 export default class App extends Mixins(Helpers) {
-  public step: number;
-  public phone_number = "";
-  public verification_code = "";
+  step: number;
+  phone_number = "";
+  verification_code = "";
 
   get phone_number_error() {
     const { phone_number } = this;
@@ -124,13 +121,13 @@ export default class App extends Mixins(Helpers) {
     }
   }
 
-  public onCreate() {
+  onCreate() {
     this.step = 1;
     this.phone_number = UserController.phone.number || "";
     this.verification_code = "";
   }
 
-  public async sendCode() {
+  async sendCode() {
     this.loading = true;
     const { phone_number } = this;
     try {
@@ -144,7 +141,7 @@ export default class App extends Mixins(Helpers) {
         { phone_number: "+" + phone_number }
       );
       this.step++;
-      runNotice("success", "Code was sent successfully");
+      runNotice("success", "phone.verification.send");
       this.loading = false;
     } catch (error) {
       this.loading = false;
@@ -152,19 +149,23 @@ export default class App extends Mixins(Helpers) {
     }
   }
 
-  public async verifyCode() {
+  async verifyCode() {
     this.loading = true;
     const { phone_number, verification_code } = this;
     const payload = { phone_number, verification_code };
     try {
       await new ApiClient("auth").post("resource/phones/verify", payload);
-      runNotice("success", "Phone was verified successfully");
+      runNotice("success", "phone.confirmed");
       this.loading = false;
       this.delete();
     } catch (error) {
       this.loading = false;
       return error;
     }
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("modal.phone." + message, data);
   }
 }
 </script>

@@ -15,23 +15,23 @@
         <span> 1 BTC : {{ getCurrency }} USDT</span>
       </dl>
       <dl class="change">
-        <dt v-text="translation('status.change')" />
+        <dt v-text="$t('page.global.table.24h_change')" />
         <dt class="value" :class="getLastTrend" v-text="getChange" />
       </dl>
       <dl class="high">
-        <dt v-text="translation('status.high')" />
+        <dt v-text="$t('page.global.table.24h_high')" />
         <dt class="value" v-text="getHighPrice" />
       </dl>
       <dl class="low">
-        <dt v-text="translation('status.low')" />
+        <dt v-text="$t('page.global.table.24h_low')" />
         <dt class="value" v-text="getLowPrice" />
       </dl>
       <dl class="amount">
-        <dt v-text="translation('status.24h_amount')" />
+        <dt v-text="$t('page.global.table.24h_amount')" />
         <dt class="value" v-text="getAmount" />
       </dl>
       <dl class="volume">
-        <dt v-text="translation('status.24h_volume')" />
+        <dt v-text="$t('page.global.table.24h_volume')" />
         <dt class="value" v-text="getVolume" />
       </dl>
     </div>
@@ -39,7 +39,6 @@
 </template>
 
 <script lang="ts">
-import { PublicController, TradeController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
@@ -71,11 +70,11 @@ export default class App extends Vue {
     }
 
   get market() {
-    return TradeController.market;
+    return this.TradeController.market;
   }
 
   get ticker() {
-    return TradeController.ticker;
+    return this.TradeController.ticker;
   }
 
   get getLastTrend() {

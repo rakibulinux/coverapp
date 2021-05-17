@@ -1,12 +1,12 @@
 <template>
   <div class="trade-action-balance">
     <span>
-      {{ $t("table.available") }}: {{ balance() }}
+      {{ $t("page.global.table.available") }}: {{ balance() }}
       {{ currency.toUpperCase() }}
     </span>
 
     <router-link class="trade-action-balance-action" to="/assets/balance">
-      {{ $t("action.deposit") }}
+      {{ $t("page.global.action.deposit") }}
     </router-link>
   </div>
 </template>

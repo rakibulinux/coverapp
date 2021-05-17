@@ -1,7 +1,7 @@
 <template>
   <div class="setting-main information">
     <div class="setting-head">
-      {{ $t("usercenter.account_information.title") }}
+      {{ translation("title") }}
     </div>
     <div class="setting-body">
       <table class="table">
@@ -41,27 +41,27 @@ export default class AccountInformation extends Vue {
   get account_informations() {
     return [
       {
-        name: "UID",
+        name: this.$t("page.global.table.uid"),
         type: "text",
         desc: ``,
         value: UserController.uid
       },
       {
-        name: this.translation("account_information.rows.email.name"),
+        name: this.$t("page.global.table.email"),
         type: "text",
-        desc: this.translation("account_information.rows.email.desc"),
+        desc: this.translation("email.desc"),
         value: EncryptEmail(UserController.email)
       },
       {
-        name: "Phone",
+        name: this.$t("page.global.table.phone"),
         type: UserController.phone.validated ? "text" : "action",
-        desc: this.translation("account_information.rows.email.desc"),
+        desc: this.translation("phone.desc"),
         value: UserController.phone.validated
           ? "+" + UserController.phone.number
           : "",
         action: {
           allow: !UserController.phone.validated,
-          text: this.translation("action.setting"),
+          text: this.$t("page.global.action.settings"),
           runner: "phone"
         }
       }
@@ -69,7 +69,7 @@ export default class AccountInformation extends Vue {
   }
 
   translation(message: string, data?: {}) {
-    return helpers.translation("usercenter." + message, data);
+    return helpers.translation("page.account.account_information." + message, data);
   }
 }
 </script>

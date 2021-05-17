@@ -1,14 +1,14 @@
 <template>
   <div class="setting-main history">
     <div class="setting-head">
-      {{ $t("usercenter.login_history.title") }}
+      {{ translation("title") }}
     </div>
     <div class="setting-body">
       <table class="table table-head">
         <thead>
-          <th class="text-left" v-text="$t('table.date')" />
-          <th class="text-center" v-text="$t('table.ip_address')" />
-          <th class="text-right" v-text="$t('table.status')" />
+          <th class="text-left" v-text="$t('page.global.table.date')" />
+          <th class="text-center" v-text="$t('page.global.table.ip_address')" />
+          <th class="text-right" v-text="$t('page.global.table.status')" />
         </thead>
       </table>
       <div class="table-content">
@@ -22,8 +22,8 @@
               <td class="text-left" v-text="getDate(data.created_at)" />
               <td class="text-center" v-text="data.user_ip" />
               <td class="text-right">
-                {{ $t(`history.${data.action}`) }}
-                {{ $t(`history.${data.result}`) }}
+                {{ translation(`history.${data.action}`) }}
+                {{ translation(`history.result.${data.result}`) }}
               </td>
             </tr>
           </tbody>
@@ -86,6 +86,10 @@ export default class AccountHistory extends Vue {
 
   getDate(date: Date) {
     return helpers.getDate(date, true);
+  }
+
+  translation(message: string, data?: {}) {
+    return helpers.translation("page.account.login_history." + message, data);
   }
 }
 </script>

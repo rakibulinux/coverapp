@@ -23,7 +23,7 @@
               @click.prevent="resend_email"
             >
               <span v-if="this.loading_resend">
-                Sending...
+                {{ $t("page.global.action.sending") }}
               </span>
               <span v-else>{{ this.cooldown ? "Resend" : "Send Code" }}</span>
               <span v-if="cooldown">({{ cooldown }})</span>

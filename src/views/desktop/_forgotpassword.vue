@@ -4,15 +4,15 @@
       <div v-if="step == 1">
         <form @submit.prevent="forgot_password">
           <a-steps :current="step - 1" size="small">
-            <a-step title="Enter Email" />
-            <a-step title="Confirm" />
-            <a-step title="Reset Password" />
+            <a-step :title="$t('page.auth.forgot_password.steps.1.step')" />
+            <a-step :title="$t('page.auth.forgot_password.steps.2.step')" />
+            <a-step :title="$t('page.auth.forgot_password.steps.3.step')" />
           </a-steps>
-          <h3 class="title">Forgot Password</h3>
+          <h3 class="title" v-text="$t('page.auth.forgot_password')" />
           <auth-input
             v-model="email"
             name="email"
-            :placeholder="$t('input.placeholder.email')"
+            :placeholder="$t('page.global.placeholder.email')"
             :placeholder-need="true"
             :error="email_error"
           />
@@ -21,31 +21,31 @@
             :loading="loading"
             :disabled="!email || email_error"
           >
-            {{ $t("auth.forgot_password") }}
+            {{ $t("page.global.action.forgot_password") }}
           </auth-button>
         </form>
       </div>
       <div v-else-if="step == 2">
         <form @submit.prevent="check_token">
           <a-steps :current="step - 1" size="small">
-            <a-step title="Enter Email" />
-            <a-step title="Confirm" />
-            <a-step title="Reset Password" />
+            <a-step :title="$t('page.auth.forgot_password.steps.1.step')" />
+            <a-step :title="$t('page.auth.forgot_password.steps.2.step')" />
+            <a-step :title="$t('page.auth.forgot_password.steps.3.step')" />
           </a-steps>
-          <h3 class="title">Security verification</h3>
+          <h3 class="title">{{ $t('page.auth.forgot_password.steps.2.title') }}</h3>
           <div class="desc">
-            To secure your account, please complete the following verification.
+            {{ $t('page.auth.forgot_password.steps.2.desc') }}
           </div>
 
           <auth-input
             v-model="confirmation_code"
             name="confirmation_code"
-            placeholder="E-mail verification code"
+            :placeholder="$t('page.global.placeholder.e-confirmation_code')"
             :placeholder-need="true"
           >
             <template slot="right-action">
               <button :disabled="cooldown > 0" @click.prevent="forgot_password">
-                <span>{{ this.cooldown ? "Resend" : "Send Code" }}</span>
+                <span>{{ this.cooldown ? $t("page.global.action.resend") : $t("page.global.action.send_code") }}</span>
                 <span v-if="cooldown">({{ cooldown }})</span>
               </button>
             </template>
@@ -56,24 +56,24 @@
             :loading="loading"
             :disabled="confirmation_code.length < 6"
           >
-            Submit
+            {{ $t("page.global.action.submit") }}
           </auth-button>
         </form>
       </div>
       <div v-else>
         <form @submit.prevent="reset_password">
           <a-steps :current="step - 1" size="small">
-            <a-step title="Enter Email" />
-            <a-step title="Confirm" />
-            <a-step title="Reset Password" />
+            <a-step :title="$t('page.auth.forgot_password.steps.1.step')" />
+            <a-step :title="$t('page.auth.forgot_password.steps.2.step')" />
+            <a-step :title="$t('page.auth.forgot_password.steps.3.step')" />
           </a-steps>
-          <h3 class="title">Reset Password</h3>
+          <h3 class="title">{{ $t('page.auth.forgot_password.steps.3.title') }}</h3>
 
           <auth-input
             v-model="password"
             name="password"
             type="password"
-            :placeholder="$t('input.placeholder.password')"
+            :placeholder="$t('page.global.placeholder.password')"
             :placeholder-need="true"
             :error="password_error"
           />
@@ -81,7 +81,7 @@
             v-model="confirm_password"
             name="confirm_password"
             type="password"
-            :placeholder="$t('input.placeholder.confirm_password')"
+            :placeholder="$t('page.global.placeholder.confirm_password')"
             :placeholder-need="true"
             :error="confirm_password_error"
           />
@@ -90,7 +90,7 @@
             :loading="loading"
             :disabled="password_error || confirm_password_error"
           >
-            Reset Password
+            {{ $t("page.global.action.reset_password") }}
           </auth-button>
         </form>
       </div>
@@ -187,7 +187,7 @@ export default class ForgotPassword extends Mixins(ConfirmationMixin) {
       this.password,
       this.confirm_password,
       () => {
-        this.$router.push("/login");
+        this.$router.push("/signin");
       }
     );
     this.loading = false;

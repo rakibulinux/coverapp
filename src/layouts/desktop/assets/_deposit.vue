@@ -1,56 +1,98 @@
 <template>
   <div class="assets-deposit">
-    <div class="assets-form">
-      <div class="address-box">
-        <label
-          class="address-label"
-          v-text="$t('assets.deposit.deposit_address')"
-        />
-        <div class="address-form">
-          <input type="text" :value="deposit_address || 'LOADING'" readonly />
-          <a @click="copy_address" v-text="$t('assets.deposit.copy')" />
-          <a
-            v-click-outside:mousedown.capture="show_qr_code"
-            v-click-outside.capture="show_qr_code"
-            @click="qrcode_show = true"
-          >
-            <span v-text="$t('assets.deposit.qr_code')" />
-            <div class="show-qrcode" :class="{ active: qrcode_show }">
-              <qrcode
-                v-if="deposit_address"
-                :value="deposit_address"
-                :size="110"
-                level="L"
-                background="transparent"
-              />
-            </div>
-          </a>
+    <template v-if="currency.type === 'coin'">
+      <div class="assets-form">
+        <div class="address-box">
+          <label
+            class="address-label"
+            v-text="$t('page.assets.deposit.deposit_address')"
+          />
+          <div class="address-form">
+            <input type="text" :value="deposit_address || 'LOADING'" readonly />
+            <a @click="copy_address" v-text="$t('page.global.action.copy')" />
+            <a
+              v-click-outside:mousedown.capture="show_qr_code"
+              v-click-outside.capture="show_qr_code"
+              @click="qrcode_show = true"
+            >
+              <span v-text="$t('page.assets.deposit.qr_code')" />
+              <div class="show-qrcode" :class="{ active: qrcode_show }">
+                <qrcode
+                  v-if="deposit_address"
+                  :value="deposit_address"
+                  :size="110"
+                  level="L"
+                  background="transparent"
+                />
+              </div>
+            </a>
+          </div>
+        </div>
+        <a
+          class="block-address"
+          :href="currency.explorer_address.replace('#{address}', deposit_address)"
+          target="_blank"
+        >
+          Block Browser
+        </a>
+      </div>
+      <div class="assets-note">
+        <h3 v-text="$t('page.assets.instructions')" />
+        <fix-i18n
+          tag="p"
+          class="desc"
+          path="page.assets.deposit.coin.note"
+          :places="{
+            currency: currency.id.toUpperCase(),
+            min_deposit_amount: currency.min_deposit_amount,
+            min_confirmations: currency.min_confirmations
+          }"
+        >
+          <br />
+        </fix-i18n>
+      </div>
+    </template>
+    <template v-else>
+      <div class="assets-form">
+        <div class="bank-info-box">
+          <h1 class="bank-info-title">Deposit using bank transfer</h1>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.bank_name.title") }}: </span>
+            {{ $t(`page.assets.deposit.fiat.bank_name.value.${currency.id}`) }}
+          </div>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.account_number.title") }}: </span>
+            {{ $t(`page.assets.deposit.fiat.account_number.value.${currency.id}`) }}
+          </div>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.account_name.title") }}: </span>
+            {{ $t(`page.assets.deposit.fiat.account_name.value.${currency.id}`) }}
+          </div>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.phone_numer.title") }}: </span>
+            {{ $t(`page.assets.deposit.fiat.phone_numer.value.${currency.id}`) }}
+          </div>
+          <div>
+            <span class="bank-info-title">{{ $t("page.assets.deposit.fiat.reference_code.title") }}: </span>
+            {{ UserController.uid }}
+          </div>
         </div>
       </div>
-      <a
-        v-if="currency.type === 'coin'"
-        class="block-address"
-        :href="currency.explorer_address.replace('#{address}', deposit_address)"
-        target="_blank"
-      >
-        Block Browser
-      </a>
-    </div>
-    <div class="assets-note">
-      <h3 v-text="$t('assets.instructions')" />
-      <fix-i18n
-        tag="p"
-        class="desc"
-        path="assets.deposit.note"
-        :places="{
-          currency: currency.id.toUpperCase(),
-          min_deposit_amount: currency.min_deposit_amount,
-          min_confirmations: currency.min_confirmations
-        }"
-      >
-        <br />
-      </fix-i18n>
-    </div>
+      <div class="assets-note">
+        <h3 v-text="$t('page.assets.instructions')" />
+        <fix-i18n
+          tag="p"
+          class="desc"
+          path="page.assets.deposit.fiat.note"
+          :places="{
+            currency: currency.id.toUpperCase(),
+            min_deposit_amount: currency.min_deposit_amount
+          }"
+        >
+          <br />
+        </fix-i18n>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -69,14 +111,12 @@ export default class DepositBox extends Vue {
 
   deposit_address = "";
   qrcode_show = false;
-  destroyed = false;
 
   mounted() {
     this.getDepositAddress();
   }
 
   async getDepositAddress() {
-    if (this.destroyed) return;
     try {
       const { data } = await new ApiClient("trade").get(
         "account/deposit_address/" + this.currency.id
@@ -100,16 +140,24 @@ export default class DepositBox extends Vue {
   show_qr_code() {
     this.qrcode_show = false;
   }
-
-  beforeDestroy() {
-    this.destroyed = true;
-  }
 }
 </script>
 
 <style lang="less">
 .assets-deposit {
   padding: 20px 0;
+
+  .bank-info {
+    &-box {
+      line-height: 30px;
+      font-size: 14px;
+    }
+
+    &-title {
+      color: var(--color-gray);
+    }
+  }
+
   .address-box {
     display: flex;
     width: 556px;

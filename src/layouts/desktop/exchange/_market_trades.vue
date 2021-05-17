@@ -32,7 +32,6 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import { TradeController } from "@/controllers";
@@ -48,19 +47,19 @@ export default class MarketTrades extends Vue {
   get COLUMN() {
     return [
       {
-        title: `${this.$t("table.price")} (${this.market.quote_unit.toUpperCase()})`,
+        title: `${this.$t("page.global.table.price")} (${this.market.quote_unit.toUpperCase()})`,
         key: "price",
         algin: "left",
         scopedSlots: true
       },
       {
-        title: `${this.$t("table.amount")} (${this.market.base_unit.toUpperCase()})`,
+        title: `${this.$t("page.global.table.amount")} (${this.market.base_unit.toUpperCase()})`,
         key: "amount",
         algin: "right",
         scopedSlots: true
       },
       {
-        title: this.$t("table.time"),
+        title: this.$t("page.global.table.time"),
         key: "created_at",
         class_name: "time",
         algin: "right",

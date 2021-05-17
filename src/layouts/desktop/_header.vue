@@ -131,15 +131,15 @@ export default class App extends Vue {
       NAME: this.translation("orders"),
       MENU: [
         {
-          name: this.translation("open_orders"),
+          name: this.translation("orders.open_orders"),
           url: "/exchange_record/open",
         },
         {
-          name: this.translation("orders_history"),
+          name: this.translation("orders.orders_history"),
           url: "/exchange_record/history",
         },
         {
-          name: this.translation("trades_history"),
+          name: this.translation("orders.trades_history"),
           url: "/exchange_record/transaction",
         },
       ],
@@ -206,11 +206,11 @@ export default class App extends Vue {
     return null;
   }
 
-  public checkSelectedLang(name: string) {
+  checkSelectedLang(name: string) {
     return this.$t("name") === name;
   }
 
-  public setLanguage(item) {
+  setLanguage(item) {
     const locale = item.key;
     if (this.locale === locale) {
       return;
@@ -220,12 +220,12 @@ export default class App extends Vue {
     ZSmartModel.emit("change-language");
   }
 
-  public logout() {
+  logout() {
     UserController.logout();
   }
 
-  public translation(message, data = {}) {
-    return helpers.translation("header." + message, data);
+  translation(message, data = {}) {
+    return helpers.translation("page.global.header." + message, data);
   }
 }
 </script>

@@ -2,12 +2,12 @@
   <z-content class="page-auth">
     <div class="auth-box">
       <div>
-        <h3 class="title" v-text="$t('auth.login')" />
+        <h3 class="title" v-text="$t('page.auth.sign_in')" />
         <form @submit.prevent="login">
           <auth-input
             v-model="email"
             name="email"
-            :placeholder="$t('input.placeholder.email')"
+            :placeholder="$t('page.global.placeholder.email')"
             :placeholder-need="true"
             :error="email_error"
           />
@@ -15,20 +15,20 @@
             v-model="password"
             name="password"
             type="password"
-            :placeholder="$t('input.placeholder.password')"
+            :placeholder="$t('page.global.placeholder.password')"
             :placeholder-need="true"
             :error="password_error"
           />
           <auth-button type="submit" :loading="loading" :disabled="button_disabled">
-            {{ $t("auth.login") }}
+            {{ $t("page.global.action.login") }}
           </auth-button>
           <div>
             <router-link to="forgotpassword" class="forgot">
-              Forgot Password?
+              {{ $t("page.auth.sign_in.forgot_password") }}
             </router-link>
             <div class="text-right signup">
-              {{ $t("auth.no_account") }}
-              <router-link to="signup" v-text="$t('auth.to_sign_up')" />
+              {{ $t("page.auth.sign_in.no_account") }}
+              <router-link to="signup" v-text="$t('page.auth.sign_in.to_sign_up')" />
             </div>
           </div>
         </form>

@@ -9,7 +9,7 @@
   >
     <div slot="extra" class="extra-action cancel-all">
       <a-button @click="cancel_all_orders" type="primary">
-        {{ translation("card_head.button.cancel_all") }}
+        {{ $t("page.global.action.cancel_all") }}
       </a-button>
     </div>
     <open-orders
@@ -51,15 +51,15 @@ export default class MineControl extends Vue {
     return [
       {
         key: "open_orders",
-        tab: this.translation("card_head.open_orders")
+        tab: this.$t("page.global.header.orders.open_orders")
       },
       {
         key: "orders_history",
-        tab: this.translation("card_head.orders_history")
+        tab: this.$t("page.global.header.orders.orders_history")
       },
       {
         key: "trades_history",
-        tab: this.translation("card_head.trades_history")
+        tab: this.$t("page.global.header.orders.trades_history")
       }
     ];
   }
@@ -98,7 +98,7 @@ export default class MineControl extends Vue {
   }
 
   public translation(message, data = {}) {
-    return helpers.translation("exchange." + message, data);
+    return helpers.translation("page.exchange." + message, data);
   }
 }
 </script>

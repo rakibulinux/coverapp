@@ -13,10 +13,10 @@
     <div v-else-if="step === 1">
       <img src="@/assets/img/Google_Authenticator.png" class="logo-modal" />
       <div class="title">
-        Create ApiKey
+        {{ translation("steps.1.title") }}
       </div>
       <div class="desc">
-        Enter the authentication code from the app below.
+        {{ translation("steps.1.desc") }}
       </div>
       <form @submit.prevent="create_api_key">
         <auth-input
@@ -32,18 +32,14 @@
           :loading="loading"
           :disabled="disabled_button"
         >
-          {{ $t("auth.confirm") }}
+          {{ $t("page.global.action.confirm") }}
         </auth-button>
       </form>
     </div>
     <div v-else>
       <div class="info-warning">
         <a-icon type="warning" />
-        <p>
-          <span>API Key Created</span>
-          <br />This information will be shown only once and cannot be retrieved
-          once lost. Please store it properly.
-        </p>
+        <p v-html="ranslation('steps.2.title')" />
       </div>
       <form @submit.prevent="closeModal">
         <auth-input
@@ -62,7 +58,7 @@
           :disabled="true"
         />
         <auth-button type="submit">
-          {{ $t("auth.confirm") }}
+          {{ $t("page.global.action.confirm") }}
         </auth-button>
       </form>
     </div>
@@ -70,6 +66,7 @@
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
 import { UserController } from "@/controllers";
 import { Component, Mixins } from "vue-property-decorator";
 import Helpers from "./helpers";
@@ -122,6 +119,10 @@ export default class App extends Mixins(Helpers) {
     } finally {
       this.loading = false;
     }
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("modal.api." + message, data);
   }
 }
 </script>

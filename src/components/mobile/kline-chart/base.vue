@@ -147,12 +147,12 @@ export default class KlineChart extends Vue {
           showRule: 'follow_cross',
           showType: 'rect',
           labels: [
-            { text: "Time: ", titleColor: "#fff", valueColor: "#fff" },
-            { text: 'Open: ', titleColor: "#fff", valueColor: "#fff" },
-            { text: 'Close: ', titleColor: "#fff", valueColor: "#fff" },
-            { text: 'High: ', titleColor: "#fff", valueColor: "#fff" },
-            { text: 'Low: ', titleColor: "#fff", valueColor: "#fff" },
-            { text: 'Volume: ', titleColor: "#fff", valueColor: "#fff" }
+            'Time: ',
+            'Open: ',
+            'Close: ',
+            'High: ',
+            'Low: ',
+            'Volume: ',
           ],
           values: null,
           defaultValue: 'n/a',

@@ -13,11 +13,10 @@
     <div v-else-if="UserController.otp && step === 1">
       <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
       <div class="title">
-        Change password
+        {{ translation("steps.1.title") }}
       </div>
       <div class="desc">
-        Don’t forget that your new pasword has to be different from the previous
-        one.
+        {{ translation("steps.1.desc") }}
       </div>
       <form @submit.prevent="check_password()">
         <auth-input
@@ -42,17 +41,17 @@
           :placeholder-need="true"
         />
         <auth-button type="submit" :disabled="vaild_password()">
-          Save
+          {{ $t("page.global.action.save") }}
         </auth-button>
       </form>
     </div>
     <div v-else-if="UserController.otp && step === 2">
       <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
       <div class="title">
-        Google Authentication
+        {{ translation("steps.2.title") }}
       </div>
       <div class="desc">
-        Enter the authentication code from the app below.
+        {{ translation("steps.2.desc") }}
       </div>
       <form @submit.prevent="change_password">
         <auth-input
@@ -68,7 +67,7 @@
           :loading="loading"
           :disabled="!(otp_code.length === 6)"
         >
-          {{ $t("auth.confirm") }}
+          {{ $t("page.global.action.confirm") }}
         </auth-button>
       </form>
     </div>
@@ -76,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Mixins } from "vue-property-decorator";
+import { Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import ApiClient from "@zsmartex/z-apiclient";
@@ -89,16 +88,16 @@ import { runNotice } from "@/mixins";
   }
 })
 export default class App extends Mixins(Helpers) {
-  public old_password = "";
-  public new_password = "";
-  public confirm_password = "";
-  public otp_code = "";
+  old_password = "";
+  new_password = "";
+  confirm_password = "";
+  otp_code = "";
 
-  public mounted() {
+  mounted() {
     this.onCreate();
   }
 
-  public onCreate() {
+  onCreate() {
     this.step = 1;
     this.old_password = "";
     this.new_password = "";
@@ -106,8 +105,8 @@ export default class App extends Mixins(Helpers) {
     this.otp_code = "";
   }
 
-  public vaild_password() {
-    const { step, old_password, new_password, confirm_password } = this;
+  vaild_password() {
+    const { old_password, new_password, confirm_password } = this;
     if (!old_password || !new_password || !confirm_password) {
       return true;
     }
@@ -118,14 +117,14 @@ export default class App extends Mixins(Helpers) {
     );
   }
 
-  public async check_password() {
+  async check_password() {
     this.loading = true;
     try {
       await new ApiClient("auth").post("resource/users/checkpassword", {
         password: this.old_password
       });
       this.step++;
-      runNotice("warning", "U need enter otp code to continue");
+      runNotice("warning", "password.need2fa");
       this.loading = true;
     } catch (error) {
       this.loading = false;
@@ -133,7 +132,7 @@ export default class App extends Mixins(Helpers) {
     }
   }
 
-  public async change_password() {
+  async change_password() {
     this.loading = true;
     const { old_password, new_password, confirm_password, otp_code } = this;
     try {
@@ -145,11 +144,15 @@ export default class App extends Mixins(Helpers) {
       });
       this.loading = false;
       this.delete();
-      runNotice("success", "Password changed");
+      runNotice("success", "password.changed");
     } catch (error) {
       this.loading = false;
       return error;
     }
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("modal.password." + message, data);
   }
 }
 </script>
