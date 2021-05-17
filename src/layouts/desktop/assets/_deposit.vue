@@ -113,7 +113,7 @@ export default class DepositBox extends Vue {
   qrcode_show = false;
 
   mounted() {
-    this.getDepositAddress();
+    if (this.currency.type == "coin") this.getDepositAddress();
   }
 
   async getDepositAddress() {
