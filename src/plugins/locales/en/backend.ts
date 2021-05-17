@@ -169,6 +169,8 @@ export default {
   "account.beneficiary.cant_resend_within_1_minute": "Can\"t resend activation pin within 1 minute",
   "account.beneficiary.duplicate_address": "Beneficiary address already exists",
 
+
+  "market.order.side_blocked": "contact administrator",
   "market.market.doesnt_exist": "Market doesn\"t exist",
   "market.order.invalid_state": "Invalid deposit state",
   "market.order.invalid_limit": "Invalid limit",
