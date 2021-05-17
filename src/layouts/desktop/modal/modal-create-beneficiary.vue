@@ -119,6 +119,7 @@ export default class ModalCreateBeneficiary extends Mixins(ModalMixin) {
         address: this.address
       } : {
         account_number: this.account_number,
+        full_name: this.full_name,
         bank_name: this.bank_name,
         bank_swift_code: this.bank_swift_code,
         intermediary_bank_name: this.intermediary_bank_name,
