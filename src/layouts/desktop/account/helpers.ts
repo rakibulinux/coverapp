@@ -31,10 +31,6 @@ export default class App extends Vue {
     this.step = 1;
   }
 
-  public translation(message, data = {}) {
-    return helpers.translation("modal." + message, data);
-  }
-
   public closeModal() {
     this.delete();
   }

@@ -75,7 +75,7 @@ export default class UserScreen extends Mixins(ScreenMixin) {
 
   copyUID() {
     copyText(this.UserController.uid);
-    runNotice("success", "Copy successfully");
+    runNotice("success", "copy");
   }
 
   open_screen(screen: string) {

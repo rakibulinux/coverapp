@@ -14,28 +14,32 @@
 
 <script>
 import * as helpers from "@zsmartex/z-helpers";
-import _modal from "@/components/desktop/exchange/_modal.vue";
+import { Vue, Component } from "vue-property-decorator";
 
-export default {
+@Component({
   components: {
     "trade-action-part": () => import("./trade-action-part.vue"),
-    "modal-exchange": _modal
-  },
-  data: () => ({
-    tabList: [
+    "modal-exchange": () => import("@/components/desktop/exchange/_modal.vue")
+  }
+})
+export default class TradeAction extends Vue {
+  selected = "limit";
+
+  get tabList() {
+    return [
       {
         key: "limit",
-        tab: "Limit Order"
+        tab: this.translation("limit_order")
       }
-    ],
-    selected: "limit"
-  }),
-  methods: {
-    onTabChange(type) {
-      this.selected = type;
-    },
-    translation: (message, data = {}) =>
-      helpers.translation("exchange." + message, data)
+    ]
+  }
+
+  onTabChange(type) {
+    this.selected = type;
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("page.exchange.trade_action." + message, data)
   }
 };
 </script>

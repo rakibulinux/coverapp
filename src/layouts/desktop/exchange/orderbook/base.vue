@@ -16,13 +16,13 @@
     <div class="z-table z-table-hoverable">
       <div class="z-table-head">
         <span class="text-left">
-          {{ $t("table.price") }} ({{ market.quote_unit.toUpperCase() }})
+          {{ $t("page.global.table.price") }} ({{ market.quote_unit.toUpperCase() }})
         </span>
         <span class="text-right">
-          {{ $t("table.amount") }} ({{ market.base_unit.toUpperCase() }})
+          {{ $t("page.global.table.amount") }} ({{ market.base_unit.toUpperCase() }})
         </span>
         <span class="text-right">
-          {{ $t("table.sum") }} ({{ market.quote_unit.toUpperCase() }})
+          {{ $t("page.global.table.sum") }} ({{ market.quote_unit.toUpperCase() }})
         </span>
       </div>
       <div :class="['z-table-content', type + '-type']">
@@ -54,17 +54,16 @@ import book_bids_svg from "@/assets/img/book_bids.svg";
   }
 })
 export default class App extends Vue {
-  $refs!: {
-    [key: string]: any;
-  };
-
-  public loading = false;
-  public type = "normal";
-
-  public type_list = {
+  loading = false;
+  type = "default";
+  type_list = {
     asks: book_asks_svg,
     default: book_avg_svg,
     bids: book_bids_svg
+  };
+
+  $refs!: {
+    [key: string]: any;
   };
 
   get orderbook() {

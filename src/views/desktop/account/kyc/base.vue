@@ -5,7 +5,7 @@
     </div>
 
     <a-steps :current="step" size="small">
-      <a-step title="Basic Verification">
+      <a-step :title="translation('steps.basic_verification')">
         <a-icon
           v-if="
             profile_label.value == 'pending' ||
@@ -16,7 +16,7 @@
         />
         <a-icon v-else slot="icon" type="user" />
       </a-step>
-      <a-step title="ID & Face Verification">
+      <a-step :title="translation('steps.id_and_face_verification')">
         <a-icon
           v-if="document_label.value == 'pending'"
           slot="icon"
@@ -24,7 +24,7 @@
         />
         <a-icon v-else slot="icon" type="solution" />
       </a-step>
-      <a-step title="Done">
+      <a-step :title="translation('steps.done')">
         <a-icon slot="icon" type="smile-o" />
       </a-step>
     </a-steps>
@@ -54,6 +54,7 @@
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 import { UserController } from "@/controllers";
 
@@ -83,6 +84,10 @@ export default class AccountKYC extends Vue {
 
   get document_label() {
     return UserController.labels.find(label => label.key === "document") || {};
+  }
+
+  translation(message: string, data?: {}) {
+    return helpers.translation("page.account.kyc_account_verification." + message, data);
   }
 }
 </script>

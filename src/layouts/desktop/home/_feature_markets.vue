@@ -20,7 +20,7 @@
         <i>≈ ${{ getLastPriceUSD(NameToID(data)) }}</i>
       </p>
       <p class="vol">
-        <span>{{ $t("table.24h_volume") }}</span>
+        <span>{{ $t("page.global.table.24h_volume") }}</span>
         <i>{{ getVolume(NameToID(data)) }} {{ data.split("/")[1] }}</i>
       </p>
       <sparkline :market_id="NameToID(data)" />

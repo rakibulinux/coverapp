@@ -161,7 +161,7 @@ export default class SecurityOTPScreen extends Mixins(ScreenMixin) {
 
   copy_secret() {
     helpers.copyText(this.code.secret);
-    runNotice("success", "Copy success");
+    runNotice("success", "copy");
   }
 
   async enable_2fa() {

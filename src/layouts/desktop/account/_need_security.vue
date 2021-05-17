@@ -1,10 +1,9 @@
 <template>
   <div>
     <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
-    <div class="title">Security alert</div>
+    <div class="title">{{ translation("title") }}</div>
     <div class="desc">
-      Select an authentication method from the list below for your account’s
-      safety.
+      {{ translation("desc") }}
     </div>
     <div class="box">
       <p
@@ -22,15 +21,16 @@
       :disabled="!selected"
       @click="$emit('change-modal', selected)"
     >
-      Next
+      {{ $t('page.global.action.next') }}
     </auth-button>
     <div class="later-footer">
-      <span @click="$emit('close-modal')">Maybe later</span>
+      <span @click="$emit('close-modal')">{{ $t("page.global.action.later") }}</span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
 import example_action_logo from "@/assets/img/example_modal_logo.jpg";
 import { Vue, Component } from "vue-property-decorator";
 
@@ -51,6 +51,10 @@ export default class NeedSecurity extends Vue {
 
   actionChange(action) {
     this.selected = action;
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("modal.need_security." + message, data);
   }
 }
 </script>

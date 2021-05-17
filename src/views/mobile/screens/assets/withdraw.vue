@@ -133,9 +133,10 @@ export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
 
     await TradeController.create_withdrawal(
       this.currency.id,
-      this.address,
       Number(this.amount),
       otp_code,
+      this.address,
+      null,
       () => {
         this.close_verify_otp_screen();
       }

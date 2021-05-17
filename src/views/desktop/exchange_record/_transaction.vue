@@ -1,10 +1,10 @@
 <template>
   <div class="order-main">
-    <div class="order-head" v-text="$t('orders.transaction.title')" />
+    <div class="order-head" v-text="$t('page.global.header.orders.trades_history')" />
     <div class="order-body">
       <div class="select">
         <div class="form-row">
-          <label class="form-label">{{ $t("table.market") }}:</label>
+          <label class="form-label">{{ $t("page.global.table.market") }}:</label>
           <div class="form-control">
             <a-select v-model="market" style="width: 115px">
               <a-select-option
@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="form-row">
-          <label class="form-label">{{ $t("table.type") }}:</label>
+          <label class="form-label">{{ $t("page.global.table.type") }}:</label>
           <div class="form-control">
             <a-select v-model="type" style="width: 115px">
               <a-select-option v-for="data in TYPE" :key="data">
@@ -28,7 +28,7 @@
           </div>
         </div>
         <div class="form-row">
-          <label class="form-label">{{ $t("table.date") }}:</label>
+          <label class="form-label">{{ $t("page.global.table.date") }}:</label>
           <div class="form-control datepicker">
             <a-range-picker v-model="timeMoment">
               <template slot="dateRender" slot-scope="current">
@@ -50,12 +50,12 @@
       </div>
       <div class="table-content">
         <dt>
-          <span v-text="$t('table.date')" />
-          <span v-text="$t('table.pair')" />
-          <span v-text="$t('table.type')" />
-          <span v-text="$t('table.price')" />
-          <span v-text="$t('table.amount')" />
-          <span v-text="$t('table.total')" />
+          <span v-text="$t('page.global.table.date')" />
+          <span v-text="$t('page.global.table.pair')" />
+          <span v-text="$t('page.global.table.type')" />
+          <span v-text="$t('page.global.table.price')" />
+          <span v-text="$t('page.global.table.amount')" />
+          <span v-text="$t('page.global.table.total')" />
         </dt>
         <dd :class="{ empty: !array.data.length }">
           <p
@@ -72,7 +72,7 @@
           </p>
           <z-loading v-if="loading" />
           <p v-else-if="!array.data.length">
-            <span v-text="$t('orders.transaction.empty')" />
+            <span v-text="$t('page.orders.trades_history.empty')" />
           </p>
 
           <z-pagination

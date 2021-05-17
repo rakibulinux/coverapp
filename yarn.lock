@@ -1696,10 +1696,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zsmartex/z-apiclient@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@zsmartex/z-apiclient/-/z-apiclient-1.0.8.tgz#c532e616e0bdabcc34c39886f0a01c03e59bbe1c"
-  integrity sha512-sHHUwXAUqNU1HjBuV+h2q+huxPFyMWCFWGMUU+XXzFPxzg7GjyKzZW/GUKZ0h471ocIh5TyVab/eWpS+/KpkTQ==
+"@zsmartex/z-apiclient@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@zsmartex/z-apiclient/-/z-apiclient-1.0.10.tgz#10df68494773154aa7349ee12ec6e4c8d28f3e51"
+  integrity sha512-SmCG8Rqu83An9k15lDP9QQseln6PNLTSPLPqIBjpXhBrCcjsgdO+wsWYThX+3iwmcbkRnzF2Zs/06TcAkJtEjA==
   dependencies:
     "@zsmartex/z-eventbus" "^1.0.2"
     axios "^0.21.1"
@@ -1723,10 +1723,10 @@
   resolved "https://registry.yarnpkg.com/@zsmartex/z-store/-/z-store-2.2.30.tgz#28a2613da49e3f0158b90a9ffeb28aec26b91949"
   integrity sha512-FdOa4lbxk3J3E8ujukCoU/DpGyPZtesqRubq7ewtif2nL0iv/r09dyk7pbHbrHvsn44eyitamUTy2p20KPXwsA==
 
-"@zsmartex/z-types@1.10.14":
-  version "1.10.14"
-  resolved "https://registry.yarnpkg.com/@zsmartex/z-types/-/z-types-1.10.14.tgz#a64bc8d2f5e4f84198c486dc11eb33278fcbb717"
-  integrity sha512-wp+VXxkvmRt8rJFhjUlGrayBOSOrY+NtDXTgwO6aXfUNPaEwQv6LZQTHUoIJGWjEOc6pvGKVyN5Oco85jaV+Sw==
+"@zsmartex/z-types@1.10.16":
+  version "1.10.16"
+  resolved "https://registry.yarnpkg.com/@zsmartex/z-types/-/z-types-1.10.16.tgz#f9001d348ef33dfde18e60b8e551f648010dafe6"
+  integrity sha512-Jw4qonNVf8edYhqz8cDEfZGdigGnKLZX4sKrZFi1MT821NGZVye0D5PrdUqj0ZKMsd4pBlzwAyZdaljrsfQwbQ==
 
 abbrev@1:
   version "1.1.1"

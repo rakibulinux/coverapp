@@ -8,7 +8,7 @@
           }"
           @click="changeSelect('Favorites')"
         >
-          {{ $t("market_list.favorite") }}
+          {{ $t("page.global.table.favorite") }}
         </li>
         <li
           v-for="(data, index) in list_bid"
@@ -16,13 +16,13 @@
           :class="{ selected: isSelected === data }"
           @click="changeSelect(data)"
         >
-          {{ $t("market_list.market", { market: data }) }}
+          {{ $t("page.global.market", { currency: data }) }}
         </li>
       </ul>
       <div class="search">
         <input
           v-model="search"
-          :placeholder="$t('input.placeholder.search')"
+          :placeholder="$t('page.global.table.search')"
           maxlength="9"
           type="text"
         />
@@ -49,7 +49,7 @@
             />
           </span>
         </span>
-        <span class="text-right actions">{{ $t("table.action") }}</span>
+        <span class="text-right actions">{{ $t("page.global.table.action") }}</span>
       </dt>
       <dd>
         <market-list-row
@@ -66,7 +66,6 @@
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
-import { PublicController, TradeController } from '@/controllers';
 
 @Component({
   components: {
@@ -81,12 +80,12 @@ export default class MarketList extends Vue {
 
   get sorts() {
     return [
-      { sortBy: "name", text: this.$t("table.pair") },
-      { sortBy: "last", text: this.$t("table.last_price") },
-      { sortBy: "change", text: this.$t("table.24h_change") },
-      { sortBy: "high", text: this.$t("table.24h_high") },
-      { sortBy: "low", text: this.$t("table.24h_low") },
-      { sortBy: "volume", text: this.$t("table.24h_volume") }
+      { sortBy: "name", text: this.$t("page.global.table.pair") },
+      { sortBy: "last", text: this.$t("page.global.table.last_price") },
+      { sortBy: "change", text: this.$t("page.global.table.24h_change") },
+      { sortBy: "high", text: this.$t("page.global.table.24h_high") },
+      { sortBy: "low", text: this.$t("page.global.table.24h_low") },
+      { sortBy: "volume", text: this.$t("page.global.table.24h_volume") }
     ];
   }
 
@@ -98,7 +97,7 @@ export default class MarketList extends Vue {
     const { sortBy, sortReverse, isSelected, search } = this;
     const { findTickersBase } = helpers;
 
-    let tickers = Object.values(PublicController.tickers);
+    let tickers = Object.values(this.PublicController.tickers);
     tickers = findTickersBase(tickers, "market", isSelected, true);
     if (this.search) {
       tickers = findTickersBase(tickers, "search", search, true);

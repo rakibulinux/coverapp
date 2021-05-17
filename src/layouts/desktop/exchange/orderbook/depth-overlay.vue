@@ -8,18 +8,18 @@
     >
       <template v-if="mouse_event.hover">
         <div class="depth-overlay-item avg-price">
-          <span class="depth-overlay-title">Avg.Price:</span>
+          <span class="depth-overlay-title">{{ $t('page.exchange.depth.overlay.avg_price') }}:</span>
           <span class="depth-overlay-value">≈ {{ overlayData.avg_price }}</span>
         </div>
         <div class="depth-overlay-item">
           <span class="depth-overlay-title">
-            Sum ({{ market.base_unit.toUpperCase() }}):
+            {{ $t("page.global.table.sum") }} ({{ market.base_unit.toUpperCase() }}):
           </span>
           <span class="depth-overlay-value">{{ overlayData.sum_volume }}</span>
         </div>
         <div class="depth-overlay-item">
           <span class="depth-overlay-title">
-            Sum ({{ market.quote_unit.toUpperCase() }}):
+            {{ $t("page.global.table.sum") }} ({{ market.quote_unit.toUpperCase() }}):
           </span>
           <span class="depth-overlay-value">{{ overlayData.sum_total }}</span>
         </div>

@@ -22,7 +22,7 @@
     <span class="date" v-text="getDate(record.created_at)" />
     <span class="infomation">
       <div class="address">
-        <span class="title">{{ $t("assets.address") }}:</span>
+        <span class="title">{{ $t("page.global.placeholder.address") }}:</span>
         <a
           v-if="txid_box_opening"
           :href="currency.explorer_address.replace('#{address}', record.from_addresses[0] || record.rid)"
@@ -32,7 +32,7 @@
         <span v-else v-text="record.from_addresses[0] || record.rid" />
       </div>
       <div class="txid" :class="[txid_box_opening ? 'show' : 'hide']">
-        <span class="title">{{ $t("assets.txid") }}:</span>
+        <span class="title">{{ $t("page.global.placeholder.txid") }}:</span>
         <a
           :href="
             currency.explorer_transaction.replace(

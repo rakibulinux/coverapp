@@ -4,7 +4,7 @@
     <trade-action-input
       class="price"
       v-model="price"
-      :prefix="translation('price')"
+      :prefix="$t('page.global.table.price').toUpperCase()"
       :suffix="currency_by_side('buy').toUpperCase()"
       :limit-length-after-dot="price_precision"
       :estimate-value="
@@ -15,7 +15,7 @@
     <trade-action-input
       class="amount"
       v-model="amount"
-      :prefix="translation('amount')"
+      :prefix="$t('page.global.table.amount').toUpperCase()"
       :suffix="currency_by_side('sell').toUpperCase()"
       :limit-length-after-dot="amount_precision"
       :error="amount_error"
@@ -30,7 +30,7 @@
       @change="onSliderPercentChange"
     />
     <div class="total">
-      {{ translation("total") }}:
+      {{ $t('page.global.table.total') }}:
       <span class="value">
         {{ (total || 0).toFixed(total_precision) }}
         {{ currency_by_side("buy").toUpperCase() }}
