@@ -12,7 +12,7 @@
         }
       ]"
     >
-      {{ $t(`assets.history.state.${record.state}`) }}
+      {{ $t(`page.assets.history.state.${record.state}`) }}
       <span v-if="record.state == 'processing' || record.state == 'confirming'">
         ({{ record.confirmations }}/{{ currency.min_confirmations }})
       </span>
