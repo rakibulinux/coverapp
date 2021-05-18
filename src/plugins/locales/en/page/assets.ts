@@ -38,4 +38,22 @@ export default {
   "page.assets.deposit.fiat.phone_numer.title": "Phone Number",
   "page.assets.deposit.fiat.phone_numer.value.usdt": "+3 8093 1212 12 12",
   "page.assets.deposit.fiat.reference_code.title": "Reference Code",
+
+  // History
+  "page.assets.history.state.submitted": "Submitted",
+  "page.assets.history.state.canceled": "Canceled",
+  "page.assets.history.state.rejected": "Rejected",
+  "page.assets.history.state.accepted": "Accepted",
+  "page.assets.history.state.aml_processing": "Aml Processing",
+  "page.assets.history.state.aml_suspicious": "Aml Suspicious",
+  "page.assets.history.state.processing": "Processing",
+  "page.assets.history.state.skipped": "Skipped",
+  "page.assets.history.state.collected": "Collected",
+  "page.assets.history.state.fee_processing": "Fee Processing",
+  "page.assets.history.state.errored": "Errored",
+  "page.assets.history.state.prepared": "Prepared",
+  "page.assets.history.state.to_reject": "To Reject",
+  "page.assets.history.state.succeed": "Succeed",
+  "page.assets.history.state.failed": "Failed",
+  "page.assets.history.state.confirming": "Confirming",
 };
