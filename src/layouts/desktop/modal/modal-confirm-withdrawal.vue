@@ -35,7 +35,6 @@
         type="submit"
         :loading="loading"
         :disabled="confirmation_code.length < 6"
-        @click="confirm_withdrawal"
       >
         {{ $t("page.global.action.confirm") }}
       </auth-button>
