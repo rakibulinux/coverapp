@@ -132,7 +132,7 @@ export default class SignUp extends Vue {
       return false;
     }
 
-    if (/^ID\w{10}$/g.test(refid)) {
+    if (!(/^ID\w{10}$/g.test(refid))) {
       return this.$t("auth.input_error.refid");
     }
   }
