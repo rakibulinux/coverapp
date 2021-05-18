@@ -80,8 +80,8 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     [key: string]: ScreenMixin;
   };
 
-  email = "demo@zsmart.tech";
-  password = "J\\=v<Sfn7>8%W6S6";
+  email = "";
+  password = "";
   otp_code = "";
   button_rules = ["loading", "email", "password"];
 
