@@ -227,7 +227,6 @@ export default class AssetsWithdraw extends Vue {
     const amount = Number(this.amount);
     const available = Number(this.available);
 
-
     if (amount > available) return true;
     if (amount <= 0) return true;
     if (!address && this.type == "address") return true;
@@ -303,15 +302,17 @@ export default class AssetsWithdraw extends Vue {
 
   async withdraw(otp_code?: string) {
     if (!otp_code) return this.open_modal("totp");
+    console.log(otp_code);
 
     this.loading = true;
+    console.log(this.type == "book", this.selected_beneficiary);
 
     await this.TradeController.create_withdrawal(
       this.currency.id,
       Number(this.amount),
       otp_code,
       this.type == "address" ? this.address : null,
-      this.type == "book" && this.selected_beneficiary ? this.selected_beneficiary.id.toString() : null,
+      this.type == "book" ? this.selected_beneficiary.id.toString() : null,
       withdraw => {
         this.close_modal("totp");
 
