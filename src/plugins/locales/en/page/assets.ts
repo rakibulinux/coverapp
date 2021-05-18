@@ -30,13 +30,13 @@ export default {
 
   // Fiat
   "page.assets.deposit.fiat.bank_name.title": "Bank Name",
-  "page.assets.deposit.fiat.bank_name.value.usdt": "Diamant Bank",
+  "page.assets.deposit.fiat.bank_name.value.usd": "Diamant Bank",
   "page.assets.deposit.fiat.account_number.title": "Account Number",
-  "page.assets.deposit.fiat.account_number.value.usdt": "10120212",
+  "page.assets.deposit.fiat.account_number.value.usd": "10120212",
   "page.assets.deposit.fiat.account_name.title": "Account Name",
-  "page.assets.deposit.fiat.account_name.value.usdt": "name",
+  "page.assets.deposit.fiat.account_name.value.usd": "name",
   "page.assets.deposit.fiat.phone_numer.title": "Phone Number",
-  "page.assets.deposit.fiat.phone_numer.value.usdt": "+3 8093 1212 12 12",
+  "page.assets.deposit.fiat.phone_numer.value.usd": "+3 8093 1212 12 12",
   "page.assets.deposit.fiat.reference_code.title": "Reference Code",
 
   // History
