@@ -2,16 +2,15 @@ import getUrl from "@/getUrl";
 import en from "@/plugins/locales/en";
 import vn from "@/plugins/locales/vn";
 
-const nameEX = "Welcome Exchange";
+const nameEX = "XUM Exchange";
 
 export default {
   nameEX,
-  "default_market": "xumusdt",
-  "feature_markets": ["ETH/USD", "XUM/USD", "XUM/USDT", "XUM/ETH", "XUM/BTC"],
-  "list_bid": ["USD", "ETH", "BTC", "USDT"],
+  "default_market": "ethusdt",
+  "feature_markets": ["ETH/USDT", "BTC/USDT", "ETH/USDT", "BTC/USDT", "ETH/USDT"],
+  "list_bid": ["USDT", "ETH", "BTC", "ETC", "USDC", "USDB"],
   "messages": {
-    en,
-    vn
+    en
   },
   "api": {
     url: "/api/v2/",

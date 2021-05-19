@@ -56,7 +56,7 @@
         <li class="m" v-text="`Business: ${contactus.business}`" />
         <li class="m">
           Facebook:
-          <a :href="contactus.facebook" target="_blank">smartchainers</a>
+          <a :href="contactus.facebook" target="_blank">XUM</a>
         </li>
       </ul>
     </div>
