@@ -56,7 +56,7 @@
         <li class="m" v-text="`Business: ${contactus.business}`" />
         <li class="m">
           Facebook:
-          <a :href="contactus.facebook" target="_blank">XUM</a>
+          <a>XUM</a>
         </li>
       </ul>
     </div>
@@ -76,7 +76,7 @@ export default class App extends Vue {
   public contactus = {
     service: "Xumchain.com",
     business: "Xumchain.com",
-    facebook: "https://fb.com/smartchainers"
+    facebook: ""
   };
 
   public copyright = {
