@@ -80,8 +80,6 @@ export default class DataFeed {
         volume: el[5]
       }));
 
-      bars = [];
-
       if (firstDataRequest) {
         history[symbolInfo.name] = { lastBar: bars.length ? bars[bars.length - 1] : null };
         ZSmartModel.emit("tradingview-ready");
