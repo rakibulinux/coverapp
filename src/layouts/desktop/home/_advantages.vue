@@ -28,7 +28,7 @@ import advantage_example from "@/assets/img/advantage_example.png";
 
 export default {
   data: () => ({
-    title: "The Advantages of Exchange",
+    title: "The Advantages of XUM Exchange",
     contentOne: [
       {
         img: advantage_example,
