@@ -71,7 +71,7 @@ export default class DataFeed {
     const url = "public/markets/" + TradeController.market.id + "/k-line";
     try {
       const { data } = await new ApiClient("trade").get(url, payload);
-      const bars = data.map(el => ({
+      let bars = data.map(el => ({
         time: el[0] * 1000,
         open: el[1],
         high: el[2],
@@ -80,11 +80,14 @@ export default class DataFeed {
         volume: el[5]
       }));
 
+      bars = [];
+
       if (firstDataRequest) {
-        history[symbolInfo.name] = { lastBar: bars[bars.length - 1] };
+        history[symbolInfo.name] = { lastBar: bars.length ? bars[bars.length - 1] : null };
         ZSmartModel.emit("tradingview-ready");
       }
-      onDataCallback(bars, { noData: !data.length });
+      
+      onDataCallback(bars, { noData: !bars.length });
     } catch (error) {
       onErrorCallback(error);
       return error;
