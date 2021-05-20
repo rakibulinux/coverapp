@@ -25,6 +25,9 @@
 <script>
 import config from "@/config";
 import advantage_example from "@/assets/img/advantage_example.png";
+import risk from "@/assets/img/risk.png"
+import team from "@/assets/img/team.jpg"
+import tech from "@/assets/img/sup_tech.jpeg"
 
 export default {
   data: () => ({
@@ -37,13 +40,13 @@ export default {
           "Your digital assets are secured safely with highest levels of SSL encryption security."
       },
       {
-        img: advantage_example,
+        img:team ,
         title: "Professional Team",
         desc:
           "Our team is composed of finance and IT experts with years of trading experiences."
       },
       {
-        img: advantage_example,
+        img: risk,
         title: "Risk Management",
         desc:
           "Our dedicated risk management team manages the safety of your digital assets with multi-dimension security protection system."
@@ -51,7 +54,7 @@ export default {
     ],
     contentTwo: [
       {
-        img: advantage_example,
+        img: tech,
         title: "Superior Technology",
         desc:
           "Enjoy stable and fast trading experience with highly-efficient matching engine in our clean and simple UI."

@@ -1,7 +1,7 @@
 <template>
   <div class="preview">
     <div class="fixed">
-      <h3>Welcome to Exchange</h3>
+      <h3>Welcome to XUM exchange</h3>
       <div class="banners">
         <swiper class="slide_viewer" :options="swiperOption">
           <swiper-slide v-for="(banner, index) in banners" :key="index">
