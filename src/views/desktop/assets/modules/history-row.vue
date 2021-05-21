@@ -25,11 +25,11 @@
         <span class="title">{{ $t("page.global.placeholder.address") }}:</span>
         <a
           v-if="txid_box_opening"
-          :href="currency.explorer_address.replace('#{address}', record.from_addresses[0] || record.rid)"
+          :href="currency.explorer_address.replace('#{address}', type == 'deposit' ? record.from_addresses[0] : record.rid)"
           target="_blank"
-          v-text="record.from_addresses[0] || record.rid"
+          v-text="type == 'deposit' ? record.from_addresses[0] : record.rid"
         />
-        <span v-else v-text="record.from_addresses[0] || record.rid" />
+        <span v-else v-text="type == 'deposit' ? record.from_addresses[0] : record.rid" />
       </div>
       <div class="txid" :class="[txid_box_opening ? 'show' : 'hide']">
         <span class="title">{{ $t("page.global.placeholder.txid") }}:</span>
