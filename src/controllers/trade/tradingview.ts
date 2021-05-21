@@ -37,7 +37,7 @@ interface TradingViewSymbolInfo {
 
 interface TradingViewStream {
 	channelString: string;
-	lastBar: TradingViewLastBar
+	lastBar?: TradingViewLastBar
 	listener: (lastBar: TradingViewLastBar) => void;
 	resolution: TradingViewResolution;
 	subscribeUID: string;
@@ -95,25 +95,30 @@ export default class TradingView {
     const coeff = resolution * 60;
     const rounded = Math.floor(payload.time / coeff) * coeff;
 
-    if (rounded > lastBar.time / 1000) {
+    if (!lastBar || rounded > lastBar.time / 1000) {
       lastBar = {
         time: rounded * 1000,
-        open: payload.open,
-        high: payload.high,
-        low: payload.low,
+        open: payload.close,
+        high: payload.close,
+        low: payload.close,
         close: payload.close,
         volume: payload.volume
       }
-    } else if (payload_type == "trade") {
-      if (lastBar.open == undefined) lastBar.open = payload.close;
-      if (lastBar.low == undefined) lastBar.low = payload.close;
-      if (lastBar.high == undefined) lastBar.high = payload.close;
+    } else {
+      if (!lastBar.time) lastBar.time = rounded * 1000;
+      if (!lastBar.open) lastBar.open = payload.close;
+      if (!lastBar.high) lastBar.high = payload.close;
+      if (!lastBar.low) lastBar.low = payload.close;
+      lastBar.close = payload.close;
 
       if (payload.close < lastBar.low) lastBar.low = payload.close;
-      else if (payload.close > lastBar.high) lastBar.high = payload.close;
+      if (payload.high > lastBar.high) lastBar.high = payload.high;
 
-      lastBar.volume += payload.volume;
-      lastBar.close = payload.close;
+      if (lastBar.volume) {
+        lastBar.volume += payload.volume;
+      } else {
+        lastBar.volume = payload.volume;
+      }
     }
 
     this.stream.lastBar = lastBar;
