@@ -14,7 +14,7 @@
       <div class="screen-assets-details-info">
         <p class="screen-assets-details-info-line">
           <span class="title">Address</span>
-          <span class="value">{{ record.from_addresses || record.rid }}</span>
+          <span class="value">{{ type == 'deposit' ? record.from_addresses : record.rid }}</span>
         </p>
         <p class="screen-assets-details-info-line">
           <span class="title">Transaction Fee</span>
