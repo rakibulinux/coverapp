@@ -71,7 +71,7 @@ export default class DataFeed {
     const url = "public/markets/" + TradeController.market.id + "/k-line";
     try {
       const { data } = await new ApiClient("trade").get(url, payload);
-      let bars = data.map(el => ({
+      const bars = data.map(el => ({
         time: el[0] * 1000,
         open: el[1],
         high: el[2],
