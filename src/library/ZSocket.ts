@@ -142,19 +142,6 @@ class ZSocket {
           }
         }
 
-        if (klineMatch) {
-          TradeController.tradingview.add_update_chart({
-              time: event[0],
-              open: event[1],
-              high: event[2],
-              low: event[3],
-              close: event[4],
-              volume: event[5]
-            },
-            "kline"
-          );
-        }
-
         if (tradesMatch) {
           for (const trade of (event.trades as ZTypes.PublicTrade[])) {
             TradeController.add_trade(trade);
