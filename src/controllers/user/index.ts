@@ -293,9 +293,21 @@ export class UserController {
         password,
         code: otp_code
       });
-      store.commit("user/ENABLE_OTP");
       this.otp = true;
       runNotice("success", "otp.enabled");
+      on_success();
+    } catch (error) {
+      return;
+    }
+  }
+
+  async disable_2fa(otp_code: string, on_success?: () => void) {
+    try {
+      await new ApiClient("auth").post("resource/otp/disable", {
+        code: otp_code
+      });
+      this.otp = false;
+      runNotice("success", "otp.disabled");
       on_success();
     } catch (error) {
       return;
