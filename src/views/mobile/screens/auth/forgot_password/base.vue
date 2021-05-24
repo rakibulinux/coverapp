@@ -125,7 +125,7 @@ export default class ScreenConfirmEmail extends Mixins(
     }
 
     if (!helpers.validEmail(email)) {
-      return this.$t("auth.input_error.email");
+      return this.$t("page.global.input.error.email");
     }
   }
 
