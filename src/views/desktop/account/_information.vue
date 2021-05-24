@@ -19,6 +19,7 @@
         </tr>
       </table>
     </div>
+
     <modal-phone ref="phone" />
   </div>
 </template>
@@ -29,7 +30,7 @@ import { Vue, Component } from "vue-property-decorator";
 import _modal_phone from "@/layouts/desktop/account/_modal_phone.vue";
 import Helpers from "./helpers";
 import { UserController } from "@/controllers";
-import { EncryptEmail } from "@/mixins";
+import { EncryptEmail, runNotice } from "@/mixins";
 
 @Component({
   components: {
@@ -42,9 +43,16 @@ export default class AccountInformation extends Vue {
     return [
       {
         name: this.$t("page.global.table.uid"),
-        type: "text",
-        desc: ``,
-        value: UserController.uid
+        type: "action",
+        desc: `Click to get invite link`,
+        action: {
+          allow: true,
+          text: this.$t("page.global.action.copy"),
+          runner: () => {
+            runNotice("success", "copy");
+            helpers.copyText(`${document.location.origin}/signup?refid=${UserController.uid}`)
+          }
+        }
       },
       {
         name: this.$t("page.global.table.email"),

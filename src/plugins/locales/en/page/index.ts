@@ -107,6 +107,7 @@ export default {
   "page.global.action.sending": "Sending...",
   "page.global.action.resend": "Resend",
   "page.global.action.copy": "Copy",
+  "page.global.action.turn_off": "Turn Off",
 
   ...Home,
   ...Account,

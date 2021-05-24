@@ -6,7 +6,11 @@ export default class Helpers extends Vue {
     [key: string]: any;
   }
 
-  onClick(modal: string) {
-    this.$refs[modal].create();
+  onClick(evt) {
+    if (typeof evt === "string") {
+      this.$refs[evt].create();
+    } else {
+      evt();
+    }
   }
 };

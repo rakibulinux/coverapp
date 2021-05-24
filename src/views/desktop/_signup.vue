@@ -61,7 +61,7 @@ export default class SignUp extends Vue {
   public email = "";
   public password = "";
   public confirm_password = "";
-  public refid = "";
+  public refid = "" || this.$route.query.refid as string;
   public captcha_response = "";
 
   get loading() {
@@ -132,7 +132,7 @@ export default class SignUp extends Vue {
       return false;
     }
 
-    if (!(/^ID\w{10}$/g.test(refid))) {
+    if (/^ID\w{10}$/g.test(refid)) {
       return this.$t("auth.input_error.refid");
     }
   }
