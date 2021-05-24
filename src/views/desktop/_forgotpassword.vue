@@ -126,7 +126,7 @@ export default class ForgotPassword extends Mixins(ConfirmationMixin) {
     }
 
     if (!helpers.validEmail(email)) {
-      return this.$t("auth.input_error.email");
+      return this.$t("page.global.input.error.email");
     }
   }
 

@@ -72,6 +72,13 @@ export default {
   "page.global.placeholder.intermediary_bank_name": "Intermediary bank name",
   "page.global.placeholder.intermediary_bank_swift_code": "Intermediary bank swift code",
 
+  // Input error
+  "page.global.input.error.email": "Incorrect email address. Please enter again.",
+  "page.global.input.error.password": "At least 8 characters, must include UPPER CASE letters and numbers.",
+  "page.global.input.error.confirm_password": "Passwords do not match. Please try again.",
+  "page.global.input.error.refid": "Please enter correct referral ID",
+  "page.global.input.error.otp": "Please enter correct 2FA Code",
+
   // Header
   "page.global.header.exchange": "Exchange",
   "page.global.header.sign_in": "Sign In",
