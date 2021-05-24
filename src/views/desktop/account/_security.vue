@@ -20,25 +20,29 @@
     </div>
     <modal-2fa ref="2fa" />
     <modal-password ref="password" @changeModal="onClick" />
+    <ModalTOTP ref="turn-off-2fa" :loading="turn_off_2fa_loading" @submit="turn_off_2fa" />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
+import ModalTOTP from "@/layouts/desktop/modal/_modal_totp.vue";
 import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
 import _modal_password from "@/layouts/desktop/account/_modal_password.vue";
 import Helpers from "./helpers";
-import { UserController } from "@/controllers";
 
 @Component({
   components: {
+    ModalTOTP,
     "modal-2fa": _modal_2fa,
     "modal-password": _modal_password
   },
   mixins: [Helpers]
 })
 export default class AccountSecurity extends Vue {
+  turn_off_2fa_loading = false;
+
   get account_security() {
     return [
       {
@@ -52,16 +56,24 @@ export default class AccountSecurity extends Vue {
         }
       },
       {
-        status: UserController.otp,
+        status: this.UserController.otp,
         name: this.$t("page.global.table.otp"),
         desc: this.translation("otp.desc"),
         action: {
-          allow: !UserController.otp,
-          text: this.$t("page.global.action.settings"),
-          runner: "2fa"
+          allow: true,
+          text: this.$t(this.UserController.otp ? "page.global.action.turn_off" : "page.global.action.settings"),
+          runner: this.UserController.otp ? "turn-off-2fa" : "2fa"
         }
       }
     ];
+  }
+
+  async turn_off_2fa(otp_code) {
+    this.turn_off_2fa_loading = true;
+    await this.UserController.disable_2fa(otp_code, () => {
+      (this.$refs["turn-off-2fa"] as any).delete();
+    });
+    this.turn_off_2fa_loading = false;
   }
 
   translation(message: string, data?: {}) {
