@@ -96,7 +96,7 @@ export default class SignIn extends Vue {
     }
 
     if (!helpers.validEmail(email)) {
-      return this.$t("auth.input_error.email");
+      return this.$t("page.global.input.error.email");
     }
   }
 
@@ -107,7 +107,7 @@ export default class SignIn extends Vue {
     }
 
     if (!helpers.validPassword(password)) {
-      return this.$t("auth.input_error.password");
+      return this.$t("page.global.input.error.password");
     }
   }
 
