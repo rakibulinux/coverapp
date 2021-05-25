@@ -137,7 +137,7 @@
             <input
               type="text"
               disabled
-              :value="Number((amount || 0) - currency.withdraw_fee).toFixed(8)"
+              :value="(amount.length ? (Number(amount) - currency.withdraw_fee) : 0).toFixed(8)"
             />
           </div>
         </div>
