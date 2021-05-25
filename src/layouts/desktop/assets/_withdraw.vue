@@ -137,7 +137,7 @@
             <input
               type="text"
               disabled
-              :value="(amount.length ? (Number(amount) - currency.withdraw_fee) : 0).toFixed(8)"
+              :value="receive_amount"
             />
           </div>
         </div>
@@ -226,12 +226,18 @@ export default class AssetsWithdraw extends Vue {
     const { address } = this;
     const amount = Number(this.amount);
     const available = Number(this.available);
+    const receive_amount = Number(this.receive_amount);
 
     if (amount > available) return true;
     if (amount <= 0) return true;
+    if (receive_amount <= 0) return true;
     if (!address && this.type == "address") return true;
     if (!this.selected_beneficiary && this.type == "book") return true;
     if (this.selected_beneficiary.state != "active" && this.type == "book") return true;
+  }
+
+  get receive_amount() {
+    return this.amount ? (Number(this.amount) - Number(this.currency.withdraw_fee)).toFixed(8) : (0).toFixed(8);
   }
 
   mounted() {
