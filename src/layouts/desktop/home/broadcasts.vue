@@ -12,7 +12,6 @@
 </template>
 
 <script lang="ts">
-import { PublicController } from "@/controllers";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component
@@ -27,7 +26,7 @@ export default class BroadCasts extends Vue {
   }
 
   get broadcasts() {
-    return PublicController.broadcasts;
+    return this.PublicController.broadcasts;
   }
 }
 </script>

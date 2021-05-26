@@ -1,6 +1,5 @@
 import "@/assets/css/layouts/desktop/base.less";
 import "@/assets/css/themes/custom/index.less";
-import zCard from "@/layouts/desktop/z-card.vue";
 import zContent from "@/layouts/desktop/z-content.vue";
 import {
   AutoComplete,
@@ -48,4 +47,3 @@ Vue.use(Progress);
 Vue.use(Steps);
 
 Vue.component("z-content", zContent);
-Vue.component("z-card", zCard);

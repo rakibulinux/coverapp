@@ -1,35 +1,32 @@
 <template>
   <z-card
-    id="mine_control"
-    :bordered="false"
+    v-model="type_control"
     :tab-list="tab_list"
-    :active-tab-key="type_control"
     @tabChange="onTabChange"
     class="page-trade-mine-control"
   >
-    <div slot="extra" class="extra-action cancel-all">
+    <div slot="head" class="extra-action cancel-all">
       <a-button @click="cancel_all_orders" type="primary">
         {{ $t("page.global.action.cancel_all") }}
       </a-button>
     </div>
     <open-orders
-      v-if="type_control === 'open_orders'"
+      v-show="type_control === 'open_orders'"
       :type_control="type_control"
     />
     <orders-history
-      v-if="type_control === 'orders_history'"
+      v-show="type_control === 'orders_history'"
       :type_control="type_control"
     />
     <trades-history
-      v-if="type_control === 'trades_history'"
+      v-show="type_control === 'trades_history'"
       :type_control="type_control"
     />
+    <modal-exchange v-if="!UserController.isAuth" />
   </z-card>
 </template>
 
 <script lang="ts">
-import { UserController } from "@/controllers";
-import TradeController from "@/controllers/trade";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
@@ -37,39 +34,36 @@ import { Vue, Component } from "vue-property-decorator";
   components: {
     "open-orders": () => import("./control/open_orders.vue"),
     "orders-history": () => import("./control/orders_history.vue"),
-    "trades-history": () => import("./control/trades_history.vue")
+    "trades-history": () => import("./control/trades_history.vue"),
+    "modal-exchange": () => import("@/components/desktop/exchange/_modal.vue")
   }
 })
 export default class MineControl extends Vue {
   type_control = "open_orders";
 
-  get TradeController() {
-    return TradeController;
-  }
-
   get tab_list() {
     return [
       {
         key: "open_orders",
-        tab: this.$t("page.global.header.orders.open_orders")
+        text: this.$t("page.global.header.orders.open_orders")
       },
       {
         key: "orders_history",
-        tab: this.$t("page.global.header.orders.orders_history")
+        text: this.$t("page.global.header.orders.orders_history")
       },
       {
         key: "trades_history",
-        tab: this.$t("page.global.header.orders.trades_history")
+        text: this.$t("page.global.header.orders.trades_history")
       }
     ];
   }
 
   get market() {
-    return TradeController.market;
+    return this.TradeController.market;
   }
 
   public mounted() {
-    if (UserController.state == "active") {
+    if (this.UserController.isAuth) {
       this.getData();
     }
   }
@@ -77,7 +71,7 @@ export default class MineControl extends Vue {
   public getData() {
     ["open_orders", "orders_history", "trades_history"].forEach(
       async (type: "open_orders" | "orders_history" | "trades_history") => {
-        const mine_control = TradeController[type];
+        const mine_control = this.TradeController[type];
         mine_control.market = this.market.id;
 
         mine_control.market = this.market.id;
@@ -90,7 +84,7 @@ export default class MineControl extends Vue {
   }
 
   public cancel_all_orders() {
-    TradeController.stop_orders(this.market.id);
+    this.TradeController.stop_orders(this.market.id);
   }
 
   public onTabChange(type) {

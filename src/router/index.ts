@@ -49,18 +49,6 @@ const PathHandle = (path: string) => {
   if (document.location.pathname[document.location.pathname.length -1] == "/" && document.location.pathname.length > 1) {
     document.location.pathname = document.location.pathname.slice(0, document.location.pathname.length - 1);
   }
-
-  if (path.includes("/exchange/")) {
-    const markets: string[] = PublicController.markets.map(
-      row => row.name
-    );
-    const market = path.replace("/exchange/", "").split("-");
-    if (!markets.includes(market.join("/"))) {
-      return router.push("/exchange");
-    } else {
-      TradeController.open_exchange(market.join("").toLowerCase());
-    }
-  }
 };
 
 router.beforeEach(async (to, from, next) => {

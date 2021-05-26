@@ -4,14 +4,12 @@
 
 <script lang="ts">
 import uuid from "uuid/v4";
-import store from "@/store";
 import TradingViewDataFeed from "@/library/tradingview_datafeed";
 import config from "@/config";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { Vue, Component } from "vue-property-decorator";
-import night_theme from "@/assets/css/tradingview/night";
-import { cssjson, charting_library as TradingView } from "@/assets/js";
+import { charting_library as TradingView } from "@/assets/js";
 import { PublicController, TradeController } from "@/controllers";
 
 @Component({
@@ -22,6 +20,7 @@ import { PublicController, TradeController } from "@/controllers";
 export default class TradingViewChart extends Vue {
   element_id = uuid();
 
+  public theme_interval : NodeJS.Timeout;
   public loading = false;
   public isAsk = TradeController.market.base_unit;
   public isBid = TradeController.market.quote_unit;
@@ -35,6 +34,7 @@ export default class TradingViewChart extends Vue {
     library_path: "/charting_library/",
     timezone: config.timeZone,
     locale: "en",
+    custom_css_url: "custom.css",
     disabled_features: [
       "symbol_search_hot_key",
       "compare_symbol",
@@ -99,14 +99,15 @@ export default class TradingViewChart extends Vue {
   }
 
   public iframe() {
-    return (this.element.querySelector(`iframe`) as HTMLIFrameElement)
+    return (this.element.querySelector(`iframe#${this.tvWidget._id}`) as HTMLIFrameElement)
       .contentWindow;
   }
 
-  public renderChart() {
+  public async renderChart() {
     TradeController.tradingview.ready = false;
     ZSmartModel.emit("tradingview-rending");
     this.tvWidget = new TradingView(this.widgetOptions);
+
     const buttons = [
       { title: "Realtime", resolution: "1", chartType: 3 },
       { title: "1min", resolution: "1", chartType: 1 },
@@ -122,27 +123,13 @@ export default class TradingViewChart extends Vue {
       if (!this.tvWidget) {
         return;
       }
-
       this.headerReady(buttons);
       this.createStudy();
       this.tvWidget.chart().setChartType(this.chartType);
       this.toggleStudy(this.chartType);
-      this.appendStyle();
       ZSmartModel.emit("tradingview-ready");
       TradeController.tradingview.ready = true;
     });
-  }
-
-  public appendStyle() {
-    const css = cssjson().toCSS(night_theme);
-    const iframe_document = this.iframe().document;
-    const iframe_head = iframe_document.head;
-
-    const style_element = iframe_document.createElement("style");
-    style_element.setAttribute("type", "text/css");
-    style_element.innerHTML = css;
-
-    iframe_head.appendChild(style_element);
   }
 
   public async headerReady(buttons) {

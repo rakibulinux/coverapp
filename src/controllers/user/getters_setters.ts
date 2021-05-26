@@ -11,6 +11,10 @@ export default class GettersSetters {
     this.store.state = state;
   }
 
+  get isAuth() {
+    return this.state == "active";
+  }
+
   get email() {
     return this.store.email;
   }

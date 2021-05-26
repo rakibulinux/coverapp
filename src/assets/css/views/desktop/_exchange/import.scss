@@ -1,7 +1,7 @@
 @import "orderbook";
 @import "order_entry";
 
-#mine_control {
+.page-trade-mine-control {
   height: $order-entry-height;
   margin-top: 4px;
   .type,
@@ -175,9 +175,26 @@
   }
 }
 
+.pro {
+  .page-exchange-chart {
+    margin-top: 4px;
+    height: calc(100% - #{$ticker-status-height + $mine-control-height + 8px});
+  }
+}
+
 .page-exchange-chart {
-  margin-top: 4px;
-  height: calc(100% - #{$ticker-status-height + $mine-control-height + 8px});
+  .z-card {
+    &-head {
+      display: flex;
+      height: 40px;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    &-content {
+      height: calc(100% - 40px);
+    }
+  }
 
   &-item {
     position: absolute;
@@ -205,9 +222,18 @@
   margin: 0;
   padding: 4px 0;
   overflow: hidden;
+
+  .z-table {
+    &-row {
+      height: 20px;
+      line-height: 20px;
+    }
+  }
+
   input {
     caret-color: var(--blue-color);
   }
+
   .group-left {
     width: 290px;
     transition: all 0.3s linear;
@@ -314,6 +340,8 @@
       font-size: 12px;
       line-height: 67px;
       margin-left: 20px;
+      overflow: hidden;
+
       > dl {
         display: inline-block;
         vertical-align: middle;

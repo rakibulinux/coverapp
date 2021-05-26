@@ -81,6 +81,8 @@ export default {
 
   // Header
   "page.global.header.exchange": "Exchange",
+  "page.global.header.exchange.basic": "Simplified",
+  "page.global.header.exchange.pro": "Professional",
   "page.global.header.sign_in": "Sign In",
   "page.global.header.sign_up": "Sign Up",
   "page.global.header.my_assets": "My Assets",

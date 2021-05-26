@@ -27,13 +27,13 @@
 </template>
 
 <script lang="ts">
+import FeatureMarket from "./feature-market.vue"
 import { Vue, Component } from "vue-property-decorator";
 import config from "@/config";
-import { PublicController } from "@/controllers";
 
 @Component({
   components: {
-    "feature-market": () => import("./feature-market.vue")
+    FeatureMarket
   }
 })
 export default class FeatureMarkets extends Vue {
@@ -53,7 +53,7 @@ export default class FeatureMarkets extends Vue {
       .join("")
       .toLowerCase();
 
-    return PublicController.markets.find(market => market.id == market_id);
+    return this.PublicController.markets.find(market => market.id == market_id);
   }
 
   featureMarkets(type) {

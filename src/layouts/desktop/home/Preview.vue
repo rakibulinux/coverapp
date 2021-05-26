@@ -17,19 +17,19 @@
       </div>
     </div>
     <canvas ref="canvas" />
-    <broadcasts />
+    <Broadcasts />
   </div>
 </template>
 
 <script lang="ts">
-import config from "@/config";
+import Broadcasts from "./Broadcasts.vue";
 import { canvas } from "@/assets/js";
 import { Vue, Component } from "vue-property-decorator";
 import { PublicController } from "@/controllers";
 
 @Component({
   components: {
-    broadcasts: () => import("./broadcasts.vue")
+    Broadcasts
   }
 })
 export default class Preview extends Vue {

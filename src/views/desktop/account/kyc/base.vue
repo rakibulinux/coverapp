@@ -69,7 +69,7 @@ export default class AccountKYC extends Vue {
     const profile_state = (this.profile_label as ZTypes.UserLabel)?.value;
     const document_state = (this.document_label as ZTypes.UserLabel)?.value;
 
-    if (document_state == "verified") {
+    if (document_state == "verified" && profile_state == "verified") {
       return 2;
     } else if (profile_state == "verified") {
       return 1;

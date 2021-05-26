@@ -1,14 +1,13 @@
 <template>
   <z-card
-    :bordered="false"
-    :tab-list="tabList"
-    :active-tab-key="selected"
+    v-model="selected"
     class="trade-action"
+    :tab-list="tabList"
     @tabChange="onTabChange"
   >
     <trade-action-part side="buy" />
     <trade-action-part side="sell" />
-    <modal-exchange v-if="!$store.getters['user/isLoggedIn']" />
+    <modal-exchange v-if="!UserController.isAuth" />
   </z-card>
 </template>
 
@@ -29,8 +28,12 @@ export default class TradeAction extends Vue {
     return [
       {
         key: "limit",
-        tab: this.translation("limit_order")
-      }
+        text: this.translation("limit_order")
+      },
+      // {
+      //   key: "market",
+      //   text: this.translation("market")
+      // }
     ]
   }
 
@@ -48,6 +51,11 @@ export default class TradeAction extends Vue {
 .trade-action {
   height: 275px;
   margin-top: 4px;
+
+  .ant-tabs-ink-bar {
+    width: 100% !important; // need remove
+  }
+
   &-part {
     position: relative;
     display: inline-block;

@@ -5,9 +5,24 @@
     </router-link>
 
     <div class="action-group left">
-      <router-link to="/exchange">
-        {{ translation("exchange") }}
-      </router-link>
+      <a-dropdown placement="bottomCenter">
+        <a class="ant-dropdown-link">
+          {{ EXCHANGES_MENU.NAME }}
+          <i class="zicon-arrow-down" />
+        </a>
+        <a-menu slot="overlay">
+          <a-menu-item
+            v-for="data in EXCHANGES_MENU.MENU"
+            :key="data.url"
+            :title="data.name"
+            :class="{
+              'ant-dropdown-menu-item-selected': path.includes(data.url),
+            }"
+          >
+            <router-link :to="data.url" v-text="data.name" />
+          </a-menu-item>
+        </a-menu>
+      </a-dropdown>
     </div>
     <div class="action-group right">
       <div v-if="isAuth" class="auth">
@@ -124,6 +139,22 @@ export default class App extends Vue {
       },
       { name: this.translation("sign_up"), url: "/signup" },
     ];
+  }
+
+  get EXCHANGES_MENU() {
+    return {
+      NAME: this.translation("exchange"),
+      MENU: [
+        {
+          name: this.translation("exchange.basic"),
+          url: "/exchange/basic",
+        },
+        {
+          name: this.translation("exchange.pro"),
+          url: "/exchange/pro",
+        }
+      ],
+    };
   }
 
   get ORDERS_MENU() {

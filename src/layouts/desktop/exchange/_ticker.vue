@@ -1,6 +1,7 @@
 <template>
   <div class="ticker-info">
     <a-icon
+      v-if="!buttonHideMarketList"
       :class="['icon-hide-pairs', { 'active': hide_pairs_table }]"
       type="arrow-left"
       @click="update_hide_pairs_table"
@@ -41,6 +42,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class App extends Vue {
+  @Prop() readonly buttonHideMarketList!: boolean;
   @Prop() hide_pairs_table!: boolean;
 
   get market() {

@@ -36,7 +36,8 @@ export class TradeController {
     localStorage.setItem("market", this.market.id);
     if (router.currentRoute.fullPath.includes("/exchange")) return;
 
-    const exchange_path = helpers.isMobile() ? "/m/exchange" : "/exchange";
+    const exchange_layout = localStorage.getItem("exchange_layout");
+    const exchange_path = helpers.isMobile() ? "/m/exchange" : `/exchange/${exchange_layout}`;
     router.push({ path: exchange_path, query: { type: side } });
   }
 

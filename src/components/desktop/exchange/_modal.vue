@@ -21,8 +21,8 @@ export default {
   },
   data: () => ({
     BUTTON: [
-      { name: "header.login", url: "/signin" },
-      { name: "header.register", url: "/signup" }
+      { name: "page.global.header.sign_in", url: "/signin" },
+      { name: "page.global.header.sign_up", url: "/signup" }
     ]
   })
 };
