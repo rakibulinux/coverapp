@@ -122,11 +122,7 @@
         <div class="form-row">
           <label class="form-label">{{ $t("page.global.placeholder.fee") }}</label>
           <div class="form-control">
-            <input
-              type="text"
-              disabled
-              :value="Number(currency.withdraw_fee).toFixed(8)"
-            />
+            <input type="text" :value="Number(currency.withdraw_fee).toFixed(8)" disabled />
           </div>
         </div>
         <div class="form-row">
@@ -134,11 +130,7 @@
             {{ $t("page.global.placeholder.receive_amount") }}
           </label>
           <div class="form-control">
-            <input
-              type="text"
-              disabled
-              :value="receive_amount"
-            />
+            <input type="text" :value="receive_amount" disabled />
           </div>
         </div>
       </div>
@@ -233,7 +225,7 @@ export default class AssetsWithdraw extends Vue {
     if (receive_amount <= 0) return true;
     if (!address && this.type == "address") return true;
     if (!this.selected_beneficiary && this.type == "book") return true;
-    if (this.selected_beneficiary.state != "active" && this.type == "book") return true;
+    if (this.selected_beneficiary?.state != "active" && this.type == "book") return true;
   }
 
   get receive_amount() {
