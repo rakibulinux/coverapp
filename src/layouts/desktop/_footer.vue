@@ -3,7 +3,7 @@
     <div class="menu-footer">
       <ul>
         <li class="title">
-          <img src="@/assets/img/logo-1.png" />
+          <img src="@/assets/img/logo.png" />
         </li>
         <li class="m">
           <a href="#" class="icon-link">

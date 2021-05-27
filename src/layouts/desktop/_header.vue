@@ -1,7 +1,7 @@
 <template>
   <div class="ant-layout-header">
     <router-link to="/" class="logo">
-      <img src="@/assets/img/logo-1.png" />
+      <img src="@/assets/img/logo.png" />
     </router-link>
 
     <div class="action-group left">
