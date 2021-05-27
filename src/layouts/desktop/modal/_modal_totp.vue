@@ -23,8 +23,7 @@
           maxlength="6"
           type="number"
         />
-        <auth-button type="submit" :disabled="totp_code.length < 6">
-          <a-icon v-if="loading" type="loading" style="font-size: 24px" spin />
+        <auth-button type="submit" :loading="loading" :disabled="totp_code.length < 6">
           {{ $t("page.global.action.confirm") }}
         </auth-button>
       </form>

@@ -97,6 +97,7 @@
 </template>
 
 <script lang="ts">
+import { runNotice } from "@/mixins";
 import ApiClient from "@zsmartex/z-apiclient";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
@@ -135,6 +136,7 @@ export default class DepositBox extends Vue {
 
   copy_address() {
     helpers.copyText(this.deposit_address);
+    runNotice("success", "copy");
   }
 
   show_qr_code() {

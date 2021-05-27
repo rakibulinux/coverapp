@@ -122,11 +122,7 @@
         <div class="form-row">
           <label class="form-label">{{ $t("page.global.placeholder.fee") }}</label>
           <div class="form-control">
-            <input
-              type="text"
-              disabled
-              :value="Number(currency.withdraw_fee).toFixed(8)"
-            />
+            <input type="text" :value="Number(currency.withdraw_fee).toFixed(8)" disabled />
           </div>
         </div>
         <div class="form-row">
@@ -134,11 +130,7 @@
             {{ $t("page.global.placeholder.receive_amount") }}
           </label>
           <div class="form-control">
-            <input
-              type="text"
-              disabled
-              :value="Number((amount || 0) - currency.withdraw_fee).toFixed(8)"
-            />
+            <input type="text" :value="receive_amount" disabled />
           </div>
         </div>
       </div>
@@ -226,12 +218,18 @@ export default class AssetsWithdraw extends Vue {
     const { address } = this;
     const amount = Number(this.amount);
     const available = Number(this.available);
+    const receive_amount = Number(this.receive_amount);
 
     if (amount > available) return true;
     if (amount <= 0) return true;
+    if (receive_amount <= 0) return true;
     if (!address && this.type == "address") return true;
     if (!this.selected_beneficiary && this.type == "book") return true;
-    if (this.selected_beneficiary.state != "active" && this.type == "book") return true;
+    if (this.selected_beneficiary?.state != "active" && this.type == "book") return true;
+  }
+
+  get receive_amount() {
+    return this.amount ? (Number(this.amount) - Number(this.currency.withdraw_fee)).toFixed(8) : (0).toFixed(8);
   }
 
   mounted() {

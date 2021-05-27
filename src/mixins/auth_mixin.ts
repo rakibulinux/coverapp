@@ -31,7 +31,7 @@ export class AuthMixin extends Vue {
     const { email } = this;
 
     if (email.length && !helpers.validEmail(email)) {
-      return this.$t("auth.input_error.email");
+      return this.$t("page.global.input.error.email");
     }
   }
 
@@ -43,7 +43,7 @@ export class AuthMixin extends Vue {
     const { password, new_password, confirm_password } = this;
 
     if (confirm_password.length && confirm_password !== (typeof password === "string" ? password : new_password)) {
-      return this.$t("auth.input_error.confirm_password");
+      return this.$t("page.global.input.error.confirm_password");
     }
   }
 
@@ -52,7 +52,7 @@ export class AuthMixin extends Vue {
     const regex = /^ID\w{10}$/g;
 
     if (refid.length && regex.test(refid)) {
-      return this.$t("auth.input_error.refid");
+      return this.$t("page.global.input.error.refid");
     }
   }
 
@@ -68,7 +68,7 @@ export class AuthMixin extends Vue {
     const { otp } = this;
 
     if (otp.length && otp.length !== 6) {
-      return this.$t("auth.input_error.otp");
+      return this.$t("page.global.input.error.otp");
     }
   }
 
@@ -82,7 +82,7 @@ export class AuthMixin extends Vue {
 
   valid_password(password: string) {
     if (password.length && !helpers.validPassword(password)) {
-      return this.$t("auth.input_error.password");
+      return this.$t("page.global.input.error.password");
     }
   }
 }

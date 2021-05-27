@@ -100,7 +100,7 @@ export default class SignUp extends Vue {
     }
 
     if (!helpers.validEmail(email)) {
-      return this.$t("auth.input_error.email");
+      return this.$t("page.global.input.error.email");
     }
   }
 
@@ -111,7 +111,7 @@ export default class SignUp extends Vue {
     }
 
     if (!helpers.validPassword(password)) {
-      return this.$t("auth.input_error.password");
+      return this.$t("page.global.input.error.password");
     }
   }
 
@@ -122,7 +122,7 @@ export default class SignUp extends Vue {
     }
 
     if (confirm_password !== password) {
-      return this.$t("auth.input_error.confirm_password");
+      return this.$t("page.global.input.error.confirm_password");
     }
   }
 
@@ -132,9 +132,13 @@ export default class SignUp extends Vue {
       return false;
     }
 
-    if (/^ID\w{10}$/g.test(refid)) {
-      return this.$t("auth.input_error.refid");
+    if (!/^ID\w{10}$/g.test(refid)) {
+      return this.$t("page.global.input.error.refid");
     }
+  }
+
+  mounted() {
+    if (this.$route.query.refid) this.refid = this.$route.query.refid as string;
   }
 
   async register() {

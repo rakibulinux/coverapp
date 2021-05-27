@@ -81,10 +81,11 @@ export default class DataFeed {
       }));
 
       if (firstDataRequest) {
-        history[symbolInfo.name] = { lastBar: bars[bars.length - 1] };
+        history[symbolInfo.name] = { lastBar: bars.length ? bars[bars.length - 1] : null };
         ZSmartModel.emit("tradingview-ready");
       }
-      onDataCallback(bars, { noData: !data.length });
+      
+      onDataCallback(bars, { noData: !bars.length });
     } catch (error) {
       onErrorCallback(error);
       return error;
