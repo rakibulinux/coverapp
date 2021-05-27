@@ -22,10 +22,14 @@
 </template>
 
 <script lang="ts">
-import config from "@/config";
+// import config from "@/config";
 import { canvas } from "@/assets/js";
 import { Vue, Component } from "vue-property-decorator";
-import { PublicController } from "@/controllers";
+// import { PublicController } from "@/controllers";
+import Banner1 from "@/assets/img/banner/banner_1.png"
+import Banner2 from "@/assets/img/banner/banner_2.png"
+import Banner3 from "@/assets/img/banner/banner_3.png"
+import Banner4 from "@/assets/img/banner/banner_4.png"
 
 @Component({
   components: {
@@ -44,7 +48,29 @@ export default class Preview extends Vue {
   }
 
   get banners() {
-    return PublicController.banners;
+    const data = [
+      {
+        uuid:"banner-1",             
+        url:"https://newexch.xumchain.com/",
+        image:Banner1
+      },
+      {
+        uuid:"banner-2",             
+        url:"https://newexch.xumchain.com/",
+        image:Banner2
+      },
+      {
+        uuid:"banner-3",             
+        url:"https://newexch.xumchain.com/",
+        image:Banner3
+      },
+      {
+        uuid:"banner-4",             
+        url:"https://newexch.xumchain.com/",
+        image:Banner4
+      }
+    ]
+    return data;
   }
 
   mounted() {
