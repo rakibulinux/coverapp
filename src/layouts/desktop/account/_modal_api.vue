@@ -39,7 +39,7 @@
     <div v-else>
       <div class="info-warning">
         <a-icon type="warning" />
-        <p v-html="ranslation('steps.2.title')" />
+        <p v-html="translation('steps.2.title')" />
       </div>
       <form @submit.prevent="closeModal">
         <auth-input
