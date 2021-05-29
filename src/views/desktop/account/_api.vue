@@ -30,13 +30,14 @@
                     openModal(
                       data.kid,
                       data.state === 'active' ? 'disabled' : 'active',
-                      'totp'
+                      'totp',
+                      'update'
                     )
                   "
                 />
                 <i
                   class="zicon-close"
-                  @click="openModal(data.kid, false, 'totp')"
+                  @click="openModal(data.kid, false, 'totp', 'delete')"
                 />
               </td>
             </tr>
@@ -64,13 +65,13 @@
     <modal-totp ref="totp" @submit="onSubmitTotp" @close="modalClose" />
   </div>
 </template>
-
+ 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import store from "@/store";
-
+ 
 @Component({
   components: {
     "modal-2fa": () => import("@/layouts/desktop/account/_modal_2fa.vue"),
@@ -80,20 +81,21 @@ import store from "@/store";
 })
 export default class ApiKeyPage extends Mixins(Helpers) {
   page = 1;
-  payload_modal: {
-    kid: "";
-    state: "";
-    modal: "";
+  payload_modal?: {
+    kid: string;
+    state: string;
+    modal: string;
+    action: string;
   };
-
+ 
   get api_keys() {
     return store.state.user.api_keys;
   }
-
+ 
   get isLoading() {
     return this.api_keys.loading;
   }
-
+ 
   mounted() {
     if (!this.api_keys.loading)
       this.$store.dispatch("user/GET_API_KEYS", {
@@ -101,32 +103,35 @@ export default class ApiKeyPage extends Mixins(Helpers) {
         limit: 25
       });
   }
-
+ 
   modalClose() {
     const { kid } = this.payload_modal;
     const index = this.getIndexApiKey(kid);
     this.api_keys.array[index].loading = false;
     this.api_keys.array[index].state += "_";
   }
-
-  openModal(kid, state, modal) {
+ 
+  openModal(kid, state, modal, action) {
     const index = this.getIndexApiKey(kid);
-    this.payload_modal = { kid, state, modal };
+    this.payload_modal = { kid, state, modal, action };
     this.onClick(modal);
     this.api_keys.array[index].loading = true;
   }
-
+ 
   getIndexApiKey(kid) {
     return this.api_keys.array.findIndex(e => e.kid == kid);
   }
-
-  onSubmitTotp(payload, totp_code) {
-    if (payload.modal === "totp") this.updateApiKey(payload, totp_code);
-    else this.removeApiKey(payload, totp_code);
+ 
+  onSubmitTotp(totp_code : string) {
+    if (this.payload_modal.action == "update") {
+      this.updateApiKey(totp_code);
+    } else {
+      this.removeApiKey(totp_code);
+    }
   }
-
-  async updateApiKey(payload, totp_code) {
-    const { kid, state } = payload;
+ 
+  async updateApiKey(totp_code: string) {
+    const { kid, state } = this.payload_modal;
     try {
       await this.$store.dispatch("user/UPDATE_API_KEYS", {
         kid,
@@ -138,9 +143,9 @@ export default class ApiKeyPage extends Mixins(Helpers) {
       return error;
     }
   }
-
-  async removeApiKey(payload, totp_code) {
-    const { kid } = payload;
+ 
+  async removeApiKey(totp_code: string) {
+    const { kid } = this.payload_modal;
     try {
       await this.$store.dispatch("user/DELETE_API_KEYS", {
         kid,
@@ -151,29 +156,30 @@ export default class ApiKeyPage extends Mixins(Helpers) {
       return error;
     }
   }
-
+ 
   onNewApiKeyCreated() {
     this.$store.dispatch("user/GET_API_KEYS", {
       page: this.page,
       limit: 25
     });
   }
-
+ 
   onPageChange($page) {
     this.page = $page;
-
+ 
     this.$store.dispatch("user/GET_API_KEYS", {
       page: this.page,
       limit: 25
     });
   }
-
+ 
   getDate(date) {
     return helpers.getDate(date, true);
   }
-
+ 
   translation(message: string, data?: {}) {
     return helpers.translation("page.account.api." + message, data);
   }
 }
 </script>
+ 
