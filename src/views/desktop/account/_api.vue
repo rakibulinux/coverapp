@@ -30,13 +30,14 @@
                     openModal(
                       data.kid,
                       data.state === 'active' ? 'disabled' : 'active',
-                      'totp'
+                      'totp',
+                      'update'
                     )
                   "
                 />
                 <i
                   class="zicon-close"
-                  @click="openModal(data.kid, false, 'totp')"
+                  @click="openModal(data.kid, false, 'totp', 'delete')"
                 />
               </td>
             </tr>
@@ -80,10 +81,11 @@ import store from "@/store";
 })
 export default class ApiKeyPage extends Mixins(Helpers) {
   page = 1;
-  payload_modal: {
-    kid: "";
-    state: "";
-    modal: "";
+  payload_modal?: {
+    kid: string;
+    state: string;
+    modal: string;
+    action: string;
   };
 
   get api_keys() {
@@ -109,9 +111,9 @@ export default class ApiKeyPage extends Mixins(Helpers) {
     this.api_keys.array[index].state += "_";
   }
 
-  openModal(kid, state, modal) {
+  openModal(kid, state, modal, action) {
     const index = this.getIndexApiKey(kid);
-    this.payload_modal = { kid, state, modal };
+    this.payload_modal = { kid, state, modal, action };
     this.onClick(modal);
     this.api_keys.array[index].loading = true;
   }
@@ -120,13 +122,16 @@ export default class ApiKeyPage extends Mixins(Helpers) {
     return this.api_keys.array.findIndex(e => e.kid == kid);
   }
 
-  onSubmitTotp(payload, totp_code) {
-    if (payload.modal === "totp") this.updateApiKey(payload, totp_code);
-    else this.removeApiKey(payload, totp_code);
+  onSubmitTotp(totp_code : string) {
+    if (this.payload_modal.action == "update") {
+      this.updateApiKey(totp_code);
+    } else {
+      this.removeApiKey(totp_code);
+    }
   }
 
-  async updateApiKey(payload, totp_code) {
-    const { kid, state } = payload;
+  async updateApiKey(totp_code: string) {
+    const { kid, state } = this.payload_modal;
     try {
       await this.$store.dispatch("user/UPDATE_API_KEYS", {
         kid,
@@ -139,8 +144,8 @@ export default class ApiKeyPage extends Mixins(Helpers) {
     }
   }
 
-  async removeApiKey(payload, totp_code) {
-    const { kid } = payload;
+  async removeApiKey(totp_code: string) {
+    const { kid } = this.payload_modal;
     try {
       await this.$store.dispatch("user/DELETE_API_KEYS", {
         kid,
