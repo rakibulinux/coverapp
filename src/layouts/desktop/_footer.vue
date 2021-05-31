@@ -3,7 +3,7 @@
     <div class="menu-footer">
       <ul>
         <li class="title">
-          <img src="@/assets/img/rectangular_logo.png" />
+          <img src="@/assets/img/logo.png" />
         </li>
         <li class="m">
           <a href="#" class="icon-link">
@@ -81,7 +81,7 @@ export default class App extends Vue {
 
   public copyright = {
     name: "SmartChainers",
-    link: "https://www.smartchainers.in/"
+    link: "https://www.smartchainers.com/"
   };
 }
 </script>

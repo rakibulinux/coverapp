@@ -12,11 +12,11 @@
       <mine-control />
     </div>
     <div class="group-right">
+      <trade-action />
       <div id="global_list">
         <order-book />
         <market-trades />
       </div>
-      <trade-action />
     </div>
   </z-content>
 </template>

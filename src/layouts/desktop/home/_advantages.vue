@@ -24,11 +24,16 @@
 
 <script>
 import config from "@/config";
-import advantage_example from "@/assets/img/advantage_example.png";
+import advantage_example from "@/assets/img/advantage_example.jpeg";
+import risk from "@/assets/img/risk.jpeg"
+import team from "@/assets/img/team.jpeg"
+import tech from "@/assets/img/sup_tech.jpeg"
+import liquid from "@/assets/img/liquid.jpeg"
+import globalResource from "@/assets/img/global.jpeg"
 
 export default {
   data: () => ({
-    title: "The Advantages of " + config.nameEX,
+    title: "The Advantages of Smart chainers Exchange",
     contentOne: [
       {
         img: advantage_example,
@@ -37,13 +42,13 @@ export default {
           "Your digital assets are secured safely with highest levels of SSL encryption security."
       },
       {
-        img: advantage_example,
+        img:team ,
         title: "Professional Team",
         desc:
           "Our team is composed of finance and IT experts with years of trading experiences."
       },
       {
-        img: advantage_example,
+        img: risk,
         title: "Risk Management",
         desc:
           "Our dedicated risk management team manages the safety of your digital assets with multi-dimension security protection system."
@@ -51,19 +56,19 @@ export default {
     ],
     contentTwo: [
       {
-        img: advantage_example,
+        img: tech,
         title: "Superior Technology",
         desc:
           "Enjoy stable and fast trading experience with highly-efficient matching engine in our clean and simple UI."
       },
       {
-        img: advantage_example,
+        img: liquid,
         title: "Full Liquidity",
         desc:
           "Enjoy fast and efficient Fiat-Crypto and Crypto-Crypto trading experience with our excellent liquidity of cryptocurrencies."
       },
       {
-        img: advantage_example,
+        img: globalResource,
         title: "Global Resources",
         desc:
           "Connecting outstanding blockchain projects from all of the world to you."

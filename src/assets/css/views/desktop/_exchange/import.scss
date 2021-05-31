@@ -177,7 +177,7 @@
 
 .page-exchange-chart {
   margin-top: 4px;
-  height: calc(100% - #{$ticker-status-height + $mine-control-height + 8px});
+  height: calc(100% - 100px);
 
   &-item {
     position: absolute;
