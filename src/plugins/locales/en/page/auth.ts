@@ -17,7 +17,7 @@ export default {
   "page.auth.forgot_password.steps.3.title": "Reset Password",
 
   "page.auth.confirmation_email.title": "Email Verification",
-  "page.auth.confirmation_email.desc": `We have sent an activation email to {{ email }}.
+  "page.auth.confirmation_email.desc": `We have sent an activation email to { email }.
                                         Please follow click the link inside to complete your activation. If
                                         you have not received the email. Please Resend Email`,
   "page.auth.confirmation_email.note.title": "If you haven't received the email for a long time, please：",
