@@ -51,17 +51,17 @@ export default class Preview extends Vue {
     const data = [
       {
         uuid:"banner-1",             
-        url:"https://newexch.xumchain.com/",
+        // url:"https://newexch.xumchain.com/",
         image:Banner1
       },
       {
         uuid:"banner-2",             
-        url:"https://newexch.xumchain.com/",
+        // url:"https://newexch.xumchain.com/",
         image:Banner2
       },
       {
         uuid:"banner-3",             
-        url:"https://newexch.xumchain.com/",
+        // url:"https://newexch.xumchain.com/",
         image:Banner3
       },
       {
