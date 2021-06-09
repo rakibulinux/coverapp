@@ -10,6 +10,8 @@
       :estimate-value="
         amount_to_usd(currency_by_side('buy'), Number(this.price)).toFixed(2)
       "
+      :ord_type="ord_type"
+      :disabled="ord_type == 'market'"
       :error="price_error"
     />
     <trade-action-input
@@ -18,6 +20,7 @@
       :prefix="$t('page.global.table.amount').toUpperCase()"
       :suffix="currency_by_side('sell').toUpperCase()"
       :limit-length-after-dot="amount_precision"
+      :ord_type="ord_type"
       :error="amount_error"
     />
     <a-slider
@@ -63,6 +66,7 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
 })
 export default class TradeActionPart extends Mixins(TradeActionMixin) {
   @Prop() readonly side!: ZTypes.OrderSide;
+  @Prop() readonly ord_type!: ZTypes.OrdType;
 
   get slider_disabled() {
     return !this.assets.available;

@@ -1,6 +1,9 @@
 <template>
   <div class="assets-withdraw">
-    <div v-if="UserController.otp" class="assets-form">
+    <div v-if="!currency.withdrawal_enabled" class="assets-withdrawal-disabled">
+      Withdrawal disabled
+    </div>
+    <div v-else-if="UserController.otp" class="assets-form">
       <div class="form-row">
         <span
           v-if="currency.type == 'coin'"
@@ -338,6 +341,12 @@ export default class AssetsWithdraw extends Vue {
 <style lang="less">
 .assets-withdraw {
   padding: 20px 0;
+
+  .assets-withdrawal-disabled {
+    color: var(--warning-color);
+    text-align: center;
+    font-size: 25px;
+  }
 
   &-address-type {
     font-size: 16px;

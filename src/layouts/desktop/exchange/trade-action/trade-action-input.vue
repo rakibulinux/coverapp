@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['trade-action-input', { 'trade-action-input-error': error }]"
+    :class="['trade-action-input', { 'trade-action-input-error': error, 'trade-action-input-disabled': disabled }]"
     @mouseover="mouseover"
     @mouseleave="mouseleave"
   >
@@ -13,7 +13,8 @@
         @input="onInputChange"
         @focus="onInputFocus"
         @blur="onInputBlur"
-        :value="value"
+        :value="disabled ? 'The best market price' : value"
+        :disabled="disabled"
         type="text"
       />
       <span v-if="suffix" class="trade-action-input-suffix">{{ suffix }}</span>
@@ -32,44 +33,46 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component
 export default class App extends Vue {
-  @Prop() public readonly value!: string;
-  @Prop() public readonly prefix!: string;
-  @Prop() public readonly suffix!: string;
-  @Prop() public readonly estimateValue!: string;
-  @Prop() public readonly limitLengthAfterDot!: number;
+  @Prop() readonly value!: string;
+  @Prop() readonly prefix!: string;
+  @Prop() readonly suffix!: string;
+  @Prop() readonly estimateValue!: string;
+  @Prop() readonly limitLengthAfterDot!: number;
   @Prop({ default: false }) public readonly estimate!: boolean;
-  @Prop() public readonly error!: boolean;
+  @Prop() readonly error!: boolean;
+  @Prop() readonly ord_type!: ZTypes.OrdType;
+  @Prop() readonly disabled!: boolean;
 
-  public allow_tooltip = false;
-  public input_error_class = "ant-input-error";
-  public input_focus = false;
+  allow_tooltip = false;
+  input_error_class = "ant-input-error";
+  input_focus = false;
 
-  public onInputChange(event) {
+  onInputChange(event) {
     this.input_focus = true;
     const { value } = event.target;
 
     this.commit_value(value);
   }
 
-  public onInputFocus() {
+  onInputFocus() {
     this.input_focus = true;
   }
 
-  public onInputBlur() {
+  onInputBlur() {
     this.input_focus = false;
   }
 
-  public string_to_number(value: string) {
+  string_to_number(value: string) {
     return value.replace(/[^0-9.]/g, "");
   }
 
-  public update_component() {
+  update_component() {
     this.$nextTick(() => {
       this.$forceUpdate();
     });
   }
 
-  public before_commit_value(value: string) {
+  before_commit_value(value: string) {
     value = value
       .split(".")
       .filter((val, index) => index <= 1)
@@ -93,22 +96,22 @@ export default class App extends Vue {
     return value;
   }
 
-  public commit_value(value: string) {
+  commit_value(value: string) {
     value = this.before_commit_value(value);
     this.$emit("input", value);
     this.update_component();
   }
 
-  public mouseover() {
+  mouseover() {
     this.allow_tooltip = true;
   }
 
-  public mouseleave() {
+  mouseleave() {
     this.allow_tooltip = false;
   }
 
   @Watch("value")
-  public onValueChanged(value: string) {
+  onValueChanged(value: string) {
     this.commit_value(value);
   }
 }
@@ -125,6 +128,14 @@ export default class App extends Vue {
     border-radius: 4px;
     border-color: #314363;
     padding: 0 75px !important;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &-disabled {
+    background-color: var(--bg-head-color);
   }
 
   &-error {

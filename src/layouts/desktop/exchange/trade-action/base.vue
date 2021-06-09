@@ -2,12 +2,12 @@
   <z-card
     :bordered="false"
     :tab-list="tabList"
-    :active-tab-key="selected"
+    :active-tab-key="ord_type"
     class="trade-action"
     @tabChange="onTabChange"
   >
-    <trade-action-part side="buy" />
-    <trade-action-part side="sell" />
+    <trade-action-part side="buy" :ord_type="ord_type" />
+    <trade-action-part side="sell" :ord_type="ord_type" />
     <modal-exchange v-if="!$store.getters['user/isLoggedIn']" />
   </z-card>
 </template>
@@ -23,19 +23,23 @@ import { Vue, Component } from "vue-property-decorator";
   }
 })
 export default class TradeAction extends Vue {
-  selected = "limit";
+  ord_type = "limit";
 
   get tabList() {
     return [
       {
         key: "limit",
         tab: this.translation("limit_order")
+      },
+      {
+        key: "market",
+        tab: this.translation("market_order")
       }
     ]
   }
 
   onTabChange(type) {
-    this.selected = type;
+    this.ord_type = type;
   }
 
   translation(message, data = {}) {

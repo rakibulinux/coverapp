@@ -114,7 +114,10 @@ export default class DepositBox extends Vue {
   qrcode_show = false;
 
   mounted() {
-    if (this.currency.type == "coin") this.getDepositAddress();
+    if (this.currency.type == "coin" && (this.currency as any).deposit_enabled) this.getDepositAddress();
+    else if (!(this.currency as any).deposit_enabled) {
+      this.deposit_address = "Deposit disabled"
+    }
   }
 
   async getDepositAddress() {
@@ -135,8 +138,10 @@ export default class DepositBox extends Vue {
   }
 
   copy_address() {
-    helpers.copyText(this.deposit_address);
-    runNotice("success", "copy");
+    if ((this.currency as any).deposit_enabled) {
+      helpers.copyText(this.deposit_address);
+      runNotice("success", "copy");
+    }
   }
 
   show_qr_code() {
