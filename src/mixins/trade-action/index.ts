@@ -208,7 +208,7 @@ export class TradeActionMixin extends Vue {
   }
 
   amount_to_usd(currency_id: string, amount: number) {
-    const price_by_usd = new helpers.Currency(currency_id).getPriceByUSD();
+    const price_by_usd = currency_id.toLowerCase() == 'usdt' ? 1 : new helpers.Currency(currency_id).getPriceByUSD();
 
     return price_by_usd * amount;
   }
