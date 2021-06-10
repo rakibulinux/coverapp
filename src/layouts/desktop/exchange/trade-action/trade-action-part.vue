@@ -38,7 +38,7 @@
         {{ (total || 0).toFixed(total_precision) }}
         {{ currency_by_side("buy").toUpperCase() }}
       </span>
-      ≈ ${{ amount_to_usd(currency_by_side("sell"), total).toFixed(2) }}
+      ≈ ${{ amount_to_usd(currency_by_side("buy"), total).toFixed(2) }}
     </div>
     <button
       :class="class_by_side('trade-action-button')"
