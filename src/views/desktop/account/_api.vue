@@ -110,7 +110,7 @@ export default class ApiKeyPage extends Mixins(Helpers) {
     this.api_keys.array[index].loading = false;
     this.api_keys.array[index].state += "_";
   }
- 
+
   openModal(kid, state, modal, action) {
     const index = this.getIndexApiKey(kid);
     this.payload_modal = { kid, state, modal, action };
@@ -121,7 +121,7 @@ export default class ApiKeyPage extends Mixins(Helpers) {
   getIndexApiKey(kid) {
     return this.api_keys.array.findIndex(e => e.kid == kid);
   }
- 
+
   onSubmitTotp(totp_code : string) {
     if (this.payload_modal.action == "update") {
       this.updateApiKey(totp_code);
@@ -129,7 +129,7 @@ export default class ApiKeyPage extends Mixins(Helpers) {
       this.removeApiKey(totp_code);
     }
   }
- 
+
   async updateApiKey(totp_code: string) {
     const { kid, state } = this.payload_modal;
     try {
@@ -143,7 +143,7 @@ export default class ApiKeyPage extends Mixins(Helpers) {
       return error;
     }
   }
- 
+
   async removeApiKey(totp_code: string) {
     const { kid } = this.payload_modal;
     try {
