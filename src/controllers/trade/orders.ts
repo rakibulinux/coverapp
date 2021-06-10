@@ -8,6 +8,7 @@ export default abstract class OrdersController {
     try {
       const response = await new ApiClient(config.finex ? "finex" : "trade").post("market/orders", {
         market: market_id,
+        ord_type: ord_type,
         side: side,
         price: price,
         volume: amount

@@ -7,7 +7,7 @@ const nameEX = "Welcome Smartchainers Exchange";
 export default {
   nameEX,
   "default_market": "btcusd",
-  "feature_markets": ["BTC/USD", "ETH/USD", "XUM/USD"],
+  "feature_markets": ["BTC/USD", "ETH/USD"],
   "list_bid": ["USD", "ETH"],
   "messages": {
     en

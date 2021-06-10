@@ -5,8 +5,8 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 
 @Component
 export class TradeActionMixin extends Vue {
-  side: ZTypes.OrderSide;
-  ord_type: ZTypes.OrdType = "limit";
+  side!: ZTypes.OrderSide;
+  ord_type!: ZTypes.OrdType;
   loading = false;
   price = "";
   amount = "";
