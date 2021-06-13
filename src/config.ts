@@ -2,7 +2,7 @@ import getUrl from "@/getUrl";
 import en from "@/plugins/locales/en";
 import vn from "@/plugins/locales/vn";
 
-const nameEX = "NameEX";
+const nameEX = "ZSmart";
 
 export default {
   nameEX,

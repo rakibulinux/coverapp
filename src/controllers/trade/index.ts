@@ -66,6 +66,8 @@ export class TradeController {
   }
 
   add_trade(trade: ZTypes.PublicTrade) {
+    document.title = `${trade.price} - ${this.market.name.toUpperCase()} - ${config.nameEX}`;
+
     this.trades.unshift({
       id: trade.id,
       price: trade.price,

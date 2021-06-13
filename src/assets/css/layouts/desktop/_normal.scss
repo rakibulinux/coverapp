@@ -168,21 +168,25 @@ dd {
 html {
   background: var(--bg-color);
 
-  * {
+  body {
+    ::-webkit-scrollbar,
     &::-webkit-scrollbar {
       width: 5px;
       height: 10px;
     }
 
+    ::-webkit-scrollbar-track-piece,
     &::-webkit-scrollbar-track-piece {
       background-color: transparent;
       border-radius: 6px;
     }
   
-    &::-webkit-scrollbar-track {
+    ::-webkit-scrollbar-track,
+    &:-webkit-scrollbar-track {
       background-color: var(--bg-color);
     }
   
+    ::-webkit-scrollbar-thumb,
     &::-webkit-scrollbar-thumb {
       height: 5px;
       background-color: var(--bg-downdown-border-color);
