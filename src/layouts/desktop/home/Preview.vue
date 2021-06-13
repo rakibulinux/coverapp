@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import Broadcasts from "./_Broadcasts.vue";
+import Broadcasts from "./Broadcasts.vue";
 import { canvas } from "@/assets/js";
 import { Vue, Component } from "vue-property-decorator";
 import { PublicController } from "@/controllers";
