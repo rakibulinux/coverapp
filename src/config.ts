@@ -7,7 +7,7 @@ const nameEX = "Welcome XUM Exchange";
 export default {
   nameEX,
   "default_market": "xumusdt",
-  "feature_markets": ["ETH/USD", "XUM/USD", "XUM/USDT", "XUM/ETH", "XUM/BTC"],
+  "feature_markets": ["ETH/USD", "BTC/USD", "XUM/USDT", "XUM/ETH", "XUM/BTC"],
   "list_bid": ["USD", "ETH", "BTC", "USDT"],
   "messages": {
     en
