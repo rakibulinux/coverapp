@@ -11,9 +11,9 @@
         <span class="now-price" :class="getLastTrend" v-text="getLastPrice" />
         <span>≈ {{ getPrice_USD.toFixed(2) }} USD</span>
       </div>
-       <dl>
+       <!-- <dl>
         <span> 1 BTC : {{ getCurrency }} USDT</span>
-      </dl>
+      </dl> -->
       <dl class="change">
         <dt v-text="$t('page.global.table.24h_change')" />
         <dt class="value" :class="getLastTrend" v-text="getChange" />
