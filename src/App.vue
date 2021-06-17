@@ -2,8 +2,6 @@
   <a-layout
     v-if="page_ready"
     :class="{
-      basic: $route.path === '/exchange/basic',
-      pro: $route.path === '/exchange/pro',
       night: $route.path.includes('/exchange'),
       'no-border': $route.path.includes('/exchange')
     }"
@@ -17,7 +15,7 @@
     />
     <tab-bar v-if="isMobile" />
 
-    <footer-exchange v-if="!$route.path.includes('/exchange/pro') && !isMobile" />
+    <footer-exchange v-if="exchange_type != 'pro' && !isMobile" />
   </a-layout>
 </template>
 
@@ -53,6 +51,14 @@ export default class App extends Vue {
 
   get page_ready() {
     return PublicController.page_ready;
+  }
+
+  get exchange_type() {
+    if (this.$route.path.includes("/exchange")) {
+      return this.$route.query["type"]
+    }
+
+    return null;
   }
 
   public beforeCreate() {

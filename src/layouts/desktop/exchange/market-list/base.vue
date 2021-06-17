@@ -220,7 +220,6 @@ export default class MarketList extends Vue {
 @trade-pairs-prefix-cls: ~"page-trade-pairs";
 
 .@{trade-pairs-prefix-cls} {
-  height: 100%;
   background-color: var(--bg-card-color);
 
   &-search-wrapper {

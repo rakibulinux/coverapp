@@ -16,7 +16,7 @@
             :key="data.url"
             :title="data.name"
             :class="{
-              'ant-dropdown-menu-item-selected': path.includes(data.url),
+              'ant-dropdown-menu-item-selected': $route.path == '/exchange' && $route.query['type'] == data.type,
             }"
           >
             <router-link :to="data.url" v-text="data.name" />
@@ -40,7 +40,7 @@
               :key="data.url"
               :title="data.name"
               :class="{
-                'ant-dropdown-menu-item-selected': path.includes(data.url),
+                'ant-dropdown-menu-item-selected': path.includes(data.url)
               }"
             >
               <router-link :to="data.url" v-text="data.name" />
@@ -147,11 +147,13 @@ export default class App extends Vue {
       MENU: [
         {
           name: this.translation("exchange.basic"),
-          url: "/exchange/basic",
+          type: "basic",
+          url: "/exchange?type=basic",
         },
         {
           name: this.translation("exchange.pro"),
-          url: "/exchange/pro",
+          type: "pro",
+          url: "/exchange?type=pro",
         }
       ],
     };
@@ -210,6 +212,7 @@ export default class App extends Vue {
   }
 
   get path() {
+    console.log(this.$route)
     return this.$route.path;
   }
 

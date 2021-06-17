@@ -9,6 +9,10 @@ export class ExchangeBaseMixin extends Vue {
   loading = false;
   identifier = 0;
 
+  get type() {
+    return this.$route.query["type"] || "basic"
+  }
+
   mounted() {
     this.onLoad(this.TradeController.market.id);
     ZSmartModel.on("exchange-render", this.forceRerender);

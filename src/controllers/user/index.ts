@@ -1,5 +1,4 @@
 import router from "@/router";
-import store from "@/store";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Vue from "vue";
@@ -9,6 +8,7 @@ import { applyMixins } from '../mixins';
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { runNotice } from "@/mixins";
 import { isMobile } from "@zsmartex/z-helpers";
+import { TradeController } from "..";
 
 export class UserController {
   store = Store;
@@ -30,6 +30,12 @@ export class UserController {
       } else {
         if (router.currentRoute.fullPath != "/") router.push({ path: "/" });
       }
+
+      ["open_orders", "orders_history", "trades_history"].forEach(
+        async (type: "open_orders" | "orders_history" | "trades_history") => {
+          TradeController[type].clear()
+        }
+      )
   
       runNotice("success", "logout");
     })

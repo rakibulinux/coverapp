@@ -2,8 +2,6 @@
 @import "order_entry";
 
 .page-trade-mine-control {
-  height: $order-entry-height;
-  margin-top: 4px;
   .type,
   .side {
     text-transform: capitalize;
@@ -175,13 +173,6 @@
   }
 }
 
-.pro {
-  .page-exchange-chart {
-    margin-top: 4px;
-    height: calc(100% - #{$ticker-status-height + $mine-control-height + 8px});
-  }
-}
-
 .page-exchange-chart {
   .z-card {
     &-head {
@@ -215,12 +206,7 @@
 }
 .page-exchange {
   position: relative;
-  display: flex;
-  height: calc(100vh - 48px);
-  min-height: 600px;
   width: 100%;
-  margin: 0;
-  padding: 4px 0;
   overflow: hidden;
 
   .z-table {

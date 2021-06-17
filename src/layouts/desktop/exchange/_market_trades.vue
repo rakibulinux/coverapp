@@ -103,9 +103,6 @@ export default class MarketTrades extends Vue {
 <style lang="less">
 .pro {
   .market-trades {
-    width: 50%;
-    height: 100%;
-
     .z-table {
       &-row {
         padding-right: 11px;

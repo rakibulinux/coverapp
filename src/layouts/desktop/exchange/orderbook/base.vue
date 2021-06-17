@@ -102,10 +102,6 @@ export default class App extends Vue {
 
 <style lang="less">
 .page-exchange .orderbook {
-  width: 50%;
-  height: 100%;
-  margin-right: 4px;
-
   .now-price {
     font-size: 18px;
     width: 100%;

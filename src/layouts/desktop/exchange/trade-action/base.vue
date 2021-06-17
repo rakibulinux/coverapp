@@ -49,9 +49,6 @@ export default class TradeAction extends Vue {
 
 <style lang="less">
 .trade-action {
-  height: 275px;
-  margin-top: 4px;
-
   .ant-tabs-ink-bar {
     width: 100% !important; // need remove
   }
