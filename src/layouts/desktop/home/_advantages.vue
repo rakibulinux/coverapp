@@ -33,7 +33,7 @@ import globalResource from "@/assets/img/global.jpeg"
 
 export default {
   data: () => ({
-    title: "The Advantages of Smart chainers Exchange",
+    title: "The Advantages of XUM Exchange",
     contentOne: [
       {
         img: advantage_example,

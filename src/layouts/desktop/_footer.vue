@@ -56,7 +56,8 @@
         <li class="m" v-text="`Business: ${contactus.business}`" />
         <li class="m">
           Facebook:
-          <a :href="contactus.facebook" target="_blank">Smart Chainers</a>
+          <!-- <a :href="contactus.facebook" target="_blank">XUM exchange</a> -->
+          XUM Exchange
         </li>
       </ul>
     </div>
@@ -74,14 +75,14 @@ import { Vue, Component } from "vue-property-decorator";
 @Component
 export default class App extends Vue {
   public contactus = {
-    service: "business@SmartChainers.tech",
-    business: "business@SmartChainers.tech",
-    facebook: "https://fb.com/smartchainers"
+    service: "business@xumexchange.tech",
+    business: "business@xumexchange.tech",
+    facebook: "https://fb.com/xumexchange"
   };
 
   public copyright = {
-    name: "SmartChainers",
-    link: "https://www.smartchainers.com/"
+    name: "XUM Exchange",
+    link: "https://www.xumexchange.com/"
   };
 }
 </script>

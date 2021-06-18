@@ -2,13 +2,13 @@ import getUrl from "@/getUrl";
 import en from "@/plugins/locales/en";
 import vn from "@/plugins/locales/vn";
 
-const nameEX = "Welcome Smartchainers Exchange";
+const nameEX = "Welcome XUM Exchange";
 
 export default {
   nameEX,
-  "default_market": "btcusd",
-  "feature_markets": ["BTC/USD", "ETH/USD"],
-  "list_bid": ["USD", "ETH"],
+  "default_market": "xumusdt",
+  "feature_markets": ["ETH/USD", "BTC/USD", "XUM/USDT", "XUM/ETH", "XUM/BTC"],
+  "list_bid": ["USD", "ETH", "BTC", "USDT"],
   "messages": {
     en
   },
