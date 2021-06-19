@@ -1,14 +1,17 @@
 import { PublicController, UserController, TradeController } from '@/controllers';
 import ZSmartModel from "@zsmartex/z-eventbus";
 import * as helpers from "@zsmartex/z-helpers";
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 
 @Component
 export class TradeActionMixin extends Vue {
-  side: ZTypes.OrderSide;
-  ord_type: ZTypes.OrdType = "limit";
+  @Prop() readonly side!: ZTypes.OrderSide;
+  @Prop({ default: "limit" }) readonly ord_type!: ZTypes.OrdType;
+  @Prop() readonly isStop!: boolean;
+
   loading = false;
   price = "";
+  stop_price = "";
   amount = "";
   slider_percent = 0;
   marks_slider = {
@@ -96,6 +99,15 @@ export class TradeActionMixin extends Vue {
     }
   }
 
+  get stop_price_error() {
+    if (!this.stop_price.length) {
+      return false;
+    }
+    if (Number(this.stop_price) < this.min_price) {
+      return "Stop price too low";
+    }
+  }
+
   get amount_error() {
     if (!this.amount.length) {
       return false;
@@ -106,14 +118,22 @@ export class TradeActionMixin extends Vue {
   }
 
   get button_disabled() {
-    const { amount, price } = this;
-    const { price_error, amount_error } = this;
+    if (this.price_error) return true;
+    if (this.amount_error) return true;
+    if (this.stop_price_error) return true;
+    if (this.loading) return true;
 
-    const rule_1 = amount.length && price.length;
-    const rule_2 = !price_error && !amount_error;
-    const allow = rule_1 && rule_2 && !this.loading;
+    if (this.ord_type == "market") {
+      if (this.price.length) return true;
+      if (this.stop_price.length) return true;
+    } else {
+      if (!this.price.length) return true;
+      if (!this.stop_price.length) return true;
+    }
 
-    return !allow;
+    if (!this.amount.length) return true;
+
+    return false;
   }
 
   get assets() {
@@ -221,17 +241,21 @@ export class TradeActionMixin extends Vue {
 
       return;
     }
+
     this.loading = true;
-    await TradeController.create_order(this.market.id, this.side, this.ord_type, Number(this.price), Number(this.amount));
+    await TradeController.create_order(
+      this.market.id,
+      this.side,
+      this.ord_type,
+      this.price ? Number(this.price) : null,
+      this.stop_price ? Number(this.stop_price) : null,
+      Number(this.amount)
+    );
     this.loading = false;
   }
 
   onSliderPercentChange(slider_percent: number) {
     this.percent_to_amount(slider_percent);
-  }
-
-  change_ord_type(ord_type: ZTypes.OrdType) {
-    this.ord_type = ord_type;
   }
 
   @Watch("price")

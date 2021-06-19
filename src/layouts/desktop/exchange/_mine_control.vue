@@ -2,7 +2,6 @@
   <z-card
     v-model="type_control"
     :tab-list="tab_list"
-    @tabChange="onTabChange"
     class="page-trade-mine-control"
   >
     <div slot="head" class="extra-action cancel-all">
@@ -85,10 +84,6 @@ export default class MineControl extends Vue {
 
   public cancel_all_orders() {
     this.TradeController.stop_orders(this.market.id);
-  }
-
-  public onTabChange(type) {
-    this.type_control = type;
   }
 
   public translation(message, data = {}) {

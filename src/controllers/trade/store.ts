@@ -3,6 +3,7 @@ import VueCompositionAPI, { reactive } from "@vue/composition-api";
 
 Vue.use(VueCompositionAPI);
 
+export type ExchangeLayout = "basic" | "pro";
 export interface IStore {
 	market?: ZTypes.Market;
 	depth: {
@@ -21,6 +22,7 @@ export interface IStore {
 	open_orders: ZTypes.Order[];
 	orders_history: ZTypes.Order[];
 	trades_history: ZTypes.Trade[];
+	exchange_layout: ExchangeLayout;
 }
 
 class Store {
@@ -35,7 +37,8 @@ class Store {
 		trades: [],
 		open_orders: [],
 		orders_history: [],
-		trades_history: []
+		trades_history: [],
+		exchange_layout: (localStorage.getItem("exchange_layout") as ExchangeLayout) || "basic",
 	});
 }
 

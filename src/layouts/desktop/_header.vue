@@ -7,19 +7,27 @@
     <div class="action-group left">
       <a-dropdown placement="bottomCenter">
         <a class="ant-dropdown-link">
-          {{ EXCHANGES_MENU.NAME }}
+          {{ this.translation("exchange") }}
           <i class="zicon-arrow-down" />
         </a>
         <a-menu slot="overlay">
           <a-menu-item
-            v-for="data in EXCHANGES_MENU.MENU"
-            :key="data.url"
-            :title="data.name"
+            :title="this.translation('exchange.basic')"
             :class="{
-              'ant-dropdown-menu-item-selected': $route.path == '/exchange' && $route.query['type'] == data.type,
+              'ant-dropdown-menu-item-selected': $route.path == '/exchange' && TradeController.exchange_layout == 'basic',
             }"
+            @click="TradeController.exchange_layout = 'basic'"
           >
-            <router-link :to="data.url" v-text="data.name" />
+            <router-link to="/exchange?type=basic" v-text="this.translation('exchange.basic')" />
+          </a-menu-item>
+          <a-menu-item
+            :title="this.translation('exchange.pro')"
+            :class="{
+              'ant-dropdown-menu-item-selected': $route.path == '/exchange' && TradeController.exchange_layout == 'pro',
+            }"
+            @click="TradeController.exchange_layout = 'pro'"
+          >
+            <router-link to="/exchange?type=pro" v-text="this.translation('exchange.pro')" />
           </a-menu-item>
         </a-menu>
       </a-dropdown>
@@ -137,26 +145,11 @@ export default class App extends Vue {
         name: this.translation("sign_in"),
         url: "/signin",
       },
-      { name: this.translation("sign_up"), url: "/signup" },
+      {
+        name: this.translation("sign_up"),
+        url: "/signup"
+      },
     ];
-  }
-
-  get EXCHANGES_MENU() {
-    return {
-      NAME: this.translation("exchange"),
-      MENU: [
-        {
-          name: this.translation("exchange.basic"),
-          type: "basic",
-          url: "/exchange?type=basic",
-        },
-        {
-          name: this.translation("exchange.pro"),
-          type: "pro",
-          url: "/exchange?type=pro",
-        }
-      ],
-    };
   }
 
   get ORDERS_MENU() {
@@ -212,7 +205,6 @@ export default class App extends Vue {
   }
 
   get path() {
-    console.log(this.$route)
     return this.$route.path;
   }
 

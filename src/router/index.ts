@@ -57,6 +57,10 @@ router.beforeEach(async (to, from, next) => {
   if (!PublicController.page_ready && first_route) {
     first_route = false;
 
+    if (to.path == "/exchange" && to.query["type"].length) {
+      TradeController.exchange_layout = (to.query["type"] as any);
+    }
+
     await Promise.all([
       UserController.get_logged(),
       PublicController.fetch_currencies(),

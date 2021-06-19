@@ -15,7 +15,7 @@
     />
     <tab-bar v-if="isMobile" />
 
-    <footer-exchange v-if="exchange_type != 'pro' && !isMobile" />
+    <footer-exchange v-if="!($route.path == '/exchange' && exchange_layout == 'pro') && !isMobile" />
   </a-layout>
 </template>
 
@@ -53,19 +53,12 @@ export default class App extends Vue {
     return PublicController.page_ready;
   }
 
-  get exchange_type() {
-    if (this.$route.path.includes("/exchange")) {
-      return this.$route.query["type"]
-    }
-
-    return null;
+  get exchange_layout() {
+    return this.TradeController.exchange_layout;
   }
 
   public beforeCreate() {
     "localStorage" in window;
-    if (localStorage.getItem("exchange_layout") == null) {
-      localStorage.setItem("exchange_layout", "basic");
-    }
     if (localStorage.getItem("market") == null) {
       localStorage.setItem("market", config.default_market);
     }

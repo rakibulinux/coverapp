@@ -4,7 +4,7 @@ import { applyMixins } from "../mixins";
 import MineControl from "./mine_control";
 import OrdersController from "./orders";
 import OrderBook from "./orderbook";
-import Store, { IStore } from "./store";
+import Store, { ExchangeLayout, IStore } from "./store";
 import GettersSetters from "./getters_setters";
 import config from '@/config';
 import { PublicController } from '..';
@@ -25,7 +25,7 @@ export class TradeController {
     });
   }
 
-  open_exchange(market_id: string, side?: ZTypes.OrderSide) {
+  open_exchange(market_id: string, side?: ZTypes.OrderSide, exchange_layout = this.store.exchange_layout) {
     const market = PublicController.markets.find(market => market.id == market_id);
 
     if (this.market.id != market.id) {
@@ -34,11 +34,13 @@ export class TradeController {
     }
 
     localStorage.setItem("market", this.market.id);
-    if (router.currentRoute.fullPath.includes("/exchange")) return;
+    if (["/exchange", "/m/exchange"].includes(router.currentRoute.path)) return;
 
-    const exchange_layout = localStorage.getItem("exchange_layout");
-    const exchange_path = helpers.isMobile() ? "/m/exchange" : `/exchange?type=${exchange_layout}`;
-    router.push({ path: exchange_path, query: { type: side } });
+    if (helpers.isMobile()) {
+      router.push({ path: "/m/exchange", query: { type: side } });
+    } else {
+      router.push({ path: "/exchange", query: { type: exchange_layout } });
+    }
   }
 
   get_best_price(side: ZTypes.OrderSide | ZTypes.TakerType) {

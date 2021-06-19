@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['trade-action-input', { 'trade-action-input-error': error }]"
+    :class="['trade-action-input', { 'trade-action-input-error': error, 'trade-action-input-disabled': disabled }]"
     @mouseover="mouseover"
     @mouseleave="mouseleave"
   >
@@ -15,6 +15,7 @@
         @blur="onInputBlur"
         :value="value"
         type="text"
+        :disabled="disabled"
       />
       <span v-if="suffix" class="trade-action-input-suffix">{{ suffix }}</span>
       <div
@@ -39,6 +40,7 @@ export default class App extends Vue {
   @Prop() public readonly limitLengthAfterDot!: number;
   @Prop({ default: false }) public readonly estimate!: boolean;
   @Prop() public readonly error!: boolean;
+  @Prop() public readonly disabled!: boolean;
 
   public allow_tooltip = false;
   public input_error_class = "ant-input-error";
@@ -117,14 +119,25 @@ export default class App extends Vue {
 <style lang="less">
 .trade-action-input {
   position: relative;
+  border: 1px solid;
+  border-radius: 4px;
+  border-color: var(--border-color);
 
   input {
     height: 35px;
     width: 100%;
-    border: 1px solid;
-    border-radius: 4px;
-    border-color: #314363;
+    border: none;
     padding: 0 75px !important;
+    text-align: right;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &-disabled {
+    background-color: var(--bg-downdown-color);
+    cursor: not-allowed;
   }
 
   &-error {

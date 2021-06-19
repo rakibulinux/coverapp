@@ -1,6 +1,6 @@
 import config from '@/config';
 import { PublicController } from '..';
-import { IStore } from './store';
+import { IStore, ExchangeLayout } from './store';
 
 export default class GettersSetters {
   store!: IStore;
@@ -30,5 +30,18 @@ export default class GettersSetters {
     document.title = `${latest_trade.price} - ${(
       this.market.name
     ).toUpperCase()} - ${config.nameEX}`;
+  }
+
+  get exchange_layout() {
+    return this.store.exchange_layout;
+  }
+
+  set exchange_layout(layout: ExchangeLayout) {
+    if (layout != "basic" && layout != "pro") {
+      layout = "basic";
+    }
+
+    this.store.exchange_layout = layout;
+    localStorage.setItem("exchange_layout", layout);
   }
 }

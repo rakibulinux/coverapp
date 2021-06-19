@@ -1,17 +1,22 @@
 <template>
   <z-card
-    v-model="selected"
+    v-model="ord_type"
     class="trade-action"
-    :tab-list="tabList"
-    @tabChange="onTabChange"
+    :tab-list="ORDER_TYPES"
   >
-    <trade-action-part side="buy" />
-    <trade-action-part side="sell" />
-    <modal-exchange v-if="!UserController.isAuth" />
+    <template v-if="ord_type == 'stop_limit'">
+      <trade-action-part ord_type="limit" :is-stop="true" side="buy" />
+      <trade-action-part ord_type="limit" :is-stop="true" side="sell" />
+    </template>
+    <template v-else>
+      <trade-action-part :ord_type="ord_type" side="buy" />
+      <trade-action-part :ord_type="ord_type" side="sell" />
+    </template>
+    <!-- <modal-exchange v-if="!UserController.isAuth" /> -->
   </z-card>
 </template>
 
-<script>
+<script lang="ts">
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
@@ -22,23 +27,23 @@ import { Vue, Component } from "vue-property-decorator";
   }
 })
 export default class TradeAction extends Vue {
-  selected = "limit";
+  ord_type = "limit";
 
-  get tabList() {
+  get ORDER_TYPES() {
     return [
       {
         key: "limit",
-        text: this.translation("limit_order")
+        text: this.translation("ord_type.limit")
       },
-      // {
-      //   key: "market",
-      //   text: this.translation("market")
-      // }
+      {
+        key: "market",
+        text: this.translation("ord_type.market")
+      },
+      {
+        key: "stop_limit",
+        text: this.translation("ord_type.stop_limit")
+      }
     ]
-  }
-
-  onTabChange(type) {
-    this.selected = type;
   }
 
   translation(message, data = {}) {
@@ -49,10 +54,6 @@ export default class TradeAction extends Vue {
 
 <style lang="less">
 .trade-action {
-  .ant-tabs-ink-bar {
-    width: 100% !important; // need remove
-  }
-
   &-part {
     position: relative;
     display: inline-block;
@@ -67,6 +68,14 @@ export default class TradeAction extends Vue {
 
       .value {
         color: white;
+      }
+    }
+
+    &-market {
+      .price {
+        input {
+          font-size: 14px;
+        }
       }
     }
   }
@@ -86,14 +95,13 @@ export default class TradeAction extends Vue {
       font-size: 14px;
     }
   }
+
   &-input {
-    &.amount {
-      margin-top: 12px;
-    }
+    margin-bottom: 12px;
   }
 
   &-slider {
-    margin: 20px 6px;
+    margin: 20px 6px 8px;
     .ant-slider {
       &-rail {
         background-color: var(--border-color) !important;
