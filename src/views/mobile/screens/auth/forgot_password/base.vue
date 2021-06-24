@@ -110,7 +110,6 @@ export default class ScreenConfirmEmail extends Mixins(
   loading = false;
   sended = false;
   email = "";
-  captcha_response = "";
   password = "";
   confirm_password = "";
 
@@ -156,7 +155,6 @@ export default class ScreenConfirmEmail extends Mixins(
 
     await UserController.forgot_password(
       this.email,
-      this.captcha_response,
       () => {
         this.start_cooldown();
         this.step++;

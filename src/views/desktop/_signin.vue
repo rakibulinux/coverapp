@@ -48,12 +48,14 @@ import { Vue, Component, Watch } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import ModalTotp from "@/layouts/desktop/modal/_modal_totp.vue";
 import { UserController } from "@/controllers";
+import VueRecaptcha from 'vue-recaptcha';
 
 @Component({
   components: {
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
     "auth-button": () => import("@/components/desktop/auth-button.vue"),
-    "modal-totp": ModalTotp
+    "modal-totp": ModalTotp,
+    "vue-recaptcha": VueRecaptcha,
   }
 })
 export default class SignIn extends Vue {
@@ -63,7 +65,6 @@ export default class SignIn extends Vue {
   public email = "";
   public password = "";
   public otp_code = "";
-  public captcha_response = "";
   public payload_modal = {};
 
   get loading() {
@@ -112,14 +113,13 @@ export default class SignIn extends Vue {
   }
 
   public async callLogin() {
-    const { email, password, otp_code, captcha_response } = this;
+    const { email, password, otp_code } = this;
 
     await UserController.login(
       {
         email,
         password,
-        otp_code,
-        captcha_response
+        otp_code
       },
       "/account/security"
     );

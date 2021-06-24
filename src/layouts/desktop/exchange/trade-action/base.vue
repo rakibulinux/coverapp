@@ -12,7 +12,7 @@
       <trade-action-part :ord_type="ord_type" side="buy" />
       <trade-action-part :ord_type="ord_type" side="sell" />
     </template>
-    <!-- <modal-exchange v-if="!UserController.isAuth" /> -->
+    <modal-exchange v-if="!UserController.isAuth" />
   </z-card>
 </template>
 

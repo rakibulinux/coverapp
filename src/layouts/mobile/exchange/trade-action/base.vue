@@ -30,8 +30,7 @@ import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
-    "trade-action-input": () => import("./trade-action-input.vue"),
-    "trade-action-balance": () => import("./trade-action-balance.vue")
+    "trade-action-part": () => import("./trade-action-part.vue")
   }
 })
 export default class TradeAction extends Vue {

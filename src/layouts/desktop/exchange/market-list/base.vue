@@ -333,6 +333,7 @@ export default class MarketList extends Vue {
     span.currency {
       > span {
         display: inline-block;
+        font-weight: 500;
         & + span {
           margin-left: 6px;
         }

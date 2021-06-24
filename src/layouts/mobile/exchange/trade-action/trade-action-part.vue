@@ -59,7 +59,12 @@
 import { TradeActionMixin } from "@/mixins";
 import { Component, Mixins } from 'vue-property-decorator'
 
-@Component({})
+@Component({
+  components: {
+    "trade-action-input": () => import("./trade-action-input.vue"),
+    "trade-action-balance": () => import("./trade-action-balance.vue"),
+  }
+})
 export default class TradeActionPart extends Mixins(TradeActionMixin) {
   get AMOUNT_PERCENT() {
     return Object.keys(this.marks_slider).map(percent => Number(percent));

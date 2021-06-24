@@ -115,7 +115,6 @@ export default class ForgotPassword extends Mixins(ConfirmationMixin) {
   loading = false;
   sended = false;
   email = "";
-  captcha_response = "";
   password = "";
   confirm_password = "";
 
@@ -157,7 +156,6 @@ export default class ForgotPassword extends Mixins(ConfirmationMixin) {
 
     await UserController.forgot_password(
       this.email,
-      this.captcha_response,
       () => {
         this.start_cooldown();
         this.step++;

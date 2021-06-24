@@ -62,14 +62,13 @@ export default class SignUp extends Vue {
   public password = "";
   public confirm_password = "";
   public refid = "";
-  public captcha_response = "";
 
   get loading() {
     return UserController.state == "loading";
   }
 
   get buttonDisabled() {
-    const { email, password, confirm_password, captcha_response } = this;
+    const { email, password, confirm_password } = this;
     const {
       email_error,
       password_error,
@@ -80,8 +79,7 @@ export default class SignUp extends Vue {
     const rule_1 =
       email.length ||
       password.length ||
-      confirm_password.length ||
-      captcha_response.length;
+      confirm_password.length
     const rule_2 =
       !email_error &&
       !password_error &&
@@ -147,8 +145,7 @@ export default class SignUp extends Vue {
     await UserController.register({
       email: this.email,
       password: this.password,
-      refid: this.refid,
-      captcha_response: this.captcha_response
+      refid: this.refid
     });
   }
 }

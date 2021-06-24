@@ -24,7 +24,7 @@ export default {
   },
   "finex": true,
   "recaptcha": {
-    sitekey: "6LcrA5wUAAAAABY8KW-beaUOjShGC_U2va3kJEJt",
+    sitekey: "6LeHA5wUAAAAAJWjx5JHPcp-JBnfTqD53hOo-1mC",
   },
   "timeZone": "UTC",
   "SESSION_KEY": "ALLOW-ALL", // For use on exchange

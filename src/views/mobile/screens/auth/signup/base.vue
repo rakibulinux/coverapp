@@ -75,7 +75,6 @@ export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
   password = "";
   confirm_password = "";
   refid = "";
-  captcha_response = "";
 
   button_rules = ["loading", "email", "password", "confirm_password"];
 
@@ -97,8 +96,7 @@ export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
     await this.UserController.register({
       email: this.email,
       password: this.password,
-      refid: this.refid,
-      captcha_response: this.captcha_response
+      refid: this.refid
     });
   }
 }

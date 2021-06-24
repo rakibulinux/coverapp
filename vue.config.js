@@ -83,7 +83,7 @@ const configWebPack = {
   devServer: {
     proxy: {
       "^/api": {
-        target: "https://demo.zsmart.tech/",
+        target: "https://www.vpex.io/",
         secure: false,
         ws: true,
         changeOrigin: true,
