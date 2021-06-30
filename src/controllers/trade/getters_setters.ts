@@ -28,6 +28,8 @@ export default class GettersSetters {
 
     const latest_trade = trades[0];
 
+    if (!latest_trade) return;
+
     document.title = `${latest_trade.price} - ${(
       this.market.name
     ).toUpperCase()} - ${config.nameEX}`;

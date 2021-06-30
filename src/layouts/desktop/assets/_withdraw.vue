@@ -300,10 +300,8 @@ export default class AssetsWithdraw extends Vue {
 
   async withdraw(otp_code?: string) {
     if (!otp_code) return this.open_modal("totp");
-    console.log(otp_code);
 
     this.loading = true;
-    console.log(this.type == "book", this.selected_beneficiary);
 
     await this.TradeController.create_withdrawal(
       this.currency.id,

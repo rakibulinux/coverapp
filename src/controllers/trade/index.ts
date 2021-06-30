@@ -16,19 +16,17 @@ import router from '@/router';
 export class TradeController {
   constructor() {
     this.create_mine_control();
-    this.orderbook = new OrderBook();
     this.store = Store;
     this.tradingview = new TradingView();
 
     ZSmartModel.on("page-ready", () => {
       this.market = PublicController.markets.find(market => market.id == (localStorage.getItem("market") || config.default_market));
+      this.orderbook = new OrderBook(this.market.id);
     });
   }
 
   open_exchange(market_id: string, side?: ZTypes.OrderSide, exchange_layout = this.store.exchange_layout) {
     const market = PublicController.markets.find(market => market.id == market_id);
-
-    console.log(this.market.id, market_id)
 
     if (this.market.id != market.id) {
       ZSmartModel.emit("exchange-render", market.id, this.market.id);
@@ -125,8 +123,6 @@ export class TradeController {
 
       if (callback) callback();
     } catch (error) {
-
-      console.log(error)
       return error;
     }
   }

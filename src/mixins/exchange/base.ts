@@ -40,11 +40,10 @@ export class ExchangeBaseMixin extends Vue {
   async onLoad(market: string) {
     this.loading = true;
     this.setTitle();
-    this.TradeController.orderbook.clear();
     await Promise.all([
       this.TradeController.orderbook.fetch(market, 500),
       this.TradeController.get_public_trades(market)
-    ])
+    ]);
     this.loading = false;
 
     MarketChannels().forEach(channel => {

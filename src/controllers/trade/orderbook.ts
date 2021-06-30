@@ -1,6 +1,12 @@
 import TradeController from "@/controllers/trade";
 
 export default class OrderBook {
+  market_id: string;
+
+  constructor(market_id: string) {
+    this.market_id = market_id;
+  }
+
   get book() {
     return TradeController.store.depth;
   }
@@ -23,6 +29,7 @@ export default class OrderBook {
 
   async fetch(market_id: string, limit?: number) {
     this.loading = true;
+    this.market_id = market_id;
 
     try {
       this.clear();
