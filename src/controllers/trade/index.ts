@@ -28,6 +28,8 @@ export class TradeController {
   open_exchange(market_id: string, side?: ZTypes.OrderSide, exchange_layout = this.store.exchange_layout) {
     const market = PublicController.markets.find(market => market.id == market_id);
 
+    console.log(this.market.id, market_id)
+
     if (this.market.id != market.id) {
       ZSmartModel.emit("exchange-render", market.id, this.market.id);
       this.market = market;
@@ -39,7 +41,7 @@ export class TradeController {
     if (helpers.isMobile()) {
       router.push({ path: "/m/exchange", query: { type: side } });
     } else {
-      router.push({ path: "/exchange", query: { type: exchange_layout } });
+      router.push({ name: "ExchangePage", params: { name: this.market.name.replace("/", "-") }, query: { type: exchange_layout } });
     }
   }
 

@@ -14,20 +14,30 @@
           <a-menu-item
             :title="this.translation('exchange.basic')"
             :class="{
-              'ant-dropdown-menu-item-selected': $route.path == '/exchange' && TradeController.exchange_layout == 'basic',
+              'ant-dropdown-menu-item-selected': $route.name == 'ExchangePage' && TradeController.exchange_layout == 'basic',
             }"
             @click="TradeController.exchange_layout = 'basic'"
           >
-            <router-link to="/exchange?type=basic" v-text="this.translation('exchange.basic')" />
+            <router-link :to="{
+              name: 'ExchangePage',
+              params: { name: TradeController.market.name.replace('/', '-') },
+              query: { type: 'basic' }
+            }"
+            v-text="this.translation('exchange.basic')" />
           </a-menu-item>
           <a-menu-item
             :title="this.translation('exchange.pro')"
             :class="{
-              'ant-dropdown-menu-item-selected': $route.path == '/exchange' && TradeController.exchange_layout == 'pro',
+              'ant-dropdown-menu-item-selected': $route.name == 'ExchangePage' && TradeController.exchange_layout == 'pro',
             }"
             @click="TradeController.exchange_layout = 'pro'"
           >
-            <router-link to="/exchange?type=pro" v-text="this.translation('exchange.pro')" />
+            <router-link :to="{
+              name: 'ExchangePage',
+              params: { name: TradeController.market.name.replace('/', '-') },
+              query: { type: 'pro' }
+            }"
+            v-text="this.translation('exchange.pro')" />
           </a-menu-item>
         </a-menu>
       </a-dropdown>

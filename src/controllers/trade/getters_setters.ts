@@ -11,6 +11,7 @@ export default class GettersSetters {
 
   set market(market: ZTypes.Market) {
     this.store.market = market;
+    localStorage.setItem("market", market.id);
   }
 
   get ticker() {

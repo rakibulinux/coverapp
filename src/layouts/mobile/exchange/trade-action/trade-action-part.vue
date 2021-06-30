@@ -72,6 +72,6 @@ export default class TradeActionPart extends Mixins(TradeActionMixin) {
 }
 </script>
 
-<style lang="scss">
+<style lang="less">
 
 </style>

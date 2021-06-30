@@ -32,9 +32,14 @@
           <a-menu-item
             v-for="market in MARKET"
             :key="market.id"
-            @click="changeMarket(market.name)"
           >
-            {{ market.name }}
+            <router-link :to="{
+              name: 'ExchangePage',
+              params: { name: market.name.replace('/', '-') },
+              query: { type: 'pro' }
+            }">
+              {{ market.name }}
+            </router-link>
           </a-menu-item>
         </a-menu>
       </a-dropdown>

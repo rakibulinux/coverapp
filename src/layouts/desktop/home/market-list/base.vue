@@ -49,7 +49,6 @@
             />
           </span>
         </span>
-        <span class="text-right actions">{{ $t("page.global.table.action") }}</span>
       </dt>
       <dd>
         <market-list-row

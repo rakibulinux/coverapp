@@ -57,10 +57,6 @@ router.beforeEach(async (to, from, next) => {
   if (!PublicController.page_ready && first_route) {
     first_route = false;
 
-    if (to.path == "/exchange" && to.query["type"].length) {
-      TradeController.exchange_layout = (to.query["type"] as any);
-    }
-
     await Promise.all([
       UserController.get_logged(),
       PublicController.fetch_currencies(),
@@ -82,10 +78,28 @@ router.beforeEach(async (to, from, next) => {
         PublicController.broadcasts
       ) {
         PublicController.page_ready = true;
+
         break;
       }
 
       await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+
+  // Hanlder
+  if (to.name == "ExchangePage" && to.query["type"].length) {
+    TradeController.exchange_layout = (to.query["type"] as any);
+
+    const name = to.params["name"]
+    const market_id = name.split("-").join("").toLowerCase();
+    const market = PublicController.markets.find(market => market_id == market.id)
+
+    if (market) {
+      TradeController.market = market;
+    } else {
+      const market = PublicController.markets.find(market => market.id == config.default_market)
+
+      location.pathname = "/exchange/" + market.name.replace("/", "-")
     }
   }
 

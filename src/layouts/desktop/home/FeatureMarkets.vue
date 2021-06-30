@@ -6,24 +6,30 @@
       class="market"
       @click="MarketJoin(data)"
     >
-      <span class="rate" :class="getTrend(getChange(NameToID(data)), true)">
-        {{ getChange(NameToID(data)) }}
-      </span>
-      <h3 class="name">
-        <span>{{ reWorkName(data) }}</span>
-        <i>{{ data.split("/")[1] }}</i>
-      </h3>
-      <p class="price">
-        <span :class="getTrend(getChange(NameToID(data)), false)">
-          {{ getLastPrice(NameToID(data)) }}
+      <router-link :to="{
+        name: 'ExchangePage',
+        params: { name: data.replace('/', '-') },
+        query: { type: 'pro' }
+      }">
+        <span class="rate" :class="getTrend(getChange(NameToID(data)), true)">
+          {{ getChange(NameToID(data)) }}
         </span>
-        <i>≈ ${{ getLastPriceUSD(NameToID(data)) }}</i>
-      </p>
-      <p class="vol">
-        <span>{{ $t("page.global.table.24h_volume") }}</span>
-        <i>{{ getVolume(NameToID(data)) }} {{ data.split("/")[1] }}</i>
-      </p>
-      <sparkline :market_id="NameToID(data)" />
+        <h3 class="name">
+          <span>{{ reWorkName(data) }}</span>
+          <i>{{ data.split("/")[1] }}</i>
+        </h3>
+        <p class="price">
+          <span :class="getTrend(getChange(NameToID(data)), false)">
+            {{ getLastPrice(NameToID(data)) }}
+          </span>
+          <i>≈ ${{ getLastPriceUSD(NameToID(data)) }}</i>
+        </p>
+        <p class="vol">
+          <span>{{ $t("page.global.table.24h_volume") }}</span>
+          <i>{{ getVolume(NameToID(data)) }} {{ data.split("/")[1] }}</i>
+        </p>
+        <sparkline :market_id="NameToID(data)" />
+      </router-link>
     </li>
   </ul>
 </template>

@@ -28,6 +28,8 @@ export class ExchangeBaseMixin extends Vue {
 
   removeLoad(market) {
     this.TradeController.orderbook.clear();
+    this.TradeController.trades = [];
+
     const channels = MarketChannels(market);
 
     channels.forEach(channel => {

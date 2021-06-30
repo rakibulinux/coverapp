@@ -50,7 +50,7 @@ export default class PageExchangePro extends Mixins(ExchangeBaseMixin) {
     }
   ]
   hide_pairs_table = false;
-
+  
   mounted() {
     if (window.innerWidth < 1600) {
       this.hide_pairs_table = true;
