@@ -125,10 +125,10 @@ export class TradeActionMixin extends Vue {
 
     if (this.ord_type == "market") {
       if (this.price.length) return true;
-      if (this.stop_price.length) return true;
+      if (this.stop_price.length && this.isStop) return true;
     } else {
       if (!this.price.length) return true;
-      if (!this.stop_price.length) return true;
+      if (!this.stop_price.length && this.isStop) return true;
     }
 
     if (!this.amount.length) return true;

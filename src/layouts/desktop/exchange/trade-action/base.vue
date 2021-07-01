@@ -4,14 +4,16 @@
     class="trade-action"
     :tab-list="ORDER_TYPES"
   >
-    <template v-if="ord_type == 'stop_limit'">
-      <trade-action-part ord_type="limit" :is-stop="true" side="buy" />
-      <trade-action-part ord_type="limit" :is-stop="true" side="sell" />
-    </template>
-    <template v-else>
-      <trade-action-part :ord_type="ord_type" side="buy" />
-      <trade-action-part :ord_type="ord_type" side="sell" />
-    </template>
+    <trade-action-part
+      :ord_type="ord_type == 'stop_limit' ? 'limit' : 'market'"
+      :is-stop="ord_type == 'stop_limit'"
+      side="buy"
+    />
+    <trade-action-part
+      :ord_type="ord_type == 'stop_limit' ? 'limit' : 'market'"
+      :is-stop="ord_type == 'stop_limit'"
+      side="sell"
+    />
     <modal-exchange v-if="!UserController.isAuth" />
   </z-card>
 </template>

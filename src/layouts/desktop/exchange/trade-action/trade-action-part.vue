@@ -11,7 +11,7 @@
       :estimate-value="
         amount_to_usd(currency_by_side('buy'), Number(this.price)).toFixed(2)
       "
-      :error="price_error"
+      :error="stop_price_error"
     />
     <trade-action-input
       v-if="ord_type == 'limit'"
