@@ -5,12 +5,12 @@
     :tab-list="ORDER_TYPES"
   >
     <trade-action-part
-      :ord_type="ord_type == 'stop_limit' ? 'limit' : 'market'"
+      :ord_type="ord_type == 'stop_limit' ? 'limit' : ord_type"
       :is-stop="ord_type == 'stop_limit'"
       side="buy"
     />
     <trade-action-part
-      :ord_type="ord_type == 'stop_limit' ? 'limit' : 'market'"
+      :ord_type="ord_type == 'stop_limit' ? 'limit' : ord_type"
       :is-stop="ord_type == 'stop_limit'"
       side="sell"
     />
