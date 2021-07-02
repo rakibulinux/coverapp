@@ -122,15 +122,8 @@ export class TradeActionMixin extends Vue {
     if (this.amount_error) return true;
     if (this.stop_price_error) return true;
     if (this.loading) return true;
-
-    if (this.ord_type == "market") {
-      if (this.price.length) return true;
-      if (this.stop_price.length && this.isStop) return true;
-    } else {
-      if (!this.price.length) return true;
-      if (!this.stop_price.length && this.isStop) return true;
-    }
-
+    if (this.ord_type == "limit" && !this.price.length) return true;
+    if (!this.stop_price.length && this.isStop) return true;
     if (!this.amount.length) return true;
 
     return false;
@@ -247,8 +240,8 @@ export class TradeActionMixin extends Vue {
       this.market.id,
       this.side,
       this.ord_type,
-      this.price ? Number(this.price) : null,
-      this.stop_price ? Number(this.stop_price) : null,
+      this.ord_type == "limit" ? Number(this.price) : null,
+      this.isStop ? Number(this.stop_price) : null,
       Number(this.amount)
     );
     this.loading = false;
