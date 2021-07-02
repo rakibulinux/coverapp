@@ -151,7 +151,7 @@ export class TradeController {
 }
 
 export interface TradeController extends OrdersController, MineControl, GettersSetters {
-  orderbook: OrderBook;
+  orderbook?: OrderBook;
   store: IStore;
   tradingview: TradingView;
 }
