@@ -10,7 +10,7 @@ interface UserPhone {
   validated: boolean;
 }
 
-export interface IStore {
+export interface Store {
   state?: "loading" | "pending" | "active" | "banned";
   email?: string;
   uid?: string;
@@ -28,32 +28,30 @@ export interface IStore {
   }
 }
 
-class Store {
-	store = reactive<IStore>({
-    state: null,
-    email: null,
-    uid: null,
-    role: null,
-    level: null,
-    otp: false,
-    phone: {
-      number: null,
-      country: null,
-      validated_at: null,
+const store: Store = reactive<Store>({
+  state: null,
+  email: null,
+  uid: null,
+  role: null,
+  level: null,
+  otp: false,
+  phone: {
+    number: null,
+    country: null,
+    validated_at: null,
 
-      get validated() {
-        return !!(this.validated_at as UserPhone["validated_at"]);
-      }
-    },
-    labels: [],
-    balances: [],
-    need2fa: false,
-    session: {
-      sended_email: false,
-      password: "",
-      reset_password_token: ""
+    get validated() {
+      return !!(this.validated_at as UserPhone["validated_at"]);
     }
-	});
-}
+  },
+  labels: [],
+  balances: [],
+  need2fa: false,
+  session: {
+    sended_email: false,
+    password: "",
+    reset_password_token: ""
+  }
+});
 
-export default new Store().store as IStore;
+export default store;

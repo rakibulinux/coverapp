@@ -1,7 +1,7 @@
-import { IStore } from './store';
+import { Store } from './store';
 
 export default class GettersSetters {
-  store!: IStore;
+  store!: Store;
 
   get state() {
     return this.store.state;

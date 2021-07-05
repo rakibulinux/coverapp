@@ -32,5 +32,6 @@ module.exports = {
     "getter-return": "off",
     'prettier/prettier': process.env.NODE_ENV === "production" ? "warn" : "off",
     "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-empty-interface": "off",
   }
 };

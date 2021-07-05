@@ -2,7 +2,7 @@ import router from "@/router";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Vue from "vue";
-import Store, { IStore } from "./store";
+import store from "./store";
 import GettersSetters from "./getters_setters";
 import { applyMixins } from '../mixins';
 import ZSmartModel from "@zsmartex/z-eventbus";
@@ -11,7 +11,7 @@ import { isMobile } from "@zsmartex/z-helpers";
 import { TradeController } from "..";
 
 export class UserController {
-  store = Store;
+  store = store;
 
   constructor() {
     ZSmartModel.on("user/LOGIN", () => {
@@ -410,7 +410,6 @@ export class UserController {
 }
 
 export interface UserController extends GettersSetters {
-  store: IStore;
 }
 
 applyMixins(UserController, [GettersSetters]);

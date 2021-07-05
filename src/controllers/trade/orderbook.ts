@@ -1,9 +1,9 @@
 import TradeController from "@/controllers/trade";
 
 export default class OrderBook {
-  market_id: string;
+  market_id?: string;
 
-  constructor(market_id: string) {
+  constructor(market_id?: string) {
     this.market_id = market_id;
   }
 

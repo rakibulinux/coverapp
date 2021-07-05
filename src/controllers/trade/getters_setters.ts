@@ -1,9 +1,9 @@
 import config from '@/config';
 import { PublicController } from '..';
-import { IStore, ExchangeLayout } from './store';
+import { Store, ExchangeLayout } from './store';
 
 export default class GettersSetters {
-  store!: IStore;
+  store!: Store;
 
   get market(): ZTypes.Market {
     return this.store.market;

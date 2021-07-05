@@ -1,12 +1,12 @@
 import ApiClient from "@zsmartex/z-apiclient";
 import { applyMixins } from "../mixins";
-import Store, { IStore } from "./store";
+import store from "./store";
 import Helpers from "./helpers";
 import GettersSetters from './getters_setters';
 import config from "@/config";
 
 export class PublicController {
-  store = Store;
+  store = store;
   helpers = new Helpers(this.store);
 
   set_title(title: string) {
@@ -111,7 +111,6 @@ export class PublicController {
 }
 
 export interface PublicController extends GettersSetters {
-  store: IStore;
 }
 
 applyMixins(PublicController, [GettersSetters]);

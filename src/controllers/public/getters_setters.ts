@@ -1,10 +1,9 @@
 import colors from "@/colors";
-import ApiClient from "@zsmartex/z-apiclient";
 import ZSmartModel from "@zsmartex/z-eventbus";
-import { IStore } from './store';
+import { Store } from './store';
 
 export default class GettersSetters {
-  store!: IStore;
+  store!: Store;
 
   get theme() {
     return this.store.theme;
@@ -21,9 +20,6 @@ export default class GettersSetters {
   set page_ready(page_ready: boolean) {
     const meta = document.querySelector("meta[name='theme-color']");
 
-    if (this.page_ready != page_ready) {
-      ZSmartModel.emit("page-ready");
-    }
     meta.setAttribute("content", colors["bg-card-color"]);
     this.store.page_ready = page_ready;
   }

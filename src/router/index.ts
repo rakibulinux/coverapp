@@ -78,6 +78,7 @@ router.beforeEach(async (to, from, next) => {
         PublicController.broadcasts
       ) {
         PublicController.page_ready = true;
+        ZSmartModel.emit("page-ready");
 
         break;
       }

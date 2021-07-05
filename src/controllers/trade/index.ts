@@ -4,7 +4,7 @@ import { applyMixins } from "../mixins";
 import MineControl from "./mine_control";
 import OrdersController from "./orders";
 import OrderBook from "./orderbook";
-import Store, { ExchangeLayout, IStore } from "./store";
+import store from "./store";
 import GettersSetters from "./getters_setters";
 import config from '@/config';
 import { PublicController } from '..';
@@ -16,12 +16,12 @@ import router from '@/router';
 export class TradeController {
   constructor() {
     this.create_mine_control();
-    this.store = Store;
+    this.store = store;
     this.tradingview = new TradingView();
 
     ZSmartModel.on("page-ready", () => {
       this.market = PublicController.markets.find(market => market.id == (localStorage.getItem("market") || config.default_market));
-      this.orderbook = new OrderBook(this.market.id);
+      this.orderbook = new OrderBook(null);
     });
   }
 
@@ -152,7 +152,6 @@ export class TradeController {
 
 export interface TradeController extends OrdersController, MineControl, GettersSetters {
   orderbook?: OrderBook;
-  store: IStore;
   tradingview: TradingView;
 }
 applyMixins(TradeController, [OrdersController, MineControl, GettersSetters]);
