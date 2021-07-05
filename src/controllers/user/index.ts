@@ -6,7 +6,7 @@ import store from "./store";
 import GettersSetters from "./getters_setters";
 import { applyMixins } from '../mixins';
 import ZSmartModel from "@zsmartex/z-eventbus";
-import { runNotice, GenenateRecaptcha } from "@/mixins";
+import { runNotice } from "@/mixins";
 import { isMobile } from "@zsmartex/z-helpers";
 import { TradeController } from "..";
 
@@ -62,12 +62,11 @@ export class UserController {
       email: string;
       password: string;
       otp_code?: string;
+      captcha_response: string;
     },
     url_callback?: string
   ) {
     this.auth_loading();
-
-    payload["captcha_response"] = await GenenateRecaptcha("login");
 
     try {
       const { data } = await new ApiClient("auth").post("identity/sessions", payload);
@@ -98,13 +97,13 @@ export class UserController {
       email: string;
       password: string;
       refid?: string;
+      captcha_response: string;
       lang?: string;
     },
     url_callback?: string
   ) {
     this.auth_loading();
 
-    payload["captcha_response"] = await GenenateRecaptcha("register");
     if (!payload.refid) delete payload.refid;
     payload.lang = "en";
 
@@ -202,11 +201,9 @@ export class UserController {
     }
   }
 
-  async forgot_password(email: string, callback?: () => void) {
-    const captcha_response = await GenenateRecaptcha("forgot_password");
-
+  async forgot_password(payload: { email: string; captcha_response: string }, callback?: () => void) {
     try {
-      await new ApiClient("auth").post("/identity/users/password/generate_code", { email, captcha_response });
+      await new ApiClient("auth").post("/identity/users/password/generate_code", payload);
       runNotice("success", "password.forgot");
       if (callback) callback();
     } catch (error) {

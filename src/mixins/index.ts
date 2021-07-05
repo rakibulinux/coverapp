@@ -55,4 +55,3 @@ export * from "./market_channels";
 export * from "./trade-action";
 export * from "./confirmation_mixin";
 export * from "./modal_mixin";
-export * from "./genenate_recaptcha";

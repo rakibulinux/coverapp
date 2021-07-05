@@ -40,6 +40,7 @@
           placeholder="Referral UID"
           :error="refid_error"
         />
+        <z-recaptcha @verify="on_captcha_verifed" @expired="on_captcha_expired" />
         <auth-button
           type="submit"
           :loading="loading"
@@ -76,7 +77,7 @@ export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
   confirm_password = "";
   refid = "";
 
-  button_rules = ["loading", "email", "password", "confirm_password"];
+  button_rules = ["loading", "email", "password", "confirm_password", "captcha"];
 
   before_panel_create() {
     ZSmartModel.on("user/WAIT_EMAIL", () => {
@@ -96,7 +97,8 @@ export default class SignUpScreen extends Mixins(ScreenMixin, AuthMixin) {
     await this.UserController.register({
       email: this.email,
       password: this.password,
-      refid: this.refid
+      refid: this.refid,
+      captcha_response: this.captcha_response,
     });
   }
 }

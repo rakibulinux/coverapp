@@ -5,6 +5,7 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export class AuthMixin extends Vue {
   private _loading = false;
+
   otp!: string;
 
   // default auth
@@ -18,6 +19,8 @@ export class AuthMixin extends Vue {
   new_password!: string;
 
   button_rules: string[] = [];
+
+  captcha_response = "";
 
   get loading() {
     return this._loading || UserController.state == "loading";
@@ -76,6 +79,7 @@ export class AuthMixin extends Vue {
     return this.button_rules.map(rule => {
       if (rule === "loading") return this["loading"];
       if (rule === "otp") return this.otp.length === 6;
+      if (rule == "captcha") return !!this.captcha_response.length;
       return !(!!(this[rule] as string).length && !this[`${rule}_error`]);
     }).reduce((a, b) => a || b, false);
   }
@@ -84,5 +88,13 @@ export class AuthMixin extends Vue {
     if (password.length && !helpers.validPassword(password)) {
       return this.$t("page.global.input.error.password");
     }
+  }
+
+  on_captcha_verifed(captcha_response: string) {
+    this.captcha_response = captcha_response;
+  }
+
+  on_captcha_expired() {
+    this.captcha_response = "";
   }
 }
