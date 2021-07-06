@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+import config from "@/config";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
@@ -32,7 +33,7 @@ export default class TradeAction extends Vue {
   ord_type = "limit";
 
   get ORDER_TYPES() {
-    return [
+    const types = [
       {
         key: "limit",
         text: this.translation("ord_type.limit")
@@ -40,12 +41,19 @@ export default class TradeAction extends Vue {
       {
         key: "market",
         text: this.translation("ord_type.market")
-      },
-      {
-        key: "stop_limit",
-        text: this.translation("ord_type.stop_limit")
       }
     ]
+
+    if (config.finex) {
+      types.push(
+        {
+          key: "stop_limit",
+          text: this.translation("ord_type.stop_limit")
+        }
+      )
+    }
+
+    return types;
   }
 
   translation(message, data = {}) {
