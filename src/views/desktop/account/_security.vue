@@ -19,8 +19,8 @@
       </table>
     </div>
     <modal-2fa ref="2fa" />
-    <modal-password ref="password" @changeModal="onClick" />
-    <ModalTOTP ref="turn-off-2fa" :loading="turn_off_2fa_loading" @submit="turn_off_2fa" />
+    <modal-password ref="password" @change-modal="onClick" />
+    <modal-totp ref="turn-off-2fa" :loading="turn_off_2fa_loading" @submit="turn_off_2fa" />
   </div>
 </template>
 
@@ -34,7 +34,7 @@ import Helpers from "./helpers";
 
 @Component({
   components: {
-    ModalTOTP,
+    "modal-totp": ModalTOTP,
     "modal-2fa": _modal_2fa,
     "modal-password": _modal_password
   },

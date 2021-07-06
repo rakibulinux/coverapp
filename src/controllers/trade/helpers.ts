@@ -1,9 +1,9 @@
-import { IStore } from './store';
+import { Store } from './store';
 
 export default class Helpers {
-  store: IStore;
+  store: Store;
 
-  constructor(store: IStore) {
+  constructor(store: Store) {
     this.store = store;
   }
 }

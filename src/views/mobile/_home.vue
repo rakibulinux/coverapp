@@ -1,6 +1,6 @@
 <template>
   <z-content class="page-home-m pull-content">
-    <head-bar
+    <HeadBar
       @user-click="open_user_screen"
       @search-click="open_search_market_screen"
     />
@@ -17,16 +17,20 @@
 </template>
 
 <script lang="ts">
+import HeadBar from "@/layouts/mobile/home/head-bar.vue";
+import Preview from "@/layouts/mobile/home/preview.vue";
+import FeatureMarkets from "@/layouts/mobile/home/feature-markets";
+import TrendTop from "@/layouts/mobile/home/trend-top.vue";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {
-    "head-bar": () => import("@/layouts/mobile/home/head-bar.vue"),
-    preview: () => import("@/layouts/mobile/home/preview.vue"),
-    "feature-markets": () => import("@/layouts/mobile/home/feature-markets"),
-    "trend-top": () => import("@/layouts/mobile/home/trend-top.vue"),
+    HeadBar,
+    Preview,
+    FeatureMarkets,
+    TrendTop,
     "screen-user": () => import("@/views/mobile/screens/user"),
     "screen-market-preview": () =>
       import("@/views/mobile/screens/market-preview"),

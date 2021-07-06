@@ -71,6 +71,10 @@ export default {
   "page.global.placeholder.full_name": "Full name",
   "page.global.placeholder.intermediary_bank_name": "Intermediary bank name",
   "page.global.placeholder.intermediary_bank_swift_code": "Intermediary bank swift code",
+  "page.global.placeholder.price": "Price",
+  "page.global.placeholder.total": "Total",
+  "page.global.placeholder.limit": "Limit",
+  "page.global.placeholder.stop": "Stop",
 
   // Input error
   "page.global.input.error.email": "Incorrect email address. Please enter again.",
@@ -81,6 +85,8 @@ export default {
 
   // Header
   "page.global.header.exchange": "Exchange",
+  "page.global.header.exchange.basic": "Simplified",
+  "page.global.header.exchange.pro": "Professional",
   "page.global.header.sign_in": "Sign In",
   "page.global.header.sign_up": "Sign Up",
   "page.global.header.my_assets": "My Assets",

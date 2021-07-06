@@ -1,9 +1,9 @@
 <template>
   <z-card
     :bordered="false"
-    class="orderbook ant-card-wider-padding ant-card-padding-transition"
+    class="orderbook"
   >
-    <div slot="title" class="ch">
+    <template slot="head">
       <div
         v-for="(item, key) in type_list"
         :key="key"
@@ -12,7 +12,7 @@
       >
         <img :src="item" />
       </div>
-    </div>
+    </template>
     <div class="z-table z-table-hoverable">
       <div class="z-table-head">
         <span class="text-left">
@@ -78,23 +78,23 @@ export default class App extends Vue {
     return TradeController.ticker;
   }
 
-  public getLastTrend() {
+  getLastTrend() {
     return helpers.getMarketPriceChange() >= 0 ? "text-up" : "text-down";
   }
 
-  public getLastPrice() {
+  getLastPrice() {
     return helpers.getMarketLastPrice();
   }
 
-  public getPrice_USD() {
+  getPrice_USD() {
     return helpers.getMarketLastUSD();
   }
 
-  public getChange() {
+  getChange() {
     return this.ticker.price_change_percent;
   }
 
-  public change_type(type) {
+  change_type(type) {
     this.type = type;
   }
 }
@@ -102,9 +102,6 @@ export default class App extends Vue {
 
 <style lang="less">
 .page-exchange .orderbook {
-  width: 50%;
-  height: 100%;
-  margin-right: 4px;
   .now-price {
     font-size: 18px;
     width: 100%;
@@ -112,6 +109,12 @@ export default class App extends Vue {
       font-size: 14px;
       font-style: normal;
       color: var(--color-gray);
+    }
+  }
+
+  .z-card {
+    &-head {
+
     }
   }
 
@@ -151,7 +154,6 @@ export default class App extends Vue {
       opacity: 1;
       padding: 0;
       overflow: hidden;
-      transition: background-size 500ms linear;
 
       span {
         &:first-child {

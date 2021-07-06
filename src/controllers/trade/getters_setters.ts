@@ -1,9 +1,9 @@
 import config from '@/config';
 import { PublicController } from '..';
-import { IStore } from './store';
+import { Store, ExchangeLayout } from './store';
 
 export default class GettersSetters {
-  store!: IStore;
+  store!: Store;
 
   get market(): ZTypes.Market {
     return this.store.market;
@@ -11,6 +11,7 @@ export default class GettersSetters {
 
   set market(market: ZTypes.Market) {
     this.store.market = market;
+    localStorage.setItem("market", market.id);
   }
 
   get ticker() {
@@ -27,8 +28,23 @@ export default class GettersSetters {
 
     const latest_trade = trades[0];
 
+    if (!latest_trade) return;
+
     document.title = `${latest_trade.price} - ${(
       this.market.name
     ).toUpperCase()} - ${config.nameEX}`;
+  }
+
+  get exchange_layout() {
+    return this.store.exchange_layout;
+  }
+
+  set exchange_layout(layout: ExchangeLayout) {
+    if (layout != "basic" && layout != "pro") {
+      layout = "basic";
+    }
+
+    this.store.exchange_layout = layout;
+    localStorage.setItem("exchange_layout", layout);
   }
 }

@@ -1,17 +1,17 @@
 import router from "@/router";
-import store from "@/store";
 import ApiClient from "@zsmartex/z-apiclient";
 import * as helpers from "@zsmartex/z-helpers";
 import Vue from "vue";
-import Store, { IStore } from "./store";
+import store from "./store";
 import GettersSetters from "./getters_setters";
 import { applyMixins } from '../mixins';
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { runNotice } from "@/mixins";
 import { isMobile } from "@zsmartex/z-helpers";
+import { TradeController } from "..";
 
 export class UserController {
-  store = Store;
+  store = store;
 
   constructor() {
     ZSmartModel.on("user/LOGIN", () => {
@@ -30,6 +30,12 @@ export class UserController {
       } else {
         if (router.currentRoute.fullPath != "/") router.push({ path: "/" });
       }
+
+      ["open_orders", "orders_history", "trades_history"].forEach(
+        async (type: "open_orders" | "orders_history" | "trades_history") => {
+          TradeController[type].clear()
+        }
+      )
   
       runNotice("success", "logout");
     })
@@ -56,7 +62,7 @@ export class UserController {
       email: string;
       password: string;
       otp_code?: string;
-      captcha_response?: string;
+      captcha_response: string;
     },
     url_callback?: string
   ) {
@@ -91,7 +97,7 @@ export class UserController {
       email: string;
       password: string;
       refid?: string;
-      captcha_response?: string;
+      captcha_response: string;
       lang?: string;
     },
     url_callback?: string
@@ -195,9 +201,9 @@ export class UserController {
     }
   }
 
-  async forgot_password(email: string, captcha_response: string, callback?: () => void) {
+  async forgot_password(payload: { email: string; captcha_response: string }, callback?: () => void) {
     try {
-      await new ApiClient("auth").post("/identity/users/password/generate_code", { email, captcha_response });
+      await new ApiClient("auth").post("/identity/users/password/generate_code", payload);
       runNotice("success", "password.forgot");
       if (callback) callback();
     } catch (error) {
@@ -401,7 +407,6 @@ export class UserController {
 }
 
 export interface UserController extends GettersSetters {
-  store: IStore;
 }
 
 applyMixins(UserController, [GettersSetters]);

@@ -1,6 +1,8 @@
 import { TradeController } from '@/controllers';
 import ApiClient from "@zsmartex/z-apiclient";
 import ZSmartModel from "@zsmartex/z-eventbus";
+import DatafeedApi from "../../public/charting_library/datafeed-api";
+import TradingView from "../../public/charting_library/charting_library";
 
 let store;
 const supportedResolutions = [
@@ -26,7 +28,7 @@ const createChannelString = symbolInfo => {
   return channel[0] + "/" + channel[1];
 };
 
-export default class DataFeed {
+export default class DataFeed implements TradingView.IBasicDataFeed {
   onReady(cb) {
     cb(config);
   }
@@ -49,24 +51,20 @@ export default class DataFeed {
     onSymbolResolvedCallback(symbol_stub);
   }
 
-  async getBars(
-    symbolInfo,
-    resolution,
-    from,
-    to,
-    onDataCallback,
-    onErrorCallback,
-    firstDataRequest
-  ) {
-    if (resolution === "D" || resolution === "1D") resolution = 1440;
-    if (firstDataRequest) {
+  searchSymbols(userInput: string, exchange: string, symbolType: string, onResult: TradingView.SearchSymbolsCallback) {
+  }
+
+  async getBars(symbolInfo: TradingView.LibrarySymbolInfo, resolution: TradingView.ResolutionString, periodParams: TradingView.PeriodParams, onResult: TradingView.HistoryCallback, onError: TradingView.ErrorCallback) {
+    if (resolution === "D" || resolution === "1D") resolution = "1400" as TradingView.ResolutionString;
+    if (periodParams.firstDataRequest) {
       ZSmartModel.emit("tradingview-rending");
     }
+
     const payload = {
       period: resolution,
-      time_from: from,
-      time_to: to,
-      limit: 2000
+      time_from: periodParams.from,
+      time_to: periodParams.to,
+      limit: periodParams.countBack
     };
     const url = "public/markets/" + TradeController.market.id + "/k-line";
     try {
@@ -80,14 +78,14 @@ export default class DataFeed {
         volume: el[5]
       }));
 
-      if (firstDataRequest) {
+      if (periodParams.firstDataRequest) {
         history[symbolInfo.name] = { lastBar: bars.length ? bars[bars.length - 1] : null };
         ZSmartModel.emit("tradingview-ready");
       }
-      
-      onDataCallback(bars, { noData: !bars.length });
+
+      onResult(bars, { noData: !bars.length });
     } catch (error) {
-      onErrorCallback(error);
+      onError(error);
       return error;
     }
   }

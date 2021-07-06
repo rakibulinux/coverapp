@@ -35,7 +35,7 @@
       </span>
       <div v-if="show_tab_more" class="page-trade-pairs-tab-more-table">
         <li
-          v-for="data in MARKET_MORE.filter(market => market != tab_more_key)"
+          v-for="data in MARKET_MORE.filter((market) => market != tab_more_key)"
           :key="data"
           @click="change_tab_more(data)"
         >
@@ -52,32 +52,47 @@
       :scroll="true"
       :border="false"
       :selected="{ key: 'id', value: market.id }"
+      :custom-tag="true"
       @click="on_table_click"
     >
-      <template slot="base_unit" slot-scope="{ item, column }">
-        <span :class="`currency text-${column.algin}`">
-          <span
-            :class="[
-              'favorite',
-              { 'favorite-selected': check_favorite(item.id) },
-            ]"
-            @click.stop="add_remove_favorite(item.id)"
-          >
-            <i class="zicon-star"></i>
-          </span>
-          <span>{{ item.base_unit.toUpperCase() }}</span>
-        </span>
-      </template>
-      <template slot="price_change_percent" slot-scope="{ item, column }">
-        <span
-          :class="[
-            'change',
-            `text-${column.algin}`,
-            `text-${getMarketPriceChange(item.id) >= 0 ? 'up' : 'down'}`,
-          ]"
+      <template slot="tag" slot-scope="{ item }">
+        <router-link
+          :to="{
+            name: 'ExchangePage',
+            params: { name: item.name.replace('/', '-') },
+            query: { type: TradeController.exchange_layout },
+          }"
         >
-          {{ item.price_change_percent }}
-        </span>
+          <div
+            @click.prevent="TradeController.open_exchange(item.id)"
+            style="width: 100%"
+          >
+            <span :class="`currency text-left`">
+              <span
+                :class="[
+                  'favorite',
+                  { 'favorite-selected': check_favorite(item.id) },
+                ]"
+                @click.stop="add_remove_favorite(item.id)"
+              >
+                <i class="zicon-star" />
+              </span>
+              <span>{{ item.base_unit.toUpperCase() }}</span>
+            </span>
+            <span class="price text-right">
+              {{ item.last }}
+            </span>
+            <span
+              :class="[
+                'change',
+                `text-right`,
+                `text-${getMarketPriceChange(item.id) >= 0 ? 'up' : 'down'}`,
+              ]"
+            >
+              {{ item.price_change_percent }}
+            </span>
+          </div>
+        </router-link>
       </template>
     </z-table>
   </div>
@@ -132,14 +147,14 @@ export default class MarketList extends Vue {
         key: "base_unit",
         class_name: "currency",
         algin: "left",
-        scopedSlots: true
+        scopedSlots: true,
       },
       {
         title: this.$t("page.global.table.price"),
         key: "last",
         class_name: "price",
         algin: "right",
-        sorter: true
+        sorter: true,
       },
       {
         title: this.$t("page.global.table.change"),
@@ -147,7 +162,7 @@ export default class MarketList extends Vue {
         class_name: "change",
         algin: "right",
         scopedSlots: true,
-        sorter: true
+        sorter: true,
       },
     ];
   }
@@ -220,7 +235,6 @@ export default class MarketList extends Vue {
 @trade-pairs-prefix-cls: ~"page-trade-pairs";
 
 .@{trade-pairs-prefix-cls} {
-  height: 100%;
   background-color: var(--bg-card-color);
 
   &-search-wrapper {
@@ -302,7 +316,6 @@ export default class MarketList extends Vue {
               font-size: 10px;
               padding-right: 8px;
             }
-
           }
         }
       }
@@ -331,9 +344,29 @@ export default class MarketList extends Vue {
       border-color: var(--blue-color);
     }
 
+    a {
+      width: 100%;
+      height: 32px;
+      line-height: 32px;
+      color: var(--text-default-color);
+
+      > div {
+        display: flex;
+        width: 100%;
+        height: 32px;
+        line-height: 32px;
+      }
+
+      > span {
+        height: 32px;
+        line-height: 32px;
+      }
+    }
+
     span.currency {
       > span {
         display: inline-block;
+        font-weight: 500;
         & + span {
           margin-left: 6px;
         }

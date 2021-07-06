@@ -1,9 +1,9 @@
 <template>
-  <z-card class="page-trade-trades" :bordered="false" title="Market trades">
+  <z-card class="market-trades" :bordered="false" title="Market trades">
     <z-table
-      :loading="loading"
       :columns="COLUMN"
-      :data="trades"
+      :loading="loading"
+      :data="TradeController.trades"
       :border="false"
     >
       <template slot="price" slot-scope="{ column, item }">
@@ -32,16 +32,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
-import { TradeController } from "@/controllers";
 
 @Component
 export default class MarketTrades extends Vue {
-  loading = false;
-  
+  @Prop() readonly loading!: boolean;
+
   get market() {
-    return TradeController.market;
+    return this.TradeController.market;
   }
 
   get COLUMN() {
@@ -68,26 +67,12 @@ export default class MarketTrades extends Vue {
     ];
   }
 
-  get trades() {
-    return TradeController.trades;
-  }
-
   get price_precision() {
     return helpers.pricePrecision();
   }
 
   get amount_precision() {
     return helpers.amountPrecision();
-  }
-
-  mounted() {
-    this.get_public_trades();
-  }
-
-  async get_public_trades() {
-    this.loading = true;
-    await TradeController.get_public_trades(this.market.id);
-    this.loading = false;
   }
 
   getTrendType(taker_type) {
@@ -116,14 +101,13 @@ export default class MarketTrades extends Vue {
 </script>
 
 <style lang="less">
-.page-trade-trades {
-  width: 50%;
-  height: 100%;
-
-  .z-table {
-    &-row {
-      padding-right: 11px;
-      padding-left: 16px;
+.pro {
+  .market-trades {
+    .z-table {
+      &-row {
+        padding-right: 11px;
+        padding-left: 16px;
+      }
     }
   }
 }

@@ -4,15 +4,13 @@
 
 <script lang="ts">
 import uuid from "uuid/v4";
-import store from "@/store";
 import TradingViewDataFeed from "@/library/tradingview_datafeed";
 import config from "@/config";
-import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { Vue, Component } from "vue-property-decorator";
-import night_theme from "@/assets/css/tradingview/night";
-import { cssjson, charting_library as TradingView } from "@/assets/js";
-import { PublicController, TradeController } from "@/controllers";
+import { TradeController } from "@/controllers";
+import colors from "@/colors";
+import * as TradingView from "../../../../../public/charting_library/charting_library";
 
 @Component({
   components: {
@@ -22,63 +20,125 @@ import { PublicController, TradeController } from "@/controllers";
 export default class TradingViewChart extends Vue {
   element_id = uuid();
 
+  public theme_interval : NodeJS.Timeout;
   public loading = false;
   public isAsk = TradeController.market.base_unit;
   public isBid = TradeController.market.quote_unit;
   public symbol = [this.isAsk, this.isBid].join("/").toUpperCase();
-  public widgetOptions = {
-    debug: false,
-    symbol: this.symbol,
-    datafeed: new TradingViewDataFeed(),
-    interval: localStorage.getItem("tradingview.resolution") || "15",
-    container_id: this.element_id,
-    library_path: "/charting_library/",
-    timezone: config.timeZone,
-    locale: "en",
-    disabled_features: [
-      "symbol_search_hot_key",
-      "compare_symbol",
-      "display_market_status",
-      "go_to_date",
-      "header_chart_type",
-      "header_compare",
-      "header_toolbar_save_load",
-      "header_interval_dialog_button",
-      "header_resolutions",
-      "header_screenshot",
-      "header_symbol_search",
-      "header_undo_redo",
-      "legend_context_menu",
-      "show_hide_button_in_legend",
-      "show_interval_dialog_on_key_press",
-      "snapshot_trading_drawings",
-      "symbol_info",
-      "timeframes_toolbar",
-      "use_localstorage_for_settings",
-      "volume_force_overlay"
-    ],
-    enabled_features: [
-      "dont_show_boolean_study_arguments",
-      "hide_last_na_study_output",
-      "move_logo_to_main_pane",
-      "side_toolbar_in_fullscreen_mode",
-      "keep_left_toolbar_visible_on_small_screens",
-      "disable_resolution_rebuild"
-    ],
-    charts_storage_url: "https://saveload.tradingview.com",
-    charts_storage_api_version: "1.1",
-    client_id: "tradingview.com",
-    user_id: "public_user_id",
-    toolbar_bg: "transparent",
-    fullscreen: false,
-    autosize: true,
-    studies_overrides: helpers.getStudiesOverrides(
-      PublicController.theme
-    ),
-    overrides: helpers.getOverrides(PublicController.theme)
-  };
   public studies = [];
-  public tvWidget!: TradingView;
+  public tvWidget!: TradingView.IChartingLibraryWidget;
+
+  public studies_overrides: TradingView.StudyOverrides = {
+    "volume.volume.color.0": colors["color-down"] as TradingView.StudyOverrideValueType,
+    "volume.volume.color.1": colors["color-up"] as TradingView.StudyOverrideValueType,
+    "volume.volume.transparency": 70 as TradingView.StudyOverrideValueType,
+  }
+
+  public overrides: TradingView.Overrides = {
+    volumePaneSize: "medium",
+    "scalesProperties.lineColor": colors["color-gray"],
+    "scalesProperties.textColor": colors["color-gray"],
+    "paneProperties.background": colors["bg-card-color"],
+    "paneProperties.vertGridProperties.color": "#272c48",
+    "paneProperties.horzGridProperties.color": "#272c48",
+    "paneProperties.crossHairProperties.color": "#9194A3",
+    "paneProperties.legendProperties.showLegend": true,
+    "paneProperties.legendProperties.showStudyArguments": true,
+    "paneProperties.legendProperties.showStudyTitles": true,
+    "paneProperties.legendProperties.showStudyValues": true,
+    "paneProperties.legendProperties.showSeriesTitle": true,
+    "paneProperties.legendProperties.showSeriesOHLC": true,
+    "mainSeriesProperties.candleStyle.upColor": colors["up-color"],
+    "mainSeriesProperties.candleStyle.downColor": colors["down-color"],
+    "mainSeriesProperties.candleStyle.drawWick": true,
+    "mainSeriesProperties.candleStyle.drawBorder": true,
+    "mainSeriesProperties.candleStyle.borderColor": "#4e5b85",
+    "mainSeriesProperties.candleStyle.borderUpColor": colors["up-color"],
+    "mainSeriesProperties.candleStyle.borderDownColor": colors["down-color"],
+    "mainSeriesProperties.candleStyle.wickUpColor": colors["up-color"],
+    "mainSeriesProperties.candleStyle.wickDownColor": colors["down-color"],
+    "mainSeriesProperties.candleStyle.barColorsOnPrevClose": false,
+    "mainSeriesProperties.hollowCandleStyle.upColor": colors["up-color"],
+    "mainSeriesProperties.hollowCandleStyle.downColor": colors["down-color"],
+    "mainSeriesProperties.hollowCandleStyle.drawWick": true,
+    "mainSeriesProperties.hollowCandleStyle.drawBorder": true,
+    "mainSeriesProperties.hollowCandleStyle.borderColor": "#4e5b85",
+    "mainSeriesProperties.hollowCandleStyle.borderUpColor": colors["up-color"],
+    "mainSeriesProperties.hollowCandleStyle.borderDownColor": colors["down-color"],
+    "mainSeriesProperties.hollowCandleStyle.wickColor": "#737375",
+    "mainSeriesProperties.haStyle.upColor": colors["up-color"],
+    "mainSeriesProperties.haStyle.downColor": colors["down-color"],
+    "mainSeriesProperties.haStyle.drawWick": false,
+    "mainSeriesProperties.haStyle.drawBorder": false,
+    "mainSeriesProperties.haStyle.borderColor": "#4e5b85",
+    "mainSeriesProperties.haStyle.borderUpColor": colors["up-color"],
+    "mainSeriesProperties.haStyle.borderDownColor": colors["down-color"],
+    "mainSeriesProperties.haStyle.wickColor": "#4e5b85",
+    "mainSeriesProperties.haStyle.barColorsOnPrevClose": false,
+    "mainSeriesProperties.barStyle.upColor": colors["up-color"],
+    "mainSeriesProperties.barStyle.downColor": colors["down-color"],
+    "mainSeriesProperties.barStyle.barColorsOnPrevClose": false,
+    "mainSeriesProperties.barStyle.dontDrawOpen": false,
+    "mainSeriesProperties.lineStyle.color": "#4e5b85",
+    "mainSeriesProperties.lineStyle.linewidth": 1,
+    "mainSeriesProperties.lineStyle.priceSource": "close",
+    "mainSeriesProperties.areaStyle.color1": "rgba(122, 152, 247, .1)",
+    "mainSeriesProperties.areaStyle.color2": "rgba(122, 152, 247, .02)",
+    "mainSeriesProperties.areaStyle.linecolor": "#4e5b85",
+    "mainSeriesProperties.areaStyle.linewidth": 1,
+    "mainSeriesProperties.areaStyle.priceSource": "close"
+  }
+
+  public widgetOptions: TradingView.ChartingLibraryWidgetOptions = {
+      debug: false,
+      symbol: this.symbol,
+      datafeed: new TradingViewDataFeed(),
+      interval: (localStorage.getItem("tradingview.resolution") || "15") as TradingView.ResolutionString,
+      container: this.element_id,
+      library_path: "/charting_library/",
+      timezone: config.timeZone as TradingView.Timezone,
+      locale: "en",
+      custom_css_url: "custom.css",
+      disabled_features: [
+        "symbol_search_hot_key",
+        "compare_symbol",
+        "display_market_status",
+        "go_to_date",
+        "header_chart_type",
+        "header_compare",
+        "header_toolbar_save_load",
+        "header_interval_dialog_button",
+        "header_resolutions",
+        "header_screenshot",
+        "header_symbol_search",
+        "header_undo_redo",
+        "legend_context_menu",
+        "show_hide_button_in_legend",
+        "show_interval_dialog_on_key_press",
+        "snapshot_trading_drawings",
+        "symbol_info",
+        "timeframes_toolbar",
+        "use_localstorage_for_settings",
+        "volume_force_overlay"
+      ],
+      enabled_features: [
+        "dont_show_boolean_study_arguments",
+        "hide_last_na_study_output",
+        "move_logo_to_main_pane",
+        "side_toolbar_in_fullscreen_mode",
+        "keep_left_toolbar_visible_on_small_screens",
+        "disable_resolution_rebuild"
+      ],
+      charts_storage_url: "https://saveload.tradingview.com",
+      charts_storage_api_version: "1.1",
+      client_id: "tradingview.com",
+      user_id: "public_user_id",
+      toolbar_bg: "transparent",
+      fullscreen: false,
+      autosize: true,
+      studies_overrides: this.studies_overrides,
+      overrides: this.overrides,
+    }
 
   get element() {
     return document.getElementById(this.element_id);
@@ -103,10 +163,12 @@ export default class TradingViewChart extends Vue {
       .contentWindow;
   }
 
-  public renderChart() {
+  public async renderChart() {
     TradeController.tradingview.ready = false;
     ZSmartModel.emit("tradingview-rending");
-    this.tvWidget = new TradingView(this.widgetOptions);
+
+    this.tvWidget = new TradingView.widget(this.widgetOptions);
+
     const buttons = [
       { title: "Realtime", resolution: "1", chartType: 3 },
       { title: "1min", resolution: "1", chartType: 1 },
@@ -122,27 +184,13 @@ export default class TradingViewChart extends Vue {
       if (!this.tvWidget) {
         return;
       }
-
       this.headerReady(buttons);
       this.createStudy();
       this.tvWidget.chart().setChartType(this.chartType);
       this.toggleStudy(this.chartType);
-      this.appendStyle();
       ZSmartModel.emit("tradingview-ready");
       TradeController.tradingview.ready = true;
     });
-  }
-
-  public appendStyle() {
-    const css = cssjson().toCSS(night_theme);
-    const iframe_document = this.iframe().document;
-    const iframe_head = iframe_document.head;
-
-    const style_element = iframe_document.createElement("style");
-    style_element.setAttribute("type", "text/css");
-    style_element.innerHTML = css;
-
-    iframe_head.appendChild(style_element);
   }
 
   public async headerReady(buttons) {
@@ -166,7 +214,7 @@ export default class TradingViewChart extends Vue {
           this.tvWidget.chart().setChartType(config.chartType);
           this.toggleStudy(config.chartType);
         }
-        this.tvWidget.chart().setResolution(config.resolution);
+        this.tvWidget.chart().setResolution(config.resolution, () => {});
         TradeController.tradingview.resolution = config.resolution;
         localStorage.setItem("tradingview.chartType", config.chartType);
         button.parentElement.classList.add("actived");
@@ -181,47 +229,38 @@ export default class TradingViewChart extends Vue {
     }
   }
 
-  public createStudy() {
-    const studies = [
+  public async createStudy() {
+    const studies: {
+      name: string;
+      length: number[];
+    }[] = [
       {
         name: "Moving Average",
-        length: [5],
-        data: {
-          "Plot.color": "rgb(132, 170, 213)"
-        }
+        length: [5]
       },
       {
         name: "Moving Average",
-        length: [10],
-        data: {
-          "Plot.color": "rgb(132, 170, 213)"
-        }
+        length: [10]
       },
       {
         name: "Moving Average",
-        length: [30],
-        data: {
-          "Plot.color": "rgb(85, 178, 99)"
-        }
+        length: [30]
       },
       {
         name: "Moving Average",
-        length: [60],
-        data: {
-          "Plot.color": "rgb(183, 36, 138)"
-        }
+        length: [60]
       }
     ];
     for (const study of studies) {
-      const id = this.tvWidget
+      const id = await this.tvWidget
         .chart()
-        .createStudy(study.name, false, false, study.length, null, study.data);
+        .createStudy(study.name, false, false, study.length, null);
       this.studies.push(id);
     }
   }
 
   public toggleStudy(chartType: number) {
-    const state = chartType == 3 ? 0 : 1;
+    const state = chartType == 3 ? false : true;
     for (let i = 0; i < this.studies.length; i++) {
       this.tvWidget
         .chart()

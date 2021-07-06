@@ -5,9 +5,9 @@ export default [
     component: () => import("@/views/desktop/_home.vue")
   },
   {
-    path: "/exchange",
-    name: "ExchangePro",
-    component: () => import("@/views/desktop/_exchange.vue")
+    path: "/exchange/:name",
+    name: "ExchangePage",
+    component: () => import("@/views/desktop/exchange.vue")
   },
   {
     path: "/signin",

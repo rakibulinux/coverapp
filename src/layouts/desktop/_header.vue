@@ -5,9 +5,42 @@
     </router-link>
 
     <div class="action-group left">
-      <router-link to="/exchange">
-        {{ translation("exchange") }}
-      </router-link>
+      <a-dropdown placement="bottomCenter">
+        <a class="ant-dropdown-link">
+          {{ this.translation("exchange") }}
+          <i class="zicon-arrow-down" />
+        </a>
+        <a-menu slot="overlay">
+          <a-menu-item
+            :title="this.translation('exchange.basic')"
+            :class="{
+              'ant-dropdown-menu-item-selected': $route.name == 'ExchangePage' && TradeController.exchange_layout == 'basic',
+            }"
+            @click="TradeController.exchange_layout = 'basic'"
+          >
+            <router-link :to="{
+              name: 'ExchangePage',
+              params: { name: TradeController.market.name.replace('/', '-') },
+              query: { type: 'basic' }
+            }"
+            v-text="this.translation('exchange.basic')" />
+          </a-menu-item>
+          <a-menu-item
+            :title="this.translation('exchange.pro')"
+            :class="{
+              'ant-dropdown-menu-item-selected': $route.name == 'ExchangePage' && TradeController.exchange_layout == 'pro',
+            }"
+            @click="TradeController.exchange_layout = 'pro'"
+          >
+            <router-link :to="{
+              name: 'ExchangePage',
+              params: { name: TradeController.market.name.replace('/', '-') },
+              query: { type: 'pro' }
+            }"
+            v-text="this.translation('exchange.pro')" />
+          </a-menu-item>
+        </a-menu>
+      </a-dropdown>
     </div>
     <div class="action-group right">
       <div v-if="isAuth" class="auth">
@@ -25,7 +58,7 @@
               :key="data.url"
               :title="data.name"
               :class="{
-                'ant-dropdown-menu-item-selected': path.includes(data.url),
+                'ant-dropdown-menu-item-selected': path.includes(data.url)
               }"
             >
               <router-link :to="data.url" v-text="data.name" />
@@ -122,7 +155,10 @@ export default class App extends Vue {
         name: this.translation("sign_in"),
         url: "/signin",
       },
-      { name: this.translation("sign_up"), url: "/signup" },
+      {
+        name: this.translation("sign_up"),
+        url: "/signup"
+      },
     ];
   }
 

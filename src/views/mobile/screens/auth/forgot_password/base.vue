@@ -19,13 +19,13 @@
             placeholder="Email"
             :error="email_error"
           />
-
+          <z-recaptcha @verify="on_captcha_verifed" @expired="on_captcha_expired" />
           <auth-button
             :loading="loading || loading_resend"
             :disabled="!email || email_error"
             @click="forgot_password"
           >
-            {{ $t("auth.forgot_password") }}
+            {{ $t("page.global.action.forgot_password") }}
           </auth-button>
         </template>
         <template v-else-if="step == 2">
@@ -56,7 +56,7 @@
             :disabled="confirmation_code.length < 6"
             @click="check_token"
           >
-            Submit
+            {{ $t("page.global.action.submit") }}
           </auth-button>
         </template>
         <template v-else>
@@ -74,13 +74,12 @@
             :placeholder="$t('input.placeholder.confirm_password')"
             :error="confirm_password_error"
           />
-
           <auth-button
             :loading="loading"
             :disabled="password_error || confirm_password_error"
             @click="reset_password"
           >
-            Reset Password
+            {{ $t("page.global.action.reset_password") }}
           </auth-button>
         </template>
       </div>
@@ -90,7 +89,7 @@
 
 <script lang="ts">
 import { ScreenMixin } from "@/mixins/mobile";
-import { ConfirmationMixin } from "@/mixins";
+import { AuthMixin, ConfirmationMixin } from "@/mixins";
 import { Component, Mixins } from "vue-property-decorator";
 import { UserController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
@@ -103,60 +102,31 @@ import * as helpers from "@zsmartex/z-helpers";
 })
 export default class ScreenConfirmEmail extends Mixins(
   ScreenMixin,
-  ConfirmationMixin
+  ConfirmationMixin,
+  AuthMixin
 ) {
   step = 1;
   loading_resend = false;
   loading = false;
   sended = false;
+
   email = "";
-  captcha_response = "";
   password = "";
   confirm_password = "";
+  button_rules = ["loading", "email", "captcha"];
 
   before_panel_create() {
     this.step = 1;
-  }
-
-  get email_error() {
-    const { email } = this;
-    if (!email.length) {
-      return false;
-    }
-
-    if (!helpers.validEmail(email)) {
-      return this.$t("page.global.input.error.email");
-    }
-  }
-
-  get password_error() {
-    const { password } = this;
-    if (!password.length) {
-      return false;
-    }
-
-    if (!helpers.validPassword(password)) {
-      return "Incorrect email address. Please enter again.";
-    }
-  }
-
-  get confirm_password_error() {
-    const { password, confirm_password } = this;
-    if (!confirm_password.length) {
-      return false;
-    }
-
-    if (confirm_password !== password) {
-      return "Incorrect email address. Please enter again.";
-    }
   }
 
   async forgot_password() {
     this.loading_resend = true;
 
     await UserController.forgot_password(
-      this.email,
-      this.captcha_response,
+      {
+        email: this.email,
+        captcha_response: this.captcha_response,
+      },
       () => {
         this.start_cooldown();
         this.step++;
@@ -173,6 +143,7 @@ export default class ScreenConfirmEmail extends Mixins(
       this.confirmation_code,
       () => {
         this.step++;
+        this.button_rules = ["loading", "password", "confirm_password"];
       }
     );
     this.loading = false;

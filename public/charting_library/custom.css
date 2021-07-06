@@ -1,0 +1,26 @@
+.chart-page .apply-common-tooltip {
+	background-color: transparent;
+	border: 1px solid transparent;
+	color: #728bb9;
+	cursor: pointer;
+}
+
+.chart-page [class^="labelRow-"], .chart-page [class^="icon-"] {
+	color: #7482a0 !important;
+}
+
+.chart-page .layout__area--top .apply-common-tooltip {
+	padding: 3px 10px;
+}
+
+.chart-page .actived .apply-common-tooltip {
+	color: #728bb9;
+	background-color: #2e3f5f;
+}
+
+body {
+	--tv-color-platform-background: transparent;
+	--tv-color-pane-background: transparent;
+	--tv-color-toolbar-button-background-hover: transparent;
+	--tv-color-toolbar-button-background-expanded: #2e3f5f;
+}

@@ -28,6 +28,7 @@
           placeholder="Password"
           :error="password_error"
         />
+        <z-recaptcha @verify="on_captcha_verifed" @expired="on_captcha_expired" />
         <auth-button
           type="submit"
           :loading="loading"
@@ -82,8 +83,8 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
 
   email = "";
   password = "";
-  otp_code = "";
-  button_rules = ["loading", "email", "password"];
+  otp = "";
+  button_rules = ["loading", "email", "password", "otp", "captcha"];
 
   get need2fa() {
     return UserController.need2fa;
@@ -108,14 +109,18 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   }
 
   onTotpSubmit(otp_code: string) {
-    this.otp_code = otp_code;
+    this.otp = otp_code;
     this.login();
   }
 
   async callLogin() {
-    const { email, password, otp_code } = this;
 
-    await UserController.login({ email, password, otp_code }, "/m");
+    await UserController.login({
+      email: this.email,
+      password: this.password,
+      otp_code: this.otp,
+      captcha_response: this.captcha_response,
+    }, "/m");
 
     if (!["pending", "active"].includes(UserController.state)) return;
 
@@ -128,10 +133,10 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
 
   login(otp_code?: string) {
     if (this.loading) return;
-    if (otp_code) this.otp_code = otp_code;
+    if (otp_code) this.otp = otp_code;
 
     if (this.need2fa) {
-      if (this.otp_code.length >= 6) this.callLogin();
+      if (this.otp.length >= 6) this.callLogin();
     } else {
       this.callLogin();
     }
@@ -140,7 +145,7 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   @Watch("need2fa")
   onNeed2FAChanged(need2fa: boolean) {
     this.$refs["screen-verify-otp"][`${need2fa ? "create" : "destroy"}`]();
-    this.otp_code = "";
+    this.otp = "";
   }
 
   @Watch("UserController.state")

@@ -19,87 +19,55 @@
         <a-icon class="trade-action-type-picker-icon" type="caret-down" />
       </span>
     </div>
-    <trade-action-input
-      v-model="price"
-      :placeholder="`Price(${market.quote_unit.toUpperCase()})`"
-      :precision="price_precision"
-    />
-    <div class="trade-action-estimate">
-      ≈
-      {{
-        amount_to_usd(currency_by_side("buy"), Number(this.price)).toFixed(2)
-      }}
-      USD
-    </div>
-    <trade-action-input
-      v-model="amount"
-      :placeholder="`Amount(${market.base_unit.toUpperCase()})`"
-      :precision="amount_precision"
-    />
-    <div class="trade-action-amount-picker">
-      <span v-for="percent in AMOUNT_PERCENT" :key="percent">
-        {{ percent }}%
-      </span>
-    </div>
-    <div class="trade-action-calculate-total">
-      Total:
-      <span class="trade-action-calculate-total-value">{{ total }}</span>
-      ≈
-      {{
-        amount_to_usd(currency_by_side("buy"), Number(this.price)).toFixed(2)
-      }}
-      USD
-    </div>
-
-    <div class="trade-action-calculate-fee">
-      Fee: <span class="trade-action-calculate-fee-value">{{ fee }}</span>
-    </div>
-    <div
-      :class="[
-        'trade-action-button',
-        { 'trade-action-button-disabled': button_disabled }
-      ]"
-      @click="create_order"
-    >
-      {{
-        authorized
-          ? [
-              side === "buy" ? "Buy" : "Sell",
-              market.base_unit.toUpperCase()
-            ].join(" ")
-          : "Login"
-      }}
-    </div>
-    <trade-action-balance :currency_id="currency_by_side(side)" />
+    <trade-action-part :ord_type="ord_type" :side="side" />
   </div>
 </template>
 
 <script lang="ts">
-import { TradeActionMixin } from "@/mixins";
+import * as helpers from "@zsmartex/z-helpers";
 import { Picker } from "cube-ui";
-import { Mixins, Component } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
-    "trade-action-input": () => import("./trade-action-input.vue"),
-    "trade-action-balance": () => import("./trade-action-balance.vue")
+    "trade-action-part": () => import("./trade-action-part.vue")
   }
 })
-export default class TradeAction extends Mixins(TradeActionMixin) {
+export default class TradeAction extends Vue {
   picker!: Picker;
-
   side: ZTypes.OrderSide = "buy";
-  price = "";
-  amount = "";
 
   SIDE = ["buy", "sell"];
-  ORDER_TYPES = [
-    { value: "limit", text: "Limit Order" },
-    { value: "market", text: "Market Order" }
-  ];
+  
+  ord_type_selected = "limit";
 
-  get AMOUNT_PERCENT() {
-    return Object.keys(this.marks_slider).map(percent => Number(percent));
+  get ORDER_TYPES() {
+    return [
+      {
+        value: "limit",
+        text: this.translation("limit_order")
+      },
+      {
+        value: "market",
+        text: this.translation("market_order")
+      },
+      {
+        value: "stop_limit_order",
+        text: this.translation("stop_limit_order")
+      }
+    ]
+  }
+
+  get ord_type() {
+    if (this.ord_type_selected == "market") {
+      return this.ord_type_selected;
+    }
+
+    return "limit"
+  }
+
+  translation(message, data = {}) {
+    return helpers.translation("page.exchange.trade_action." + message, data)
   }
 
   mounted() {
@@ -128,6 +96,10 @@ export default class TradeAction extends Mixins(TradeActionMixin) {
       });
     }
     this.picker.show();
+  }
+
+  change_ord_type(ordType) {
+    this.ord_type_selected = ordType;
   }
 }
 </script>

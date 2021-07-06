@@ -2,8 +2,8 @@
   <a-layout
     v-if="page_ready"
     :class="{
-      night: $route.path === '/exchange',
-      'no-border': $route.path === '/exchange'
+      night: $route.path.includes('/exchange'),
+      'no-border': $route.path.includes('/exchange')
     }"
   >
     <header-exchange v-if="!isMobile" />
@@ -15,7 +15,7 @@
     />
     <tab-bar v-if="isMobile" />
 
-    <footer-exchange v-if="$route.path !== '/exchange' && !isMobile" />
+    <footer-exchange v-if="!($route.path == '/exchange' && exchange_layout == 'pro') && !isMobile" />
   </a-layout>
 </template>
 
@@ -53,6 +53,10 @@ export default class App extends Vue {
     return PublicController.page_ready;
   }
 
+  get exchange_layout() {
+    return this.TradeController.exchange_layout;
+  }
+
   public beforeCreate() {
     "localStorage" in window;
     if (localStorage.getItem("market") == null) {
@@ -62,7 +66,7 @@ export default class App extends Vue {
       localStorage.setItem("LANGUAGE_HASH", "en");
     }
     if (
-      localStorage.getItem("exchangeTheme") === null ||
+      localStorage.getItem("exchangeTheme") == null ||
       localStorage.getItem("exchangeTheme") == "light"
     ) {
       localStorage.setItem("exchangeTheme", "night");

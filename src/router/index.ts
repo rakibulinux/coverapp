@@ -49,18 +49,6 @@ const PathHandle = (path: string) => {
   if (document.location.pathname[document.location.pathname.length -1] == "/" && document.location.pathname.length > 1) {
     document.location.pathname = document.location.pathname.slice(0, document.location.pathname.length - 1);
   }
-
-  if (path.includes("/exchange/")) {
-    const markets: string[] = PublicController.markets.map(
-      row => row.name
-    );
-    const market = path.replace("/exchange/", "").split("-");
-    if (!markets.includes(market.join("/"))) {
-      return router.push("/exchange");
-    } else {
-      TradeController.open_exchange(market.join("").toLowerCase());
-    }
-  }
 };
 
 router.beforeEach(async (to, from, next) => {
@@ -90,10 +78,29 @@ router.beforeEach(async (to, from, next) => {
         PublicController.broadcasts
       ) {
         PublicController.page_ready = true;
+        ZSmartModel.emit("page-ready");
+
         break;
       }
 
       await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+
+  // Hanlder
+  if (to.name == "ExchangePage" && to.query["type"].length) {
+    TradeController.exchange_layout = (to.query["type"] as any);
+
+    const name = to.params["name"]
+    const market_id = name.split("-").join("").toLowerCase();
+    const market = PublicController.markets.find(market => market_id == market.id)
+
+    if (market) {
+      TradeController.market = market;
+    } else {
+      const market = PublicController.markets.find(market => market.id == config.default_market)
+
+      location.pathname = "/exchange/" + market.name.replace("/", "-")
     }
   }
 

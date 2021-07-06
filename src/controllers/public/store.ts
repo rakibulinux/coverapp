@@ -3,7 +3,7 @@ import VueCompositionAPI, { reactive } from "@vue/composition-api";
 
 Vue.use(VueCompositionAPI);
 
-export interface IStore {
+export interface Store {
   theme: "night" | "light";
   page_ready: boolean;
   favorites: string[];
@@ -16,7 +16,7 @@ export interface IStore {
   broadcasts?: ZTypes.BroadCast[];
 }
 
-const Store: IStore = reactive<IStore>({
+const store: Store = reactive<Store>({
   theme: "night",
   page_ready: false,
   favorites: JSON.parse(localStorage.getItem("favorites") || null) || [],
@@ -29,4 +29,4 @@ const Store: IStore = reactive<IStore>({
   broadcasts: null
 });
 
-export default Store;
+export default store;

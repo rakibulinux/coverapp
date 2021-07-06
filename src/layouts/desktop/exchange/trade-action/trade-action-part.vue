@@ -1,10 +1,23 @@
 <template>
-  <div class="trade-action-part">
+  <div class="trade-action-part" :class="{ 'trade-action-part-market': ord_type == 'market' }">
     <trade-action-balance :currency="currency" />
     <trade-action-input
+      v-if="ord_type == 'limit' && isStop"
+      class="stop_price"
+      v-model="stop_price"
+      :prefix="$t('page.global.placeholder.stop').toUpperCase()"
+      :suffix="currency_by_side('buy').toUpperCase()"
+      :limit-length-after-dot="price_precision"
+      :estimate-value="
+        amount_to_usd(currency_by_side('buy'), Number(this.price)).toFixed(2)
+      "
+      :error="stop_price_error"
+    />
+    <trade-action-input
+      v-if="ord_type == 'limit'"
       class="price"
       v-model="price"
-      :prefix="$t('page.global.table.price').toUpperCase()"
+      :prefix="$t(isStop ? 'page.global.placeholder.limit' : 'page.global.placeholder.price').toUpperCase()"
       :suffix="currency_by_side('buy').toUpperCase()"
       :limit-length-after-dot="price_precision"
       :estimate-value="
@@ -15,9 +28,22 @@
       :error="price_error"
     />
     <trade-action-input
+      v-else
+      class="price"
+      :value="this.translation('ord_type.market')"
+      :prefix="$t('page.global.placeholder.price').toUpperCase()"
+      :suffix="currency_by_side('buy').toUpperCase()"
+      :limit-length-after-dot="price_precision"
+      :estimate-value="
+        amount_to_usd(currency_by_side('buy'), Number(this.price)).toFixed(2)
+      "
+      :error="price_error"
+      :disabled="ord_type == 'market'"
+    />
+    <trade-action-input
       class="amount"
       v-model="amount"
-      :prefix="$t('page.global.table.amount').toUpperCase()"
+      :prefix="$t('page.global.placeholder.amount').toUpperCase()"
       :suffix="currency_by_side('sell').toUpperCase()"
       :limit-length-after-dot="amount_precision"
       :ord_type="ord_type"
@@ -33,7 +59,7 @@
       @change="onSliderPercentChange"
     />
     <div class="total">
-      {{ $t('page.global.table.total') }}:
+      {{ $t('page.global.placeholder.total') }}:
       <span class="value">
         {{ (total || 0).toFixed(total_precision) }}
         {{ currency_by_side("buy").toUpperCase() }}
@@ -56,7 +82,7 @@
 
 <script lang="ts">
 import { TradeActionMixin } from "@/mixins";
-import { Mixins, Component, Prop } from "vue-property-decorator";
+import { Mixins, Component } from "vue-property-decorator";
 
 @Component({
   components: {
@@ -65,9 +91,6 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
   }
 })
 export default class TradeActionPart extends Mixins(TradeActionMixin) {
-  @Prop() readonly side!: ZTypes.OrderSide;
-  @Prop() readonly ord_type!: ZTypes.OrdType;
-
   get slider_disabled() {
     return !this.assets.available;
   }

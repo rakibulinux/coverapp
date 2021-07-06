@@ -1,16 +1,17 @@
 import { runNotice } from "@/mixins";
 import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
 
 export default abstract class OrdersController {
-  async create_order(market_id: string, side: ZTypes.OrderSide, ord_type: ZTypes.OrdType = "limit", price: number, amount: number): Promise<ZTypes.Order> {
+  async create_order(market_id: string, side: ZTypes.OrderSide, ord_type: ZTypes.OrdType = "limit", price: number | null, stop_price: number | null, amount: number): Promise<ZTypes.Order> {
     try {
       const response = await new ApiClient(config.finex ? "finex" : "trade").post("market/orders", {
         market: market_id,
         ord_type: ord_type,
         side: side,
         price: price,
+        stop_price: stop_price,
+        ord_type: ord_type,
         volume: amount
       });
       runNotice("success", "order.created");

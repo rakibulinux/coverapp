@@ -4,7 +4,7 @@ import { applyMixins } from "../mixins";
 import MineControl from "./mine_control";
 import OrdersController from "./orders";
 import OrderBook from "./orderbook";
-import Store, { IStore } from "./store";
+import store from "./store";
 import GettersSetters from "./getters_setters";
 import config from '@/config';
 import { PublicController } from '..';
@@ -16,16 +16,16 @@ import router from '@/router';
 export class TradeController {
   constructor() {
     this.create_mine_control();
-    this.orderbook = new OrderBook();
-    this.store = Store;
+    this.store = store;
     this.tradingview = new TradingView();
 
     ZSmartModel.on("page-ready", () => {
       this.market = PublicController.markets.find(market => market.id == (localStorage.getItem("market") || config.default_market));
+      this.orderbook = new OrderBook(null);
     });
   }
 
-  open_exchange(market_id: string, side?: ZTypes.OrderSide) {
+  open_exchange(market_id: string, side?: ZTypes.OrderSide, exchange_layout = this.store.exchange_layout) {
     const market = PublicController.markets.find(market => market.id == market_id);
 
     if (this.market.id != market.id) {
@@ -34,10 +34,13 @@ export class TradeController {
     }
 
     localStorage.setItem("market", this.market.id);
-    if (router.currentRoute.fullPath.includes("/exchange")) return;
+    if (["/exchange", "/m/exchange"].includes(router.currentRoute.path)) return;
 
-    const exchange_path = helpers.isMobile() ? "/m/exchange" : "/exchange";
-    router.push({ path: exchange_path, query: { type: side } });
+    if (helpers.isMobile()) {
+      router.push({ path: "/m/exchange", query: { type: side } });
+    } else {
+      router.push({ name: "ExchangePage", params: { name: this.market.name.replace("/", "-") }, query: { type: exchange_layout } });
+    }
   }
 
   get_best_price(side: ZTypes.OrderSide | ZTypes.TakerType) {
@@ -119,8 +122,6 @@ export class TradeController {
 
       if (callback) callback();
     } catch (error) {
-
-      console.log(error)
       return error;
     }
   }
@@ -149,8 +150,7 @@ export class TradeController {
 }
 
 export interface TradeController extends OrdersController, MineControl, GettersSetters {
-  orderbook: OrderBook;
-  store: IStore;
+  orderbook?: OrderBook;
   tradingview: TradingView;
 }
 applyMixins(TradeController, [OrdersController, MineControl, GettersSetters]);

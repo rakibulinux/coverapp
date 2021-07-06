@@ -45,30 +45,36 @@
         <a-icon slot="indicator" type="loading" spin />
       </a-spin>
       <z-empty v-else-if="!data.length && !noEmpty" />
-      <p
-        v-for="(item, index) in data_with_sort"
-        :class="[
-          'z-table-row',
-          { 'z-table-row-selected': item[selected.key] === selected.value }
-        ]"
-        :key="index"
-        @click="onClick(item)"
-      >
-        <template v-for="column of columns">
+      <template v-for="(item, index) in data_with_sort">
+        <p
+          :class="[
+            'z-table-row',
+            { 'z-table-row-selected': item[selected.key] === selected.value }
+          ]"
+          :key="index"
+          @click="onClick(item)"
+        >
           <slot
-            v-if="column.scopedSlots"
-            :name="column.key"
+            v-if="customTag"
+            name="tag"
             :item="item"
-            :column="column"
           />
-          <span
-            v-else
-            :key="column.key"
-            :class="[column.class_name || column.key, `text-${column.algin}`]"
-            v-text="value_by_key(item, column.key)"
-          />
-        </template>
-      </p>
+          <template v-else v-for="column of columns">
+            <slot
+              v-if="column.scopedSlots"
+              :name="column.key"
+              :item="item"
+              :column="column"
+            />
+            <span
+              v-else
+              :key="column.key"
+              :class="[column.class_name || column.key, `text-${column.algin}`]"
+              v-text="value_by_key(item, column.key)"
+            />
+          </template>
+        </p>
+      </template>
     </div>
     <a-pagination
       v-if="pagination && !loading"
@@ -111,6 +117,7 @@ export default class ZTable extends Vue {
   public readonly selected!: { key: string; value: string };
   @Prop({ default: false }) public readonly noEmpty!: boolean;
   @Prop({ default: true }) public readonly border!: boolean;
+  @Prop() readonly customTag!: boolean;
 
   protected sort_by = "";
   protected sort_reverse = false;

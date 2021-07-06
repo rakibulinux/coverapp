@@ -3,7 +3,7 @@ import Notification from "ant-design-vue/lib/vc-notification";
 
 const notificationInstance = {};
 let defaultDuration = 5;
-let defaultTop = "24px";
+let defaultTop = "55px";
 let defaultBottom = "24px";
 let defaultPlacement = "topRight";
 let defaultGetContainer = () => document.body;

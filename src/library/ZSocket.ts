@@ -89,7 +89,7 @@ class ZSocket {
         const unsubscribedMatch = routingKey === "success" && event["message"] === "unsubscribed";
         const klineMatch = routingKey.match(/([^.]*)\.kline-(.+)/);
         const tradesMatch = routingKey.match(/([^.]*)\.trades/);
-        const depthUpdateMatch = routingKey.match(/([^.]*)\.depth/);
+        const depthUpdateMatch = routingKey == TradeController.orderbook?.market_id + ".depth";
         const balanceUpdateMatch = routingKey == "balance";
 
         if (subscribedMatch || unsubscribedMatch) {

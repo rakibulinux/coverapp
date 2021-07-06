@@ -34,12 +34,6 @@ import DepthOverLay from "./depth-overlay.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";
 import ZSmartModel from "@zsmartex/z-eventbus";
 
-interface MouseEvent {
-  side?: MarketDepth["side"];
-  index?: number;
-  hover: boolean;
-}
-
 @Component({
   components: {
     "depth-row": () => import("./depth-row.vue"),

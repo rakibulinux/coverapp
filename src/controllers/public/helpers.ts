@@ -1,10 +1,8 @@
 import GettersSetters from './getters_setters';
-import { IStore } from './store';
+import { Store } from './store';
 
 export default class Helpers extends GettersSetters {
-  store: IStore;
-
-  constructor(store: IStore) {
+  constructor(store: Store) {
     super();
 
     this.store = store;

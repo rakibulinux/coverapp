@@ -19,6 +19,7 @@
             :placeholder-need="true"
             :error="password_error"
           />
+          <z-recaptcha @verify="on_captcha_verifed" @expired="on_captcha_expired" />
           <auth-button type="submit" :loading="loading" :disabled="button_disabled">
             {{ $t("page.global.action.login") }}
           </auth-button>
@@ -44,42 +45,27 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
+import { Mixins, Component, Watch } from "vue-property-decorator";
 import ModalTotp from "@/layouts/desktop/modal/_modal_totp.vue";
 import { UserController } from "@/controllers";
+import { AuthMixin } from "@/mixins";
 
 @Component({
   components: {
     "auth-input": () => import("@/components/desktop/auth-input.vue"),
     "auth-button": () => import("@/components/desktop/auth-button.vue"),
-    "modal-totp": ModalTotp
+    "modal-totp": ModalTotp,
   }
 })
-export default class SignIn extends Vue {
+export default class SignIn extends Mixins(AuthMixin) {
   public $refs!: {
     "modal-totp": ModalTotp;
   };
-  public email = "";
-  public password = "";
-  public otp_code = "";
-  public captcha_response = "";
-  public payload_modal = {};
 
-  get loading() {
-    return UserController.state == "loading";
-  }
-
-  get button_disabled() {
-    const { email_error, password_error } = this;
-
-    return (
-      email_error ||
-      password_error ||
-      !this.email.length ||
-      !this.password.length
-    );
-  }
+  email = "";
+  password = "";
+  otp = "";
+  button_rules = ["loading", "email", "password", "captcha"];
 
   get need2fa() {
     return UserController.need2fa;
@@ -89,37 +75,15 @@ export default class SignIn extends Vue {
     UserController.need2fa = need2fa;
   }
 
-  get email_error() {
-    const { email } = this;
-    if (!email.length) {
-      return false;
-    }
-
-    if (!helpers.validEmail(email)) {
-      return this.$t("page.global.input.error.email");
-    }
-  }
-
-  get password_error() {
-    const { password } = this;
-    if (!password.length) {
-      return false;
-    }
-
-    if (!helpers.validPassword(password)) {
-      return this.$t("page.global.input.error.password");
-    }
-  }
-
   public async callLogin() {
-    const { email, password, otp_code, captcha_response } = this;
+    const { email, password, otp } = this;
 
     await UserController.login(
       {
         email,
         password,
-        otp_code,
-        captcha_response
+        otp_code: otp,
+        captcha_response: this.captcha_response
       },
       "/account/security"
     );
@@ -127,7 +91,7 @@ export default class SignIn extends Vue {
 
   public login() {
     if (this.need2fa) {
-      if (this.otp_code.length >= 6) {
+      if (this.otp.length >= 6) {
         this.callLogin();
       }
     } else {
@@ -140,7 +104,7 @@ export default class SignIn extends Vue {
   }
 
   public onSubmitTotp(totp_code) {
-    this.otp_code = totp_code;
+    this.otp = totp_code;
     this.login();
   }
 

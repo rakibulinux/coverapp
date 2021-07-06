@@ -1,7 +1,7 @@
-import { IStore } from './store';
+import { Store } from './store';
 
 export default class GettersSetters {
-  store!: IStore;
+  store!: Store;
 
   get state() {
     return this.store.state;
@@ -9,6 +9,10 @@ export default class GettersSetters {
 
   set state(state) {
     this.store.state = state;
+  }
+
+  get isAuth() {
+    return this.state == "active";
   }
 
   get email() {

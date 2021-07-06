@@ -4,6 +4,7 @@ import VueI18n, { TranslateResult } from "vue-i18n";
 import { i18n } from "@/plugins";
 
 export function EncryptEmail(email: string) {
+  if (!email) return;
   let email_name = email.split("@")[0];
   let email_domain = email.split("@")[1];
   email_name = [email_name.slice(0, 2), "**"].join("");

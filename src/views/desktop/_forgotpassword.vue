@@ -16,6 +16,7 @@
             :placeholder-need="true"
             :error="email_error"
           />
+          <z-recaptcha @verify="on_captcha_verifed" @expired="on_captcha_expired" />
           <auth-button
             type="submit"
             :loading="loading"
@@ -100,8 +101,7 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
-import { ConfirmationMixin } from "@/mixins";
+import { ConfirmationMixin, AuthMixin } from "@/mixins";
 import { UserController } from "@/controllers";
 
 @Component({
@@ -110,54 +110,24 @@ import { UserController } from "@/controllers";
     "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
 })
-export default class ForgotPassword extends Mixins(ConfirmationMixin) {
+export default class ForgotPassword extends Mixins(ConfirmationMixin, AuthMixin) {
   step = 1;
   loading = false;
   sended = false;
+
   email = "";
-  captcha_response = "";
   password = "";
   confirm_password = "";
-
-  get email_error() {
-    const { email } = this;
-    if (!email.length) {
-      return false;
-    }
-
-    if (!helpers.validEmail(email)) {
-      return this.$t("page.global.input.error.email");
-    }
-  }
-
-  get password_error() {
-    const { password } = this;
-    if (!password.length) {
-      return false;
-    }
-
-    if (!helpers.validPassword(password)) {
-      return "Incorrect email address. Please enter again.";
-    }
-  }
-
-  get confirm_password_error() {
-    const { password, confirm_password } = this;
-    if (!confirm_password.length) {
-      return false;
-    }
-
-    if (confirm_password !== password) {
-      return "Incorrect email address. Please enter again.";
-    }
-  }
+  button_rules = ["loading", "email", "captcha"];
 
   async forgot_password() {
     this.loading = true;
 
     await UserController.forgot_password(
-      this.email,
-      this.captcha_response,
+      {
+        email: this.email,
+        captcha_response: this.captcha_response
+      },
       () => {
         this.start_cooldown();
         this.step++;
@@ -174,6 +144,7 @@ export default class ForgotPassword extends Mixins(ConfirmationMixin) {
       this.confirmation_code,
       () => {
         this.step++;
+        this.button_rules = ["loading", "password", "confirm_password"];
       }
     );
     this.loading = false;

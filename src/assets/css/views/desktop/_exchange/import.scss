@@ -1,9 +1,7 @@
 @import "orderbook";
 @import "order_entry";
 
-#mine_control {
-  height: $order-entry-height;
-  margin-top: 4px;
+.page-trade-mine-control {
   .type,
   .side {
     text-transform: capitalize;
@@ -176,8 +174,18 @@
 }
 
 .page-exchange-chart {
-  margin-top: 4px;
-  height: calc(100% - 100px);
+  .z-card {
+    &-head {
+      display: flex;
+      height: 40px;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    &-content {
+      height: calc(100% - 40px);
+    }
+  }
 
   &-item {
     position: absolute;
@@ -198,16 +206,20 @@
 }
 .page-exchange {
   position: relative;
-  display: flex;
-  height: calc(100vh - 48px);
-  min-height: 600px;
   width: 100%;
-  margin: 0;
-  padding: 4px 0;
   overflow: hidden;
+
+  .z-table {
+    &-row {
+      height: 20px;
+      line-height: 20px;
+    }
+  }
+
   input {
     caret-color: var(--blue-color);
   }
+
   .group-left {
     width: 290px;
     transition: all 0.3s linear;
@@ -314,6 +326,8 @@
       font-size: 12px;
       line-height: 67px;
       margin-left: 20px;
+      overflow: hidden;
+
       > dl {
         display: inline-block;
         vertical-align: middle;

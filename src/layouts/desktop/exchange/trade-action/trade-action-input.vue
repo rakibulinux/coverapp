@@ -16,6 +16,7 @@
         :value="disabled ? 'The best market price' : value"
         :disabled="disabled"
         type="text"
+        :disabled="disabled"
       />
       <span v-if="suffix" class="trade-action-input-suffix">{{ suffix }}</span>
       <div
@@ -39,9 +40,8 @@ export default class App extends Vue {
   @Prop() readonly estimateValue!: string;
   @Prop() readonly limitLengthAfterDot!: number;
   @Prop({ default: false }) public readonly estimate!: boolean;
-  @Prop() readonly error!: boolean;
-  @Prop() readonly ord_type!: ZTypes.OrdType;
-  @Prop() readonly disabled!: boolean;
+  @Prop() public readonly error!: boolean;
+  @Prop() public readonly disabled!: boolean;
 
   allow_tooltip = false;
   input_error_class = "ant-input-error";
@@ -120,14 +120,16 @@ export default class App extends Vue {
 <style lang="less">
 .trade-action-input {
   position: relative;
+  border: 1px solid;
+  border-radius: 4px;
+  border-color: var(--border-color);
 
   input {
     height: 35px;
     width: 100%;
-    border: 1px solid;
-    border-radius: 4px;
-    border-color: #314363;
+    border: none;
     padding: 0 75px !important;
+    text-align: right;
 
     &:disabled {
       cursor: not-allowed;
@@ -135,7 +137,8 @@ export default class App extends Vue {
   }
 
   &-disabled {
-    background-color: var(--bg-head-color);
+    background-color: var(--bg-downdown-color);
+    cursor: not-allowed;
   }
 
   &-error {
