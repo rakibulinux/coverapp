@@ -79,7 +79,7 @@ export class AuthMixin extends Vue {
     return this.button_rules.map(rule => {
       if (rule === "loading") return this["loading"];
       if (rule === "otp") return this.otp.length === 6;
-      if (rule == "captcha") return !!this.captcha_response.length;
+      if (rule == "captcha") return this.captcha_response.length == 0;
       return !(!!(this[rule] as string).length && !this[`${rule}_error`]);
     }).reduce((a, b) => a || b, false);
   }

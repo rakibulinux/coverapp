@@ -7,8 +7,8 @@
   >
     <need-security
       v-if="!UserController.otp"
-      @closeModal="closeModal"
-      @changeModal="changeModal"
+      @change-modal="changeModal"
+      @close-modal="closeModal"
     />
     <div v-else-if="UserController.otp && step === 1">
       <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
