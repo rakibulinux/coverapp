@@ -15,7 +15,7 @@
     />
     <tab-bar v-if="isMobile" />
 
-    <footer-exchange v-if="!($route.path == '/exchange' && exchange_layout == 'pro') && !isMobile" />
+    <footer-exchange v-if="!($route.name == 'ExchangePage' && exchange_layout == 'pro') && !isMobile" />
   </a-layout>
 </template>
 
