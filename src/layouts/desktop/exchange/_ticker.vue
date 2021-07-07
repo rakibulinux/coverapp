@@ -12,9 +12,6 @@
         <span class="now-price" :class="getLastTrend" v-text="getLastPrice" />
         <span>≈ {{ getPrice_USD.toFixed(2) }} USD</span>
       </div>
-       <!-- <dl>
-        <span> 1 BTC : {{ getCurrency }} USDT</span>
-      </dl> -->
       <dl class="change">
         <dt v-text="$t('page.global.table.24h_change')" />
         <dt class="value" :class="getLastTrend" v-text="getChange" />
@@ -48,26 +45,6 @@ export default class App extends Vue {
   @Prop() readonly buttonHideMarketList!: boolean;
   @Prop() hide_pairs_table!: boolean;
 
-  created() {
-    
-    this.getUsdt();
-    
-  }
-
-  async getUsdt(){
-    
-    try {
-      const result = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-      console.log("Checking...",)
-      const res = await result.json()
-      if (res.price) this.data = res.price
-
-      return
-    } catch (error) {
-      return error;
-    }
-    }
-
   get market() {
     return this.TradeController.market;
   }
@@ -91,16 +68,6 @@ export default class App extends Vue {
   get getPrice_USD() {
     return helpers.getMarketLastUSD();
   }
-
-  get getCurrency() {
-    
-      
-    console.log("checking currency...",this.data);
-    if(this.data) {
-      return Number(this.data)};
-    return
-  }
-
 
   get getHighPrice() {
     const ticker = this.ticker

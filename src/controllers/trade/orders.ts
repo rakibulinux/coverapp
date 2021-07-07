@@ -11,7 +11,6 @@ export default abstract class OrdersController {
         side: side,
         price: price,
         stop_price: stop_price,
-        ord_type: ord_type,
         volume: amount
       });
       runNotice("success", "order.created");

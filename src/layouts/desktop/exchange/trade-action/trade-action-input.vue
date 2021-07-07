@@ -14,7 +14,6 @@
         @focus="onInputFocus"
         @blur="onInputBlur"
         :value="disabled ? 'The best market price' : value"
-        :disabled="disabled"
         type="text"
         :disabled="disabled"
       />
