@@ -18,6 +18,29 @@
 	background-color: #2e3f5f;
 }
 
+.menuWrap-1gEtmoET, .item-2xPVYue0 {
+	background-color: #25344e;
+	color: #c6d8f3;
+}
+
+.item-2xPVYue0 {
+	cursor: pointer;
+}
+
+.menuWrap-1gEtmoET {
+	box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+}
+
+.item-2xPVYue0.isActive-2j-GhQs_, .item-2xPVYue0.isActive-2j-GhQs_:active {
+	background-color: #2e3f5f;
+}
+
+@media (any-hover: hover), not all {
+	.item-2xPVYue0:hover, .item-2xPVYue0.isActive-2j-GhQs_:hover {
+		background-color: #2e3f5f;
+	}
+}
+
 body {
 	--tv-color-platform-background: transparent;
 	--tv-color-pane-background: transparent;
