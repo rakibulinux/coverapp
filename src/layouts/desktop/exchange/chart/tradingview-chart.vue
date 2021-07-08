@@ -104,7 +104,7 @@ export default class TradingViewChart extends Vue {
         "compare_symbol",
         "display_market_status",
         "go_to_date",
-        "header_chart_type",
+        // "header_chart_type",
         "header_compare",
         "header_toolbar_save_load",
         "header_interval_dialog_button",
@@ -127,7 +127,8 @@ export default class TradingViewChart extends Vue {
         "move_logo_to_main_pane",
         "side_toolbar_in_fullscreen_mode",
         "keep_left_toolbar_visible_on_small_screens",
-        "disable_resolution_rebuild"
+        "disable_resolution_rebuild",
+        "save_chart_properties_to_local_storage",
       ],
       charts_storage_url: "https://saveload.tradingview.com",
       charts_storage_api_version: "1.1",
@@ -184,12 +185,26 @@ export default class TradingViewChart extends Vue {
       if (!this.tvWidget) {
         return;
       }
+
+      const chartSave = localStorage.getItem("tradingview.saveState")
+      if (chartSave) {
+        const data = JSON.parse(chartSave);
+        this.tvWidget.load(data);
+      }
+
+      console.log("aloo")
       this.headerReady(buttons);
       this.createStudy();
       this.tvWidget.chart().setChartType(this.chartType);
       this.toggleStudy(this.chartType);
       ZSmartModel.emit("tradingview-ready");
       TradeController.tradingview.ready = true;
+
+      setInterval(() => {
+        this.tvWidget.save(state => {
+          localStorage.setItem("tradingview.saveState", JSON.stringify(state));
+        })
+      }, 100);
     });
   }
 
