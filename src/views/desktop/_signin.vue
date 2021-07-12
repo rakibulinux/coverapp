@@ -1,6 +1,6 @@
 <template>
   <z-content class="page-auth">
-    <div class="auth-box">
+    <div class="signin-box">
       <div>
         <h3 class="title" v-text="$t('page.auth.sign_in')" />
         <form @submit.prevent="login">
