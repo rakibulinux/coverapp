@@ -26,10 +26,10 @@ import Broadcasts from "./Broadcasts.vue";
 import { canvas } from "@/assets/js";
 import { Vue, Component } from "vue-property-decorator";
 // import { PublicController } from "@/controllers";
-import Banner1 from "@/assets/img/banner/banner_1.png"
-import Banner2 from "@/assets/img/banner/banner_2.png"
-import Banner3 from "@/assets/img/banner/banner_3.png"
-import Banner4 from "@/assets/img/banner/banner_4.png"
+import Banner1 from "@/assets/img/banner/banner_1.jpg"
+import Banner2 from "@/assets/img/banner/banner_2.jpg"
+import Banner3 from "@/assets/img/banner/banner_3.jpg"
+import Banner4 from "@/assets/img/banner/banner_4.jpg"
 
 @Component({
   components: {
