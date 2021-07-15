@@ -20,7 +20,7 @@
         </li>
         <li class="m">
           <router-link to="/desclaimer">
-          Desclaimer
+          Disclaimer
           </router-link>
         </li>
         <!-- <li class="m">
