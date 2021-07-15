@@ -5,7 +5,7 @@
         <li class="title">
           <img src="@/assets/img/logo.png" />
         </li>
-        <li class="m">
+        <li class="l">
           <a href="#" class="icon-link">
             <i class="zicon-telegram" />
           </a>
@@ -16,9 +16,14 @@
       </ul>
       <ul>
         <li class="title">
-          Example
+          About Us
         </li>
         <li class="m">
+          <router-link to="/desclaimer">
+          Desclaimer
+          </router-link>
+        </li>
+        <!-- <li class="m">
           <a>Example</a>
         </li>
         <li class="m">
@@ -26,11 +31,8 @@
         </li>
         <li class="m">
           <a>Example</a>
-        </li>
-        <li class="m">
-          <a>Example</a>
-        </li>
-      </ul>
+        </li> -->
+      <!-- </ul>
       <ul>
         <li class="title">
           Example
@@ -46,7 +48,7 @@
         </li>
         <li class="m">
           <a>Example</a>
-        </li>
+        </li> -->
       </ul>
       <ul class="contact">
         <li class="title">
@@ -75,8 +77,8 @@ import { Vue, Component } from "vue-property-decorator";
 @Component
 export default class App extends Vue {
   public contactus = {
-    service: "business@xumexchange.tech",
-    business: "business@xumexchange.tech",
+     service: "service@xumexchange.com",
+    business: "business@xumexchange.com",
     facebook: "https://fb.com/xumexchange"
   };
 

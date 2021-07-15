@@ -43,6 +43,21 @@
             }
           }
         }
+        &.l {
+          line-height: 25px;
+          font-size: 12px;
+          margin-left: 32px;
+          > a.icon-link {
+            width: 32px;
+            height: 32px;
+            font-size: 32px;
+            margin-right: 20px;
+            transition: all .3s;
+            &:hover {
+              color: var(--color-gray);
+            }
+          }
+        }
         a {
           text-decoration: none !important;
           &:hover {
