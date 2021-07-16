@@ -201,16 +201,19 @@
               }
             }
             &.coin {
-              width: 125px;
+              width: 100px;
             }
-            &.date {
-              width: 175px;
+            &.network {
+              width: 100px;
             }
             &.amount {
-              width: 175px;
+              width: 150px;
+            }
+            &.date {
+              width: 150px;
             }
             &.infomation {
-              width: 475px;
+              width: 450px;
               > div {
                 display: flex;
               }

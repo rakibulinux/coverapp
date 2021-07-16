@@ -212,6 +212,7 @@ export class UserController {
   }
 
   async confirm_email(code: string, callback?: () => void) {
+    this.auth_loading();
     try {
       const { data } = await new ApiClient("auth").post("identity/users/email/confirm_code", { email: this.email, code });
       this.state = data.state;
@@ -219,6 +220,7 @@ export class UserController {
       runNotice("success", "email.confirmed");
       if (callback) callback();
     } catch (error) {
+      this.state = "pending";
       return error;
     }
   }
@@ -366,9 +368,9 @@ export class UserController {
     return new ApiClient("trade").get("account/beneficiaries", { currency_id: currency });
   }
 
-  async create_beneficiary(currency: string, name: string, data: string, callback?: () => void) {
+  async create_beneficiary(currency: string, blockchain_key: string, name: string, data: string, callback?: () => void) {
     try {
-      await new ApiClient("trade").post("account/beneficiaries", { currency, name, data });
+      await new ApiClient("trade").post("account/beneficiaries", { currency, blockchain_key, name, data });
       runNotice("success", "address_book.created");
       if (callback) callback();
     } catch (error) {

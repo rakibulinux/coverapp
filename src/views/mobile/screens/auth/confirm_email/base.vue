@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { ScreenMixin } from "@/mixins/mobile";
-import { ConfirmationMixin } from "@/mixins";
+import { AuthMixin, ConfirmationMixin } from "@/mixins";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import { UserController } from "@/controllers";
 
@@ -57,8 +57,11 @@ import { UserController } from "@/controllers";
 })
 export default class ScreenConfirmEmail extends Mixins(
   ScreenMixin,
-  ConfirmationMixin
+  ConfirmationMixin,
+  AuthMixin
 ) {
+  loading = false;
+
   before_panel_destroy() {
     if (UserController.state == "pending") this.UserController.logout();
   }
@@ -84,9 +87,7 @@ export default class ScreenConfirmEmail extends Mixins(
 
   async confirm_email() {
     this.loading = true;
-
     await UserController.confirm_email(this.confirmation_code);
-
     this.loading = false;
   }
 

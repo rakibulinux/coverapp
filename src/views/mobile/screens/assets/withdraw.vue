@@ -10,6 +10,10 @@
       :currency="currency"
       @click="open_currency_picker_screen"
     />
+    <networks-selection
+      :currency="currency"
+      v-model="blockchain_key"
+    />
 
     <div class="screen-assets-withdraw-box">
       <assets-input
@@ -78,6 +82,8 @@ import * as helpers from "@zsmartex/z-helpers";
 
 @Component({
   components: {
+    "networks-selection": () =>
+      import("@/layouts/mobile/screens/assets/networks-selection.vue"),
     "currency-picker": () =>
       import("@/layouts/mobile/screens/assets/deposit/currency-picker.vue"),
     "assets-input": () => import("@/layouts/mobile/assets/assets-input.vue"),
@@ -89,6 +95,7 @@ export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
   currency = PublicController.currencies[0];
   address = "";
   amount = "";
+  blockchain_key = "";
 
   $refs: {
     [key: string]: ScreenMixin;
@@ -104,6 +111,7 @@ export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
 
   before_panel_create(currency: ZTypes.Currency) {
     this.currency = currency;
+    this.blockchain_key = this.currency.networks[0].blockchain_key;
   }
 
   open_currency_picker_screen() {
@@ -136,6 +144,7 @@ export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
       Number(this.amount),
       otp_code,
       this.address,
+      this.blockchain_key,
       null,
       () => {
         this.close_verify_otp_screen();

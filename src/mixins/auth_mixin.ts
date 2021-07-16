@@ -22,11 +22,11 @@ export class AuthMixin extends Vue {
 
   captcha_response = "";
 
-  get loading() {
+  get auth_loading() {
     return this._loading || UserController.state == "loading";
   }
 
-  set loading(loading: boolean) {
+  set auth_loading(loading: boolean) {
     this._loading = loading;
   }
 
@@ -77,7 +77,7 @@ export class AuthMixin extends Vue {
 
   get button_disabled() {
     return this.button_rules.map(rule => {
-      if (rule === "loading") return this["loading"];
+      if (rule.includes("loading")) return this[rule];
       if (rule === "otp") return this.otp.length === 6;
       if (rule == "captcha") return this.captcha_response.length == 0;
       return !(!!(this[rule] as string).length && !this[`${rule}_error`]);

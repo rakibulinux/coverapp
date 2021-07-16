@@ -2,7 +2,6 @@ import { Vue, Component, Watch } from "vue-property-decorator";
 
 @Component
 export class ConfirmationMixin extends Vue {
-  loading = false;
   loading_resend = false;
   confirmation_code = "";
   cooldown = 0;

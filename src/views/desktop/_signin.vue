@@ -20,7 +20,7 @@
             :error="password_error"
           />
           <z-recaptcha @verify="on_captcha_verifed" @expired="on_captcha_expired" />
-          <auth-button type="submit" :loading="loading" :disabled="button_disabled">
+          <auth-button type="submit" :loading="auth_loading" :disabled="button_disabled">
             {{ $t("page.global.action.login") }}
           </auth-button>
           <div>
@@ -37,7 +37,7 @@
     </div>
     <modal-totp
       ref="modal-totp"
-      :loading="loading"
+      :loading="auth_loading"
       @submit="onSubmitTotp"
       @close="modalClose"
     />
@@ -65,7 +65,7 @@ export default class SignIn extends Mixins(AuthMixin) {
   email = "";
   password = "";
   otp = "";
-  button_rules = ["loading", "email", "password", "captcha"];
+  button_rules = ["auth_loading", "email", "password", "captcha"];
 
   get need2fa() {
     return UserController.need2fa;

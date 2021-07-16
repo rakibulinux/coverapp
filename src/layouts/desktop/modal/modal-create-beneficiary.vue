@@ -23,6 +23,22 @@
         :placeholder="$t('page.global.placeholder.address')"
         :placeholder-need="true"
       />
+      <auth-input
+        v-if="currency.type == 'coin'"
+        v-model="blockchain_key"
+        type="select"
+        name="network"
+        :placeholder="$t('page.global.placeholder.network')"
+        :placeholder-need="true"
+        :select="
+          networks.reduce((obj, network) => {
+            return {
+              ...obj,
+              [network['blockchain_key']]: network.protocol
+            };
+          }, {})
+        "
+      />
       <template v-else>
         <auth-input
           v-model="full_name"
@@ -86,6 +102,7 @@ export default class ModalCreateBeneficiary extends Mixins(ModalMixin) {
 
   // for coin
   address = "";
+  blockchain_key = "";
 
   // for fiat
   account_number = "";
@@ -94,6 +111,10 @@ export default class ModalCreateBeneficiary extends Mixins(ModalMixin) {
   full_name = "";
   intermediary_bank_name = "";
   intermediary_bank_swift_code = "";
+
+  get networks() {
+    return this.currency.networks;
+  }
 
   get button_disabled() {
     if (!this.name) return true;
@@ -114,6 +135,7 @@ export default class ModalCreateBeneficiary extends Mixins(ModalMixin) {
     this.loading = true;
     await this.UserController.create_beneficiary(
       this.currency.id,
+      this.blockchain_key,
       this.name,
       JSON.stringify(this.currency.type == "coin" ? {
         address: this.address

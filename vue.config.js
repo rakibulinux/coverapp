@@ -83,7 +83,7 @@ const configWebPack = {
   devServer: {
     proxy: {
       "^/api": {
-        target: "http://www.app.local/",
+        target: "https://test.zsmartex.tech/",
         secure: false,
         ws: true,
         changeOrigin: true,

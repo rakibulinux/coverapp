@@ -10,6 +10,10 @@
       :currency="currency"
       @click="open_currency_picker_screen"
     />
+    <networks-selection
+      :currency="currency"
+      v-model="blockchain_key"
+    />
     <deposit-address-box
       :currency="currency"
       :deposit_address="deposit_address"
@@ -27,11 +31,13 @@
 
 <script lang="ts">
 import { ScreenMixin } from "@/mixins/mobile";
-import { Mixins, Component } from "vue-property-decorator";
+import { Mixins, Component, Watch } from "vue-property-decorator";
 import { PublicController, TradeController } from "@/controllers";
 
 @Component({
   components: {
+    "networks-selection": () =>
+      import("@/layouts/mobile/screens/assets/networks-selection.vue"),
     "currency-picker": () =>
       import("@/layouts/mobile/screens/assets/deposit/currency-picker.vue"),
     "deposit-address-box": () =>
@@ -42,10 +48,11 @@ export default class DepositScreen extends Mixins(ScreenMixin) {
   loading = false;
   deposit_address = "Loading";
   currency = PublicController.currencies[0];
+  blockchain_key?: string = null;
 
   before_panel_create(currency: ZTypes.Currency) {
-    this.deposit_address = "Loading";
     this.currency = currency;
+    this.blockchain_key = this.currency.networks[0].blockchain_key;
     this.get_deposit_address();
   }
 
@@ -54,11 +61,13 @@ export default class DepositScreen extends Mixins(ScreenMixin) {
   }
 
   async get_deposit_address() {
+    this.deposit_address = "Loading";
     this.loading = true;
 
     try {
       const payment_address = await TradeController.get_deposit_address(
-        this.currency.id
+        this.currency.id,
+        this.blockchain_key
       );
       this.deposit_address = payment_address.address || "Error";
     } catch (error) {
@@ -71,6 +80,11 @@ export default class DepositScreen extends Mixins(ScreenMixin) {
 
   open_deposit_history_screen() {
     (this.$parent as any).open_assets_history_screen("deposit");
+  }
+
+  @Watch("blockchain_key")
+  onBlockChainKeyChanged() {
+    this.get_deposit_address();
   }
 }
 </script>

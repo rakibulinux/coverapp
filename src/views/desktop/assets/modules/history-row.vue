@@ -8,7 +8,7 @@
           error: ['errored', 'rejected', 'failed', 'to_reject'].includes(
             record.state
           ),
-          success: ['succeed', 'completed', 'accepted'].includes(record.state)
+          success: ['succeed', 'completed', 'accepted', 'collected'].includes(record.state)
         }
       ]"
     >
@@ -18,6 +18,7 @@
       </span>
     </span>
     <span class="coin" v-text="record.currency.toUpperCase()" />
+    <span class="network" v-text="record.protocol" />
     <span class="amount" v-text="Number(record.amount).toFixed(8)" />
     <span class="date" v-text="getDate(record.created_at)" />
     <span class="infomation">
@@ -25,7 +26,7 @@
         <span class="title">{{ $t("page.global.placeholder.address") }}:</span>
         <a
           v-if="txid_box_opening"
-          :href="currency.explorer_address.replace('#{address}', type == 'deposit' ? record.from_addresses[0] : record.rid)"
+          :href="network.explorer_address.replace('#{address}', type == 'deposit' ? record.from_addresses[0] : record.rid)"
           target="_blank"
           v-text="type == 'deposit' ? record.from_addresses[0] : record.rid"
         />
@@ -35,7 +36,7 @@
         <span class="title">{{ $t("page.global.placeholder.txid") }}:</span>
         <a
           :href="
-            currency.explorer_transaction.replace(
+            network.explorer_transaction.replace(
               '#{txid}',
               record.txid || record.blockchain_txid
             )
@@ -91,6 +92,10 @@ export default class AssetsHistoryRow extends Vue {
     return PublicController.currencies.find(
       currency => currency.id == this.record.currency
     );
+  }
+
+  get network() {
+    return this.currency.networks.find(network => network.blockchain_key == this.record.blockchain_key)
   }
 
   mounted() {

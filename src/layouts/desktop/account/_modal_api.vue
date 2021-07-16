@@ -78,8 +78,8 @@ import Helpers from "./helpers";
   }
 })
 export default class App extends Mixins(Helpers) {
+  loading = false;
   otp_code = "";
-  step = 1;
   api_key = "";
   api_secret = "";
 

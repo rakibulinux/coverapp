@@ -36,7 +36,7 @@
           <z-recaptcha @verify="on_captcha_verifed" @expired="on_captcha_expired" />
           <auth-button
             type="submit"
-            :loading="loading"
+            :loading="auth_loading"
             :disabled="buttonDisabled"
           >
             {{ $t("page.global.action.sign_up") }}
@@ -64,14 +64,14 @@ export default class SignUp extends Mixins(AuthMixin) {
   confirm_password = "";
   refid = "";
 
-  button_rules = ["loading", "email", "password", "confirm_password", "refid", "captcha"];
+  button_rules = ["auth_loading", "email", "password", "confirm_password", "refid", "captcha"];
 
   mounted() {
     if (this.$route.query.refid) this.refid = this.$route.query.refid as string;
   }
 
   async register() {
-    if (this.loading) return;
+    if (this.auth_loading) return;
 
     await UserController.register({
       email: this.email,

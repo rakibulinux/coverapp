@@ -40,6 +40,8 @@ import { Vue, Component } from "vue-property-decorator";
   }
 })
 export default class NeedSecurity extends Vue {
+  loading = false;
+
   actions = {
     "2fa": {
       enabled: false,

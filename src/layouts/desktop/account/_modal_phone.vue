@@ -86,7 +86,7 @@ import { runNotice } from "@/mixins";
   }
 })
 export default class App extends Mixins(Helpers) {
-  step: number;
+  loading = false;
   phone_number = "";
   verification_code = "";
 

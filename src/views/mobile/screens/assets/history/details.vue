@@ -14,7 +14,7 @@
       <div class="screen-assets-details-info">
         <p class="screen-assets-details-info-line">
           <span class="title">Address</span>
-          <span class="value">{{ type == 'deposit' ? record.from_addresses : record.rid }}</span>
+          <span class="value">{{ type == 'deposit' ? record.from_addresses[0] : record.rid }}</span>
         </p>
         <p class="screen-assets-details-info-line">
           <span class="title">Transaction Fee</span>
@@ -73,6 +73,10 @@ export default class AssetsHistoryDetails extends Mixins(ScreenMixin) {
     );
   }
 
+  get network() {
+    return this.currency.networks.find(network => network.blockchain_key == this.record.blockchain_key);
+  }
+
   get txid() {
     return (
       (this.record as ZTypes.Deposit)?.txid ||
@@ -81,7 +85,7 @@ export default class AssetsHistoryDetails extends Mixins(ScreenMixin) {
   }
 
   get explorer_url() {
-    return this.currency.explorer_transaction.replace("#{txid}", this.txid);
+    return this.network?.explorer_transaction?.replace("#{txid}", this.txid);
   }
 
   get created_at() {
