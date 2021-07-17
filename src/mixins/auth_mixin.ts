@@ -52,9 +52,10 @@ export class AuthMixin extends Vue {
 
   get refid_error() {
     const { refid } = this;
+    const regex = /^ID\w{10}$/g;
 
-    if (refid.length) {
-      if (!/^ID\w{10}$/g.test(refid)) return this.$t("page.global.input.error.refid");
+    if (refid.length && regex.test(refid)) {
+      return this.$t("page.global.input.error.refid");
     }
   }
 
@@ -79,10 +80,6 @@ export class AuthMixin extends Vue {
       if (rule.includes("loading")) return this[rule];
       if (rule === "otp") return this.otp.length === 6;
       if (rule == "captcha") return this.captcha_response.length == 0;
-      if (rule == "refid") {
-        if (this.refid) return !!this.refid_error;
-        return false;
-      }
       return !(!!(this[rule] as string).length && !this[`${rule}_error`]);
     }).reduce((a, b) => a || b, false);
   }
