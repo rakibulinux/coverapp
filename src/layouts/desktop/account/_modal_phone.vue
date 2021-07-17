@@ -24,7 +24,7 @@
       <div class="desc">
         {{ translation("steps.1.desc") }}
       </div>
-      <form v-if="UserController.phone" @submit.prevent="sendCode">
+      <form @submit.prevent="sendCode">
         <div class="phone-number">
           <auth-input
             v-model="phone_number"
@@ -61,8 +61,22 @@
           :placeholder-need="true"
           type="number"
           maxlength="5"
-        />
-        <auth-button type="submit" :disabled="button_disabled">
+        >
+          <template slot="right-action">
+            <button
+              style="padding: 0px 6px;font-weight: 500;line-height: 24px;height: 24px;"
+              :disabled="this.cooldown > 0"
+              @click.prevent="reSendCode"
+            >
+              <span v-if="this.loading_resend">
+                {{ $t("page.global.action.sending") }}
+              </span>
+              <span v-else>{{ this.cooldown ? "Resend" : "Send Code" }}</span>
+              <span v-if="cooldown">({{ cooldown }})</span>
+            </button>
+          </template>
+        </auth-input>
+        <auth-button type="submit" :loading="loading" :disabled="button_disabled">
           {{ $t("page.global.action.confirm") }}
         </auth-button>
       </form>
@@ -77,7 +91,7 @@ import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import phone from "phone";
 import { UserController } from "@/controllers";
-import { runNotice } from "@/mixins";
+import { ConfirmationMixin, runNotice } from "@/mixins";
 
 @Component({
   components: {
@@ -85,7 +99,7 @@ import { runNotice } from "@/mixins";
     "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
 })
-export default class App extends Mixins(Helpers) {
+export default class App extends Mixins(Helpers, ConfirmationMixin) {
   loading = false;
   phone_number = "";
   verification_code = "";
@@ -123,44 +137,50 @@ export default class App extends Mixins(Helpers) {
 
   onCreate() {
     this.step = 1;
-    this.phone_number = UserController.phone.number || "";
+    if (UserController.phone?.number) {
+      this.step++;
+    }
     this.verification_code = "";
   }
 
   async sendCode() {
     this.loading = true;
-    const { phone_number } = this;
     try {
-      await new ApiClient("auth").post(
-        `resource/phones${
-          UserController.phone.number &&
-          UserController.phone.number === phone_number
-            ? "/send_code"
-            : ""
-        }`,
-        { phone_number: "+" + phone_number }
-      );
+      await new ApiClient("auth").post("resource/phones", {
+        phone_number: this.phone_number
+      });
       this.step++;
       runNotice("success", "phone.verification.send");
-      this.loading = false;
     } catch (error) {
-      this.loading = false;
       return error;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async reSendCode() {
+    this.loading_resend = true;
+    try {
+      await new ApiClient("auth").post("resource/phones/send_code");
+      runNotice("success", "phone.verification.send");
+      this.start_cooldown();
+    } catch (error) {
+      return error;
+    } finally {
+      this.loading_resend = false;
     }
   }
 
   async verifyCode() {
     this.loading = true;
-    const { phone_number, verification_code } = this;
-    const payload = { phone_number, verification_code };
     try {
-      await new ApiClient("auth").post("resource/phones/verify", payload);
+      await new ApiClient("auth").post("resource/phones/verify", { verification_code: this.verification_code });
       runNotice("success", "phone.confirmed");
-      this.loading = false;
       this.delete();
     } catch (error) {
-      this.loading = false;
       return error;
+    } finally {
+      this.loading = false;
     }
   }
 

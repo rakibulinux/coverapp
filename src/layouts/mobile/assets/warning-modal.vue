@@ -23,6 +23,7 @@
           </div>
         </div>
       </div>
+      <screen-security-otp ref="screen-security-otp" />
     </div>
   </transition>
 </template>
@@ -30,7 +31,11 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    "screen-security-otp": () => import("@/views/mobile/screens/user/security/otp.vue")
+  }
+})
 export default class WarningModal extends Vue {
   showing = false;
 
@@ -51,8 +56,7 @@ export default class WarningModal extends Vue {
   }
 
   onpen2FAPage() {
-    //TODO: add support for router
-    return;
+    (this.$refs["screen-security-otp"] as any).create();
   }
 }
 </script>

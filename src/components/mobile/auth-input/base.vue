@@ -283,6 +283,8 @@ export default class AuthInput extends Vue {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
 
+    color: var(--text-default-color);
+
     &-disabled {
       color: rgba(255, 255, 255, 0.5);
     }

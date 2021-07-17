@@ -13,7 +13,7 @@
         <template slot="prefix">
           <auth-input-prefix @click="open_search('search-country-code')">
             <span class="dial-code">
-              {{ prefix_phone_number }}
+              +{{ prefix_phone_number }}
             </span>
 
             <a-icon type="caret-down" />
@@ -26,12 +26,12 @@
         type="text"
         title="SMS Verification Code"
         placeholder="Enter the verification code"
-        @suffix-action-click="send_sms_code"
       >
         <template slot="suffix">
           <auth-input-suffix
             :is-action="true"
             :disabled="!suffix_phone_number.length"
+            @click="doSend"
           >
             Send
           </auth-input-suffix>
@@ -39,8 +39,8 @@
       </auth-input>
 
       <auth-button
-        :disabled="suffix_phone_number.length || !code.length"
-        @click="onSubmit"
+        :disabled="code.length != 5"
+        @click="verifyCode"
       >
         Active
       </auth-button>
@@ -54,8 +54,11 @@
 </template>
 
 <script lang="ts">
+import { ConfirmationMixin, runNotice } from "@/mixins";
 import { ScreenMixin } from "@/mixins/mobile";
+import ApiClient from "@zsmartex/z-apiclient";
 import { Component, Mixins } from "vue-property-decorator";
+import phone from "phone";
 
 @Component({
   components: {
@@ -68,13 +71,13 @@ import { Component, Mixins } from "vue-property-decorator";
     "search-country-code-screen": () => import("./search.vue")
   }
 })
-export default class SecurityPhoneScreen extends Mixins(ScreenMixin) {
+export default class SecurityPhoneScreen extends Mixins(ScreenMixin, ConfirmationMixin) {
   $refs!: {
     [key: string]: any;
   };
 
   loading = false;
-  prefix_phone_number = "+84";
+  prefix_phone_number = "84";
   suffix_phone_number = "";
   code = "";
 
@@ -82,12 +85,73 @@ export default class SecurityPhoneScreen extends Mixins(ScreenMixin) {
     return this.prefix_phone_number + this.suffix_phone_number;
   }
 
-  send_sms_code() {
-    return;
+  get phone_number_error() {
+    const { phone_number } = this;
+    if (!phone_number.length) {
+      return false;
+    }
+
+    if (!phone("+" + phone_number).length) {
+      return "Phone error";
+    }
   }
 
-  onSubmit() {
-    return;
+  before_panel_create() {
+    if (this.UserController.phone?.number) {
+      const number = this.UserController.phone?.number;
+      this.prefix_phone_number = number.slice(0, 2);
+      this.suffix_phone_number = number.slice(2, number.length)
+    }
+  }
+
+  async sendCode() {
+    this.loading = true;
+    try {
+      await new ApiClient("auth").post("resource/phones", {
+        phone_number: this.phone_number
+      });
+      runNotice("success", "phone.verification.send");
+    } catch (error) {
+      return error;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async reSendCode() {
+    this.loading_resend = true;
+    try {
+      await new ApiClient("auth").post("resource/phones/send_code");
+      runNotice("success", "phone.verification.send");
+      this.start_cooldown();
+    } catch (error) {
+      return error;
+    } finally {
+      this.loading_resend = false;
+    }
+  }
+
+  doSend() {
+    if (this.phone_number.includes("*")) {
+      this.reSendCode();
+    } else {
+      if (this.suffix_phone_number.length == 0) return;
+
+      this.sendCode();
+    }
+  }
+
+  async verifyCode() {
+    this.loading = true;
+    try {
+      await new ApiClient("auth").post("resource/phones/verify", { verification_code: this.code });
+      runNotice("success", "phone.confirmed");
+      this.destroy();
+    } catch (error) {
+      return error;
+    } finally {
+      this.loading = false;
+    }
   }
 
   open_search(screen: string) {
