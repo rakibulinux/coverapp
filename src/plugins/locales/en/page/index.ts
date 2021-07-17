@@ -50,6 +50,7 @@ export default {
   "page.global.table.phone": "Phone",
   "page.global.table.otp": "OTP",
   "page.global.table.password": "Password",
+  "page.global.table.network": "Network",
 
   // Placeholder
   "page.global.placeholder.email": "Email address",
@@ -75,6 +76,7 @@ export default {
   "page.global.placeholder.total": "Total",
   "page.global.placeholder.limit": "Limit",
   "page.global.placeholder.stop": "Stop",
+  "page.global.placeholder.network": "Network",
 
   // Input error
   "page.global.input.error.email": "Incorrect email address. Please enter again.",
