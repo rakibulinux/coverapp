@@ -1,17 +1,25 @@
 <template>
   <div :class="['z-auth-input', { 'z-auth-input-error': !!error }]">
     <input
+      v-if="['text', 'password'].includes(input_type)"
       ref="input"
       :value="value_input"
       :name="name"
       :type="input_type"
       autocomplete="off"
+      autocorrect="off"
       spellcheck="off"
+      autocapitalize="none"
       :maxlength="maxlength"
       @focus="onInputFocus"
       @blur="onInputBlur"
       @input="onInputChange"
     />
+    <a-select v-else-if="input_type == 'select'" dropdownClassName="z-auth-input-dropdown" @change="onSelectChange">
+      <a-select-option v-for="(v, k) in select" :key="k" :value="k">
+        {{ v }}
+      </a-select-option>
+    </a-select>
     <div v-if="$slots['right-action']" class="z-auth-input-right-action">
       <slot name="right-action" />
     </div>
@@ -47,9 +55,10 @@ export default class App extends Vue {
   @Prop() public readonly placeholder!: string;
   @Prop({ default: false }) public readonly placeholderNeed!: boolean;
   @Prop() public readonly maxlength!: string | number;
-  @Prop() public readonly type!: string;
+  @Prop({ default: "text" }) public readonly type!: "text" | "number" | "select";
   @Prop() public readonly prefix!: string;
   @Prop() public readonly error!: string;
+  @Prop() public readonly select!: { [key: string]: string };
 
   public $refs: {
     input: HTMLInputElement;
@@ -90,6 +99,11 @@ export default class App extends Vue {
     this.update_component();
   }
 
+  public onSelectChange(value: string) {
+    this.$emit("input", value);
+    this.update_component();
+  }
+
   public update_component() {
     this.$nextTick(() => {
       this.$forceUpdate();
@@ -117,7 +131,7 @@ export default class App extends Vue {
     height: @input-height;
     width: 100%;
     border: 1px solid;
-    border-color: #314362;
+    border-color: var(--border-color);
     padding: 0 20px;
     font-size: 14px;
     caret-color: var(--blue-color);
@@ -128,6 +142,53 @@ export default class App extends Vue {
     &:-webkit-autofill:active {
       background-color: transparent;
       animation: autofill 0s forwards;
+    }
+  }
+
+  .ant-select {
+    height: @input-height;
+    width: 100%;
+  }
+
+  .ant-select-selection {
+    height: @input-height;
+    line-height: @input-height;
+    width: 100%;
+    border: 1px solid;
+    border-color: var(--border-color);
+    padding: 0 20px;
+    font-size: 14px;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+
+    &__rendered {
+      height: @input-height;
+      line-height: @input-height;
+      margin: 0;
+    }
+
+    i {
+      color: var(--color-gray);
+    }
+  }
+
+  &-dropdown {
+    border-radius: 0;
+    border-color: var(--border-color);
+    box-shadow: none;
+
+    .ant-dropdown-menu-item-selected,
+    .ant-select-dropdown-menu-item-selected,
+    .ant-dropdown-menu-item:hover,
+    .ant-select-dropdown-menu-item:hover,
+    .ant-dropdown-menu-item-selected a,
+    .ant-select-dropdown-menu-item-selected a {
+      background-color: var(--bg-color) !important;
+    }
+
+    .ant-select-dropdown-menu {
+      background-color: var(--bg-card-color);
     }
   }
 
