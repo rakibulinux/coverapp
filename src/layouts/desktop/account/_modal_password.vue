@@ -18,13 +18,14 @@
       <div class="desc">
         {{ translation("steps.1.desc") }}
       </div>
-      <form @submit.prevent="check_password()">
+      <form @submit.prevent="step++">
         <auth-input
           v-model="old_password"
           name="old_password"
           type="password"
           placeholder="Old Password"
           :placeholder-need="true"
+          :error="old_password_error"
         />
         <auth-input
           v-model="new_password"
@@ -32,6 +33,7 @@
           type="password"
           placeholder="New Password"
           :placeholder-need="true"
+          :error="new_password_error"
         />
         <auth-input
           v-model="confirm_password"
@@ -39,13 +41,17 @@
           type="password"
           placeholder="Confirm Password"
           :placeholder-need="true"
+          :error="confirm_password_error"
         />
-        <auth-button type="submit" :disabled="vaild_password()">
+        <auth-button type="submit" :disabled="button_disabled">
           {{ $t("page.global.action.save") }}
         </auth-button>
       </form>
     </div>
     <div v-else-if="UserController.otp && step === 2">
+      <span class="back" @click="step--">
+        <a-icon type="left" />
+      </span>
       <img src="@/assets/img/example_modal_logo.jpg" class="logo-modal" />
       <div class="title">
         {{ translation("steps.2.title") }}
@@ -57,14 +63,14 @@
         <auth-input
           v-model="otp_code"
           name="otp_code"
-          placeholder="2FA Code"
+          :placeholder="$t('page.global.placeholder.2fa_code')"
           :placeholder-need="true"
           maxlength="6"
           type="number"
         />
         <auth-button
           type="submit"
-          :loading="loading"
+          :loading="submit_loading"
           :disabled="!(otp_code.length === 6)"
         >
           {{ $t("page.global.action.confirm") }}
@@ -75,11 +81,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from "vue-property-decorator";
+import { Component, Mixins, Watch } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import ApiClient from "@zsmartex/z-apiclient";
-import { runNotice } from "@/mixins";
+import { runNotice, AuthMixin } from "@/mixins";
 
 @Component({
   components: {
@@ -87,11 +93,13 @@ import { runNotice } from "@/mixins";
     "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
 })
-export default class App extends Mixins(Helpers) {
+export default class App extends Mixins(Helpers, AuthMixin) {
   old_password = "";
   new_password = "";
   confirm_password = "";
   otp_code = "";
+  submit_loading = false;
+  button_rules = ["submit_loading", "old_password", "new_password", "confirm_password"];
 
   mounted() {
     this.onCreate();
@@ -105,35 +113,8 @@ export default class App extends Mixins(Helpers) {
     this.otp_code = "";
   }
 
-  vaild_password() {
-    const { old_password, new_password, confirm_password } = this;
-    if (!old_password || !new_password || !confirm_password) {
-      return true;
-    }
-    return (
-      !old_password ||
-      old_password === new_password ||
-      helpers.validPassword(new_password)
-    );
-  }
-
-  async check_password() {
-    this.loading = true;
-    try {
-      await new ApiClient("auth").post("resource/users/checkpassword", {
-        password: this.old_password
-      });
-      this.step++;
-      runNotice("warning", "password.need2fa");
-      this.loading = true;
-    } catch (error) {
-      this.loading = false;
-      return error;
-    }
-  }
-
   async change_password() {
-    this.loading = true;
+    this.submit_loading = true;
     const { old_password, new_password, confirm_password, otp_code } = this;
     try {
       await new ApiClient("auth").put("resource/users/password", {
@@ -142,17 +123,48 @@ export default class App extends Mixins(Helpers) {
         confirm_password,
         otp_code
       });
-      this.loading = false;
       this.delete();
       runNotice("success", "password.changed");
     } catch (error) {
-      this.loading = false;
       return error;
+    } finally {
+      this.submit_loading = false;
     }
   }
 
   translation(message, data = {}) {
     return helpers.translation("modal.password." + message, data);
   }
+
+  @Watch("step")
+  onStepChanged(step: number) {
+    if (step == 1) {
+      this.button_rules = ["submit_loading", "old_password", "new_password", "confirm_password"];
+    } else {
+      this.button_rules = ["submit_loading", "otp"];
+      runNotice("warning", "password.need2fa");
+    }
+  }
 }
 </script>
+
+<style lang="less">
+.password-modal {
+  .button-back {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 10;
+    padding: 0;
+    color: var(--color-gray);
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+}
+</style>
