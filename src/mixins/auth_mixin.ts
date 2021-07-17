@@ -6,17 +6,17 @@ import { Component, Vue } from "vue-property-decorator";
 export class AuthMixin extends Vue {
   private _loading = false;
 
-  otp!: string;
+  otp = "";
 
   // default auth
-  email!: string;
-  password!: string;
-  confirm_password!: string;
-  refid!: string;
+  email = "";
+  password = ""
+  confirm_password = "";
+  refid = "";
 
   // change password
-  old_password!: string;
-  new_password!: string;
+  old_password = "";
+  new_password = "";
 
   button_rules: string[] = [];
 

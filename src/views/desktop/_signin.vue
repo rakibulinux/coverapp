@@ -3,7 +3,7 @@
     <div class="auth-box">
       <div>
         <h3 class="title" v-text="$t('page.auth.sign_in')" />
-        <form @submit.prevent="login">
+        <form @submit.prevent="login()">
           <auth-input
             v-model="email"
             name="email"
@@ -47,8 +47,7 @@
 <script lang="ts">
 import { Mixins, Component, Watch } from "vue-property-decorator";
 import ModalTotp from "@/layouts/desktop/modal/_modal_totp.vue";
-import { UserController } from "@/controllers";
-import { AuthMixin } from "@/mixins";
+import { LoginMixin } from "@/mixins/page";
 
 @Component({
   components: {
@@ -57,63 +56,23 @@ import { AuthMixin } from "@/mixins";
     "modal-totp": ModalTotp,
   }
 })
-export default class SignIn extends Mixins(AuthMixin) {
+export default class SignIn extends Mixins(LoginMixin) {
   public $refs!: {
     "modal-totp": ModalTotp;
   };
 
-  email = "";
-  password = "";
-  otp = "";
-  button_rules = ["auth_loading", "email", "password", "captcha"];
+  url_callback = "/";
 
-  get need2fa() {
-    return UserController.need2fa;
-  }
-
-  set need2fa(need2fa) {
-    UserController.need2fa = need2fa;
-  }
-
-  public async callLogin() {
-    const { email, password, otp } = this;
-
-    await UserController.login(
-      {
-        email,
-        password,
-        otp_code: otp,
-        captcha_response: this.captcha_response
-      },
-      "/account/security"
-    );
-  }
-
-  public login() {
-    if (this.need2fa) {
-      if (this.otp.length >= 6) {
-        this.callLogin();
-      }
-    } else {
-      this.callLogin();
-    }
-  }
-
-  public modalClose() {
+  modalClose() {
     this.need2fa = false;
   }
 
-  public onSubmitTotp(totp_code) {
-    this.otp = totp_code;
-    this.login();
-  }
-
-  public openTotp() {
+  openTotp() {
     this.$refs["modal-totp"].create();
   }
 
   @Watch("need2fa")
-  public onNeed2FAChange(need2fa: boolean) {
+  onNeed2FAChange(need2fa: boolean) {
     if (need2fa) {
       this.openTotp();
     }
