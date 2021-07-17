@@ -9,7 +9,7 @@
     <span class="ticker-name">{{ market.base_unit.toUpperCase() }}/{{ market.quote_unit.toUpperCase() }}</span>
     <div class="ticker-status">
       <div class="price">
-        <span class="now-price" :class="getLastTrend" v-text="getLastPrice" />
+        <span class="now-price" :class="getLastTrend" v-text="ticker.last" />
         <span>≈ {{ getPrice_USD.toFixed(2) }} USD</span>
       </div>
       <dl class="change">
@@ -59,10 +59,6 @@ export default class App extends Vue {
 
   get getChange() {
     return this.ticker.price_change_percent;
-  }
-
-  get getLastPrice() {
-    return helpers.getMarketLastPrice();
   }
 
   get getPrice_USD() {
