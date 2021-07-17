@@ -62,13 +62,13 @@ export default class AccountInformation extends Vue {
       },
       {
         name: this.$t("page.global.table.phone"),
-        type: UserController.phone.validated ? "text" : "action",
+        type: UserController.phone?.validated_at ? "text" : "action",
         desc: this.translation("phone.desc"),
-        value: UserController.phone.validated
+        value: UserController.phone?.validated_at
           ? "+" + UserController.phone.number
           : "",
         action: {
-          allow: !UserController.phone.validated,
+          allow: !UserController.phone?.validated_at,
           text: this.$t("page.global.action.settings"),
           runner: "phone"
         }
