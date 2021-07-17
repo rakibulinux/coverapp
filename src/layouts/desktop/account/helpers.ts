@@ -1,4 +1,3 @@
-import * as helpers from "@zsmartex/z-helpers";
 import { Component, Vue } from "vue-property-decorator";
 @Component({
   components: {
@@ -7,9 +6,8 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class App extends Vue {
-  protected step = 1;
-  protected loading = false;
-  protected modal_enabled = false;
+  step = 1;
+  modal_enabled = false;
   public onCreate?(): void;
   public onDelete?(): void;
 
