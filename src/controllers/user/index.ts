@@ -154,14 +154,7 @@ export class UserController {
     this.level = payload.level;
     this.labels = payload.labels;
     this.otp = payload.otp;
-
-    if (payload.phones.length) {
-      const phone = payload.phones[payload.phones.length - 1];
-
-      this.phone.number = phone.number;
-      this.phone.country = phone.country;
-      this.phone.validated_at = phone.validated_at;
-    }
+    this.phone = payload.phone;
 
     this.need2fa = false;
 

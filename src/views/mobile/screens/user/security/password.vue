@@ -53,6 +53,7 @@ export default class SecurityPasswordScreen extends Mixins(
   ScreenMixin,
   AuthMixin
 ) {
+  loading = false;
   button_rules = [
     "old_password",
     "new_password",

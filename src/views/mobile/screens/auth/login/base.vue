@@ -31,7 +31,7 @@
         <z-recaptcha @verify="on_captcha_verifed" @expired="on_captcha_expired" />
         <auth-button
           type="submit"
-          :loading="loading"
+          :loading="auth_loading"
           :disabled="button_disabled"
         >
           Log In
@@ -52,7 +52,7 @@
     <screen-auth-signup ref="screen-auth-signup" />
     <screen-verify-otp
       ref="screen-verify-otp"
-      :loading="loading"
+      :loading="auth_loading"
       @submit="login"
       @cancel="need2fa = false"
     />
@@ -84,7 +84,7 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   email = "";
   password = "";
   otp = "";
-  button_rules = ["loading", "email", "password", "otp", "captcha"];
+  button_rules = ["auth_loading", "email", "password", "otp", "captcha"];
 
   get need2fa() {
     return UserController.need2fa;
@@ -132,7 +132,7 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
   }
 
   login(otp_code?: string) {
-    if (this.loading) return;
+    if (this.auth_loading) return;
     if (otp_code) this.otp = otp_code;
 
     if (this.need2fa) {

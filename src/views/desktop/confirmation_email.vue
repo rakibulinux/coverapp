@@ -62,6 +62,8 @@ import config from "@/config";
   }
 })
 export default class ConfirmationEmail extends Mixins(ConfirmationMixin) {
+  loading = false;
+
   get nameEX() {
     return config.nameEX;
   }
@@ -87,11 +89,9 @@ export default class ConfirmationEmail extends Mixins(ConfirmationMixin) {
 
   async confirm_email() {
     this.loading = true;
-
     await UserController.confirm_email(this.confirmation_code, () => {
       this.$router.push("/account/security");
     });
-
     this.loading = false;
   }
 }

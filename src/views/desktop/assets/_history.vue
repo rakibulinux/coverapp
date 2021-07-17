@@ -39,6 +39,7 @@
         <dl class="head">
           <span class="status" v-text="$t('page.global.table.status')" />
           <span class="coin" v-text="$t('page.global.table.coin')" />
+          <span class="network" v-text="$t('page.global.table.network')" />
           <span class="amount" v-text="$t('page.global.table.amount')" />
           <span class="date" v-text="$t('page.global.table.date')" />
           <span class="infomation" v-text="$t('page.global.table.infomation')" />

@@ -64,7 +64,7 @@ export default class SignUp extends Mixins(AuthMixin) {
   confirm_password = "";
   refid = "";
 
-  button_rules = ["auth_loading", "email", "password", "confirm_password", "refid"];
+  button_rules = ["auth_loading", "email", "password", "confirm_password", "refid", "captcha"];
 
   mounted() {
     if (this.$route.query.refid) this.refid = this.$route.query.refid as string;
