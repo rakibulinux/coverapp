@@ -18,11 +18,11 @@
         <li class="title">
           About Us
         </li>
-        <li class="m">
-          <router-link to="/desclaimer">
+        <!-- <li class="m">
+          <router-link to="/disclaimer">
           Disclaimer
           </router-link>
-        </li>
+        </li> -->
         <!-- <li class="m">
           <a>Example</a>
         </li>
@@ -66,7 +66,9 @@
     <div class="bottom-footer">
       &copy; 2019-2021
       <a :href="copyright.link" target="_blank" v-text="copyright.name" />. All
-      rights reserved.
+      rights reserved. <router-link to="/disclaimer">
+          Disclaimer
+          </router-link>
     </div>
   </div>
 </template>

@@ -26,8 +26,8 @@ export default [
     }
   },
   {
-    path: "/desclaimer",
-    name: "desclaimer",
+    path: "/disclaimer",
+    name: "disclaimer",
     component: () => import("@/views/desktop/desclaimer.vue"),
     meta: {
       guest: true
