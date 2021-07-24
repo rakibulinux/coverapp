@@ -6,16 +6,12 @@ export default {
   "page.assets.deposit.deposit_address": "Deposit Address",
   "page.assets.instructions": "Instructions:",
   "page.assets.deposit.coin.note": `
-    • Min. Deposit Amount: {min_deposit_amount} {currency}
-    {0}
     • {min_confirmations} network confirmations are required to deposit, send only {currency} to this address.Sending any other currency to this address may result in the loss of your deposit.
     {0}
     • Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.
   `,
   "page.assets.deposit.fiat.note": `
     • Your deposit will be reflected in your account within 2 business days
-    {0}
-    • Min. Deposit Amount: {min_deposit_amount} {currency}
     {0}
     • Please make sure that your computer and browser are secure and your information is protected from being tampered or leaked.
   `,
@@ -30,13 +26,13 @@ export default {
 
   // Fiat
   "page.assets.deposit.fiat.bank_name.title": "Bank Name",
-  "page.assets.deposit.fiat.bank_name.value.usd": "Diamant Bank",
+  "page.assets.deposit.fiat.bank_name.value.usdt": "Diamant Bank",
   "page.assets.deposit.fiat.account_number.title": "Account Number",
-  "page.assets.deposit.fiat.account_number.value.usd": "10120212",
+  "page.assets.deposit.fiat.account_number.value.usdt": "10120212",
   "page.assets.deposit.fiat.account_name.title": "Account Name",
-  "page.assets.deposit.fiat.account_name.value.usd": "name",
+  "page.assets.deposit.fiat.account_name.value.usdt": "name",
   "page.assets.deposit.fiat.phone_numer.title": "Phone Number",
-  "page.assets.deposit.fiat.phone_numer.value.usd": "+3 8093 1212 12 12",
+  "page.assets.deposit.fiat.phone_numer.value.usdt": "+3 8093 1212 12 12",
   "page.assets.deposit.fiat.reference_code.title": "Reference Code",
 
   // History

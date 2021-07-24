@@ -92,7 +92,6 @@ import { ScreenMixin } from "@/mixins/mobile";
 import { AuthMixin, ConfirmationMixin } from "@/mixins";
 import { Component, Mixins } from "vue-property-decorator";
 import { UserController } from "@/controllers";
-import * as helpers from "@zsmartex/z-helpers";
 
 @Component({
   components: {
@@ -100,14 +99,14 @@ import * as helpers from "@zsmartex/z-helpers";
     "auth-button": () => import("@/components/mobile/auth-button")
   }
 })
-export default class ScreenConfirmEmail extends Mixins(
+export default class ScreenForgotPassword extends Mixins(
   ScreenMixin,
   ConfirmationMixin,
   AuthMixin
 ) {
   step = 1;
-  loading_resend = false;
   loading = false;
+  loading_resend = false;
   sended = false;
 
   email = "";

@@ -8,7 +8,7 @@
       <span class="date">{{ created_at }}</span>
       <span class="state">
         <span :class="['dot', class_state]"></span>
-        <span>{{ $t(`assets.history.state.${record.state}`) }}</span>
+        <span>{{ $t(`page.assets.history.state.${record.state}`) }}</span>
       </span>
     </p>
   </div>

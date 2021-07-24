@@ -1,9 +1,6 @@
 <template>
   <div class="assets-withdraw">
-    <div v-if="!currency.withdrawal_enabled" class="assets-withdrawal-disabled">
-      Withdrawal disabled
-    </div>
-    <div v-else-if="UserController.otp" class="assets-form">
+    <div v-if="UserController.otp" class="assets-form">
       <div class="form-row">
         <span
           v-if="currency.type == 'coin'"
@@ -25,6 +22,17 @@
           {{ $t("page.assets.withdraw.address_book") }}
         </span>
       </div>
+      <div v-if="type == 'address'" class="form-row">
+        <div class="assets-network">
+          <a-button
+            v-for="n in networks"
+            :key="n.blockchain_key"
+            :class="{ active: network.blockchain_key == n.blockchain_key }"
+            type="primary"
+            @click="change_network(n)"
+          >{{ n.protocol }}</a-button>
+        </div>
+      </div>
       <div class="form-row">
         <label class="form-label">{{ $t(type == "address" ? "page.global.placeholder.address" : "page.assets.withdraw.address_book") }}</label>
         <div class="form-control">
@@ -35,7 +43,7 @@
               <template v-if="beneficiaries.length">
                 <span class="address-book-name">
                   <span class="address-book-name-title">Name: </span>
-                  {{ selected_beneficiary.name }}
+                  {{ selected_beneficiary.name }} - ({{ get_beneficiary_network(selected_beneficiary.blockchain_key).protocol }})
                 </span>
                 <span class="address-book-info">
                   <span class="address-book-state">{{ selected_beneficiary.state }}</span>
@@ -85,7 +93,7 @@
                     Name:
                   </div>
                   <div>
-                    {{ beneficiary.name }}
+                    {{ beneficiary.name }} - ({{ get_beneficiary_network(beneficiary.blockchain_key).protocol }})
                   </div>
                 </span>
                 <span class="text-right">
@@ -125,7 +133,7 @@
         <div class="form-row">
           <label class="form-label">{{ $t("page.global.placeholder.fee") }}</label>
           <div class="form-control">
-            <input type="text" :value="Number(currency.withdraw_fee).toFixed(8)" disabled />
+            <input type="text" :value="Number(network.withdraw_fee).toFixed(8)" disabled />
           </div>
         </div>
         <div class="form-row">
@@ -151,7 +159,7 @@
           path="page.assets.withdraw.note"
           :places="{
             currency: currency.id.toUpperCase(),
-            min_withdraw_amount: currency.min_withdraw_amount
+            min_withdraw_amount: network.min_withdraw_amount
           }"
         >
           <br />
@@ -212,6 +220,7 @@ export default class AssetsWithdraw extends Vue {
   address_book_dropdown = false;
   selected_beneficiary?: ZTypes.Beneficiary = null;
 
+  blockchain_key?: string = null;
   type = this.currency.type == "coin" ? "address" : "book";
   address = "";
   amount = "";
@@ -231,8 +240,22 @@ export default class AssetsWithdraw extends Vue {
     if (this.selected_beneficiary?.state != "active" && this.type == "book") return true;
   }
 
+  get networks() {
+    return this.currency.networks;
+  }
+
+  get network() {
+    return this.networks.find(network => this.blockchain_key == network.blockchain_key);
+  }
+
   get receive_amount() {
-    return this.amount ? (Number(this.amount) - Number(this.currency.withdraw_fee)).toFixed(8) : (0).toFixed(8);
+    return this.amount ? (Number(this.amount) - Number(this.network.withdraw_fee)).toFixed(8) : (0).toFixed(8);
+  }
+
+  created() {
+    if (this.currency.type == "coin") {
+      this.blockchain_key = this.currency.networks[0].blockchain_key;
+    }
   }
 
   mounted() {
@@ -246,6 +269,14 @@ export default class AssetsWithdraw extends Vue {
         this.get_beneficiaries();
       }
     }
+  }
+
+  get_beneficiary_network(blockchain_key: string) {
+    return this.networks.find(n => n.blockchain_key == blockchain_key);
+  }
+
+  change_network(network: ZTypes.Network) {
+    this.blockchain_key = network.blockchain_key;
   }
 
   change_address_book_dropdown(show: boolean) {
@@ -311,6 +342,7 @@ export default class AssetsWithdraw extends Vue {
       Number(this.amount),
       otp_code,
       this.type == "address" ? this.address : null,
+      this.type == "address" ? this.blockchain_key : null,
       this.type == "book" ? this.selected_beneficiary.id.toString() : null,
       withdraw => {
         this.close_modal("totp");
@@ -340,10 +372,18 @@ export default class AssetsWithdraw extends Vue {
 .assets-withdraw {
   padding: 20px 0;
 
-  .assets-withdrawal-disabled {
-    color: var(--warning-color);
-    text-align: center;
-    font-size: 25px;
+  .assets-network {
+    display: flex;
+
+    button {
+      margin-right: 8px;
+    }
+
+    .active {
+      color: #fff;
+      background-color: #40a9ff;
+      border-color: #40a9ff;
+    }
   }
 
   &-address-type {

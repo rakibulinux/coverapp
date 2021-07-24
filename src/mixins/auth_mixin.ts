@@ -22,11 +22,11 @@ export class AuthMixin extends Vue {
 
   captcha_response = "";
 
-  get loading() {
+  get auth_loading() {
     return this._loading || UserController.state == "loading";
   }
 
-  set loading(loading: boolean) {
+  set auth_loading(loading: boolean) {
     this._loading = loading;
   }
 
@@ -52,10 +52,9 @@ export class AuthMixin extends Vue {
 
   get refid_error() {
     const { refid } = this;
-    const regex = /^ID\w{10}$/g;
 
-    if (refid.length && regex.test(refid)) {
-      return this.$t("page.global.input.error.refid");
+    if (refid.length) {
+      if (!/^ID\w{10}$/g.test(refid)) return this.$t("page.global.input.error.refid");
     }
   }
 
@@ -77,9 +76,13 @@ export class AuthMixin extends Vue {
 
   get button_disabled() {
     return this.button_rules.map(rule => {
-      if (rule === "loading") return this["loading"];
+      if (rule.includes("loading")) return this[rule];
       if (rule === "otp") return this.otp.length === 6;
       if (rule == "captcha") return this.captcha_response.length == 0;
+      if (rule == "refid") {
+        if (this.refid) return !!this.refid_error;
+        return false;
+      }
       return !(!!(this[rule] as string).length && !this[`${rule}_error`]);
     }).reduce((a, b) => a || b, false);
   }

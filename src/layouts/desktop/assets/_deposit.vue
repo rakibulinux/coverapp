@@ -2,6 +2,15 @@
   <div class="assets-deposit">
     <template v-if="currency.type === 'coin'">
       <div class="assets-form">
+        <div class="assets-network">
+          <a-button
+            v-for="n in networks"
+            :key="n.blockchain_key"
+            :class="{ active: network.blockchain_key == n.blockchain_key }"
+            type="primary"
+            @click="change_network(n)"
+          >{{ n.protocol }}</a-button>
+        </div>
         <div class="address-box">
           <label
             class="address-label"
@@ -30,7 +39,7 @@
         </div>
         <a
           class="block-address"
-          :href="currency.explorer_address.replace('#{address}', deposit_address)"
+          :href="network.explorer_address.replace('#{address}', deposit_address)"
           target="_blank"
         >
           Block Browser
@@ -44,8 +53,7 @@
           path="page.assets.deposit.coin.note"
           :places="{
             currency: currency.id.toUpperCase(),
-            min_deposit_amount: currency.min_deposit_amount,
-            min_confirmations: currency.min_confirmations
+            min_confirmations: network.min_confirmations
           }"
         >
           <br />
@@ -85,8 +93,7 @@
           class="desc"
           path="page.assets.deposit.fiat.note"
           :places="{
-            currency: currency.id.toUpperCase(),
-            min_deposit_amount: currency.min_deposit_amount
+            currency: currency.id.toUpperCase()
           }"
         >
           <br />
@@ -111,19 +118,39 @@ export default class DepositBox extends Vue {
   @Prop() public readonly currency!: ZTypes.Currency;
 
   deposit_address = "";
+  blockchain_key?: string = null;
   qrcode_show = false;
 
-  mounted() {
-    if (this.currency.type == "coin" && (this.currency as any).deposit_enabled) this.getDepositAddress();
-    else if (!(this.currency as any).deposit_enabled) {
-      this.deposit_address = "Deposit disabled"
+  get networks() {
+    return this.currency.networks;
+  }
+
+  get network() {
+    return this.networks.find(network => this.blockchain_key == network.blockchain_key);
+  }
+
+  created() {
+    if (this.currency.type == "coin") {
+      this.blockchain_key = this.currency.networks[0].blockchain_key;
     }
+  }
+
+  mounted() {
+    if (this.currency.type == "coin") {
+      this.getDepositAddress();
+    }
+  }
+
+  change_network(network: ZTypes.Network) {
+    this.deposit_address = "";
+    this.blockchain_key = network.blockchain_key;
+    this.getDepositAddress();
   }
 
   async getDepositAddress() {
     try {
       const { data } = await new ApiClient("trade").get(
-        "account/deposit_address/" + this.currency.id
+        "account/deposit_address/" + this.currency.id, { blockchain_key: this.network.blockchain_key }
       );
       this.deposit_address = data.address;
     } catch (error) {
@@ -138,10 +165,8 @@ export default class DepositBox extends Vue {
   }
 
   copy_address() {
-    if ((this.currency as any).deposit_enabled) {
-      helpers.copyText(this.deposit_address);
-      runNotice("success", "copy");
-    }
+    helpers.copyText(this.deposit_address);
+    runNotice("success", "copy");
   }
 
   show_qr_code() {
@@ -165,11 +190,27 @@ export default class DepositBox extends Vue {
     }
   }
 
+  .assets-network {
+    display: flex;
+
+    button {
+      margin-right: 8px;
+    }
+
+    .active {
+      color: #fff;
+      background-color: #40a9ff;
+      border-color: #40a9ff;
+    }
+  }
+
   .address-box {
     display: flex;
     width: 556px;
     height: 36px;
     line-height: 36px;
+    margin-top: 20px;
+
     .address-label {
       width: 106px;
       color: var(--color-gray);
