@@ -5,6 +5,10 @@
 	cursor: pointer;
 }
 
+.loading-indicator {
+	background-color: #0e182b;
+}
+
 .chart-page [class^="labelRow-"], .chart-page [class^="icon-"] {
 	color: #7482a0 !important;
 }
