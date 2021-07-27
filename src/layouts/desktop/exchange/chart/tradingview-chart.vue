@@ -27,6 +27,7 @@ export default class TradingViewChart extends Vue {
   public symbol = [this.isAsk, this.isBid].join("/").toUpperCase();
   public studies = [];
   public tvWidget!: TradingView.IChartingLibraryWidget;
+  loopSaveChart: NodeJS.Timeout = null;
 
   public studies_overrides: TradingView.StudyOverrides = {
     "volume.volume.color.0": colors["color-down"] as TradingView.StudyOverrideValueType,
@@ -159,6 +160,10 @@ export default class TradingViewChart extends Vue {
     });
   }
 
+  beforeDestroy() {
+    if (this.loopSaveChart) clearInterval(this.loopSaveChart);
+  }
+
   public iframe() {
     return (this.element.querySelector(`iframe`) as HTMLIFrameElement)
       .contentWindow;
@@ -186,23 +191,31 @@ export default class TradingViewChart extends Vue {
         return;
       }
 
+      this.headerReady(buttons);
+      this.tvWidget.chart().setChartType(this.chartType);
+      this.toggleStudy(this.chartType);
+
       const chartSave = localStorage.getItem("tradingview.saveState")
       if (chartSave) {
         const data = JSON.parse(chartSave);
-        this.tvWidget.load(data);
+        const chartData = data[TradeController.market.id];
+        if (chartData) this.tvWidget.load(chartData);
+      } else {
+        this.createStudy();
       }
-
-      console.log("aloo")
-      this.headerReady(buttons);
-      this.createStudy();
-      this.tvWidget.chart().setChartType(this.chartType);
-      this.toggleStudy(this.chartType);
       ZSmartModel.emit("tradingview-ready");
       TradeController.tradingview.ready = true;
 
-      setInterval(() => {
+      this.loopSaveChart = setInterval(() => {
         this.tvWidget.save(state => {
-          localStorage.setItem("tradingview.saveState", JSON.stringify(state));
+          const chartSave = localStorage.getItem("tradingview.saveState");
+          if (chartSave) {
+            const data = JSON.parse(chartSave);
+            data[TradeController.market.id] = state;
+            localStorage.setItem("tradingview.saveState", JSON.stringify(data));
+          } else {
+            localStorage.setItem("tradingview.saveState", JSON.stringify({ [TradeController.market.id]: state }));
+          }
         })
       }, 100);
     });
