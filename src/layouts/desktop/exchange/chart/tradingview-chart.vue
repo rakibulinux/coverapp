@@ -191,6 +191,11 @@ export default class TradingViewChart extends Vue {
         return;
       }
 
+      if (localStorage.getItem("appVersion") != "3.1.0") {
+        localStorage.setItem("appVersion", "3.1.0");
+        localStorage.removeItem("tradingview.saveState");
+      }
+
       this.headerReady(buttons);
       this.tvWidget.chart().setChartType(this.chartType);
       this.toggleStudy(this.chartType);
