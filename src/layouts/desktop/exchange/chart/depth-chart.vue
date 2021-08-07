@@ -5,7 +5,7 @@
 <script lang="ts">
 import TradeController from "@/controllers/trade";
 import uuid from "uuid/v4";
-import ResizeObserver from "resize-observer-polyfill";
+import { ResizeObserver } from 'resize-observer';
 import { Chart } from "@/library/depth-chart";
 import { Vue, Component, Watch } from "vue-property-decorator";
 

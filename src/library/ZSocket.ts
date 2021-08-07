@@ -8,14 +8,14 @@ class ZSocket {
 
   url: string;
   type: string;
-  callback?: Function;
+  callback?: (args: any) => void;
   socket!: WebSocket;
 
   is_connected = false;
   allow_reconnect = true;
   channels: string[] = [];
 
-  constructor(url: string, callback?: Function, type = "public") {
+  constructor(url: string, callback?: (args: any) => void, type = "public") {
     this.url = url;
     this.type = type;
     this.callback = callback;

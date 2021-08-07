@@ -50,6 +50,11 @@
     "tests/**/*.tsx", "babel.config.js", "vue.config.js"
   ],
   "exclude": [
-    "node_modules"
+    "public",
+    "dist",
+    "node_modules",
+    "src/assets/js/*.js",
+    "./babel.config.js",
+    "./vue.config.js",
   ]
 }

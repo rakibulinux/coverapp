@@ -6,7 +6,7 @@
 import uuid from "uuid/v4";
 import TradeController from "@/controllers/trade";
 import * as helpers from "@zsmartex/z-helpers";
-import ResizeObserver from "resize-observer-polyfill";
+import { ResizeObserver } from 'resize-observer';
 import { Chart } from "@/library/depth-chart";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 

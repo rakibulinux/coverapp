@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { ScreenMixin } from "@/mixins/mobile";
-import { Component, Mixins } from "vue-property-decorator";
+import { Vue, Component, Mixins } from "vue-property-decorator";
 import { PublicController } from "@/controllers";
 
 @Component({

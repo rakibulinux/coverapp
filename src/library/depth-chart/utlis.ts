@@ -18,7 +18,7 @@ export default {
 
     return canvas;
   },
-  resizeCanvas(canvas: HTMLCanvasElement, height: number, width: number, callback?: Function) {
+  resizeCanvas(canvas: HTMLCanvasElement, height: number, width: number, callback?: () => void) {
     const context = canvas.getContext("2d");
     const pixelRatio = this.getPixelRatio(context);
 

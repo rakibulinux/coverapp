@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import ResizeObserver from "resize-observer-polyfill";
+import { ResizeObserver } from 'resize-observer';
 
 @Component
 export default class ZLoading extends Vue {

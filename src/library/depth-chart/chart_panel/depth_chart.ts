@@ -77,7 +77,7 @@ export default class DepthChartPanel extends ChartPanel {
     }
   }
 
-  draw_chart_by_side(context: CanvasRenderingContext2D, height: number, width: number, data: DepthData[], side: string, callback: Function) {
+  draw_chart_by_side(context: CanvasRenderingContext2D, height: number, width: number, data: DepthData[], side: string, callback: (...args: any[]) => void) {
     const { gap, paddingTop } = this.config.chart;
     const equalWidth = width / 2;
     const scaleW = equalWidth / data.length;

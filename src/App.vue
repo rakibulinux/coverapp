@@ -92,7 +92,7 @@ export default class App extends Vue {
 
         first_time = false;
 
-        ZSmartModel.on("need-login", (callback?: Function) => {
+        ZSmartModel.on("need-login", (callback?: (args: any) => void) => {
           this.$refs["auth-login-screen"].create(callback);
         });
 
@@ -113,7 +113,7 @@ export default class App extends Vue {
     }
   }
 
-  openPanel(panel: string, callback?: Function) {
+  openPanel(panel: string, callback?: (args: any) => void) {
     this.$refs[panel].create(callback);
   }
 

@@ -13,6 +13,10 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020
   },
+  globals: {
+    ZTypes: true,
+    NodeJS: true
+  },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
@@ -33,5 +37,6 @@ module.exports = {
     'prettier/prettier': process.env.NODE_ENV === "production" ? "warn" : "off",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
   }
 };

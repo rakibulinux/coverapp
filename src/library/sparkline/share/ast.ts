@@ -87,7 +87,7 @@ export const optionsDefault: OptionsFace = {
 
 export interface CoreReturnFace {
   canvas: any;
-  render: Function;
+  render: (...args: any) => void;
 }
 
 // 点
