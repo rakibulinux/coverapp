@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.0.0-experimental
 
-FROM node:10-alpine as build-stage
+FROM node:14.17.4-alpine3.14 as build-stage
 
 WORKDIR /app
 
