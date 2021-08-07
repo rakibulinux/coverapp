@@ -105,12 +105,12 @@ export class TradeController {
     return data;
   }
 
-  async create_withdrawal(currency_id: string, amount: number, otp_code: string, address?: string, blockchain_key?: string, beneficiary_id?: string, callback?: (payload?: any) => void) {
-    const payload = { address, blockchain_key, beneficiary_id, currency: currency_id, amount, otp_code };
+  async create_withdrawal(currency_id: string, amount: number, otp_code: string, confirmation_code: string, address?: string, blockchain_key?: string, beneficiary_id?: string, callback?: (payload?: any) => void) {
+    const payload = { address, blockchain_key, beneficiary_id, currency: currency_id, amount, otp_code, confirmation_code };
 
     try {
       const { data } = await new ApiClient("applogic").post("account/withdraws", payload);
-      runNotice("warning", "withdraw.created");
+      runNotice("success", "withdraw.created");
 
       if (callback) callback(data);
     } catch (error) {
@@ -118,20 +118,9 @@ export class TradeController {
     }
   }
 
-  async confirm_withdrawal(tid: string, confirmation_code: string, callback?: () => void) {
+  async generate_withdrawal_code(callback?: () => void) {
     try {
-      await new ApiClient("applogic").post("account/withdraws/confirm", { tid, confirmation_code });
-      runNotice("success", "withdraw.confirmed");
-
-      if (callback) callback();
-    } catch (error) {
-      return error;
-    }
-  }
-
-  async generate_withdrawal_code(tid: string, callback?: () => void) {
-    try {
-      await new ApiClient("applogic").post("account/withdraws/generate_code", { tid });
+      await new ApiClient("applogic").post("account/withdraws/generate_code");
       runNotice("success", "withdraw.code");
 
       if (callback) callback();

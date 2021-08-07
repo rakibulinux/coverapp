@@ -12,7 +12,15 @@
     <div class="desc">
       {{ translation("desc") }}
     </div>
-    <form @submit.prevent="confirm_withdrawal">
+    <form @submit.prevent="create_withdrawal">
+      <auth-input
+        v-model="otp_code"
+        name="otp_code"
+        placeholder="2FA Code"
+        :placeholder-need="true"
+        maxlength="6"
+        type="number"
+      />
       <auth-input
         v-model="confirmation_code"
         name="confirmation_code"
@@ -53,24 +61,41 @@ import { Mixins, Component } from "vue-property-decorator";
     "auth-button": () => import("@/components/desktop/auth-button.vue")
   }
 })
-export default class ModalConfirmWithdrawal extends Mixins(
+export default class ModalCreateithdrawal extends Mixins(
   ModalMixin,
   ConfirmationMixin
 ) {
-  withdraw: ZTypes.Withdraw;
+  currency: ZTypes.Currency
+  type: "address" | "book";
+  amount: string;
+  blockchain_key?: string;
+  address: string;
+  beneficiary?: ZTypes.Beneficiary;
+
   loading = false;
+  otp_code = "";
   confirmation_code = "";
 
-  onCreate(withdraw: ZTypes.Withdraw) {
-    this.withdraw = withdraw;
+  onCreate(payload: { currency: ZTypes.Currency, type: "address" | "book", amount: string, blockchain_key?: string, address?: string, beneficiary?: ZTypes.Beneficiary }) {
+    this.currency = payload.currency;
+    this.type = payload.type;
+    this.amount = payload.amount;
+    this.blockchain_key = payload.blockchain_key;
+    this.address = payload.address;
+    this.beneficiary = payload.beneficiary;
   }
 
-  async confirm_withdrawal() {
+  async create_withdrawal() {
     this.loading = true;
 
-    await this.TradeController.confirm_withdrawal(
-      this.withdraw.tid,
+    await this.TradeController.create_withdrawal(
+      this.currency.id,
+      Number(this.amount),
+      this.otp_code,
       this.confirmation_code,
+      this.type == "address" ? this.address : null,
+      this.type == "address" ? this.blockchain_key : null,
+      this.type == "book" ? this.beneficiary.id.toString() : null,
       () => {
         this.delete();
       }
@@ -83,7 +108,6 @@ export default class ModalConfirmWithdrawal extends Mixins(
     this.loading_resend = true;
 
     await this.TradeController.generate_withdrawal_code(
-      this.withdraw.tid,
       () => {
         this.start_cooldown();
       }

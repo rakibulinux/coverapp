@@ -141,29 +141,6 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next("/signin");
     }
-  } else if (UserController.state == "active" && to.path == "/confirmation/withdrawal") {
-    const tid = to.query["tid"] as string;
-    const confirmation_code = to.query["confirmation_code"] as string;
-    const action = to.query["action"] as string;
-
-    if (!["confirm", "cancel"].includes(action)) {
-      runNotice("error", "withdraw.action.invalid");
-      next(helpers.isMobile() ? "/m" : "/");
-    }
-
-    PublicController.page_ready = false;
-
-    await TradeController.confirm_withdrawal(tid, confirmation_code);
-
-    if (first_route_handler) {
-      next(helpers.isMobile() ? "/m" : "/");
-    }
-
-    PublicController.page_ready = true;
-  } else if (UserController.state != "active" && to.path == "/confirmation/withdrawal") {
-    runNotice("warning", "withdraw.needlogin");
-
-    next(helpers.isMobile() ? "/m" : "/");
   } else {
     next();
   }

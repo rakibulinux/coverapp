@@ -91,6 +91,7 @@ export default class DataFeed implements TradingView.IBasicDataFeed {
   }
 
   subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscribeUID) {
+    TradeController.tradingview.stream = null;
     const channelString = createChannelString(symbolInfo);
     const newSub = {
       channelString,
@@ -100,16 +101,11 @@ export default class DataFeed implements TradingView.IBasicDataFeed {
       lastBar: history[symbolInfo.name].lastBar,
       listener: onRealtimeCallback
     };
-    TradeController.tradingview.stream = null;
+    console.log(newSub)
     TradeController.tradingview.stream = newSub;
   }
 
   unsubscribeBars(subscriberUID) {
-    // const { stream } = store.state.exchange.TradingView;
-    // const subIndex = stream.findIndex(e => e.uid === subscriberUID);
-    // if (subIndex === -1) return;
-    // stream.splice(subIndex, 1);
-    TradeController.tradingview.stream = null;
   }
 
   calculateHistoryDepth(resolution) {

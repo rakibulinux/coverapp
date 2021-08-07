@@ -64,13 +64,6 @@
         Withdrawal
       </button>
     </div>
-
-    <screen-verify-otp
-      ref="screen-verify-otp"
-      :loading="loading"
-      @submit="submit_withdrawal"
-      @cancel="close_verify_otp_screen"
-    />
   </panel-view>
 </template>
 
@@ -86,8 +79,7 @@ import * as helpers from "@zsmartex/z-helpers";
       import("@/layouts/mobile/screens/assets/networks-selection.vue"),
     "currency-picker": () =>
       import("@/layouts/mobile/screens/assets/deposit/currency-picker.vue"),
-    "assets-input": () => import("@/layouts/mobile/assets/assets-input.vue"),
-    "screen-verify-otp": () => import("@/views/mobile/screens/verify/totp.vue")
+    "assets-input": () => import("@/layouts/mobile/assets/assets-input.vue")
   }
 })
 export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
@@ -96,6 +88,8 @@ export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
   address = "";
   amount = "";
   blockchain_key = "";
+  otp_code = "";
+  confirmation_code = "";
 
   $refs: {
     [key: string]: ScreenMixin;
@@ -130,24 +124,19 @@ export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
     this.$refs["screen-verify-otp"].destroy();
   }
 
-  async submit_withdrawal(otp_code?: string) {
-    if (!otp_code) {
-      this.open_verify_otp_screen();
-
-      return;
-    }
-
+  async submit_withdrawal() {
     this.loading = true;
 
     await TradeController.create_withdrawal(
       this.currency.id,
       Number(this.amount),
-      otp_code,
+      this.otp_code,
+      this.confirmation_code,
       this.address,
       this.blockchain_key,
       null,
       () => {
-        this.close_verify_otp_screen();
+        
       }
     );
 

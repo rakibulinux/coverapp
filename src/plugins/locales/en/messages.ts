@@ -17,7 +17,7 @@ export default {
   // Withdrawal
   "warning.withdraw.needlogin": "You must login first",
   "warning.withdraw.need2fa": "To create Withdrawal you need turn on 2FA first",
-  "warning.withdraw.created": "Withdrawal was created, now you need confirmation to complete it",
+  "warning.withdraw.created": "Withdrawal was created successfully",
   "success.withdraw.code": "A confirmation code has been sent to your email",
   "success.withdraw.confirmed": "Withdrawal was confirmed",
   "success.withdraw.canceled": "Withdrawal was canceled",
