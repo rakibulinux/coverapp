@@ -12,11 +12,11 @@ COPY .npmrc .npmrc
 
 COPY package.json ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
-RUN npm run build
+RUN yarn run build
 
 # production stage
 FROM nginx:stable-alpine as production-stage
