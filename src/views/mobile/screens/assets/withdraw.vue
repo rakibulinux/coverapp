@@ -32,6 +32,31 @@
           <a class="max" @click="amount = available">Max</a>
         </template>
       </assets-input>
+
+      <assets-input
+        v-model="otp_code"
+        title="OTP Code"
+      />
+
+      <assets-input
+        v-model="confirmation_code"
+        title="Confirmation Code"
+        placeholder="Confirmation code from email here"
+      >
+        <template slot="action">
+          <span
+            style="color: var(--blue-color);padding: 0;width: 50px;font-weight: 500;"
+            :disabled="this.cooldown > 0"
+            @click.prevent="resend_code"
+          >
+            <span v-if="this.loading_resend">
+              {{ $t("page.global.action.sending") }}
+            </span>
+            <span v-else>{{ this.cooldown ? "Resend" : "Send Code" }}</span>
+            <span v-if="cooldown">({{ cooldown }})</span>
+          </span>
+        </template>
+      </assets-input>
     </div>
 
     <div class="screen-assets-notice">
@@ -72,6 +97,7 @@ import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import { PublicController, TradeController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
+import { ConfirmationMixin } from "@/mixins";
 
 @Component({
   components: {
@@ -82,7 +108,7 @@ import * as helpers from "@zsmartex/z-helpers";
     "assets-input": () => import("@/layouts/mobile/assets/assets-input.vue")
   }
 })
-export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
+export default class AssetsWithdrawScreen extends Mixins(ScreenMixin, ConfirmationMixin) {
   loading = false;
   currency = PublicController.currencies[0];
   address = "";
@@ -141,6 +167,18 @@ export default class AssetsWithdrawScreen extends Mixins(ScreenMixin) {
     );
 
     this.loading = false;
+  }
+
+  async resend_code() {
+    this.loading_resend = true;
+
+    await this.TradeController.generate_withdrawal_code(
+      () => {
+        this.start_cooldown();
+      }
+    );
+
+    this.loading_resend = false;
   }
 
   @Watch("amount")
