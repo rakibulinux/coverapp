@@ -57,16 +57,7 @@
         class="zicon-arrow-down"
         @click="change_txid_box"
       />
-      <template v-if="record.state == 'prepared' && type == 'withdraw'">
-        <a-icon type="close" @click="cancel_withdrawal()" />
-      </template>
     </span>
-
-    <modal-totp
-      ref="totp"
-      :loading="cancel_loading"
-      @submit="cancel_withdrawal"
-    />
   </dl>
 </template>
 
@@ -84,8 +75,6 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 export default class AssetsHistoryRow extends Vue {
   @Prop() readonly record!: ZTypes.Withdraw | ZTypes.Deposit;
   @Prop() readonly type!: "deposit" | "withdraw";
-
-  cancel_loading = false;
   txid_box_opening = false;
 
   get currency() {
@@ -131,38 +120,6 @@ export default class AssetsHistoryRow extends Vue {
 
   open_confirm_modal() {
     (this.$parent.$refs["modal-confirm-withdrawal"] as any).create(this.record);
-  }
-
-  async cancel_withdrawal(otp_code?: string) {
-    if (!otp_code) {
-      (this.$refs["totp"] as any).create();
-      return;
-    }
-
-    this.cancel_loading = true;
-
-    await this.TradeController.cancel_withdrawal(
-      this.record.tid,
-      otp_code,
-      () => {
-        (this.$refs["totp"] as any).delete();
-
-        const withdraws: ZTypes.Withdraw[] = (this.$parent as any).history.data;
-
-        const index = withdraws.findIndex(
-          withdraw => withdraw.tid == this.record.tid
-        );
-
-        if (index >= 0) {
-          const withdraw = withdraws[index];
-          withdraw.state = "canceled";
-
-          withdraws[index] = withdraw;
-        }
-      }
-    );
-
-    this.cancel_loading = false;
   }
 }
 </script>

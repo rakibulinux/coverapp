@@ -51,6 +51,8 @@ export default class TradeAction extends Vue {
           text: this.translation("ord_type.stop_limit")
         }
       )
+
+      types.filter(type => type.key == "limit");
     }
 
     return types;

@@ -128,17 +128,6 @@ export class TradeController {
       return error;
     }
   }
-
-  async cancel_withdrawal(tid: string, otp_code: string, callback?: () => void) {
-    try {
-      await new ApiClient("applogic").post("account/withdraws/cancel", { tid, otp_code });
-      runNotice("success", "withdraw.canceled");
-
-      if (callback) callback();
-    } catch (error) {
-      return error;
-    }
-  }
 }
 
 export interface TradeController extends OrdersController, MineControl, GettersSetters {
