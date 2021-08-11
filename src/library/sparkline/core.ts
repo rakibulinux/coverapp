@@ -25,7 +25,7 @@ const sparklines = (
 
   const { type } = opts;
 
-  const { canvas } = (charts[type] as Function)($el, opts);
+  const { canvas } = (charts[type] as any)($el, opts);
 
   return {
     canvas,
@@ -34,7 +34,7 @@ const sparklines = (
       renderOptions: OptionsFace = optionsDefault
     ): void => {
       const optionsNew: OptionsFace = cloneDeep(optionsDefault, renderOptions);
-      (charts[optionsNew.type] as Function)($renderEl, optionsNew);
+      (charts[optionsNew.type] as any)($renderEl, optionsNew);
     },
   };
 };

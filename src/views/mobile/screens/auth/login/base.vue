@@ -94,7 +94,7 @@ export default class LoginScreen extends Mixins(ScreenMixin, AuthMixin) {
     UserController.need2fa = value;
   }
 
-  panel_created(callback?: Function) {
+  panel_created(callback?: () => void) {
     this.$on("login-success", () => {
       if (typeof callback === "function") callback();
     });

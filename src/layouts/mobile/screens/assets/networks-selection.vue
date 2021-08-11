@@ -49,4 +49,3 @@ export default class NetworksSelection extends Vue {
   }
 }
 </style>
-

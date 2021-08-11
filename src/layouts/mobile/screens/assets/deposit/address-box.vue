@@ -16,13 +16,14 @@
         {{ deposit_address.toUpperCase() }}
       </div>
       <div class="assets-deposit-address-action">
-        <button><a-icon type="copy" theme="filled" /> COPY ADDRESS</button>
+        <button @click="copy_address"><a-icon type="copy" theme="filled" /> COPY ADDRESS</button>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({
@@ -33,5 +34,9 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 export default class DepositNotice extends Vue {
   @Prop() readonly currency!: ZTypes.Currency;
   @Prop() readonly deposit_address!: string;
+
+  copy_address() {
+    helpers.copyText(this.deposit_address);
+  }
 }
 </script>

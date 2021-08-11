@@ -34,20 +34,8 @@
         <a :href="explorer_url" target="_blank" tag="explorer">
           Check Explorer
         </a>
-        <button
-          v-if="type == 'withdrawal' && record.state == 'accepted'"
-          @click="confirm_withdrawal()"
-        >
-          Confirm
-        </button>
       </div>
     </template>
-    <screen-verify-otp
-      v-if="type == 'withdrawal' && record.state == 'accepted'"
-      ref="screen-verify-otp"
-      @submit="confirm_withdrawal"
-      @cancel="close_panel('screen-verify-otp')"
-    />
   </panel-view>
 </template>
 
@@ -107,15 +95,6 @@ export default class AssetsHistoryDetails extends Mixins(ScreenMixin) {
 
   close_panel(name: string) {
     (this.$refs[name] as any).destroy();
-  }
-
-  confirm_withdrawal(otp_code?: string) {
-    if (!otp_code) {
-      (this.$refs["screen-verify-otp"] as any).create();
-      return;
-    }
-
-    this.TradeController.confirm_withdrawal(this.record.tid, otp_code);
   }
 
   copy_txid() {

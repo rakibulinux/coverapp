@@ -188,25 +188,18 @@ export default class TradingViewChart extends Vue {
         return;
       }
 
-      const chartSave = localStorage.getItem("tradingview.saveState")
-      if (chartSave) {
-        const data = JSON.parse(chartSave);
-        this.tvWidget.load(data);
+      if (localStorage.getItem("appVersion") != "3.1.0") {
+        localStorage.setItem("appVersion", "3.1.0");
+        localStorage.removeItem("tradingview.saveState");
       }
 
-      console.log("aloo")
       this.headerReady(buttons);
-      this.createStudy();
       this.tvWidget.chart().setChartType(this.chartType);
       this.toggleStudy(this.chartType);
+
+      this.createStudy();
       ZSmartModel.emit("tradingview-ready");
       TradeController.tradingview.ready = true;
-
-      setInterval(() => {
-        this.tvWidget.save(state => {
-          localStorage.setItem("tradingview.saveState", JSON.stringify(state));
-        })
-      }, 100);
     });
   }
 

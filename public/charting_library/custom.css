@@ -5,6 +5,10 @@
 	cursor: pointer;
 }
 
+.loading-indicator {
+	background-color: #1a243b;
+}
+
 .chart-page [class^="labelRow-"], .chart-page [class^="icon-"] {
 	color: #7482a0 !important;
 }
@@ -39,6 +43,14 @@
 	.item-2xPVYue0:hover, .item-2xPVYue0.isActive-2j-GhQs_:hover {
 		background-color: #2e3f5f;
 	}
+}
+
+.container-2BvS3Fpg .inner-3YzQuyJx {
+	background-color: #1a243b;
+}
+
+.chart-page .apply-common-tooltip {
+	border: none;
 }
 
 body {

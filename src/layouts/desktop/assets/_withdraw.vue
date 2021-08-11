@@ -175,9 +175,8 @@
         />
       </div>
     </div>
-    <modal-totp ref="totp" :loading="loading" @submit="withdraw" />
     <modal-2fa ref="2fa" />
-    <modal-confirm-withdrawal ref="modal-confirm-withdrawal" />
+    <modal-create-withdrawal ref="modal-create-withdrawal" />
     <modal-create-beneficiary ref="modal-create-beneficiary" />
     <modal-confirm-beneficiary ref="modal-confirm-beneficiary" />
   </div>
@@ -187,8 +186,7 @@
 import { runNotice } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
 import modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
-import modal_totp from "@/layouts/desktop/modal/_modal_totp.vue";
-import modal_confirm_withdrawal from "@/layouts/desktop/modal/modal-confirm-withdrawal.vue";
+import modal_create_withdrawal from "@/layouts/desktop/modal/modal-create-withdrawal.vue";
 import modal_confirm_beneficiary from "@/layouts/desktop/modal/modal-confirm-beneficiary.vue";
 import modal_create_beneficiary from "@/layouts/desktop/modal/modal-create-beneficiary.vue";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
@@ -196,19 +194,17 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 @Component({
   components: {
     "modal-2fa": modal_2fa,
-    "modal-totp": modal_totp,
     "modal-create-beneficiary": modal_create_beneficiary,
     "modal-confirm-beneficiary": modal_confirm_beneficiary,
-    "modal-confirm-withdrawal": modal_confirm_withdrawal
+    "modal-create-withdrawal": modal_create_withdrawal
   }
 })
 export default class AssetsWithdraw extends Vue {
   $refs!: {
     "modal-2fa":  modal_2fa;
-    "modal-totp": modal_totp;
     "modal-create-beneficiary": modal_create_beneficiary;
     "modal-confirm-beneficiary": modal_confirm_beneficiary;
-    "modal-confirm-withdrawal": modal_confirm_withdrawal;
+    "modal-create-withdrawal": modal_create_withdrawal;
   };
 
   @Prop() readonly available!: number;
@@ -221,10 +217,13 @@ export default class AssetsWithdraw extends Vue {
   selected_beneficiary?: ZTypes.Beneficiary = null;
 
   blockchain_key?: string = null;
-  type = this.currency.type == "coin" ? "address" : "book";
   address = "";
   amount = "";
   beneficiaries: ZTypes.Beneficiary[] = [];
+
+  get type() {
+    return this.currency.type == "coin" ? "address" : "book";
+  }
 
   get button_disabled() {
     const { address } = this;
@@ -332,25 +331,15 @@ export default class AssetsWithdraw extends Vue {
     this.open_modal("modal-create-beneficiary", this.currency);
   }
 
-  async withdraw(otp_code?: string) {
-    if (!otp_code) return this.open_modal("totp");
-
-    this.loading = true;
-
-    await this.TradeController.create_withdrawal(
-      this.currency.id,
-      Number(this.amount),
-      otp_code,
-      this.type == "address" ? this.address : null,
-      this.type == "address" ? this.blockchain_key : null,
-      this.type == "book" ? this.selected_beneficiary.id.toString() : null,
-      withdraw => {
-        this.close_modal("totp");
-
-        this.open_modal("modal-confirm-withdrawal", withdraw);
-      }
-    );
-    this.loading = false;
+  async withdraw() {
+    this.open_modal("modal-create-withdrawal", {
+      currency: this.currency,
+      type: this.type,
+      amount: this.amount,
+      blockchain_key: this.blockchain_key,
+      address: this.address,
+      beneficiary: this.selected_beneficiary
+    });
   }
 
   open_modal(modal: string, payload?: any) {
