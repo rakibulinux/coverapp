@@ -83,7 +83,7 @@ export default class BalanceRow extends Vue {
   }
 
   get currency() {
-    return new helpers.Currency(this.currency_id).get();
+    return PublicController.currencies.find(currency => currency.id == this.currency_id);
   }
 
   get balance() {

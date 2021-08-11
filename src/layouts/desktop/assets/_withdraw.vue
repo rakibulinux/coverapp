@@ -217,10 +217,13 @@ export default class AssetsWithdraw extends Vue {
   selected_beneficiary?: ZTypes.Beneficiary = null;
 
   blockchain_key?: string = null;
-  type = this.currency.type == "coin" ? "address" : "book";
   address = "";
   amount = "";
   beneficiaries: ZTypes.Beneficiary[] = [];
+
+  get type() {
+    return this.currency.type == "coin" ? "address" : "book";
+  }
 
   get button_disabled() {
     const { address } = this;
