@@ -55,7 +55,8 @@ export default class DataFeed implements TradingView.IBasicDataFeed {
   }
 
   async getBars(symbolInfo: TradingView.LibrarySymbolInfo, resolution: TradingView.ResolutionString, periodParams: TradingView.PeriodParams, onResult: TradingView.HistoryCallback, onError: TradingView.ErrorCallback) {
-    if (resolution === "D" || resolution === "1D") resolution = "1400" as TradingView.ResolutionString;
+    if (resolution === "D" || resolution === "1D") resolution = "1440" as TradingView.ResolutionString;
+    if (resolution === "1W") resolution = "10080" as TradingView.ResolutionString;
     if (periodParams.firstDataRequest) {
       ZSmartModel.emit("tradingview-rending");
     }

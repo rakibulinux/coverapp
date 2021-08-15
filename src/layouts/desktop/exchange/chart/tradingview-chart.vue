@@ -119,7 +119,8 @@ export default class TradingViewChart extends Vue {
         "symbol_info",
         "timeframes_toolbar",
         "use_localstorage_for_settings",
-        "volume_force_overlay"
+        "volume_force_overlay",
+        "disable_resolution_rebuild"
       ],
       enabled_features: [
         "dont_show_boolean_study_arguments",
@@ -127,7 +128,6 @@ export default class TradingViewChart extends Vue {
         "move_logo_to_main_pane",
         "side_toolbar_in_fullscreen_mode",
         "keep_left_toolbar_visible_on_small_screens",
-        "disable_resolution_rebuild",
         "save_chart_properties_to_local_storage",
       ],
       charts_storage_url: "https://saveload.tradingview.com",
