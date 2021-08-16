@@ -24,6 +24,5 @@ export default class Helpers extends GettersSetters {
     } else {
       this.favorites.push(market_id);
     }
-
   }
 }

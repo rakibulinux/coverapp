@@ -108,6 +108,19 @@ export class PublicController {
       return error;
     }
   }
+
+  update_ticker_price(market: string, price: string) {
+    const fPrice = Number(price);
+    const fLow = Number(this.tickers[market].low);
+    const fHigh = Number(this.tickers[market].high);
+
+    this.tickers[market].last = price;
+    if (fPrice < fLow) {
+      this.tickers[market].low = price;
+    } else if (fPrice > fHigh) {
+      this.tickers[market].high = price;
+    }
+  }
 }
 
 export interface PublicController extends GettersSetters {

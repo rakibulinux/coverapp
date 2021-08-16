@@ -143,7 +143,7 @@ class ZSocket {
         }
 
         if (tradesMatch) {
-          for (const trade of (event.trades as ZTypes.PublicTrade[])) {
+          for (const trade of (event.trades.reverse() as ZTypes.PublicTrade[])) {
             TradeController.add_trade(trade);
 
             TradeController.tradingview.add_update_chart({
