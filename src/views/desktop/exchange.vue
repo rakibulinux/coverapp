@@ -1,5 +1,5 @@
 <template>
-  <div :key="identifier" class="page-exchange" :class="TradeController.exchange_layout">
+  <div :key="identifier" class="page-exchange" :class="[TradeController.exchange_layout, { 'hide-pairs-table': hide_pairs_table }]">
     <TickerStatus
       :button-hide-market-list="TradeController.exchange_layout == 'basic'"
       :hide_pairs_table="hide_pairs_table"
@@ -8,7 +8,7 @@
     <OrderBook />
     <Chart />
     <TradeAction />
-    <MarketList />
+    <MarketList v-if="!hide_pairs_table && TradeController.exchange_layout == 'pro' || TradeController.exchange_layout == 'basic'" />
     <z-card v-if="TradeController.exchange_layout == 'basic'" v-model="trades_tab_active_key" class="trades" :tab-list="tradesTabList">
       <MarketTrades :loading="loading" v-show="trades_tab_active_key == 'market_trades'" />
       <MyTrades v-show="trades_tab_active_key == 'my_trades'" />
@@ -109,6 +109,14 @@ export default class PageExchangePro extends Mixins(ExchangeBaseMixin) {
         "trade-pairs chart orderbook trades"
         "trade-pairs chart trade-action trade-action"
         "trade-pairs mine-control trade-action trade-action";
+
+    &.hide-pairs-table {
+      grid-template-areas:
+        "ticker ticker orderbook trades"
+        "chart chart orderbook trades"
+        "chart chart trade-action trade-action"
+        "mine-control mine-control trade-action trade-action";
+    }
   }
 }
 
