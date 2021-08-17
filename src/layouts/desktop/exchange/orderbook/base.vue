@@ -29,7 +29,7 @@
         <depth-book ref="depth-asks" side="asks" />
         <div class="ticker-book">
           <div class="now-price" :class="getLastTrend()">
-            {{ getLastPrice() }}
+            {{ ticker.last }}
             <em class="price_usd">≈ {{ getPrice_USD() }} USD</em>
             <span class="change">{{ getChange() }}</span>
           </div>
@@ -74,16 +74,12 @@ export default class App extends Vue {
     return TradeController.market;
   }
 
-  get ticker() {
+  get ticker () {
     return TradeController.ticker;
   }
 
   getLastTrend() {
     return helpers.getMarketPriceChange() >= 0 ? "text-up" : "text-down";
-  }
-
-  getLastPrice() {
-    return helpers.getMarketLastPrice();
   }
 
   getPrice_USD() {
