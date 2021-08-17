@@ -14,6 +14,8 @@ const configWebPack = {
   publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
   chainWebpack: config => {
     config.plugins.delete("prefetch");
+    config.plugins.delete('pwa');
+    config.plugins.delete('workbox');
   },
   css: {
     loaderOptions: {
