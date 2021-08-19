@@ -1,7 +1,8 @@
 import { PublicController, UserController, TradeController } from '@/controllers';
 import ZSmartModel from "@zsmartex/z-eventbus";
-import * as helpers from "@zsmartex/z-helpers";
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
+import { IsMobile } from "@/mixins";
+import * as helpers from "@zsmartex/z-helpers";
 
 @Component
 export class TradeActionMixin extends Vue {
@@ -35,23 +36,23 @@ export class TradeActionMixin extends Vue {
   }
 
   get min_amount() {
-    return helpers.minAmount();
+    return Number(this.market.min_amount);
   }
 
   get min_price() {
-    return helpers.minPrice();
+    return Number(this.market.min_price);
   }
 
   get price_precision() {
-    return helpers.pricePrecision();
+    return this.market.price_precision;
   }
 
   get amount_precision() {
-    return helpers.amountPrecision();
+    return this.market.amount_precision;
   }
 
   get total_precision() {
-    return helpers.totalPrecision();
+    return this.market.total_precision;
   }
 
   get total() {
@@ -228,7 +229,7 @@ export class TradeActionMixin extends Vue {
 
   async create_order() {
     if (!this.authorized) {
-      if (helpers.isMobile()) {
+      if (IsMobile()) {
         ZSmartModel.emit("need-login");
       }
 

@@ -8,9 +8,8 @@ import store from "./store";
 import GettersSetters from "./getters_setters";
 import config from '@/config';
 import { PublicController } from '..';
-import { runNotice } from "@/mixins";
+import { IsMobile, runNotice } from "@/mixins";
 import TradingView from "./tradingview";
-import * as helpers from "@zsmartex/z-helpers";
 import router from '@/router';
 
 export class TradeController {
@@ -36,7 +35,7 @@ export class TradeController {
     localStorage.setItem("market", this.market.id);
     if (["/exchange", "/m/exchange"].includes(router.currentRoute.path)) return;
 
-    if (helpers.isMobile()) {
+    if (IsMobile()) {
       router.push({ path: "/m/exchange", query: { type: side } });
     } else {
       router.push({ name: "ExchangePage", params: { name: this.market.name.replace("/", "-") }, query: { type: exchange_layout } });

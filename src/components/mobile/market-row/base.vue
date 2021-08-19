@@ -30,7 +30,6 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
 import { MarketMixin } from "@/mixins/mobile";
 import { Mixins, Component, Prop } from "vue-property-decorator";
 
@@ -38,8 +37,8 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
 export default class MarketRow extends Mixins(MarketMixin) {
   @Prop() readonly market_id!: string;
 
-  getLastPriceUSD(market, last) {
-    return helpers.getTickerPriceUSD(market, last);
+  getLastPriceUSD(market_id: string, last) {
+    return this.helpers.TickerToUSD(market_id, last);
   }
 }
 </script>

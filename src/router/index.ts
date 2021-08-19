@@ -6,8 +6,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import routes from "./routes";
 import { PublicController, TradeController, UserController } from "@/controllers";
-import { isMobile } from "@zsmartex/z-helpers";
-import { runNotice } from "@/mixins";
+import { IsMobile } from "@/mixins";
 
 Vue.use(Router);
 
@@ -107,9 +106,9 @@ router.beforeEach(async (to, from, next) => {
   if (
     UserController.state == "pending" &&
     !to.matched.some(record => record.meta.requiresAuthStatePending) &&
-    !isMobile()
+    !IsMobile()
   ) {
-    if (!isMobile()) {
+    if (!IsMobile()) {
       next("/confirmation/email");
     }
   } else if (
@@ -118,7 +117,7 @@ router.beforeEach(async (to, from, next) => {
   ) {
     next("/");
   } else if (
-    helpers.isMobile() &&
+    IsMobile() &&
     !to.matched.some(record => record.meta.mobile)
   ) {
     next("/m");
@@ -128,7 +127,7 @@ router.beforeEach(async (to, from, next) => {
     to.matched.some(record => record.meta.requiresAuth) &&
     !(UserController.state == "active")
   ) {
-    if (helpers.isMobile()) {
+    if (IsMobile()) {
       if (from.path === "/") {
         next("/m");
 

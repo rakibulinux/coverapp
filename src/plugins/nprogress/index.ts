@@ -1,4 +1,4 @@
-import * as helpers from "@zsmartex/z-helpers";
+import { IsMobile } from "@/mixins";
 import NProgress from "accessible-nprogress";
 
 NProgress.settings.template = `
@@ -9,12 +9,12 @@ NProgress.settings.template = `
 
 export const initProgress = router => {
   router.beforeEach((to, from, next) => {
-    if (helpers.isMobile()) return next();
+    if (IsMobile()) return next();
     NProgress.start();
     return next();
   });
   router.afterEach(() => {
-    if (helpers.isMobile()) return;
+    if (IsMobile()) return;
     setTimeout(() => {
       NProgress.done();
     }, 100);

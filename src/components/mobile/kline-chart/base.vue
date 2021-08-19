@@ -6,7 +6,6 @@
 import colors from "@/colors";
 import ApiClient from "@zsmartex/z-apiclient";
 import uuid from "uuid/v4";
-import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { init, Chart, KLineData } from "klinecharts";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
@@ -20,12 +19,8 @@ export default class KlineChart extends Vue {
   element_id = uuid();
   old_load_more_time = new Date().getTime();
 
-  get price_precision() {
-    return helpers.pricePrecision(this.market_id);
-  }
-
-  get amount_precision() {
-    return helpers.amountPrecision(this.market_id);
+  get market() {
+    return this.PublicController.markets.find(market => market.id == this.market_id)
   }
 
   mounted() {
@@ -55,8 +50,8 @@ export default class KlineChart extends Vue {
     })
 
     this.chart.setPriceVolumePrecision(
-      this.price_precision,
-      this.amount_precision > 2 ? 2 : this.amount_precision
+      this.market.price_precision,
+      this.market.amount_precision > 2 ? 2 : this.market.amount_precision
     );
 
     this.chart.setStyleOptions({

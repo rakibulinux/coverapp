@@ -1,13 +1,11 @@
 import router from "@/router";
 import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
 import Vue from "vue";
 import store from "./store";
 import GettersSetters from "./getters_setters";
 import { applyMixins } from '../mixins';
 import ZSmartModel from "@zsmartex/z-eventbus";
-import { runNotice } from "@/mixins";
-import { isMobile } from "@zsmartex/z-helpers";
+import { IsMobile, runNotice } from "@/mixins";
 import { TradeController } from "..";
 
 export class UserController {
@@ -25,7 +23,7 @@ export class UserController {
     ZSmartModel.on("user/LOGOUT", () => {
       this.auth_error();
 
-      if (helpers.isMobile()) {
+      if (IsMobile()) {
         if (router.currentRoute.fullPath != "/m") router.push({ path: "/m" });
       } else {
         if (router.currentRoute.fullPath != "/") router.push({ path: "/" });
@@ -76,7 +74,7 @@ export class UserController {
         return
       }
 
-      if (!isMobile()) {
+      if (!IsMobile()) {
         this.auth_success(data, "login", data.state == "active" ? url_callback : "/confirmation/email");
       } else {
         this.auth_success(data, "login");
@@ -115,7 +113,7 @@ export class UserController {
       this.session.sended_email = true;
       runNotice("warning", "email.created");
 
-      if (isMobile()) return;
+      if (IsMobile()) return;
 
       router.push("/confirmation/email");
     } catch (error) {

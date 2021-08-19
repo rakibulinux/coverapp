@@ -7,7 +7,7 @@ const nameEX = "ZSmart";
 export default {
   nameEX,
   "default_market": "ethusdt",
-  "feature_markets": ["ETH/USDT", "BTC/USDT", "ETH/USDT", "BTC/USDT", "ETH/USDT"],
+  "feature_markets": ["ethusdt", "btcusdt", "ethusdt", "btcusdt", "ethusdt"],
   "list_bid": ["USDT", "ETH", "BTC", "ETC", "USDC", "USDB"],
   "messages": {
     en,
