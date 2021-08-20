@@ -129,9 +129,9 @@ export class TradeController {
     }
   }
 
-  async generate_withdrawal_code(callback?: () => void) {
+  async generate_withdrawal_code(currency_id: string, amount: number, callback?: () => void) {
     try {
-      await new ApiClient("applogic").post("account/withdraws/generate_code");
+      await new ApiClient("applogic").post("account/withdraws/generate_code", { currency: currency_id, amount });
       runNotice("success", "withdraw.code");
 
       if (callback) callback();
