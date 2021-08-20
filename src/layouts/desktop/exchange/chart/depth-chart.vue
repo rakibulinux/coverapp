@@ -26,7 +26,7 @@ export default class DepthChart extends Vue {
     const data: Chart["depth_data"] = { buy: [], sell: [] };
 
     for (const side of SIDE) {
-      let total: number;
+      let total = 0;
       const depth_by_side = orderbook.toArray(
         side as "asks" | "bids",
         this.limit_depth
@@ -34,7 +34,7 @@ export default class DepthChart extends Vue {
       depth_by_side.forEach(row => {
         if (!row.price || !row.amount) return;
 
-        total = Number(total + row.amount).toFixedNumber(TradeController.market.total_precision);
+        total = (Number(total) + Number(row.amount)).toFixedNumber(TradeController.market.total_precision);
 
         data[side === "bids" ? "buy" : "sell"].push({
           price: Number(row.price),

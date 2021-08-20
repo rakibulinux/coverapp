@@ -71,9 +71,8 @@
 </template>
 
 <script lang="ts">
-import { PublicController } from "@/controllers";
 import { MarketMixin } from "@/mixins/mobile";
-import { Vue, Component, Prop, Mixins } from "vue-property-decorator";
+import { Component, Prop, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {

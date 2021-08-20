@@ -85,7 +85,7 @@ const configWebPack = {
   devServer: {
     proxy: {
       "^/api": {
-        target: "https://test.zsmartex.tech/",
+        target: "https://www.hypecoinexchange.com/",
         secure: false,
         ws: true,
         changeOrigin: true,
