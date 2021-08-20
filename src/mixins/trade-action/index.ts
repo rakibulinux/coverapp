@@ -144,9 +144,9 @@ export class TradeActionMixin extends Vue {
     ZSmartModel.remove("depth-click", this.on_book_click);
   }
 
-  on_book_click(price: number, amount: number) {
-    this.price = price.toString();
-    this.amount = amount.toString();
+  on_book_click(price: string, amount: string) {
+    this.price = price;
+    this.amount = amount;
   }
 
   currency_by_side(side) {
@@ -158,7 +158,7 @@ export class TradeActionMixin extends Vue {
   }
 
   amount_with_balance(default_price = true) {
-    let price = Number(this.price);
+    const price = Number(this.price);
     const amount = Number(this.amount);
     const available = this.assets.available;
     if (!amount) {
@@ -169,9 +169,8 @@ export class TradeActionMixin extends Vue {
       const best_price = TradeController.get_best_price(this.side);
 
       if (!best_price) return;
-      price = best_price;
       if (default_price) {
-        this.price = price.toString();
+        this.price = best_price;
       }
     }
 

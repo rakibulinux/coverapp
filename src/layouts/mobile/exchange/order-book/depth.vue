@@ -34,8 +34,7 @@
 
 <script lang="ts">
 import { TradeController } from "@/controllers";
-import store from "@/store";
-import { Vue, Component, Prop, Mixins } from "vue-property-decorator";
+import { Component, Prop, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import { MarketMixin } from "@/mixins/mobile";
@@ -62,7 +61,7 @@ export default class MarketDepth extends Mixins(MarketMixin) {
   get maxTotal() {
     let total = 0;
     this.depth.forEach(row => {
-      total += Number(row.price * row.amount);
+      total += Number(row.price) * Number(row.amount);
     });
 
     return total;
@@ -84,11 +83,11 @@ export default class MarketDepth extends Mixins(MarketMixin) {
     return helpers.trendType(type);
   }
 
-  on_depth_clicked(order: { price: number; amount: number }) {
+  on_depth_clicked(order: { price: string; amount: string }) {
     const price = order.price;
     const orders = this.depth;
     const index = orders.findIndex(ord => ord.price === order.price);
-    let orders_with_range: { price: number; amount: number }[];
+    let orders_with_range: { price: string; amount: string }[];
 
     if (index < 0) return;
 
@@ -104,7 +103,7 @@ export default class MarketDepth extends Mixins(MarketMixin) {
 
     const amount = orders_with_range
       .map(order => order.amount)
-      .reduce((previousValue, currentValue) => previousValue + currentValue);
+      .reduce((previousValue, currentValue) => (Number(previousValue) + Number(currentValue)).toFixed(this.market.amount_precision));
 
     ZSmartModel.emit("depth-click", price, amount);
   }

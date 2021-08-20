@@ -21,8 +21,6 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
-import config from "@/config";
 import { Mixins, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import { MarketMixin } from "@/mixins/mobile";
@@ -58,10 +56,6 @@ export default class PageExchange extends Mixins(MarketMixin) {
     MarketChannels(this.market.id).forEach(channel => {
       this.WebSocketController.subscribe("public", channel);
     });
-  }
-
-  setTitle() {
-    document.title = `${helpers.getMarketLastPrice()} - ${(this.TradeController.market.name).toUpperCase()} - ${config.nameEX}`;
   }
 }
 </script>

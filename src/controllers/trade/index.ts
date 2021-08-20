@@ -60,6 +60,16 @@ export class TradeController {
     try {
       const { data } = await new ApiClient("trade").get("public/markets/" + market_id + "/trades", { limit: limit });
 
+      const market = PublicController.markets.find(market => market.id === market_id);
+
+      data.map(trade => {
+        trade.price = trade.price.toFixed(market.price_precision);
+        trade.amount = trade.amount.toFixed(market.amount_precision);
+        trade.total = trade.total.toFixed(market.total_precision);
+
+        return trade;
+      })
+
       this.trades = data;
     } catch (error) {
       return error;

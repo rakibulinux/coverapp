@@ -1,3 +1,4 @@
+import config from '@/config';
 import { PublicController, TradeController } from '@/controllers';
 import * as helpers from "@zsmartex/z-helpers";
 import { Component, Vue } from "vue-property-decorator";
@@ -81,5 +82,11 @@ export class MarketMixin extends Vue {
 
   trendType(type) {
     return helpers.trendType(type);
+  }
+
+  setTitle() {
+    document.title = `${this.TradeController.ticker.last} - ${TradeController.market.name.toUpperCase()} - ${
+      config.nameEX
+    }`;
   }
 }
