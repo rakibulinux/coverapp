@@ -1,7 +1,7 @@
-import { isMobile } from "@zsmartex/z-helpers";
 import { notification } from "@/plugins/antd/custom";
 import VueI18n, { TranslateResult } from "vue-i18n";
 import { i18n } from "@/plugins";
+import { IsMobile } from "./helpers";
 
 export function EncryptEmail(email: string) {
   if (!email) return;
@@ -17,9 +17,9 @@ export const runNotice = (type: ZTypes.NoticeType | "t-success" | "t-info" | "t-
   if (!message) return;
 
   if (type.includes("t-")) {
-    return notification[type.replace("t-", "")]({ message: message, placement: isMobile() ? "bottomCenter" : "topRight" });
+    return notification[type.replace("t-", "")]({ message: message, placement: IsMobile() ? "bottomCenter" : "topRight" });
   } else {
-    return notification[type]({ message: i18n.t(`${type}.${message}`, config), placement: isMobile() ? "bottomCenter" : "topRight" });
+    return notification[type]({ message: i18n.t(`${type}.${message}`, config), placement: IsMobile() ? "bottomCenter" : "topRight" });
   }
 };
 
@@ -49,6 +49,8 @@ export const assets_state_color = (state: string) => {
   if (warning_state.includes(state)) return "color-warning";
   if (error_state.includes(state)) return "color-error";
 }
+
+export * from "./helpers";
 
 export * from "./auth_mixin";
 export * from "./market_channels";

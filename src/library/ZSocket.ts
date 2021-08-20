@@ -116,10 +116,10 @@ class ZSocket {
               if (!payload[side].length) return;
 
               payload[side].forEach((order: string[]) => {
-                const order_price = Number(order[0]);
-                const order_amount = Number(order[1]);
+                const order_price = order[0];
+                const order_amount = order[1];
 
-                if (order_amount > 0) {
+                if (Number(order_amount) > 0) {
                   orderbook.add(order_price, order_amount, side);
                 } else {
                   orderbook.remove(order_price, side);
@@ -130,13 +130,20 @@ class ZSocket {
            (["asks", "bids"]).forEach((side: ZTypes.TakerType) => {
               if (!payload[side]) return;
 
-              const order_price = Number(payload[side][0]);
-              const order_amount = Number(payload[side][1]);
+              const order_price = payload[side][0];
+              const order_amount = payload[side][1];
 
-              if (order_amount > 0) {
-                orderbook.add(order_price, order_amount, side);
+              if (Number(order_amount) > 0) {
+                orderbook.add(
+                  order_price as unknown as string,
+                  order_amount as unknown as string,
+                  side
+                );
               } else {
-                orderbook.remove(order_price, side);
+                orderbook.remove(
+                  order_price as unknown as string,
+                  side
+                );
               }
             })
           }

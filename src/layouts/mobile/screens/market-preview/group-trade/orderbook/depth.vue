@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { PublicController, TradeController } from "@/controllers";
+import { TradeController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
 import { MarketMixin } from "@/mixins/mobile";
 import { Mixins, Component, Prop } from "vue-property-decorator";
@@ -55,7 +55,7 @@ export default class Depth extends Mixins(MarketMixin) {
   get maxTotal() {
     let total = 0;
     this.depth.forEach(row => {
-      total += Number(row.price * row.amount);
+      total += Number(row.price) * Number(row.amount);
     });
 
     return total;

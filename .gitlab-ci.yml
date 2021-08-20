@@ -3,9 +3,7 @@ build:
   stage: build
   services:
     - docker:19.03.12-dind
-  variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $IMAGE_TAG --build-arg NPM_TOKEN=${NPM_TOKEN} .
-    - docker push $IMAGE_TAG
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+    - docker build -t zsmartex/coverapp --build-arg NPM_TOKEN=${NPM_TOKEN} .
+    - docker push zsmartex/coverapp

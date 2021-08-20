@@ -7,7 +7,7 @@ const nameEX = "Welcome XUM Exchange";
 export default {
   nameEX,
   "default_market": "xumusdt",
-  "feature_markets": ["XUM/USDT", "XUM/ETH", "XUM/BTC"],
+  "feature_markets": ["xumusdt", "xumeth", "xumbtc"],
   "list_bid": ["ETH", "BTC", "USDT"],
   "messages": {
     en
@@ -25,7 +25,7 @@ export default {
   "recaptcha": {
     sitekey: "6LcZRoEbAAAAAHU1DDilkyAm2NLH7qAHGy3TroGV",
   },
-  "timeZone": "UTC",
+  "timeZone": Intl.DateTimeFormat().resolvedOptions().timeZone,
   "SESSION_KEY": "ALLOW-ALL", // For use on exchange
   /** default **/
   "titlePage.default": `XUM Exchange | Cryptocurrency Exchange | ${nameEX}`,

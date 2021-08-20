@@ -1,21 +1,25 @@
 <template>
   <a-layout
-    v-if="page_ready"
     :class="{
       night: $route.path.includes('/exchange'),
       'no-border': $route.path.includes('/exchange')
     }"
   >
-    <header-exchange v-if="!isMobile" />
-    <router-view />
-    <auth-login-screen v-if="isMobile" ref="auth-login-screen" />
-    <auth-confirm-email-screen
-      v-if="isMobile"
-      ref="auth-confirm-email-screen"
-    />
-    <tab-bar v-if="isMobile" />
+    <template v-if="page_ready">
+      <HeaderExchange v-if="!helpers.IsMobile()" />
+      <router-view />
+      <MobileLoginScreen v-if="helpers.IsMobile()" ref="auth-login-screen" />
+      <MobileConfirmEmailScreen
+        v-if="helpers.IsMobile()"
+        ref="auth-confirm-email-screen"
+      />
+      <TabBar v-if="helpers.IsMobile()" />
 
-    <footer-exchange v-if="!($route.name == 'ExchangePage' && exchange_layout == 'pro') && !isMobile" />
+      <FooterExchange v-if="!($route.name == 'ExchangePage' && exchange_layout == 'pro') && !helpers.IsMobile()" />
+    </template>
+    <transition name="loading-move">
+      <LoadingPage v-if="!page_ready" />
+    </transition>
   </a-layout>
 </template>
 
@@ -23,31 +27,31 @@
 import config from "@/config";
 import setTheme from "@/library/setTheme";
 import ZSmartModel from "@zsmartex/z-eventbus";
-import * as helpers from "@zsmartex/z-helpers";
-import { Vue, Component, Watch } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 import colors from "@/colors";
 import { PublicController } from "./controllers";
 import { wait_and_callback } from "@/mixins";
+import LoadingPage from "@/layouts/loading-page.vue";
+import HeaderExchange from "@/layouts/desktop/_header.vue";
+import FooterExchange from "@/layouts/desktop/_footer.vue";
+import TabBar from "@/layouts/mobile/_tab_bar.vue";
+import MobileLoginScreen from "@/views/mobile/screens/auth/login";
+import MobileConfirmEmailScreen from "@/views/mobile/screens/auth/confirm_email"
 
 @Component({
   components: {
-    "header-exchange": () => import("@/layouts/desktop/_header.vue"),
-    "footer-exchange": () => import("@/layouts/desktop/_footer.vue"),
-    "panel-view": () => import("@/components/mobile/panel-view.vue"),
-    "tab-bar": () => import("@/layouts/mobile/_tab_bar.vue"),
-    "loading-page": () => import("@/layouts/loading-page.vue"),
-    "auth-login-screen": () => import("@/views/mobile/screens/auth/login"),
-    "auth-confirm-email-screen": () => import("@/views/mobile/screens/auth/confirm_email")
+    HeaderExchange,
+    FooterExchange,
+    LoadingPage,
+    TabBar,
+    MobileLoginScreen,
+    MobileConfirmEmailScreen
   }
 })
 export default class App extends Vue {
   public $refs!: {
     [key: string]: any;
   };
-
-  get isMobile() {
-    return helpers.isMobile();
-  }
 
   get page_ready() {
     return PublicController.page_ready;
@@ -74,16 +78,9 @@ export default class App extends Vue {
   }
 
   mounted() {
-    (window as any).coverapp_version = "1.0.1-beta";
-    (window as any).helpers = helpers;
-    (window as any).ZSmartModel = ZSmartModel;
-    (window as any).PublicController = this.PublicController;
-    (window as any).TradeController = this.TradeController;
-    (window as any).UserController = this.UserController;
-
     this.setTheme();
 
-    if (this.isMobile) {
+    if (this.helpers.IsMobile()) {
       let first_time = true;
 
       document.body.classList.add("mobile-view");
@@ -120,11 +117,6 @@ export default class App extends Vue {
   setTheme() {
     new setTheme().setTheme(colors);
   }
-
-  @Watch("page_ready")
-  on_page_ready(page_ready: boolean) {
-    if (page_ready) document.querySelector("body>.page-loading").remove();
-  }
 }
 </script>
 
@@ -132,4 +124,16 @@ export default class App extends Vue {
 //TODO: move this less file to another file vue
 
 @import "~@/assets/css/themes/mobile/index";
+
+
+.loading-move {
+  &-leave-active {
+    transform: translate(100%, 0);
+  }
+
+  &-enter-active,
+  &-leave-active {
+    transition: transform 0.3s;
+  }
+}
 </style>

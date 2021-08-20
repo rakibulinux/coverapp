@@ -1,7 +1,6 @@
 import { Vue, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import ZSmartModel from "@zsmartex/z-eventbus";
-import * as helpers from "@zsmartex/z-helpers";
 import config from "@/config";
 
 @Component
@@ -52,7 +51,7 @@ export class ExchangeBaseMixin extends Vue {
   }
 
   setTitle() {
-    document.title = `${helpers.getMarketLastPrice()} - ${this.TradeController.market.name.toUpperCase()} - ${
+    document.title = `${this.TradeController.ticker.last} - ${this.TradeController.market.name.toUpperCase()} - ${
       config.nameEX
     }`;
   }

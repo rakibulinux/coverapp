@@ -66,7 +66,7 @@ export default class MarketDepth extends Vue {
   get maxSum() {
     let total = 0;
     this.depth().forEach(row => {
-      total += Number(row.price * row.amount);
+      total += Number(row.price) * Number(row.amount);
     });
 
     return total;
@@ -80,16 +80,15 @@ export default class MarketDepth extends Vue {
 
   depth() {
     let depth = this.orderbook.toArray(this.side);
-    depth = depth.filter(order => order.price > 0 && order.amount > 0);
     depth = depth.splice(0, 35);
 
     return this.side === "bids" ? depth : depth.reverse();
   }
 
-  orders_best_range(order_price: number) {
+  orders_best_range(order_price: string) {
     const orders = this.depth();
     const index = orders.findIndex(ord => ord.price === order_price);
-    let orders_with_range: { price: number; amount: number }[];
+    let orders_with_range: { price: string; amount: string }[];
 
     if (index < 0) return;
 
@@ -106,7 +105,7 @@ export default class MarketDepth extends Vue {
     return orders_with_range;
   }
 
-  on_depth_clicked(order: { price: number; amount: number }) {
+  on_depth_clicked(order: { price: string; amount: string }) {
     const price = order.price;
     const orders_with_range = this.orders_best_range(order.price);
 
@@ -115,7 +114,7 @@ export default class MarketDepth extends Vue {
       price,
       orders_with_range
         .map(order => order.amount)
-        .reduce((previousValue, currentValue) => previousValue + currentValue)
+        .reduce((previousValue, currentValue) => (Number(previousValue) + Number(currentValue)).toFixed(this.market.amount_precision))
     );
   }
 

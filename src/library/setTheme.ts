@@ -1,5 +1,5 @@
 export default class setTheme {
-  element: HTMLBodyElement = document.querySelector("body");
+  element: HTMLElement = document.querySelector("html");
 
   set(prop, val) {
     return this.element.style.setProperty(prop, val);

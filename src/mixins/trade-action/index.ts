@@ -1,7 +1,8 @@
 import { PublicController, UserController, TradeController } from '@/controllers';
 import ZSmartModel from "@zsmartex/z-eventbus";
-import * as helpers from "@zsmartex/z-helpers";
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
+import { IsMobile } from "@/mixins";
+import * as helpers from "@zsmartex/z-helpers";
 
 @Component
 export class TradeActionMixin extends Vue {
@@ -35,23 +36,23 @@ export class TradeActionMixin extends Vue {
   }
 
   get min_amount() {
-    return helpers.minAmount();
+    return Number(this.market.min_amount);
   }
 
   get min_price() {
-    return helpers.minPrice();
+    return Number(this.market.min_price);
   }
 
   get price_precision() {
-    return helpers.pricePrecision();
+    return this.market.price_precision;
   }
 
   get amount_precision() {
-    return helpers.amountPrecision();
+    return this.market.amount_precision;
   }
 
   get total_precision() {
-    return helpers.totalPrecision();
+    return this.market.total_precision;
   }
 
   get total() {
@@ -143,9 +144,9 @@ export class TradeActionMixin extends Vue {
     ZSmartModel.remove("depth-click", this.on_book_click);
   }
 
-  on_book_click(price: number, amount: number) {
-    this.price = price.toString();
-    this.amount = amount.toString();
+  on_book_click(price: string, amount: string) {
+    this.price = price;
+    this.amount = amount;
   }
 
   currency_by_side(side) {
@@ -157,7 +158,7 @@ export class TradeActionMixin extends Vue {
   }
 
   amount_with_balance(default_price = true) {
-    let price = Number(this.price);
+    const price = Number(this.price);
     const amount = Number(this.amount);
     const available = this.assets.available;
     if (!amount) {
@@ -168,9 +169,8 @@ export class TradeActionMixin extends Vue {
       const best_price = TradeController.get_best_price(this.side);
 
       if (!best_price) return;
-      price = best_price;
       if (default_price) {
-        this.price = price.toString();
+        this.price = best_price;
       }
     }
 
@@ -228,7 +228,7 @@ export class TradeActionMixin extends Vue {
 
   async create_order() {
     if (!this.authorized) {
-      if (helpers.isMobile()) {
+      if (IsMobile()) {
         ZSmartModel.emit("need-login");
       }
 

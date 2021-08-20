@@ -11,6 +11,7 @@ import(/* webpackPreload: true */ "@/assets/css/loading.scss");
 import { PublicController, TradeController, WebSocketController, UserController } from "@/controllers";
 import Fragment from "@grainrigi/vue-fragment";
 import Wave from "./library/wave";
+import * as helpers from "@/mixins/helpers";
 
 Vue.use(Fragment.Plugin)
 Vue.use(Vue2TouchEvents);
@@ -25,10 +26,11 @@ Vue.prototype.PublicController = PublicController;
 Vue.prototype.TradeController = TradeController;
 Vue.prototype.UserController = UserController;
 Vue.prototype.WebSocketController = WebSocketController;
+Vue.prototype.helpers = helpers;
 
 new Vue({
   store,
   i18n,
   router,
   render: (h) => h(App),
-}).$mount("#body-content");
+}).$mount("#app");

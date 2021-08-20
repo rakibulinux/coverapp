@@ -8,12 +8,12 @@ export interface Store {
 	market?: ZTypes.Market;
 	depth: {
 		asks: {
-			price: number,
-			amount: number
+			price: string,
+			amount: string
 		}[];
 		bids: {
-			price: number,
-			amount: number
+			price: string,
+			amount: string
 		}[];
 		loading: boolean;
 		sequence: number;

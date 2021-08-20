@@ -5,14 +5,19 @@ import config from "@/config";
 export default abstract class OrdersController {
   async create_order(market_id: string, side: ZTypes.OrderSide, ord_type: ZTypes.OrdType = "limit", price: number | null, stop_price: number | null, amount: number): Promise<ZTypes.Order> {
     try {
-      const response = await new ApiClient(config.finex ? "finex" : "trade").post("market/orders", {
+      const payload = {
         market: market_id,
         ord_type: ord_type,
         side: side,
         price: price,
         stop_price: stop_price,
         volume: amount
-      });
+      }
+      if (ord_type == "market") {
+        delete payload.price
+        delete payload.stop_price
+      }
+      const response = await new ApiClient(config.finex ? "finex" : "trade").post("market/orders", payload);
       runNotice("success", "order.created");
 
       return response.data;

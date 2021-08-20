@@ -102,7 +102,6 @@ export default class DataFeed implements TradingView.IBasicDataFeed {
       lastBar: history[symbolInfo.name].lastBar,
       listener: onRealtimeCallback
     };
-    console.log(newSub)
     TradeController.tradingview.stream = newSub;
   }
 

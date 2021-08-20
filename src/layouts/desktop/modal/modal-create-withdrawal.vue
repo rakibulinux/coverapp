@@ -108,6 +108,8 @@ export default class ModalCreateithdrawal extends Mixins(
     this.loading_resend = true;
 
     await this.TradeController.generate_withdrawal_code(
+      this.currency.id,
+      Number(this.amount),
       () => {
         this.start_cooldown();
       }

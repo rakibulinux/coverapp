@@ -34,11 +34,11 @@ export default class DepthChart extends Vue {
       depth_by_side.forEach(row => {
         if (!row.price || !row.amount) return;
 
-        total = Number(total + row.amount).toFixedNumber(4);
+        total = (Number(total) + Number(row.amount)).toFixedNumber(TradeController.market.total_precision);
 
         data[side === "bids" ? "buy" : "sell"].push({
-          price: row.price,
-          volume: row.amount,
+          price: Number(row.price),
+          volume: Number(row.amount),
           total
         });
       });

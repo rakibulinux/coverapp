@@ -8,9 +8,8 @@ import store from "./store";
 import GettersSetters from "./getters_setters";
 import config from '@/config';
 import { PublicController } from '..';
-import { runNotice } from "@/mixins";
+import { IsMobile, runNotice } from "@/mixins";
 import TradingView from "./tradingview";
-import * as helpers from "@zsmartex/z-helpers";
 import router from '@/router';
 
 export class TradeController {
@@ -36,7 +35,7 @@ export class TradeController {
     localStorage.setItem("market", this.market.id);
     if (["/exchange", "/m/exchange"].includes(router.currentRoute.path)) return;
 
-    if (helpers.isMobile()) {
+    if (IsMobile()) {
       router.push({ path: "/m/exchange", query: { type: side } });
     } else {
       router.push({ name: "ExchangePage", params: { name: this.market.name.replace("/", "-") }, query: { type: exchange_layout } });
@@ -60,6 +59,16 @@ export class TradeController {
   async get_public_trades(market_id: string, limit = 100) {
     try {
       const { data } = await new ApiClient("trade").get("public/markets/" + market_id + "/trades", { limit: limit });
+
+      const market = PublicController.markets.find(market => market.id === market_id);
+
+      data.map(trade => {
+        trade.price = trade.price.toFixed(market.price_precision);
+        trade.amount = trade.amount.toFixed(market.amount_precision);
+        trade.total = trade.total.toFixed(market.total_precision);
+
+        return trade;
+      })
 
       this.trades = data;
     } catch (error) {
@@ -120,9 +129,9 @@ export class TradeController {
     }
   }
 
-  async generate_withdrawal_code(callback?: () => void) {
+  async generate_withdrawal_code(currency_id: string, amount: number, callback?: () => void) {
     try {
-      await new ApiClient("applogic").post("account/withdraws/generate_code");
+      await new ApiClient("applogic").post("account/withdraws/generate_code", { currency: currency_id, amount });
       runNotice("success", "withdraw.code");
 
       if (callback) callback();

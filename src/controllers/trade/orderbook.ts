@@ -39,8 +39,8 @@ export default class OrderBook {
 
       ["asks", "bids"].forEach((side: ZTypes.TakerType) => {
         depth[side].forEach(row => {
-          const price = Number(row[0]);
-          const amount = Number(row[1]);
+          const price = row[0];
+          const amount = row[1];
 
           this.add(price, amount, side);
         })
@@ -52,7 +52,7 @@ export default class OrderBook {
     }
   }
 
-  add(price: number, amount: number, side: ZTypes.TakerType) {
+  add(price: string, amount: string, side: ZTypes.TakerType) {
     if (this.loading) return;
     const index = this.book[side].findIndex(row => row.price === price);
     if (index >= 0) {
@@ -61,13 +61,13 @@ export default class OrderBook {
       this.book[side].push({ price, amount });
 
       this.book[side] = this.book[side].sort((a, b) => {
-        if (side == "asks") return a.price - b.price;
-        if (side == "bids") return b.price - a.price;
+        if (side == "asks") return Number(a.price) - Number(b.price);
+        if (side == "bids") return Number(b.price) - Number(a.price);
       });
     }
   }
 
-  remove(price: number, side: ZTypes.TakerType) {
+  remove(price: string, side: ZTypes.TakerType) {
     if (this.loading) return;
 
     const index = this.book[side].findIndex(row => row.price === price);

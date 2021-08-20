@@ -33,8 +33,6 @@ import TradeController from "@/controllers/trade";
 import { Component, Mixins } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
 import { ScreenMixin, MarketMixin } from "@/mixins/mobile";
-import * as helpers from "@zsmartex/z-helpers";
-import config from "@/config";
 import { WebSocketController } from "@/controllers";
 
 @Component({
@@ -79,12 +77,6 @@ export default class MarketPreviewScreen extends Mixins(
     MarketChannels(this.market.id).forEach(channel => {
       WebSocketController.unsubscribe("public", channel);
     });
-  }
-
-  setTitle() {
-    document.title = `${helpers.getMarketLastPrice()} - ${TradeController.market.name.toUpperCase()} - ${
-      config.nameEX
-    }`;
   }
 }
 </script>
