@@ -35,12 +35,12 @@ import { Mixins, Component, Prop } from "vue-property-decorator";
 @Component
 export default class DepthOverLay extends Mixins(MarketMixin) {
   @Prop() readonly side!: "asks" | "bids";
-  @Prop() readonly depth: { price: number; amount: number }[];
+  @Prop() readonly depth: { price: string; amount: string }[];
   @Prop() orders_best_range?: (
-    order_price: number
+    order_price: string
   ) => {
-    price: number;
-    amount: number;
+    price: string;
+    amount: string;
   }[];
 
   $refs!: {
@@ -71,15 +71,15 @@ export default class DepthOverLay extends Mixins(MarketMixin) {
     );
 
     const avg_price = this.getPrice(
-      orders_with_range.map(order => order.price).reduce((a, b) => a + b, 0) /
+      orders_with_range.map(order => order.price).reduce((a, b) => Number(a) + Number(b), 0) /
         orders_with_range.length
     );
     const sum_volume = this.getAmount(
-      orders_with_range.map(order => order.amount).reduce((a, b) => a + b, 0)
+      orders_with_range.map(order => order.amount).reduce((a, b) => Number(a) + Number(b), 0)
     );
     const sum_total = this.getTotal(
       orders_with_range
-        .map(order => order.price * order.amount)
+        .map(order => Number(order.price) * Number(order.amount))
         .reduce((a, b) => a + b, 0)
     );
 

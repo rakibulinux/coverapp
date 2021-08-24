@@ -12,6 +12,7 @@ import { PublicController, TradeController, WebSocketController, UserController 
 import Fragment from "@grainrigi/vue-fragment";
 import Wave from "./library/wave";
 import * as helpers from "@/mixins/helpers";
+import moment from "moment";
 
 Vue.use(Fragment.Plugin)
 Vue.use(Vue2TouchEvents);
@@ -34,3 +35,5 @@ new Vue({
   router,
   render: (h) => h(App),
 }).$mount("#app");
+
+global.moment = moment;

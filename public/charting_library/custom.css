@@ -6,7 +6,7 @@
 }
 
 .loading-indicator {
-	background-color: #1a243b;
+	background: #1a243b;
 }
 
 .chart-page [class^="labelRow-"], .chart-page [class^="icon-"] {
