@@ -92,8 +92,6 @@ export default class TradingView {
       resolution = 10080;
     }
 
-    console.log(payload)
-
     const coeff = resolution * 60;
     const rounded = Math.floor(payload.time / coeff) * coeff;
 

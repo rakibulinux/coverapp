@@ -114,7 +114,7 @@ export default class DepthOverLay extends Mixins(MarketMixin) {
     this.mask_style.height = `${
       this.side === "bids"
         ? DOMRect.height * ++index
-        : DOMRect.height * (this.depth.length - index - 1)
+        : DOMRect.height * (this.depth.length - index)
     }px`;
   }
 

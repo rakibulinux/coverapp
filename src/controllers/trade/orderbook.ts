@@ -54,7 +54,7 @@ export default class OrderBook {
 
   add(price: string, amount: string, side: ZTypes.TakerType) {
     if (this.loading) return;
-    const index = this.book[side].findIndex(row => row.price === price);
+    const index = this.book[side].findIndex(row => row.price == price);
     if (index >= 0) {
       this.book[side][index].amount = amount;
     } else {
@@ -70,13 +70,22 @@ export default class OrderBook {
   remove(price: string, side: ZTypes.TakerType) {
     if (this.loading) return;
 
-    const index = this.book[side].findIndex(row => row.price === price);
+    const index = this.book[side].findIndex(row => row.price == price);
 
     if (index >= 0) this.book[side].splice(index, 1);
   }
 
   toArray(side: ZTypes.TakerType, limit = 100) {
-    return this.book[side].slice(0, limit);
+    const orders = Array<{price: string; amount: string;}>();
+
+    this.book[side].slice(0, limit).forEach(order => {
+      orders.push({
+        price: order.price,
+        amount: order.amount
+      })
+    })
+
+    return orders;
   }
 
   clear() {
