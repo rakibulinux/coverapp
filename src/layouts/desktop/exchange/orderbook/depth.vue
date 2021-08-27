@@ -26,7 +26,7 @@
 import uuid from "uuid/v4";
 import TradeController from "@/controllers/trade";
 import DepthOverLay from "./depth-overlay.vue";
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import ZSmartModel from "@zsmartex/z-eventbus";
 import OrderBookTable from "@/library/orderbook-table";
 import colors from "@/colors";
@@ -139,21 +139,6 @@ export default class MarketDepth extends Vue {
     })
 
     this.table.init();
-
-    while (true) {
-      if (this.depth_destroy) {
-        break;
-      }
-
-      if (!this.orderbook.loading) {
-        this.drawDepth(this.cloneArray(this.depth));
-        await new Promise(resolve => setTimeout(resolve, 200));
-        this.start_depth_update();
-        break;
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
   }
 
   async start_depth_update() {
@@ -261,6 +246,14 @@ export default class MarketDepth extends Vue {
     )
 
     this.table.draw_table();
+  }
+
+  @Watch("orderbook.loading")
+  async onOrderbookLoadingChanged(loading: boolean) {
+    if (!loading) {
+      this.drawDepth(this.cloneArray(this.depth));
+      this.start_depth_update();
+    }
   }
 }
 </script>
