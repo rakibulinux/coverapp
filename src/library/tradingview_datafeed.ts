@@ -92,7 +92,6 @@ export default class DataFeed implements TradingView.IBasicDataFeed {
   }
 
   subscribeBars(symbolInfo, resolution, onRealtimeCallback, subscribeUID) {
-    TradeController.tradingview.stream = null;
     const channelString = createChannelString(symbolInfo);
     const newSub = {
       channelString,
