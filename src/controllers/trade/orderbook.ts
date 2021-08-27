@@ -46,9 +46,9 @@ export default class OrderBook {
         })
       })
     } catch (error) {
-      this.loading = false;
-
       return error;
+    } finally {
+      this.loading = false;
     }
   }
 

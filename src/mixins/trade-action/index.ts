@@ -146,7 +146,7 @@ export class TradeActionMixin extends Vue {
 
   on_book_click(price: string, amount: string) {
     this.price = price;
-    this.amount = amount;
+    this.amount = amount
   }
 
   currency_by_side(side) {

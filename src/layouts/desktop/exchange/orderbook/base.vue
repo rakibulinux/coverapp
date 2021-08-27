@@ -108,17 +108,12 @@ export default class App extends Vue {
     }
   }
 
-  .z-card {
-    &-head {
-
-    }
-  }
-
   .z-table {
     &-content {
       .depth {
         height: calc(50% - 20px);
         overflow-y: hidden;
+        overflow-x: hidden;
       }
 
       > div {

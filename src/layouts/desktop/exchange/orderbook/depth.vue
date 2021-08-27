@@ -1,27 +1,36 @@
 <template>
   <div class="depth" :class="side">
-    <a-spin v-if="loading" class="z-table-loading-wrapper">
-      <a-icon slot="indicator" type="loading" spin />
-    </a-spin>
+    <z-loading v-if="loading" />
     <depth-overlay
       ref="overlay"
-      :market="market"
       :side="side"
-      :depth="depth()"
+      :depth="depth"
       :orders_best_range="orders_best_range"
     />
-
-    <div :style="style">
-      <depth-row
-        v-for="(order, index) in depth()"
-        :key="`${side}-${index}`"
-        :side="side"
-        :max-sum="maxSum"
-        :market_id="market.id"
-        :order="order"
+    <v-stage :style="style" ref="stage" :config="{
+      width: 320,
+      height: depth.length * 20,
+    }">
+      <v-layer>
+        <depth-row
+          v-for="(order, index) in depth"
+          :key="`${side}-${index}`"
+          :side="side"
+          :index="index"
+          :max-sum="maxSum"
+          :market_id="market.id"
+          :order="order"
+          :ref="`depth-row-${index}`"
+        />
+      </v-layer>
+    </v-stage>
+    <div class="depth-hover" :style="style">
+      <depth-hover-row
+        v-for="(_, index) in count"
+        :key="index"
         :ref="`depth-row-${index}`"
-        @click="on_depth_clicked(order)"
-        @mouseover="on_depth_hover(side, index)"
+        @click="on_depth_clicked(index)"
+        @mouseover="on_depth_hover(index)"
         @mouseleave="on_depth_leave_hover()"
       />
     </div>
@@ -37,11 +46,14 @@ import ZSmartModel from "@zsmartex/z-eventbus";
 @Component({
   components: {
     "depth-row": () => import("./depth-row.vue"),
-    "depth-overlay": () => import("./depth-overlay.vue")
+    "depth-overlay": () => import("./depth-overlay.vue"),
+    "depth-hover-row": () => import("./depth-hover-row.vue")
   }
 })
 export default class MarketDepth extends Vue {
   @Prop() readonly side!: "asks" | "bids";
+
+  count = 50;
 
   $refs!: {
     overlay: DepthOverLay;
@@ -64,10 +76,19 @@ export default class MarketDepth extends Vue {
   }
 
   get maxSum() {
+    let i = 0;
     let total = 0;
-    this.depth().forEach(row => {
+    for (const row of this.depth) {
+      if ((row as any).fake) {
+        continue;
+      }
+
       total += Number(row.price) * Number(row.amount);
-    });
+      i++
+      if (i >= 35) {
+        break;
+      }
+    }
 
     return total;
   }
@@ -78,16 +99,25 @@ export default class MarketDepth extends Vue {
       : "position: absolute;width: 100%;bottom: 0;";
   }
 
-  depth() {
-    let depth = this.orderbook.toArray(this.side);
-    depth = depth.splice(0, 35);
+  get depth() {
+    let depth: any = this.orderbook.toArray(this.side);
+    depth = depth.slice(0, this.count);
+    const depth_size = depth.length;
+
+    for (let index = 0; index <= this.count - depth_size; index++) {
+      depth.push({
+        fake: true,
+      })
+    }
 
     return this.side === "bids" ? depth : depth.reverse();
   }
 
-  orders_best_range(order_price: string) {
-    const orders = this.depth();
-    const index = orders.findIndex(ord => ord.price === order_price);
+  orders_best_range(index: number) {
+    const orders = this.depth.filter(row => !row.fake);
+
+    if (!orders.length) return [];
+
     let orders_with_range: { price: string; amount: string }[];
 
     if (index < 0) return;
@@ -105,9 +135,15 @@ export default class MarketDepth extends Vue {
     return orders_with_range;
   }
 
-  on_depth_clicked(order: { price: string; amount: string }) {
-    const price = order.price;
-    const orders_with_range = this.orders_best_range(order.price);
+  on_depth_clicked(index: number) {
+    const orders_with_range = this.orders_best_range(index);
+    let price: string;
+
+    if (this.side == "bids") {
+      price = orders_with_range[orders_with_range.length - 1].price
+    } else {
+      price = orders_with_range[0].price
+    }
 
     ZSmartModel.emit(
       "depth-click",
@@ -118,8 +154,8 @@ export default class MarketDepth extends Vue {
     );
   }
 
-  on_depth_hover(side: MarketDepth["side"], index: number) {
-    const element_hover = this.$refs[`depth-row-${index}`][0].$el;
+  on_depth_hover(index: number) {
+    const element_hover = this.$refs[`depth-row-${index}`][1].$el;
     const DOMRect: DOMRect = element_hover.getBoundingClientRect();
 
     this.$refs["overlay"].create(index, DOMRect);

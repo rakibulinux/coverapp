@@ -2,7 +2,7 @@
   <div class="depth-overlay">
     <div ref="overlay-mask" class="depth-overlay-mask" />
     <div
-      v-show="mouse_event.hover"
+      v-show="mouse_event.hover && depth.filter(row => !row.fake)"
       ref="overlay-content"
       class="depth-overlay-content"
     >
@@ -37,7 +37,7 @@ export default class DepthOverLay extends Mixins(MarketMixin) {
   @Prop() readonly side!: "asks" | "bids";
   @Prop() readonly depth: { price: string; amount: string }[];
   @Prop() orders_best_range?: (
-    order_price: string
+    index: number
   ) => {
     price: string;
     amount: string;
@@ -67,8 +67,16 @@ export default class DepthOverLay extends Mixins(MarketMixin) {
 
   get overlayData() {
     const orders_with_range = this.orders_best_range(
-      this.depth[this.mouse_event.index].price
+      this.mouse_event.index
     );
+
+    if (!orders_with_range.length) {
+      return {
+        avg_price: 0,
+        sum_volume: 0,
+        sum_total: 0
+      };
+    }
 
     const avg_price = this.getPrice(
       orders_with_range.map(order => order.price).reduce((a, b) => Number(a) + Number(b), 0) /
@@ -106,7 +114,7 @@ export default class DepthOverLay extends Mixins(MarketMixin) {
     this.mask_style.height = `${
       this.side === "bids"
         ? DOMRect.height * ++index
-        : DOMRect.height * (this.depth.length - index)
+        : DOMRect.height * (this.depth.length - index - 1)
     }px`;
   }
 

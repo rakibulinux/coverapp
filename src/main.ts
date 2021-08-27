@@ -12,11 +12,13 @@ import Fragment from "@grainrigi/vue-fragment";
 import Wave from "./library/wave";
 import * as helpers from "@/mixins/helpers";
 import moment from "moment";
+import VueKonva from 'vue-konva';
 
 Vue.use(Fragment.Plugin)
 Vue.use(Vue2TouchEvents);
 Vue.use(vClickOutside);
 Vue.use(Wave);
+Vue.use(VueKonva);
 
 Vue.config.productionTip = false;
 Vue.config.performance = true;
