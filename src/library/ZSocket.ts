@@ -151,10 +151,13 @@ class ZSocket {
 
         if (tradesMatch) {
           for (const trade of (event.trades.reverse() as ZTypes.PublicTrade[])) {
+            trade.price = Number(trade.price);
+            trade.amount = Number(trade.amount);
+            trade.total = Number(trade.total);
             TradeController.add_trade(trade);
 
             TradeController.tradingview.add_update_chart({
-                time: (new Date(trade.created_at).getTime() / 1000).toFixedNumber(0),
+                time: trade.created_at,
                 close: Number(trade.price),
                 volume: Number(trade.amount)
               },

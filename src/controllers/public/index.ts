@@ -109,16 +109,16 @@ export class PublicController {
     }
   }
 
-  update_ticker_price(market: string, price: string) {
+  update_ticker_price(market: string, price: number) {
     const fPrice = Number(price);
     const fLow = Number(this.tickers[market].low);
     const fHigh = Number(this.tickers[market].high);
 
-    this.tickers[market].last = price;
+    this.tickers[market].last = price.toString();
     if (fPrice < fLow) {
-      this.tickers[market].low = price;
+      this.tickers[market].low = price.toString();
     } else if (fPrice > fHigh) {
-      this.tickers[market].high = price;
+      this.tickers[market].high = price.toString();
     }
   }
 }
