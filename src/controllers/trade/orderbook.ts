@@ -1,7 +1,13 @@
 import TradeController from "@/controllers/trade";
+import Vue from "vue";
 
 export default class OrderBook {
   market_id?: string;
+
+  change_book_pool: { asks: { [key: string]: NodeJS.Timeout }, bids: { [key: string]: NodeJS.Timeout } } = {
+    asks: {},
+    bids: {}
+  }
 
   constructor(market_id?: string) {
     this.market_id = market_id;
@@ -29,6 +35,14 @@ export default class OrderBook {
 
   async fetch(market_id: string, limit?: number) {
     this.loading = true;
+
+    for (const side in this.change_book_pool) {
+      for (const key in this.change_book_pool[side]) {
+        clearTimeout(this.change_book_pool[side][key]);
+        delete this.change_book_pool[side][key];
+      }
+    }
+
     this.market_id = market_id;
 
     try {
@@ -42,7 +56,7 @@ export default class OrderBook {
           const price = row[0];
           const amount = row[1];
 
-          this.add(price, amount, side);
+          this.add(price, amount, side, false);
         })
       })
     } catch (error) {
@@ -52,22 +66,43 @@ export default class OrderBook {
     }
   }
 
-  add(price: string, amount: string, side: ZTypes.TakerType) {
+  add(price: string, amount: string, side: ZTypes.TakerType, change = true) {
+    if (this.change_book_pool[side][price] != null) {
+      clearTimeout(this.change_book_pool[side][price]);
+    }
+
     if (this.loading) return;
     const index = this.book[side].findIndex(row => row.price == price);
     if (index >= 0) {
       this.book[side][index].amount = amount;
+      this.book[side][index].change = change;
     } else {
-      this.book[side].push({ price, amount });
+      this.book[side].push({ price, amount, change: change });
 
       this.book[side] = this.book[side].sort((a, b) => {
         if (side == "asks") return Number(a.price) - Number(b.price);
         if (side == "bids") return Number(b.price) - Number(a.price);
       });
     }
+
+    if (!change) {
+      return;
+    }
+
+    this.change_book_pool[side][price] = setTimeout(() => {
+      const index = this.book[side].findIndex(row => row.price == price);
+      if (index < 0) {
+        return
+      }
+
+      delete this.book[side][index].change;
+    }, 50);
   }
 
   remove(price: string, side: ZTypes.TakerType) {
+    if (this.change_book_pool[side][price] != null) {
+      clearTimeout(this.change_book_pool[side][price]);
+    }
     if (this.loading) return;
 
     const index = this.book[side].findIndex(row => row.price == price);
@@ -76,12 +111,13 @@ export default class OrderBook {
   }
 
   toArray(side: ZTypes.TakerType, limit = 100) {
-    const orders = Array<{price: string; amount: string;}>();
+    const orders = Array<{price: string; amount: string; change: boolean;}>();
 
     this.book[side].slice(0, limit).forEach(order => {
       orders.push({
         price: order.price,
-        amount: order.amount
+        amount: order.amount,
+        change: order.change,
       })
     })
 

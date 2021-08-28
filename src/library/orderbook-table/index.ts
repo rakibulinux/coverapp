@@ -8,7 +8,6 @@ class OrderBookTable {
   config: Config;
   canvas: Canvas;
   data: Row[] = [];
-  lstTimeout: NodeJS.Timeout[] = [];
 
   constructor(element_id: string, config?: Config) {
     this.element_id = element_id;
@@ -29,10 +28,6 @@ class OrderBookTable {
   }
 
   async draw_table() {
-    for (const to of this.lstTimeout) {
-      clearTimeout(to);
-    }
-
     const context = this.canvas.context;
     utlis.clearCanvas(context, this.canvas.canvas)
 
@@ -58,28 +53,6 @@ class OrderBookTable {
         context.textAlign = column.align;
         context.fillText(row["fake"] ? "---" : row[column.key], x, y + 10 + 5);
         context.closePath();
-
-        if (row["change"]) {
-          const to = setTimeout(() => {
-            // fillRect(
-            //   context,
-            //   0,
-            //   y,
-            //   row.backgroundWidth,
-            //   this.config.line_height,
-            //   row.backgroundColor
-            // );
-
-            context.beginPath();
-            context.font = `500 ${column.fontSize}px Arial`;
-            context.textAlign = column.align;
-            context.fillStyle = column.color;
-            context.fillText(row["fake"] ? "---" : row[column.key], x, y + 10 + 5);
-            context.closePath();
-          }, 150);
-
-          this.lstTimeout.push(to)
-        }
       }
     }
   }

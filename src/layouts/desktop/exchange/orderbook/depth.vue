@@ -48,8 +48,6 @@ export default class MarketDepth extends Vue {
     overlay: DepthOverLay;
   };
 
-  depth_destroy = false;
-
   get orderbook() {
     return TradeController.orderbook;
   }
@@ -104,10 +102,6 @@ export default class MarketDepth extends Vue {
     return this.side === "bids" ? depth : depth.reverse();
   }
 
-  cloneArray(myArray: any[]) {
-    return myArray.map(a => Object.assign({}, a));
-  }
-
   async mounted() {
     this.table = new OrderBookTable(this.id, {
       height: 1000,
@@ -139,32 +133,6 @@ export default class MarketDepth extends Vue {
     })
 
     this.table.init();
-  }
-
-  async start_depth_update() {
-    let old_depth = this.cloneArray(this.depth);
-    let old_sequence =  this.orderbook.sequence
-
-    while (true) {
-      if (this.depth_destroy) {
-        break;
-      }
-
-      if (old_sequence < this.orderbook.sequence) {
-        const new_depth = this.cloneArray(this.depth);
-        const depth_diff = this.diffDepth(this.cloneArray(new_depth), this.cloneArray(old_depth));
-
-        await this.drawDepth(depth_diff);
-        old_sequence = this.orderbook.sequence
-        old_depth = this.cloneArray(new_depth);
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 200));
-    }
-  }
-
-  beforeDestroy() {
-    this.depth_destroy = true;
   }
 
   orders_best_range(index: number) {
@@ -219,20 +187,8 @@ export default class MarketDepth extends Vue {
     this.$refs["overlay"].destroy();
   }
 
-  diffDepth(new_depth: MarketDepth["depth"], old_depth: MarketDepth["depth"]) {
-    return new_depth.map(row => {
-      const old_row = old_depth.find(old_row => old_row.price == row.price);
-      if (old_row) {
-        (row as any).change = row.amount != old_row.amount
-      } else {
-        (row as any).change = true;
-      }
-
-      return row;
-    })
-  }
-
-  drawDepth(depth: MarketDepth["depth"]) {
+  @Watch("depth")
+  async onDepthChanged(depth: MarketDepth["depth"]) {
     this.table.setData(
       depth.map((row: any) => {
         row["price"] = Number(row["price"]).toFixed(this.market.price_precision);
@@ -246,14 +202,6 @@ export default class MarketDepth extends Vue {
     )
 
     this.table.draw_table();
-  }
-
-  @Watch("orderbook.loading")
-  async onOrderbookLoadingChanged(loading: boolean) {
-    if (!loading) {
-      this.drawDepth(this.cloneArray(this.depth));
-      this.start_depth_update();
-    }
   }
 }
 </script>
