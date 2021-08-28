@@ -74,10 +74,10 @@ export default class OrderBook {
     if (this.loading) return;
     const index = this.book[side].findIndex(row => row.price == price);
     if (index >= 0) {
-      this.book[side][index].amount = amount;
-      this.book[side][index].change = change;
+      Vue.set(this.book[side][index], "amount", amount);
+      Vue.set(this.book[side][index], "change", change);
     } else {
-      this.book[side].push({ price, amount, change: change });
+      Vue.set(this.book[side], this.book[side].length, { price, amount, change: change })
 
       this.book[side] = this.book[side].sort((a, b) => {
         if (side == "asks") return Number(a.price) - Number(b.price);
@@ -95,8 +95,8 @@ export default class OrderBook {
         return
       }
 
-      delete this.book[side][index].change;
-    }, 50);
+      Vue.delete(this.book[side][index], "change");
+    }, 100);
   }
 
   remove(price: string, side: ZTypes.TakerType) {
@@ -107,7 +107,9 @@ export default class OrderBook {
 
     const index = this.book[side].findIndex(row => row.price == price);
 
-    if (index >= 0) this.book[side].splice(index, 1);
+    if (index >= 0) {
+      Vue.delete(this.book[side], index);
+    }
   }
 
   toArray(side: ZTypes.TakerType, limit = 100) {

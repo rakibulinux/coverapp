@@ -42,7 +42,7 @@ export default class MarketDepth extends Vue {
 
   id = uuid();
   count = 50;
-  table: OrderBookTable
+  table: OrderBookTable;
 
   $refs!: {
     overlay: DepthOverLay;
