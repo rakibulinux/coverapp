@@ -29,7 +29,7 @@
         <depth-book ref="depth-asks" side="asks" />
         <div class="ticker-book">
           <div class="now-price" :class="getLastTrend()">
-            {{ ticker.last }}
+            {{ Number(ticker.last).toFixed(market.price_precision) }}
             <em class="price_usd">≈ {{ getPrice_USD() }} USD</em>
             <span class="change">{{ getChange() }}</span>
           </div>

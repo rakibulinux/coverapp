@@ -9,7 +9,7 @@
     <span class="ticker-name">{{ market.base_unit.toUpperCase() }}/{{ market.quote_unit.toUpperCase() }}</span>
     <div class="ticker-status">
       <div class="price">
-        <span class="now-price" :class="getLastTrend" v-text="ticker.last" />
+        <span class="now-price" :class="getLastTrend" v-text="Number(ticker.last).toFixed(market.price_precision)" />
         <span>≈ {{ getPrice_USD.toFixed(2) }} USD</span>
       </div>
       <dl class="change">
