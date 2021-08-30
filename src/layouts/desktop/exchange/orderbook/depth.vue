@@ -133,28 +133,21 @@ export default class MarketDepth extends Vue {
     })
 
     this.table.init();
+    this.draw_depth(this.depth);
   }
 
   orders_best_range(index: number) {
-    const orders = this.depth.filter(row => !row.fake);
+    const orders = this.depth;
 
     if (!orders.length) return [];
-
-    let orders_with_range: { price: string; amount: string }[];
 
     if (index < 0) return;
 
     if (this.side === "bids") {
-      orders_with_range =
-        index === 0 ? [orders[0]] : orders.slice(0, index + 1);
+      return orders.slice(0, index + 1).filter(row => !row.fake).filter(row => !row.fake);
     } else {
-      orders_with_range =
-        index === orders.length - 1
-          ? [orders[orders.length - 1]]
-          : orders.slice(index, orders.length);
+      return orders.slice(index - 1, orders.length).filter(row => !row.fake);
     }
-
-    return orders_with_range;
   }
 
   on_depth_clicked(index: number) {
@@ -187,8 +180,7 @@ export default class MarketDepth extends Vue {
     this.$refs["overlay"].destroy();
   }
 
-  @Watch("depth")
-  async onDepthChanged(depth: MarketDepth["depth"]) {
+  draw_depth(depth: MarketDepth["depth"]) {
     this.table.setData(
       depth.map((row: any) => {
         row["price"] = Number(row["price"]).toFixed(this.market.price_precision);
@@ -202,6 +194,11 @@ export default class MarketDepth extends Vue {
     )
 
     this.table.draw_table();
+  }
+
+  @Watch("depth")
+  async onDepthChanged(depth: MarketDepth["depth"]) {
+    this.draw_depth(depth);
   }
 }
 </script>
