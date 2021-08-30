@@ -129,10 +129,12 @@ export default class OrdersManager {
     if (this.find(order.uuid)) {
       const index = this.findIndex(order.uuid);
 
-      if (index >= 0) this.orders[index] = order;
+      if (index >= 0) Vue.set(this.orders, index, order);
     } else {
       this.orders.push(order);
-      this.orders = this.orders.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      Vue.set(this.orders, this.orders.length, order);
+      Vue.set(this, "orders", this.orders.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
     }
 
     return true;
