@@ -26,9 +26,9 @@ export default abstract class OrdersController {
     }
   }
 
-  async stop_order(id_or_uuid: number | string) {
+  async stop_order(uuid: string) {
     try {
-      await new ApiClient(config.finex ? "finex" : "trade").post((config.finex ? "market/orders/cancel/#{id}" : "market/orders/#{id}/cancel").replace("#{id}", id_or_uuid.toString()));
+      await new ApiClient(config.finex ? "finex" : "trade").post("market/orders/#{uuid}/cancel".replace("#{uuid}", uuid.toString()));
       runNotice("success", "order.canceled");
 
       return true;

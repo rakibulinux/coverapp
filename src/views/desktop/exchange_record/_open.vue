@@ -106,12 +106,12 @@ export default class OpenOrdersExchangeRecord extends Mixins(
     }
   }
 
-  async CloseOrder(id) {
-    const error = await this.TradeController.stop_order(id);
+  async CloseOrder(uuid) {
+    const error = await this.TradeController.stop_order(uuid);
 
     if (error) return;
 
-    const index = this.array.data.findIndex(order => order.id === id);
+    const index = this.array.data.findIndex(order => order.uuid === uuid);
 
     this.array.data.splice(index, 1);
   }

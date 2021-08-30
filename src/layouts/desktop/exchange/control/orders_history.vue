@@ -43,7 +43,7 @@
         <i
           v-if="item.state === 'wait'"
           class="zicon-close"
-          @click="TradeController.stop_order(item.id)"
+          @click="TradeController.stop_order(item.uuid)"
         />
       </span>
     </template>

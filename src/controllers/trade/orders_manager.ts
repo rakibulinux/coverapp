@@ -104,16 +104,16 @@ export default class OrdersManager {
     });
   }
 
-  findIndex(id: number) {
-    return this.orders.findIndex(order => order.id === id);
+  findIndex(uuid: string) {
+    return this.orders.findIndex(order => order.uuid === uuid);
   }
 
-  find(id: number) {
-    return this.orders.find(order => order.id === id);
+  find(uuid: string) {
+    return this.orders.find(order => order.uuid === uuid);
   }
 
-  delete(id: number) {
-    const index = this.findIndex(id);
+  delete(uuid: string) {
+    const index = this.findIndex(uuid);
 
     if (index >= 0) {
       Vue.delete(this.orders, index);
@@ -122,17 +122,17 @@ export default class OrdersManager {
 
   add(order: ZTypes.Order, force = this.realtime && this.ready) {
     if (!force) return false;
-    if (this.orders.length === this.headers.limit && order.id < this.orders[this.orders.length - 1].id) return false;
+    if (this.orders.length === this.headers.limit) return false;
     if (order.market !== this.market && this.market !== "All") return false;
     if (order.state !== this.state && this.state !== "All") return false;
 
-    if (this.find(order.id)) {
-      const index = this.findIndex(order.id);
+    if (this.find(order.uuid)) {
+      const index = this.findIndex(order.uuid);
 
       if (index >= 0) this.orders[index] = order;
     } else {
       this.orders.push(order);
-      this.orders = this.orders.sort((a, b) => b.id - a.id);
+      this.orders = this.orders.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     }
 
     return true;
