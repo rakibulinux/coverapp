@@ -51,6 +51,9 @@ export default class OrderBook {
       const depth: { [key in ZTypes.TakerType]: string[][] } = data;
       this.loading = false;
 
+      if (this.market_id != market_id) {
+        return;
+      }
       ["asks", "bids"].forEach((side: ZTypes.TakerType) => {
         depth[side].forEach(row => {
           const price = row[0];

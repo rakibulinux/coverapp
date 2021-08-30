@@ -59,6 +59,6 @@ export default abstract class OrdersController {
     if (!payload.page) payload.page = 1;
     if (!payload.limit) payload.limit = 100;
 
-    return new ApiClient("trade").get("market/trades", payload);
+    return new ApiClient(config.finex ? "finex" : "trade").get("market/trades", payload);
   }
 }
