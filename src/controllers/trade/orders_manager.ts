@@ -122,7 +122,7 @@ export default class OrdersManager {
 
   add(order: ZTypes.Order, force = this.realtime && this.ready) {
     if (!force) return false;
-    if (this.orders.length === this.headers.limit) return false;
+    if (this.orders.length === this.headers.limit && new Date(order.created_at).getTime() < new Date(this.orders[this.orders.length - 1].created_at).getTime()) return false;
     if (order.market !== this.market && this.market !== "All") return false;
     if (order.state !== this.state && this.state !== "All") return false;
 
