@@ -174,6 +174,7 @@ class ZSocket {
             break;
           } case "order":{
             const order: ZTypes.Order = event;
+            console.log(order)
 
             if (order.state === "wait") TradeController.open_orders.add(order);
             if (order.state === "done") TradeController.open_orders.delete(order.uuid);

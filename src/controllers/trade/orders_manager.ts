@@ -126,13 +126,13 @@ export default class OrdersManager {
     if (order.market !== this.market && this.market !== "All") return false;
     if (order.state !== this.state && this.state !== "All") return false;
 
-    if (this.find(order.uuid)) {
-      const index = this.findIndex(order.uuid);
+    const index = this.findIndex(order.uuid);
+    console.log(this.orders.length);
+    if (index >= 0) {
+      if (new Date(order.updated_at) < new Date(this.orders[index].updated_at)) return;
 
-      if (index >= 0) Vue.set(this.orders, index, order);
+      Vue.set(this.orders, index, order);
     } else {
-      this.orders.push(order);
-
       Vue.set(this.orders, this.orders.length, order);
       Vue.set(this, "orders", this.orders.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
     }
