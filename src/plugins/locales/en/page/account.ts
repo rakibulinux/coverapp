@@ -39,7 +39,7 @@ export default {
                                                                        <br />
                                                                        2. The identity document information is clear;
                                                                        <br />
-                                                                       3. A paper with the words "[NAMEEXCHANGE]+ application date"
+                                                                       3. A paper with the words "{exchange_name} + application date"
                                                                        displayed next to the ID certificate;
                                                                        <br />
                                                                        4. Does not support certificate certification for people over 60
@@ -51,6 +51,10 @@ export default {
   "page.account.login_history.history.login::2fa": "2FA Login",
   "page.account.login_history.history.result.succeed": "Success",
   "page.account.login_history.history.result.failed": "Failed",
+
+  "page.account.kyc_account_verification.profile_pending": "Your information will be processed in about 24 hours",
+  "page.account.kyc_account_verification.document_pending": "Your information will be processed in about 24 hours",
+  "page.account.kyc_account_verification.successfully": "KYC Successfully",
 
   "page.account.api.title": "API",
 };

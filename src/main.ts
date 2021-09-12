@@ -12,6 +12,7 @@ import Fragment from "@grainrigi/vue-fragment";
 import Wave from "./library/wave";
 import * as helpers from "@/mixins/helpers";
 import moment from "moment";
+import config from "./config";
 
 Vue.use(Fragment.Plugin)
 Vue.use(Vue2TouchEvents);
@@ -27,6 +28,7 @@ Vue.prototype.TradeController = TradeController;
 Vue.prototype.UserController = UserController;
 Vue.prototype.WebSocketController = WebSocketController;
 Vue.prototype.helpers = helpers;
+Vue.prototype.config = config;
 
 (global as any).TradeController = TradeController;
 

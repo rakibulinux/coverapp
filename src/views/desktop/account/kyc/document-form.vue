@@ -72,7 +72,7 @@
               </div>
             </div>
             <img src="@/assets/img/kyc_example.png" class="thumbnail-box" />
-            <div class="upload-notice" v-html="translation('form.id_photo.in_hand.desc')" />
+            <div class="upload-notice" v-html="translation('form.id_photo.in_hand.desc', { exchange_name: config.nameEX })" />
           </li>
         </ul>
       </div>
