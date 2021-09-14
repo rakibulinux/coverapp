@@ -130,7 +130,7 @@ export default class ForgotPassword extends Mixins(ConfirmationMixin, AuthMixin)
       },
       () => {
         this.start_cooldown();
-        this.step++;
+        this.step = 2;
       }
     );
 
