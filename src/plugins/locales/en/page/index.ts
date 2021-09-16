@@ -123,6 +123,7 @@ export default {
   "page.global.action.resend": "Resend",
   "page.global.action.copy": "Copy",
   "page.global.action.turn_off": "Turn Off",
+  "page.global.action.open": "Open",
 
   ...Home,
   ...Account,

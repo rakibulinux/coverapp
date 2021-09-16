@@ -1,16 +1,21 @@
 <template>
   <div class="page-referral-dashboard">
-    <div class="page-referral-dashboard-period">
-      <a-button
-        v-for="(p, index) in periods"
-        :key="index"
-        type="primary"
-        class="page-referral-dashboard-period-item"
-        :ghost="p.period == period"
-        @click="period = p.period"
-      >
-        {{ p.text }}
-      </a-button>
+    <div class="page-referral-dashboard-head">
+      <div class="page-referral-dashboard-period">
+        <a-button
+          v-for="(p, index) in periods"
+          :key="index"
+          type="primary"
+          class="page-referral-dashboard-period-item"
+          :ghost="p.period == period"
+          @click="period = p.period"
+        >
+          {{ p.text }}
+        </a-button>
+      </div>
+      <span class="page-referral-dashboard-link" ref="referral-link" @click="copy_referral_link">
+        {{ referral_link }}
+      </span>
     </div>
     <div class="page-referral-dashboard-content">
       <z-loading v-if="loading" />
@@ -33,8 +38,11 @@
 </template>
 
 <script lang="ts">
+import * as helpers from "@zsmartex/z-helpers";
+import { UserController } from '@/controllers';
 import ApiClient from '@zsmartex/z-apiclient';
 import { Vue, Component, Watch } from 'vue-property-decorator'
+import { runNotice, SelectTextInElement } from "@/mixins";
 
 @Component
 export default class Dashboard extends Vue {
@@ -86,8 +94,18 @@ export default class Dashboard extends Vue {
     return friend
   }
 
+  get referral_link() {
+    return `${document.location.origin}/signup?refid=${UserController.uid}`;
+  }
+
   mounted() {
     this.fetch_release_commissions();
+  }
+
+  copy_referral_link() {
+    runNotice("success", "copy");
+    helpers.copyText(this.referral_link);
+    SelectTextInElement(this.$refs["referral-link"] as HTMLElement);
   }
 
   async fetch_release_commissions() {

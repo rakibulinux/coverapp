@@ -47,10 +47,9 @@ export default class AccountInformation extends Vue {
         desc: `Click to get invite link`,
         action: {
           allow: true,
-          text: this.$t("page.global.action.copy"),
+          text: this.$t("page.global.action.open"),
           runner: () => {
-            runNotice("success", "copy");
-            helpers.copyText(`${document.location.origin}/signup?refid=${UserController.uid}`)
+            this.$router.push("/referral");
           }
         }
       },

@@ -28,7 +28,14 @@ export default class Referral extends Vue {
   &-dashboard {
     margin-top: 24px;
 
+    &-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     &-period {
+      display: inline-block;
       font-size: 16px;
 
       &-item {
@@ -59,6 +66,16 @@ export default class Referral extends Vue {
       .value {
         font-size: 24px;
       }
+    }
+
+    &-link {
+      display: flex;
+      // height: 40px;
+      // line-height: 40px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      font-size: 14px;
     }
   }
 
