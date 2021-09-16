@@ -1,5 +1,5 @@
 <template>
-  <div class="feature-markets-item" @click="$emit('click')">
+  <div class="feature-markets-item" @click="$emit('click', market)">
     <div class="feature-markets-title">
       <span class="feature-markets-name">
         {{ market.name.replace("/", " / ") }}

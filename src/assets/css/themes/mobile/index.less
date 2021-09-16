@@ -4,6 +4,30 @@
   overflow: hidden;
   user-select: none;
 
+  ::-webkit-scrollbar,
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  ::-webkit-scrollbar-track-piece,
+  &::-webkit-scrollbar-track-piece {
+    background-color: transparent;
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-track,
+  &:-webkit-scrollbar-track {
+    background-color: var(--bg-color);
+  }
+
+  ::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb {
+    height: 0;
+    background-color: var(--bg-downdown-border-color);
+    border-radius: 0;
+  }
+
   .ant-layout {
     max-height: 100vh;
     font-size: 10px;

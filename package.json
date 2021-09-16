@@ -19,7 +19,7 @@
     "@zsmartex/z-eventbus": "1.0.2",
     "@zsmartex/z-helpers": "1.2.37",
     "@zsmartex/z-store": "2.2.30",
-    "@zsmartex/z-types": "1.10.21",
+    "@zsmartex/z-types": "1.10.22",
     "accessible-nprogress": "^2.0.1",
     "ant-design-vue": "^1.6.0",
     "axios": "^0.19.2",

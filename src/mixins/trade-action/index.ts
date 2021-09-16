@@ -263,5 +263,8 @@ export class TradeActionMixin extends Vue {
   onAmountChange() {
     this.amount_with_balance();
     this.percent_with_amount();
+    if (this.amount[this.amount.length - 1] == ".") {
+      this.amount = this.amount.slice(0, this.amount.length - 1);
+    }
   }
 }

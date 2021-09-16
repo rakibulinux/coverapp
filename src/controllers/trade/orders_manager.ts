@@ -1,4 +1,3 @@
-import ApiClient from "@zsmartex/z-apiclient";
 import Vue from "vue";
 import TradeController from "@/controllers/trade";
 import VueCompositionAPI, { reactive } from "@vue/composition-api";
@@ -122,12 +121,13 @@ export default class OrdersManager {
 
   add(order: ZTypes.Order, force = this.realtime && this.ready) {
     if (!force) return false;
-    if (this.orders.length === this.headers.limit && new Date(order.created_at).getTime() < new Date(this.orders[this.orders.length - 1].created_at).getTime()) return false;
+    if (this.orders.length) {
+      if (this.headers.limit && new Date(order.created_at).getTime() < new Date(this.orders[this.orders.length - 1].created_at).getTime()) return false;
+    }
     if (order.market !== this.market && this.market !== "All") return false;
     if (order.state !== this.state && this.state !== "All") return false;
 
     const index = this.findIndex(order.uuid);
-    console.log(this.orders.length);
     if (index >= 0) {
       if (new Date(order.updated_at) < new Date(this.orders[index].updated_at)) return;
 
