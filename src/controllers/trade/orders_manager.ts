@@ -11,7 +11,6 @@ export default class OrdersManager {
   headers = reactive({
     page: 1,
     limit: 100,
-    total: 0,
   })
 
   config = reactive({
@@ -73,21 +72,18 @@ export default class OrdersManager {
       const {
         data,
         headers,
-      }: {
-        data: ZTypes.Order[];
-        headers: any;
       } = await this.getOrders(this.market, this.state, page, limit);
 
-      data.forEach(order => {
+      data.forEach((order: ZTypes.Order) => {
         this.add(order, true);
       });
       this.headers.page = Number(headers.page);
-      this.headers.total = Number(headers.total);
       this.headers.limit = Number(headers["per-page"]);
       this.ready = true;
 
       return { data, headers };
     } catch (error) {
+      console.log(error);
       return error;
     } finally {
       Vue.set(this, "loading", false);
@@ -121,8 +117,8 @@ export default class OrdersManager {
 
   add(order: ZTypes.Order, force = this.realtime && this.ready) {
     if (!force) return false;
-    if (this.orders.length) {
-      if (this.headers.limit && new Date(order.created_at).getTime() < new Date(this.orders[this.orders.length - 1].created_at).getTime()) return false;
+    if (this.orders.length == this.headers.limit) {
+      if (new Date(order.created_at).getTime() < new Date(this.orders[this.orders.length - 1].created_at).getTime()) return false;
     }
     if (order.market !== this.market && this.market !== "All") return false;
     if (order.state !== this.state && this.state !== "All") return false;
@@ -144,7 +140,6 @@ export default class OrdersManager {
     return this.headers = {
       page: 1,
       limit: 100,
-      total: 0,
     };
   }
 
