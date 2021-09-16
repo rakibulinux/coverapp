@@ -4,15 +4,11 @@ import isObject from 'isobject';
 export default {
   createCanvas(height, width, parent_element: HTMLElement | Element) {
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const pixelRatio = this.getPixelRatio(ctx);
 
-    canvas.height = height * pixelRatio;
-    canvas.width = width * pixelRatio;
+    canvas.height = height;
+    canvas.width = width;
     canvas.style.height = height + "px";
     canvas.style.width = width + "px";
-
-    ctx.scale(pixelRatio, pixelRatio);
 
     parent_element.appendChild(canvas);
 
