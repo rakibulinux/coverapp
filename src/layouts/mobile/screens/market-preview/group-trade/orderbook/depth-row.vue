@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { MarketMixin } from "@/mixins/mobile";
-import { Vue, Component, Mixins, Prop } from "vue-property-decorator";
+import { Component, Mixins, Prop } from "vue-property-decorator";
 
 @Component
 export default class DepthRow extends Mixins(MarketMixin){

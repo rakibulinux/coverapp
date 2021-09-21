@@ -416,7 +416,7 @@ export default class KlineChart extends Vue {
       const coeff = resolution * 60;
 
       const kline = {
-        timestamp: Math.floor((new Date(trade.created_at).getTime() / 1000) / coeff) * coeff * 1000,
+        timestamp: Math.floor(trade.created_at / coeff) * coeff * 1000,
         open: first_data ? Number(trade.price) : now_data.open,
         high: first_data ? Number(trade.price) : (Number(trade.price) > now_data.high ? Number(trade.price) : now_data.high),
         low: first_data ? Number(trade.price) : (Number(trade.price) < now_data.low ? Number(trade.price) : now_data.low),
@@ -491,7 +491,7 @@ export default class KlineChart extends Vue {
       kline_data.forEach(kline => {
         this.chart.updateData(kline);
       });
-    } else if (kline_data[kline_data.length - 1].timestamp > this.chart_data_list()[this.chart_data_list().length - 1].timestamp) {
+    } else if (kline_data[0].timestamp > this.chart_data_list()[this.chart_data_list().length - 1].timestamp) {
       this.chart.applyNewData([...this.chart_data_list(), ...kline_data], true);
     } else {
       this.chart.applyMoreData(kline_data, true);
