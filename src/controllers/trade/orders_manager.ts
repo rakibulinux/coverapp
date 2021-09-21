@@ -77,8 +77,8 @@ export default class OrdersManager {
       data.forEach((order: ZTypes.Order) => {
         this.add(order, true);
       });
-      this.headers.page = Number(headers.page);
-      this.headers.limit = Number(headers["per-page"]);
+      this.headers.page = page;
+      this.headers.limit = limit;
       this.ready = true;
 
       return { data, headers };

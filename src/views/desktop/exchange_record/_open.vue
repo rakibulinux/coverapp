@@ -53,7 +53,7 @@
               <i
                 v-if="data.state === 'wait' || data.state === 'pending'"
                 class="zicon-close"
-                @click="CloseOrder(data.id)"
+                @click="CloseOrder(data.uuid)"
               />
             </span>
           </p>
@@ -107,9 +107,9 @@ export default class OpenOrdersExchangeRecord extends Mixins(
   }
 
   async CloseOrder(uuid) {
-    const error = await this.TradeController.stop_order(uuid);
+    const success = await this.TradeController.stop_order(uuid);
 
-    if (error) return;
+    if (!success) return;
 
     const index = this.array.data.findIndex(order => order.uuid === uuid);
 
