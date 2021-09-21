@@ -197,8 +197,9 @@ export default class MarketDepth extends Vue {
   }
 
   @Watch("depth")
-  async onDepthChanged(depth: MarketDepth["depth"]) {
-    this.draw_depth(depth);
+  @Watch("TradeController.open_orders.orders")
+  async onDepthChanged() {
+    this.draw_depth(this.depth);
   }
 }
 </script>

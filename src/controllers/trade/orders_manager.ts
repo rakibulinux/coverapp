@@ -103,6 +103,10 @@ export default class OrdersManager {
     return this.orders.findIndex(order => order.uuid === uuid);
   }
 
+  findPrice(price: string) {
+    return this.orders.find(order => Number(order.price) == Number(price));
+  }
+
   find(uuid: string) {
     return this.orders.find(order => order.uuid === uuid);
   }

@@ -1,4 +1,5 @@
 import colors from "@/colors";
+import { TradeController } from "@/controllers";
 import Canvas from "./canvas";
 import { Config, Row } from "./config";
 import utlis from "./utlis";
@@ -52,6 +53,14 @@ class OrderBookTable {
         context.fillStyle = row["change"] == true ? colors["icon-color"] : column.color;
         context.textAlign = column.align;
         context.fillText(row["fake"] ? "---" : row[column.key], x, y + 10 + 5);
+        context.closePath();
+      }
+
+      if (TradeController.open_orders.findPrice(row.price)) {
+        context.beginPath();
+        context.fillStyle = colors["blue-dark-color"];
+        context.arc(8, y + this.config.line_height / 2, 3, 0, Math.PI*2, true);
+        context.fill();
         context.closePath();
       }
     }
