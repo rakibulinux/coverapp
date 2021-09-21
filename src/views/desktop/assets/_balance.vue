@@ -40,9 +40,9 @@
         </dl>
         <dd>
           <balance-row
-            v-for="currency in CURRENCY"
-            :key="currency"
-            :currency_id="currency"
+            v-for="currency in currencies"
+            :key="currency.id"
+            :currency_id="currency.id"
           />
         </dd>
       </div>
@@ -50,13 +50,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { PublicController } from "@/controllers";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({
   components: {
-    "balance-row": () => import("./modules/balance-row")
+    "balance-row": () => import("./modules/balance-row.vue")
   }
 })
 export default class Balance extends Vue {
@@ -64,16 +65,19 @@ export default class Balance extends Vue {
   hide_small = false;
   search = "";
 
-  get CURRENCY() {
-    let currencies = helpers.CURRENCY();
-    if (this.search)
-      currencies = this.currency_filter_base(
-        currencies,
-        "search",
-        this.search
-      );
+  get currencies() {
+    let currencies = PublicController.currencies;
+
+    if (this.search.length) {
+      currencies = currencies.filter(currency => {
+        return currency.id.toLowerCase().includes(this.search) || currency.name.toLowerCase().includes(this.search.toLowerCase());
+      });
+    }
     if (this.hide_small) {
-      currencies = this.currency_filter_base(currencies, "hide small");
+      currencies = currencies.filter(currency => {
+        const btcAmount = new helpers.Balance(currency.id).getTotalBTC();
+        return btcAmount >= 0.001;
+      });
     }
 
     return currencies;
@@ -90,23 +94,12 @@ export default class Balance extends Vue {
 
   get total_usd() {
     const price = this.PublicController.global_price.USDT;
-    if (price) return (price.USD * this.total_usdt).toFixed(2);
+    if (price) return (price.USD * Number(this.total_usdt)).toFixed(2);
     else return 0;
   }
 
   hide_smallChange() {
     this.hide_small = !this.hide_small;
-  }
-
-  currency_filter_base(currencies, find_by, payload) {
-    return currencies.filter(currency => {
-      if (find_by === "search") {
-        return currency.includes(payload);
-      } else if (find_by === "hide small") {
-        const btcAmount = new helpers.Balance(currency).getTotalBTC();
-        return btcAmount >= 0.001;
-      }
-    });
   }
 
   translation(message, data = {}) {
