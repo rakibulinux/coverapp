@@ -76,16 +76,15 @@
         </p>
       </template>
     </div>
-    <a-pagination
-      v-if="pagination && !loading"
-      class="z-table-pagination-content"
-      showSizeChanger
-      :current="page"
-      :total="total"
+    <z-pagination
+      v-if="pagination"
+      class="z-table-pagination-content text-right"
+      size="small"
+      :value="page"
+      :loading="loading"
       :page-size="pageSize"
-      :pageSizeOptions="['10', '25', '50', '100']"
+      :count-row="data.length"
       @change="onChange"
-      @showSizeChange="onChange"
     />
   </div>
 </template>
@@ -138,8 +137,8 @@ export default class ZTable extends Vue {
     return data_with_sort;
   }
 
-  public onChange(page: number, pageSize: number) {
-    this.$emit("change-pagination", { page, limit: pageSize });
+  public onChange(page: number) {
+    this.$emit("change-pagination", { page, limit: this.pageSize });
   }
 
   public onClick(item) {

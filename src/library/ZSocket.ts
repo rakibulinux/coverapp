@@ -151,10 +151,13 @@ class ZSocket {
 
         if (tradesMatch) {
           for (const trade of (event.trades.reverse() as ZTypes.PublicTrade[])) {
+            trade.price = Number(trade.price);
+            trade.amount = Number(trade.amount);
+            trade.total = Number(trade.total);
             TradeController.add_trade(trade);
 
             TradeController.tradingview.add_update_chart({
-                time: (new Date(trade.created_at).getTime() / 1000).toFixedNumber(0),
+                time: trade.created_at,
                 close: Number(trade.price),
                 volume: Number(trade.amount)
               },
@@ -173,8 +176,8 @@ class ZSocket {
             const order: ZTypes.Order = event;
 
             if (order.state === "wait") TradeController.open_orders.add(order);
-            if (order.state === "done") TradeController.open_orders.delete(order.id);
-            if (order.state === "cancel") TradeController.open_orders.delete(order.id);
+            if (order.state === "done") TradeController.open_orders.delete(order.uuid);
+            if (order.state === "cancel") TradeController.open_orders.delete(order.uuid);
             TradeController.orders_history.add(order);
             break;
           } case "trade": {

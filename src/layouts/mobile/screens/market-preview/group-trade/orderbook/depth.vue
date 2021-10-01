@@ -9,6 +9,7 @@
         :amount="order.amount"
         :length="i"
         :side="side"
+        :market_id="market.id"
         class="z-table-row"
       />
 

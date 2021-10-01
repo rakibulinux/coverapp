@@ -18,16 +18,15 @@
         :label="item.label"
       >
         <order-book v-if="item.label === 'orderbook'" :market_id="market.id" />
-        <trades v-else :market="market" />
+        <trades v-else :market_id="market.id" />
       </cube-tab-panel>
     </cube-tab-panels>
   </div>
 </template>
 
 <script lang="ts">
-import { PublicController } from "@/controllers";
 import { MarketMixin } from "@/mixins/mobile";
-import { Vue, Component, Prop, Mixins } from "vue-property-decorator";
+import { Component, Prop, Mixins } from "vue-property-decorator";
 
 @Component({
   components: {

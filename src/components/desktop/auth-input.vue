@@ -136,12 +136,13 @@ export default class App extends Vue {
     font-size: 14px;
     caret-color: var(--blue-color);
     z-index: 1;
+
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
     &:-webkit-autofill:focus,
     &:-webkit-autofill:active {
-      background-color: transparent;
-      animation: autofill 0s forwards;
+      box-shadow: 0 0 0 1000px var(--bg-card-color) inset !important;
+      -webkit-text-fill-color: var(--text-default-color) !important;
     }
   }
 
@@ -244,13 +245,6 @@ export default class App extends Vue {
     &-content {
       color: var(--down-color);
     }
-  }
-}
-
-@keyframes autofill {
-  100% {
-    background: transparent;
-    color: inherit;
   }
 }
 </style>

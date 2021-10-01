@@ -76,7 +76,7 @@ export default class ZPagination extends Vue {
 
   change(page) {
     if (this.loading) return;
-    if (this.pageSize != this.countRow) return;
+    if (page == 0) return;
 
     this.$emit("input", page);
     this.$emit("change", page);

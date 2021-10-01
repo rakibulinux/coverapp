@@ -5,7 +5,7 @@
     class="page-trade-mine-control"
   >
     <div slot="head" class="extra-action cancel-all">
-      <a-button @click="cancel_all_orders" type="primary">
+      <a-button v-if="type_control == 'open_orders'" @click="cancel_all_orders" type="primary">
         {{ $t("page.global.action.cancel_all") }}
       </a-button>
     </div>

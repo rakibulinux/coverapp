@@ -42,7 +42,7 @@
       <span :class="['action', `text-${column.algin}`]">
         <i
           class="zicon-close"
-          @click="TradeController.stop_order(item.id)"
+          @click="TradeController.stop_order(item.uuid)"
         />
       </span>
     </template>

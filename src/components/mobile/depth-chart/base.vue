@@ -38,9 +38,9 @@ export default class DepthChart extends Vue {
           total: null
         };
 
-        total = Number(total + row.amount);
-        item.price = row.price;
-        item.volume = row.amount;
+        total = total + Number(row.amount);
+        item.price = Number(row.price);
+        item.volume = Number(row.amount);
         item.total = total.toFixedNumber(4);
 
         data[side === "bids" ? "buy" : "sell"].push(item);

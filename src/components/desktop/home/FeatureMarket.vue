@@ -14,13 +14,13 @@
       </h3>
       <p class="price">
         <span :class="GetTrend(ticker.price_change_percent, false)">
-          {{ ticker.last }}
+          {{ Number(ticker.last).toFixed(market.price_precision) }}
         </span>
         <i>≈ ${{ helpers.TickerToUSD(market_id, Number(ticker.last)) }}</i>
       </p>
       <p class="vol">
         <span>{{ $t("page.global.table.24h_volume") }}</span>
-        <i>{{ ticker.volume }} {{ market.quote_unit.toUpperCase() }}</i>
+        <i>{{ Number(ticker.volume).toFixed(market.price_precision) }} {{ market.quote_unit.toUpperCase() }}</i>
       </p>
       <sparkline :market_id="market_id" />
     </router-link>

@@ -33,20 +33,34 @@
       <profile-form
         v-if="!profile_label.value || profile_label.value == 'rejected'"
       />
-      <z-loading
-        v-else-if="
+      <div class="kyc-loading" v-else-if="
           profile_label.value == 'pending' || profile_label.value == 'submitted'
         "
-      />
+      >
+        <div>
+          <a-icon type="loading" />
+        </div>
+        <div class="title">
+          {{ $t("page.account.kyc_account_verification.document_pending") }}
+        </div>
+      </div>
       <document-form
         v-else-if="!document_label.value || document_label.value == 'rejected'"
       />
+      <div class="kyc-loading" v-else-if="document_label.value == 'pending'">
+        <div>
+          <a-icon type="loading" />
+        </div>
+        <div class="title">
+          {{ $t("page.account.kyc_account_verification.document_pending") }}
+        </div>
+      </div>
       <div class="kyc-done" v-else-if="document_label.value == 'verified'">
         <div>
           <a-icon type="safety-certificate" />
         </div>
         <div class="title">
-          KYC Successfully
+          {{ $t("page.account.kyc_account_verification.successfully") }}
         </div>
       </div>
     </div>
@@ -136,6 +150,7 @@ export default class AccountKYC extends Vue {
     }
   }
 
+  .kyc-loading,
   .kyc-done {
     padding-top: 120px;
     text-align: center;

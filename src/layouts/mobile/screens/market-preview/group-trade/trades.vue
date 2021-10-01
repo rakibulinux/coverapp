@@ -13,11 +13,9 @@
 </template>
 
 <script lang="ts">
-import store from "@/store";
 import * as helpers from "@zsmartex/z-helpers";
 import { MarketMixin } from "@/mixins/mobile";
 import { Mixins, Component, Prop } from "vue-property-decorator";
-import { PublicController } from "@/controllers";
 
 @Component
 export default class Trades extends Mixins(MarketMixin) {

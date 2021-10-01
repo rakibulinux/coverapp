@@ -118,7 +118,7 @@ export default class OrderRow extends Mixins(MarketMixin) {
   }
 
   cancel_order() {
-    TradeController.stop_order(this.order.id);
+    TradeController.stop_order(this.order.uuid);
   }
 }
 </script>

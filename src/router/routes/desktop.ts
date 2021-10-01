@@ -117,5 +117,13 @@ export default [
     meta: {
       guest: true
     }
+  },
+  {
+    path: "/referral",
+    name: "Referral",
+    component: () => import("@/views/desktop/referral.vue"),
+    meta: {
+      requiresAuth: true
+    }
   }
 ];

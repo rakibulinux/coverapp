@@ -29,7 +29,7 @@
         <depth-book ref="depth-asks" side="asks" />
         <div class="ticker-book">
           <div class="now-price" :class="getLastTrend()">
-            {{ ticker.last }}
+            {{ Number(ticker.last).toFixed(market.price_precision) }}
             <em class="price_usd">≈ {{ getPrice_USD() }} USD</em>
             <span class="change">{{ getChange() }}</span>
           </div>
@@ -108,17 +108,12 @@ export default class App extends Vue {
     }
   }
 
-  .z-card {
-    &-head {
-
-    }
-  }
-
   .z-table {
     &-content {
       .depth {
         height: calc(50% - 20px);
         overflow-y: hidden;
+        overflow-x: hidden;
       }
 
       > div {

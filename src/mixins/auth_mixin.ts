@@ -45,7 +45,7 @@ export class AuthMixin extends Vue {
   get confirm_password_error() {
     const { password, new_password, confirm_password } = this;
 
-    if (confirm_password.length && confirm_password !== (typeof password === "string" ? password : new_password)) {
+    if (confirm_password.length && confirm_password !== (password.length ? password : new_password)) {
       return this.$t("page.global.input.error.confirm_password");
     }
   }

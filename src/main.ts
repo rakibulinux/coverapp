@@ -6,12 +6,13 @@ import store from "@/store";
 import * as vClickOutside from "v-click-outside-x";
 import Vue from "vue";
 import Vue2TouchEvents from "vue2-touch-events";
-import "./registerServiceWorker";
 import(/* webpackPreload: true */ "@/assets/css/loading.scss");
 import { PublicController, TradeController, WebSocketController, UserController } from "@/controllers";
 import Fragment from "@grainrigi/vue-fragment";
 import Wave from "./library/wave";
 import * as helpers from "@/mixins/helpers";
+import moment from "moment";
+import config from "./config";
 
 Vue.use(Fragment.Plugin)
 Vue.use(Vue2TouchEvents);
@@ -27,6 +28,9 @@ Vue.prototype.TradeController = TradeController;
 Vue.prototype.UserController = UserController;
 Vue.prototype.WebSocketController = WebSocketController;
 Vue.prototype.helpers = helpers;
+Vue.prototype.config = config;
+
+(global as any).TradeController = TradeController;
 
 new Vue({
   store,
@@ -34,3 +38,5 @@ new Vue({
   router,
   render: (h) => h(App),
 }).$mount("#app");
+
+global.moment = moment;

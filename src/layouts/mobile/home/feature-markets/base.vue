@@ -2,18 +2,18 @@
   <swiper :options="swiperOption" class="feature-markets">
     <swiper-slide>
       <feature-market
-        v-for="(market_name, index) in featureMarkets('one')"
+        v-for="(market_id, index) in featureMarkets('one')"
         :key="`one` + index"
-        :market_id="getMarketByName(market_name).id"
-        @click="$emit('click', getMarketByName(market_name))"
+        :market_id="market_id"
+        @click="onClick"
       />
     </swiper-slide>
     <swiper-slide>
       <feature-market
-        v-for="(market_name, index) in featureMarkets('two')"
+        v-for="(market_id, index) in featureMarkets('two')"
         :key="`one` + index"
-        :market_id="getMarketByName(market_name).id"
-        @click="$emit('click', getMarketByName(market_name))"
+        :market_id="market_id"
+        @click="onClick"
       />
       <div
         class="feature-markets-item more"
@@ -45,20 +45,13 @@ export default class FeatureMarkets extends Vue {
     }
   };
 
-  getMarketByName(market_name: string) {
-    if (!market_name.includes("/")) return;
-
-    const market_id = market_name
-      .split("/")
-      .join("")
-      .toLowerCase();
-
-    return this.PublicController.markets.find(market => market.id == market_id);
+  onClick(market: ZTypes.Market) {
+    this.$emit("click", market);
   }
 
   featureMarkets(type) {
-    const valueOne = [];
-    const valueTwo = [];
+    const valueOne: string[] = [];
+    const valueTwo: string[] = [];
     const { feature_markets } = config;
     for (const i in feature_markets) {
       if (Number(i) <= 2) valueOne.push(feature_markets[i]);

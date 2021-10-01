@@ -1,4 +1,3 @@
-import ApiClient from "@zsmartex/z-apiclient";
 import Vue from "vue";
 import TradeController from "@/controllers/trade";
 import VueCompositionAPI, { reactive } from "@vue/composition-api";
@@ -12,7 +11,6 @@ export default class OrdersManager {
   headers = reactive({
     page: 1,
     limit: 100,
-    total: 0,
   })
 
   config = reactive({
@@ -74,21 +72,18 @@ export default class OrdersManager {
       const {
         data,
         headers,
-      }: {
-        data: ZTypes.Order[];
-        headers: any;
       } = await this.getOrders(this.market, this.state, page, limit);
 
-      data.forEach(order => {
+      data.forEach((order: ZTypes.Order) => {
         this.add(order, true);
       });
-      this.headers.page = Number(headers.page);
-      this.headers.total = Number(headers.total);
-      this.headers.limit = Number(headers["per-page"]);
+      this.headers.page = page;
+      this.headers.limit = limit;
       this.ready = true;
 
       return { data, headers };
     } catch (error) {
+      console.log(error);
       return error;
     } finally {
       Vue.set(this, "loading", false);
@@ -104,16 +99,20 @@ export default class OrdersManager {
     });
   }
 
-  findIndex(id: number) {
-    return this.orders.findIndex(order => order.id === id);
+  findIndex(uuid: string) {
+    return this.orders.findIndex(order => order.uuid === uuid);
   }
 
-  find(id: number) {
-    return this.orders.find(order => order.id === id);
+  findPrice(price: string) {
+    return this.orders.find(order => Number(order.price) == Number(price));
   }
 
-  delete(id: number) {
-    const index = this.findIndex(id);
+  find(uuid: string) {
+    return this.orders.find(order => order.uuid === uuid);
+  }
+
+  delete(uuid: string) {
+    const index = this.findIndex(uuid);
 
     if (index >= 0) {
       Vue.delete(this.orders, index);
@@ -122,17 +121,20 @@ export default class OrdersManager {
 
   add(order: ZTypes.Order, force = this.realtime && this.ready) {
     if (!force) return false;
-    if (this.orders.length === this.headers.limit && order.id < this.orders[this.orders.length - 1].id) return false;
+    if (this.orders.length == this.headers.limit) {
+      if (new Date(order.created_at).getTime() < new Date(this.orders[this.orders.length - 1].created_at).getTime()) return false;
+    }
     if (order.market !== this.market && this.market !== "All") return false;
     if (order.state !== this.state && this.state !== "All") return false;
 
-    if (this.find(order.id)) {
-      const index = this.findIndex(order.id);
+    const index = this.findIndex(order.uuid);
+    if (index >= 0) {
+      if (new Date(order.updated_at) < new Date(this.orders[index].updated_at)) return;
 
-      if (index >= 0) this.orders[index] = order;
+      Vue.set(this.orders, index, order);
     } else {
-      this.orders.push(order);
-      this.orders = this.orders.sort((a, b) => b.id - a.id);
+      Vue.set(this.orders, this.orders.length, order);
+      Vue.set(this, "orders", this.orders.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
     }
 
     return true;
@@ -142,7 +144,6 @@ export default class OrdersManager {
     return this.headers = {
       page: 1,
       limit: 100,
-      total: 0,
     };
   }
 

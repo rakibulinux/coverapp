@@ -128,7 +128,7 @@ export default class ScreenForgotPassword extends Mixins(
       },
       () => {
         this.start_cooldown();
-        this.step++;
+        this.step = 2;
       }
     );
 

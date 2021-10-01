@@ -15,7 +15,7 @@ export class PublicController {
 
   async fetch_currencies() {
     try {
-      const { data } = await new ApiClient("trade").get("public/currencies");
+      const { data } = await new ApiClient("trade").get("public/currencies?limit=1000");
 
       this.currencies = data;
     } catch (error) {
@@ -25,7 +25,7 @@ export class PublicController {
 
   async fetch_markets() {
     try {
-      const { data } = await new ApiClient("trade").get("public/markets");
+      const { data } = await new ApiClient("trade").get("public/markets?limit=1000");
 
       this.markets = data;
     } catch (error) {
@@ -35,7 +35,7 @@ export class PublicController {
 
   async fetch_tickers() {
     try {
-      const { data } = await new ApiClient("trade").get("public/markets/tickers");
+      const { data } = await new ApiClient("trade").get("public/markets/tickers?limit=1000");
       const tickers = {};
 
       for (const id in data) {
@@ -109,16 +109,16 @@ export class PublicController {
     }
   }
 
-  update_ticker_price(market: string, price: string) {
+  update_ticker_price(market: string, price: number) {
     const fPrice = Number(price);
     const fLow = Number(this.tickers[market].low);
     const fHigh = Number(this.tickers[market].high);
 
-    this.tickers[market].last = price;
+    this.tickers[market].last = price.toString();
     if (fPrice < fLow) {
-      this.tickers[market].low = price;
+      this.tickers[market].low = price.toString();
     } else if (fPrice > fHigh) {
-      this.tickers[market].high = price;
+      this.tickers[market].high = price.toString();
     }
   }
 }

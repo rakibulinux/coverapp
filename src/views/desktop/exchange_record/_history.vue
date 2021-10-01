@@ -71,7 +71,7 @@
               <i
                 v-if="data.state === 'wait' || data.state === 'pending'"
                 class="zicon-close"
-                @click="CloseOrder(data.id)"
+                @click="CloseOrder(data.uuid)"
               />
             </span>
           </p>
@@ -140,8 +140,8 @@ export default class OpenOrdersExchangeRecord extends Mixins(
     }
   }
 
-  CloseOrder(id) {
-    this.TradeController.stop_order(id);
+  CloseOrder(uuid) {
+    this.TradeController.stop_order(uuid);
   }
 
   @Watch("market")

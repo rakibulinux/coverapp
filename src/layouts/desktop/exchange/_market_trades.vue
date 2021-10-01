@@ -34,6 +34,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
+import moment from "moment";
 
 @Component
 export default class MarketTrades extends Vue {
@@ -88,14 +89,7 @@ export default class MarketTrades extends Vue {
   }
 
   getDate(created_at: number) {
-    const date = new Date(created_at);
-    return (
-      ("00" + date.getHours()).slice(-2) +
-      ":" +
-      ("00" + date.getMinutes()).slice(-2) +
-      ":" +
-      ("00" + date.getSeconds()).slice(-2)
-    );
+    return moment.unix(created_at).format("hh:mm:ss")
   }
 }
 </script>
