@@ -73,9 +73,8 @@
                   'favorite',
                   { 'favorite-selected': check_favorite(item.id) },
                 ]"
-                @click.stop="add_remove_favorite(item.id)"
               >
-                <i class="zicon-star" />
+                <i class="zicon-star" @click.prevent="add_remove_favorite(item.id)" />
               </span>
               <span>{{ item.base_unit.toUpperCase() }}</span>
             </span>
