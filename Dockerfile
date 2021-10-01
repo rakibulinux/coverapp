@@ -4,7 +4,7 @@ FROM node:14.17.4-alpine3.14 as build-stage
 
 WORKDIR /app
 
-RUN apk add git
+RUN apk update && apk add yarn python3 py3-pip g++ make
 
 ARG NPM_TOKEN
 
