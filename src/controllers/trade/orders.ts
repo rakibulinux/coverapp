@@ -5,14 +5,20 @@ import config from "@/config";
 export default abstract class OrdersController {
   async create_order(market_id: string, side: ZTypes.OrderSide, ord_type: ZTypes.OrdType = "limit", price: number | null, stop_price: number | null, amount: number): Promise<ZTypes.Order> {
     try {
-      const payload = {
+      const payload: { [key: string]: any } = {
         market: market_id,
         side: side,
         price: price,
         stop_price: stop_price,
         ord_type: ord_type,
-        volume: amount
       }
+
+      if (config.finex) {
+        payload.quantity = amount
+      } else {
+        payload.volume = amount
+      }
+
       if (ord_type == "market") {
         delete payload.price
         delete payload.stop_price
