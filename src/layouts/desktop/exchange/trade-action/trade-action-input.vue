@@ -9,13 +9,13 @@
         {{ error }}
       </template>
       <span v-if="prefix" class="trade-action-input-prefix">{{ prefix }}</span>
-      <input
-        @input="onInputChange"
-        @focus="onInputFocus"
-        @blur="onInputBlur"
+      <finput
         :value="value"
         type="text"
         :disabled="disabled"
+        @input="onInputChange"
+        @focus="onInputFocus"
+        @blur="onInputBlur"
       />
       <span v-if="suffix" class="trade-action-input-suffix">{{ suffix }}</span>
       <div
@@ -29,89 +29,62 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    finput: () => import("./finput.vue")
+  }
+})
 export default class App extends Vue {
-  @Prop() public readonly value!: string;
-  @Prop() public readonly prefix!: string;
-  @Prop() public readonly suffix!: string;
-  @Prop() public readonly estimateValue!: string;
-  @Prop() public readonly limitLengthAfterDot!: number;
-  @Prop({ default: false }) public readonly estimate!: boolean;
-  @Prop() public readonly error!: boolean;
-  @Prop() public readonly disabled!: boolean;
+  @Prop() readonly value!: string;
+  @Prop() readonly prefix!: string;
+  @Prop() readonly suffix!: string;
+  @Prop() readonly estimateValue!: string;
+  @Prop({ default: false }) readonly estimate!: boolean;
+  @Prop() readonly error!: boolean;
+  @Prop() readonly disabled!: boolean;
 
-  public allow_tooltip = false;
-  public input_error_class = "ant-input-error";
-  public input_focus = false;
+  allow_tooltip = false;
+  input_error_class = "ant-input-error";
+  input_focus = false;
 
-  public onInputChange(event) {
+  onInputChange(value) {
     this.input_focus = true;
-    const { value } = event.target;
 
-    this.commit_value(value);
+    const value_with_split = value.split(".");
+    const n1 = value_with_split[0];
+    const n2 = value_with_split[1];
+
+    if (value_with_split.length >= 3) {
+      this.$emit('input', [n1, n2].join("."));
+      return;
+    };
+
+    const isNumberRegex = /^[0-9]*$/;
+
+    if (n1.length === 0) {
+      this.$emit('input', '');
+    } else if (isNumberRegex.test(n1) && !n2) {
+      this.$emit('input', value);
+    } else if (isNumberRegex.test(n1) && isNumberRegex.test(n2)) {
+      this.$emit('input', value);
+    }
   }
 
-  public onInputFocus() {
+  onInputFocus() {
     this.input_focus = true;
   }
 
-  public onInputBlur() {
+  onInputBlur() {
     this.input_focus = false;
   }
-
-  public string_to_number(value: string) {
-    return value.replace(/[^0-9.]/g, "");
-  }
-
-  public update_component() {
-    this.$nextTick(() => {
-      this.$forceUpdate();
-    });
-  }
-
-  public before_commit_value(value: string) {
-    value = value
-      .split(".")
-      .filter((val, index) => index <= 1)
-      .map(val => this.string_to_number(val))
-      .join("."); // Remove all string
-
-    value = value
-      .split(".")
-      .map((val, index) => {
-        if (!index) {
-          return val;
-        } // for index key is zero
-
-        if (val.length > this.limitLengthAfterDot) {
-          return val.substring(0, val.length - 1);
-        }
-        return val;
-      })
-      .join(".");
-
-    return value;
-  }
-
-  public commit_value(value: string) {
-    value = this.before_commit_value(value);
-    this.$emit("input", value);
-    this.update_component();
-  }
-
-  public mouseover() {
+  mouseover() {
     this.allow_tooltip = true;
   }
 
-  public mouseleave() {
+  mouseleave() {
     this.allow_tooltip = false;
-  }
-
-  @Watch("value")
-  public onValueChanged(value: string) {
-    this.commit_value(value);
   }
 }
 </script>

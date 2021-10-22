@@ -14,7 +14,6 @@ export class TradeActionMixin extends Vue {
   price = "";
   stop_price = "";
   amount = "";
-  slider_percent = 0;
   marks_slider = {
     0: "",
     25: "",
@@ -22,6 +21,14 @@ export class TradeActionMixin extends Vue {
     75: "",
     100: ""
   };
+
+  get slider_percent() {
+    return Number(this.amount) * 100 / this.max_amount;
+  }
+
+  set slider_percent(percent: number) {
+    this.amount = (this.max_amount * percent / 100).toString();
+  }
 
   get authorized() {
     return UserController.state == "active";
@@ -60,6 +67,13 @@ export class TradeActionMixin extends Vue {
     const amount = Number(this.amount);
 
     return (price * amount).toFixedNumber(this.total_precision);
+  }
+
+  get max_amount() {
+    const balance = Number(this.assets.available);
+    const price = Number(this.price);
+
+    return this.side === "buy" ? balance / price : balance;
   }
 
   get fee() {
@@ -157,69 +171,6 @@ export class TradeActionMixin extends Vue {
     return helpers.translation("page.exchange.trade_action." + message, data);
   }
 
-  amount_with_balance(default_price = true) {
-    const price = Number(this.price);
-    const amount = Number(this.amount);
-    const available = this.assets.available;
-    if (!amount) {
-      return;
-    }
-
-    if (!price) {
-      const best_price = TradeController.get_best_price(this.side);
-
-      if (!best_price) return;
-      if (default_price) {
-        this.price = best_price;
-      }
-    }
-
-    if (this.side === "sell") {
-      if (amount > available) {
-        this.amount = available.toString();
-      }
-    } else {
-      const total_balance = available / price;
-
-      if (amount > total_balance) {
-        this.amount = total_balance.toString();
-      }
-    }
-  }
-
-  percent_to_amount(percent: number) {
-    const available = this.assets.available;
-    const price = Number(this.price);
-
-    if (!percent) {
-      return this.amount = "";
-    }
-    if (!available) return 0;
-    if (this.side === "sell") {
-      this.amount = ((available * percent) / 100).toString();
-    } else {
-      const total_balance = available / price;
-
-      this.amount = ((total_balance * percent) / 100).toString();
-    }
-  }
-
-  percent_with_amount() {
-    const price = Number(this.price);
-    const amount = Number(this.amount);
-    const available = this.assets.available;
-
-    if (this.side === "sell") {
-      this.slider_percent = ((amount / available) * 100).toFixedNumber(0);
-    } else {
-      const total_balance = available / price;
-
-      this.slider_percent = (
-        (amount / total_balance) * 100
-      ).toFixedNumber(0);
-    }
-  }
-
   amount_to_usd(currency_id: string, amount: number) {
     const price_by_usd = new helpers.Currency(currency_id).getPriceByUSD();
 
@@ -247,24 +198,40 @@ export class TradeActionMixin extends Vue {
     this.loading = false;
   }
 
-  onSliderPercentChange(slider_percent: number) {
-    this.percent_to_amount(slider_percent);
+  round_precision(value: string, precision: number) {
+    const value_with_split = value.split(".");
+    const n1 = value_with_split[0];
+    const n2 = value_with_split[1];
+
+    if (n2) {
+      return [n1, n2.slice(0, precision)].join(".");
+    } else {
+      return value;
+    }
   }
 
   @Watch("price")
   onPriceChange() {
-    this.amount_with_balance(false);
-    if (this.side === "buy") {
-      this.percent_with_amount();
-    }
+    this.price = this.round_precision(this.price, this.price_precision);
+    if (this.side === "buy") this.FixAmount();
   }
 
   @Watch("amount")
   onAmountChange() {
-    this.amount_with_balance();
-    this.percent_with_amount();
-    if (this.amount[this.amount.length - 1] == ".") {
-      this.amount = this.amount.slice(0, this.amount.length - 1);
+    if (!this.amount) return;
+
+    if (this.side === "buy" && !this.price && this.TradeController.orderbook?.book.asks.length) {
+      this.price = this.TradeController.orderbook?.book.asks[0].price;
+    }
+
+    this.FixAmount();
+  }
+
+  FixAmount() {
+    this.amount = this.round_precision(this.amount, this.market?.amount_precision as number);
+
+    if (Number(this.amount) > this.max_amount) {
+      this.amount = this.max_amount.toString();
     }
   }
 }
