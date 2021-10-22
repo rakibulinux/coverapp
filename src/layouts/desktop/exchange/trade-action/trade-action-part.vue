@@ -7,7 +7,6 @@
       v-model="stop_price"
       :prefix="$t('page.global.placeholder.stop').toUpperCase()"
       :suffix="currency_by_side('buy').toUpperCase()"
-      :limit-length-after-dot="price_precision"
       :estimate-value="
         amount_to_usd(currency_by_side('buy'), Number(this.price)).toFixed(2)
       "
@@ -19,12 +18,9 @@
       v-model="price"
       :prefix="$t(isStop ? 'page.global.placeholder.limit' : 'page.global.placeholder.price').toUpperCase()"
       :suffix="currency_by_side('buy').toUpperCase()"
-      :limit-length-after-dot="price_precision"
       :estimate-value="
         amount_to_usd(currency_by_side('buy'), Number(this.price)).toFixed(2)
       "
-      :ord_type="ord_type"
-      :disabled="ord_type == 'market'"
       :error="price_error"
     />
     <trade-action-input
@@ -33,7 +29,6 @@
       :value="this.translation('ord_type.market')"
       :prefix="$t('page.global.placeholder.price').toUpperCase()"
       :suffix="currency_by_side('buy').toUpperCase()"
-      :limit-length-after-dot="price_precision"
       :estimate-value="
         amount_to_usd(currency_by_side('buy'), Number(this.price)).toFixed(2)
       "
@@ -45,8 +40,6 @@
       v-model="amount"
       :prefix="$t('page.global.placeholder.amount').toUpperCase()"
       :suffix="currency_by_side('sell').toUpperCase()"
-      :limit-length-after-dot="amount_precision"
-      :ord_type="ord_type"
       :error="amount_error"
     />
     <a-slider
@@ -56,7 +49,6 @@
       :step="1"
       :default-value="0"
       :disabled="slider_disabled"
-      @change="onSliderPercentChange"
     />
     <div class="total">
       {{ $t('page.global.placeholder.total') }}:
