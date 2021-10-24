@@ -203,7 +203,9 @@ export class TradeActionMixin extends Vue {
     const n1 = value_with_split[0];
     const n2 = value_with_split[1];
 
-    if (n2) {
+    if (precision === 0) {
+      return n1;
+    } else if (n2) {
       return [n1, n2.slice(0, precision)].join(".");
     } else {
       return value;
