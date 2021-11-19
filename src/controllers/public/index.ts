@@ -13,21 +13,13 @@ export class PublicController {
     document.title = title;
   }
 
-  async fetch_currencies() {
+  async fetch_config() {
     try {
-      const { data } = await new ApiClient("trade").get("public/currencies?limit=1000");
+      const { data } = await new ApiClient("trade").get("public/config");
 
-      this.currencies = data;
-    } catch (error) {
-      return error;
-    }
-  }
-
-  async fetch_markets() {
-    try {
-      const { data } = await new ApiClient("trade").get("public/markets?limit=1000");
-
-      this.markets = data;
+      this.currencies = data.currencies;
+      this.markets = data.markets;
+      this.trading_fees = data.trading_fees;
     } catch (error) {
       return error;
     }
@@ -46,16 +38,6 @@ export class PublicController {
 
       this.tickers = tickers;
 
-    } catch (error) {
-      return error;
-    }
-  }
-
-  async fetch_trading_fees() {
-    try {
-      const { data } = await new ApiClient("trade").get("public/trading_fees");
-
-      this.trading_fees = data;
     } catch (error) {
       return error;
     }

@@ -58,10 +58,8 @@ router.beforeEach(async (to, from, next) => {
 
     await Promise.all([
       UserController.get_logged(),
-      PublicController.fetch_currencies(),
-      PublicController.fetch_markets(),
+      PublicController.fetch_config(),
       PublicController.fetch_tickers(),
-      PublicController.fetch_trading_fees(),
       PublicController.fetch_global_price(),
       PublicController.fetch_banners(),
       PublicController.fetch_broadcasts()
