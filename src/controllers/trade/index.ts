@@ -7,7 +7,7 @@ import OrderBook from "./orderbook";
 import store from "./store";
 import GettersSetters from "./getters_setters";
 import config from '@/config';
-import { PublicController } from '..';
+import { PublicController, UserController } from '..';
 import { IsMobile, runNotice } from "@/mixins";
 import TradingView from "./tradingview";
 import router from '@/router';
@@ -138,6 +138,22 @@ export class TradeController {
     } catch (error) {
       return error;
     }
+  }
+
+  fetch_ieo_list() {
+    return new ApiClient("finex").get("public/ieo/list");
+  }
+
+  fetch_ieo(id: number) {
+    return new ApiClient("finex").get((UserController.isAuth ? "/ieo/" : "public/ieo/") + id);
+  }
+
+  create_ieo_order(ieo_id: number, payment_currency: string, quantity: string) {
+    return new ApiClient("finex").post("ieo", {
+      ieo_id,
+      payment_currency,
+      quantity
+    });
   }
 }
 

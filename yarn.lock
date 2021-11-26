@@ -1773,10 +1773,10 @@
   resolved "https://registry.yarnpkg.com/@zsmartex/z-store/-/z-store-2.2.30.tgz#28a2613da49e3f0158b90a9ffeb28aec26b91949"
   integrity sha512-FdOa4lbxk3J3E8ujukCoU/DpGyPZtesqRubq7ewtif2nL0iv/r09dyk7pbHbrHvsn44eyitamUTy2p20KPXwsA==
 
-"@zsmartex/z-types@1.10.22":
-  version "1.10.22"
-  resolved "https://registry.yarnpkg.com/@zsmartex/z-types/-/z-types-1.10.22.tgz#77f706e777fc610a44de10af85c02af9e2bd1226"
-  integrity sha512-7bDwRps3VLTvsxPp+inVfXtwn1av2VOb3VanCpor5pyGoDL76ao3jaGwLcLWJMKiiNSvjEb/mh9pnPiPF15iaQ==
+"@zsmartex/z-types@1.10.28":
+  version "1.10.28"
+  resolved "https://registry.yarnpkg.com/@zsmartex/z-types/-/z-types-1.10.28.tgz#7111375ce19229dd337bec6cf19a80f4331caf56"
+  integrity sha512-K/CqAkfBel4UJhfF1LEAPVNbJc/PgMGxRed3VHbbGr4iv/sqRJUJ4V4Gad+3Vkk7SXhweNoiHRZLIoGGH4PSAw==
 
 abbrev@1:
   version "1.1.1"

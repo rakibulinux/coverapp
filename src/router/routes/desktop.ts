@@ -117,5 +117,15 @@ export default [
     meta: {
       requiresAuth: true
     }
-  }
+  },
+  {
+    path: "/ieo/list",
+    name: "IEO List Page",
+    component: () => import("@/views/desktop/ieo_list.vue")
+  },
+  {
+    path: "/ieo/:id",
+    name: "IEO Page",
+    component: () => import("@/views/desktop/ieo.vue")
+  },
 ];

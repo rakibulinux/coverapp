@@ -54,4 +54,7 @@ export default {
   "success.address_book.deleted": "Address book was deleted",
   "success.address_book.resend": "Confirmation code was sent to your email",
   "success.address_book.confirmed": "Address book was confirmed",
+
+  // IEO
+  "success.ieo.bought": "Success"
 };

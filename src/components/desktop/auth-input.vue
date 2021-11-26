@@ -1,5 +1,5 @@
 <template>
-  <div :class="['z-auth-input', { 'z-auth-input-error': !!error }]">
+  <div :class="['z-auth-input', { 'z-auth-input-error': !!error, 'z-auth-input-disabled': disabled }]">
     <input
       v-if="['text', 'password'].includes(input_type)"
       ref="input"
@@ -11,6 +11,7 @@
       spellcheck="off"
       autocapitalize="none"
       :maxlength="maxlength"
+      :disabled="disabled"
       @focus="onInputFocus"
       @blur="onInputBlur"
       @input="onInputChange"
@@ -59,6 +60,7 @@ export default class App extends Vue {
   @Prop() public readonly prefix!: string;
   @Prop() public readonly error!: string;
   @Prop() public readonly select!: { [key: string]: string };
+  @Prop() public readonly disabled!: boolean;
 
   public $refs: {
     input: HTMLInputElement;
@@ -144,6 +146,14 @@ export default class App extends Vue {
       box-shadow: 0 0 0 1000px var(--bg-card-color) inset !important;
       -webkit-text-fill-color: var(--text-default-color) !important;
     }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &-disabled {
+    cursor: not-allowed;
   }
 
   .ant-select {

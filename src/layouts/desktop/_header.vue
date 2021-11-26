@@ -41,6 +41,7 @@
           </a-menu-item>
         </a-menu>
       </a-dropdown>
+      <router-link to="/ieo/list">IEO</router-link>
     </div>
     <div class="action-group right">
       <div v-if="isAuth" class="auth">

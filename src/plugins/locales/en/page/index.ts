@@ -4,6 +4,7 @@ import Orders from "./orders";
 import Exchange from "./exchange";
 import Assets from "./assets";
 import Auth from "./auth";
+import ieo from "./ieo";
 
 export default {
   // Market
@@ -131,4 +132,5 @@ export default {
   ...Exchange,
   ...Assets,
   ...Auth,
+  ...ieo,
 }

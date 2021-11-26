@@ -232,4 +232,15 @@ export default {
   "success.internal.transfer.created": "Internal transfer was created",
 
   // applogic
+
+  // IEO Finex
+  "market.ieo.not_enabled": "This IEO is not enabled",
+  "market.ieo.is_ended": "This IEO is ended",
+  "market.ieo.not_started": "This IEO is not started",
+  "market.ieo.invalid_payment_currency": "Payment Currency is not valid",
+  "market.ieo.non_positive_quantity": "Quantity is not positive",
+  "market.ieo.low_quantity": "Quantity is too low",
+  "market.ieo.reached_limit": "You have reached the limit quantity to buy",
+  "market.ieo.out_of_stock": "IEO is out of stock",
+  "market.ieo.is_completed": "IEO was completed"
 };
