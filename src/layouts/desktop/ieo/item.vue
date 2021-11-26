@@ -66,7 +66,6 @@ export default class IEOItem extends Vue {
   background-color: var(--bg-card-color);
   width: 350px;
   margin: 0 10px 25px;
-  box-shadow: 0 4px 20px 5px rgb(0 0 0 / 15%);
   cursor: pointer;
   color: var(--text-default-color);
 
