@@ -242,5 +242,6 @@ export default {
   "market.ieo.low_quantity": "Quantity is too low",
   "market.ieo.reached_limit": "You have reached the limit quantity to buy",
   "market.ieo.out_of_stock": "IEO is out of stock",
-  "market.ieo.is_completed": "IEO was completed"
+  "market.ieo.is_completed": "IEO was completed",
+  "market.ieo.kyc_required": "KYC required"
 };
