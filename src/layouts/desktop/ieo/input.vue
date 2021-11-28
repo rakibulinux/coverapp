@@ -1,6 +1,6 @@
 <template>
   <div class="ieo-input">
-    <auth-input type="text" :placeholder="placeholder" :placeholderNeed="placeholderNeed" :value="value" @input="onInput" :error="error" :disabled="disabled">
+    <auth-input type="text" :placeholder="placeholder" :placeholderNeed="placeholderNeed" :value="value" @input="onInput" :error="error" :disabled="disabled" @focus="$emit('focus')" @blur="$emit('blur')">
       <template v-if="$slots['right-action']" slot="right-action">
         <slot name="right-action" />
       </template>

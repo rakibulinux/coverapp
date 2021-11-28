@@ -79,10 +79,12 @@ export default class App extends Vue {
 
   public onInputFocus() {
     this.input_focus = true;
+    this.$emit("focus");
   }
 
   public onInputBlur() {
     this.input_focus = false;
+    this.$emit("blur");
   }
 
   public onInputChange(event) {

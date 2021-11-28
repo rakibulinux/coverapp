@@ -15,7 +15,7 @@
             <a-icon type="clock-circle" /> {{ $t("page.ieo.start") }}
           </span>
           <span>
-            {{ moment.unix(ieo.start_time).format("YYYY-MM-DD  hh:mm:ss") }}
+            {{ moment.unix(ieo.start_time).utc().format('MMM DD, YYYY / hh:mm:ss') }} <span class="text-up">(UTC+0)</span>
           </span>
         </p>
         <p>
@@ -23,7 +23,7 @@
             <a-icon type="clock-circle" /> {{ $t("page.ieo.end") }}
           </span>
           <span>
-            {{ moment.unix(ieo.end_time).format("YYYY-MM-DD hh:mm:ss") }}
+            {{ moment.unix(ieo.start_time).utc().format('MMM DD, YYYY / hh:mm:ss') }} <span class="text-up">(UTC+0)</span>
           </span>
         </p>
       </div>

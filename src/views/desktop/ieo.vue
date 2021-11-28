@@ -43,14 +43,15 @@
           </div>
 
           <div class="time-line">
-            {{ moment.unix(start_time).format("YYYY-MM-DD hh:mm:ss") }}
+            {{ moment.unix(start_time).utc().format('MMM DD, YYYY / hh:mm:ss') }}
             -
-            {{ moment.unix(end_time).format("YYYY-MM-DD hh:mm:ss") }}
+            {{ moment.unix(end_time).utc().format('MMM DD, YYYY / hh:mm:ss') }}
+            <span class="text-up">(UTC+0)</span>
           </div>
 
           <div class="payment-currency">
             <span v-for="pc in payment_currencies" :key="pc" class="payment-currency-item">
-              {{ pc.toUpperCase() }} ≈ {{ pc == ieo.main_payment_currency ? ieo.price : (Number(ieo.price) / Number(get_currency(pc).price)).toFixed(4) }}
+              {{ pc.toUpperCase() }} ≈ {{ pc == ieo.main_payment_currency ? ieo.price : round_number(Number(ieo.price) / Number(get_currency(pc).price)) }}
             </span>
           </div>
         </div>
@@ -59,10 +60,13 @@
             <span>
               Buy {{ currency_id }}
             </span>
-            <router-link to="/assets/balance">Deposit</router-link>
+            <div class="deposit-box">
+              <router-link to="/assets/balance">Deposit</router-link>
+              <p v-if="isAuth">Available: {{ balance }} {{ payment_currency.toUpperCase() }}</p>
+            </div>
           </div>
 
-          <ieo-input :value="total" placeholder="Payment" :placeholderNeed="true" :disabled="true">
+          <ieo-input v-model="total" placeholder="Payment" :placeholderNeed="true" @focus="totalFocus = true" @blur="totalFocus = false" :error="total_error">
             <template slot="right-action">
               <a-dropdown placement="bottomRight" :trigger="['click']" overlayClassName="idr-dropdown">
                 <a-menu slot="overlay" @click="handleMenuClick">
@@ -73,7 +77,7 @@
             </template>
           </ieo-input>
           <div class="buy-box-price">1 {{ currency_id }} ~ {{ price }} {{ payment_currency.toUpperCase() }}</div>
-          <ieo-input v-model="quantity" placeholder="Total in tokens" :placeholderNeed="true" :error="quantity_error"  />
+          <ieo-input v-model="quantity" placeholder="Total in tokens" :placeholderNeed="true" :error="quantity_error" @focus="quantityFocus = true" @blur="quantityFocus = false" />
           <div class="bought-quantity">
             <span class="bought-quantity-title">
               Bought Amount:
@@ -93,6 +97,7 @@
 import { runNotice } from '@/mixins';
 import moment from 'moment';
 import { Vue, Component, Watch } from 'vue-property-decorator'
+import Decimal from "decimal.js";
 
 @Component({
   components: {
@@ -104,30 +109,36 @@ export default class PageIEO extends Vue {
   ieo?: ZTypes.IEO = null;
   button_loading = false;
 
+  totalFocus = false;
+  quantityFocus = false;
+
   payment_currency = "";
+  total = "";
   quantity = "";
 
   time_count_interval: NodeJS.Timeout;
   time_count_key = 0;
 
+  get Decimal() {
+    return Decimal;
+  }
+
+  get isAuth() {
+    return this.UserController.isAuth;
+  }
+
   get balance() {
-    return this.UserController.balances.find(b => b.currency === this.payment_currency);
+    return this.UserController.balances.find(b => b.currency === this.payment_currency)?.balance;
   }
 
   get button_disabled() {
-    return this.quantity_error || this.quantity.length == 0 || !this.UserController.isAuth || Number(this.quantity) + Number(this.ieo.bought_quantity) > Number(this.ieo.limit_per_user) || this.total > Number(this.balance) || this.button_loading || this.IsCompleted || !this.isActive;
-  }
-
-  get total() {
-    if (!this.quantity) return "0";
-
-    return Number(this.quantity) * this.price;
+    return this.quantity_error || this.total_error || this.quantity.length == 0 || !this.UserController.isAuth || Number(this.quantity) + Number(this.ieo.bought_quantity) > Number(this.ieo.limit_per_user) || this.button_loading || this.IsCompleted || !this.isActive || !this.isAuth;
   }
 
   get price() {
     const price = Number(this.ieo.price) / Number(this.get_currency(this.payment_currency).price);
 
-    return price;
+    return this.round_number(price);
   }
 
   get currency_name() {
@@ -156,6 +167,12 @@ export default class PageIEO extends Vue {
 
   get intro_data() {
     return this.ieo?.data || "";
+  }
+
+  get total_error() {
+    if (this.total.length == 0) return
+
+    if (Number(this.total) > Number(this.balance)) return "Max. total is " + this.balance
   }
 
   get quantity_error() {
@@ -201,6 +218,10 @@ export default class PageIEO extends Vue {
 
   beforeDestroy() {
     clearInterval(this.time_count_interval);
+  }
+
+  round_number(num: number) {
+    return new Decimal(num.toFixed(8))
   }
 
   async create_ieo_order() {
@@ -260,9 +281,29 @@ export default class PageIEO extends Vue {
     }
   }
 
+  @Watch("total")
+  onTotalChanged() {
+    if (!this.totalFocus) return;
+
+    this.quantity = (Number(this.total) / Number(this.price)).toString();
+    this.quantity = this.round_precision(this.quantity, 8);
+    this.quantity = this.round_number(Number(this.quantity)).toString();
+  }
+
   @Watch("quantity")
   onQuantityChanged() {
-    this.quantity = this.round_precision(this.quantity, 8);
+    if (!this.quantityFocus) return;
+
+    this.total = (Number(this.quantity) * Number(this.price)).toString();
+    this.total = this.round_precision(this.total, 8);
+    this.total = this.round_number(Number(this.total)).toString();
+  }
+
+  
+  @Watch("payment_currency")
+  onPaymentCurrencyChanged() {
+    this.total = "";
+    this.quantity = "";
   }
 }
 </script>
@@ -278,6 +319,16 @@ export default class PageIEO extends Vue {
     .container {
       display: flex;
       justify-content: space-between;
+    }
+  }
+
+  .deposit-box {
+    text-align: right;
+    font-size: 14px;
+
+    p {
+      font-weight: normal;
+      font-size: 12px;
     }
   }
 
@@ -363,6 +414,7 @@ export default class PageIEO extends Vue {
       margin-bottom: 30px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
     }
 
     .ieo-input {
