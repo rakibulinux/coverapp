@@ -55,36 +55,46 @@
             </span>
           </div>
         </div>
-        <div class="buy-box">
-          <div class="buy-box-title">
-            <span>
-              Buy {{ currency_id }}
-            </span>
-            <div class="deposit-box">
-              <router-link to="/assets/balance">Deposit</router-link>
-              <p v-if="isAuth">Available: {{ balance }} {{ payment_currency.toUpperCase() }}</p>
+        <div class="r-box">
+          <div class="status-box">
+            <div class="total-sold">
+              <span class="title">Total sold:</span> <span class="text-up">{{ ieo.executed_quantity }}/{{ ieo.origin_quantity }}</span>
+            </div>
+            <div class="distributors">
+              <span class="title">Distributors:</span> <span class="text-up">{{ ieo.distributors }}</span>
             </div>
           </div>
+          <div class="buy-box">
+            <div class="buy-box-title">
+              <span>
+                Buy {{ currency_id }}
+              </span>
+              <div class="deposit-box">
+                <router-link to="/assets/balance">Deposit</router-link>
+                <p v-if="isAuth">Available: {{ balance }} {{ payment_currency.toUpperCase() }}</p>
+              </div>
+            </div>
 
-          <ieo-input v-model="total" placeholder="Payment" :placeholderNeed="true" @focus="totalFocus = true" @blur="totalFocus = false" :error="total_error">
-            <template slot="right-action">
-              <a-dropdown placement="bottomRight" :trigger="['click']" overlayClassName="idr-dropdown">
-                <a-menu slot="overlay" @click="handleMenuClick">
-                  <a-menu-item v-for="pc in payment_currencies" :key="pc"><img class="currency-icon" :src="get_currency_icon(pc)" /> {{ pc.toUpperCase() }}</a-menu-item>
-                </a-menu>
-                <span><img class="currency-icon" :src="get_currency_icon(payment_currency)" />{{ payment_currency.toUpperCase() }} <a-icon type="down" /></span>
-              </a-dropdown>
-            </template>
-          </ieo-input>
-          <div class="buy-box-price">1 {{ currency_id }} ~ {{ price }} {{ payment_currency.toUpperCase() }}</div>
-          <ieo-input v-model="quantity" placeholder="Total in tokens" :placeholderNeed="true" :error="quantity_error" @focus="quantityFocus = true" @blur="quantityFocus = false" />
-          <div class="bought-quantity">
-            <span class="bought-quantity-title">
-              Bought Amount:
-            </span>
-            {{ ieo.bought_quantity }}/{{ ieo.limit_per_user }}
+            <ieo-input v-model="total" placeholder="Payment" :placeholderNeed="true" @focus="totalFocus = true" @blur="totalFocus = false" :error="total_error">
+              <template slot="right-action">
+                <a-dropdown placement="bottomRight" :trigger="['click']" overlayClassName="idr-dropdown">
+                  <a-menu slot="overlay" @click="handleMenuClick">
+                    <a-menu-item v-for="pc in payment_currencies" :key="pc"><img class="currency-icon" :src="get_currency_icon(pc)" /> {{ pc.toUpperCase() }}</a-menu-item>
+                  </a-menu>
+                  <span><img class="currency-icon" :src="get_currency_icon(payment_currency)" />{{ payment_currency.toUpperCase() }} <a-icon type="down" /></span>
+                </a-dropdown>
+              </template>
+            </ieo-input>
+            <div class="buy-box-price">1 {{ currency_id }} ~ {{ price }} {{ payment_currency.toUpperCase() }}</div>
+            <ieo-input v-model="quantity" placeholder="Total in tokens" :placeholderNeed="true" :error="quantity_error" @focus="quantityFocus = true" @blur="quantityFocus = false" />
+            <div class="bought-quantity">
+              <span class="bought-quantity-title">
+                Bought Amount:
+              </span>
+              {{ ieo.bought_quantity }}/{{ ieo.limit_per_user }}
+            </div>
+            <button :disabled="button_disabled" @click="create_ieo_order"><a-icon v-if="button_loading" type="loading" /> Buy {{ currency_name }}</button>
           </div>
-          <button :disabled="button_disabled" @click="create_ieo_order"><a-icon v-if="button_loading" type="loading" /> Buy {{ currency_name }}</button>
         </div>
       </div>
     </div>
@@ -322,6 +332,19 @@ export default class PageIEO extends Vue {
     }
   }
 
+  .status-box {
+    margin-right: 20px;
+    font-size: 16px;
+
+    .title {
+      color: var(--color-gray);
+    }
+
+    .distributors {
+      margin-top: 12px;
+    }
+  }
+
   .deposit-box {
     text-align: right;
     font-size: 14px;
@@ -329,6 +352,10 @@ export default class PageIEO extends Vue {
     p {
       font-weight: normal;
       font-size: 12px;
+    }
+
+    a {
+      color: var(--blue-color);
     }
   }
 
@@ -486,6 +513,10 @@ export default class PageIEO extends Vue {
         margin-left: 4px;
       }
     }
+  }
+
+  .r-box {
+    display: flex;
   }
 }
 
