@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts">
+import { runNotice } from "@/mixins";
 import * as helpers from "@zsmartex/z-helpers";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
@@ -37,6 +38,7 @@ export default class DepositNotice extends Vue {
 
   copy_address() {
     helpers.copyText(this.deposit_address);
+    runNotice("success", "copy");
   }
 }
 </script>
