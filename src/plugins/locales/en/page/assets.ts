@@ -52,4 +52,5 @@ export default {
   "page.assets.history.state.succeed": "Succeed",
   "page.assets.history.state.failed": "Failed",
   "page.assets.history.state.confirming": "Confirming",
+  "page.assets.history.state.fee_collecting": "Fee Collecting",
 };
