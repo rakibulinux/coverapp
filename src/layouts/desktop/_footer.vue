@@ -64,7 +64,7 @@
       </ul>
     </div>
     <div class="bottom-footer">
-      &copy; 2019-2021
+      &copy; 2022-2024
       <a :href="copyright.link" target="_blank" v-text="copyright.name" />. All
       rights reserved. <router-link to="/disclaimer">
           Disclaimer
