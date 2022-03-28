@@ -85,7 +85,7 @@ const configWebPack = {
   devServer: {
     proxy: {
       "^/api": {
-        target: "https://test.zsmartex.tech",
+        target: "https://exchange.smartchainers.in/",
         secure: false,
         ws: true,
         changeOrigin: true,

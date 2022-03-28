@@ -26,6 +26,14 @@ export default [
     }
   },
   {
+    path: "/disclaimer",
+    name: "disclaimer",
+    component: () => import("@/views/desktop/desclaimer.vue"),
+    meta: {
+      guest: true
+    }
+  },
+  {
     path: "/account",
     name: "account",
     component: () => import("@/views/desktop/_account.vue"),

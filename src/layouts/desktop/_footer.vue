@@ -3,9 +3,9 @@
     <div class="menu-footer">
       <ul>
         <li class="title">
-          <img src="@/assets/img/rectangular_logo.png" />
+          <img src="@/assets/img/logo.png" />
         </li>
-        <li class="m">
+        <li class="l">
           <a href="#" class="icon-link">
             <i class="zicon-telegram" />
           </a>
@@ -16,9 +16,14 @@
       </ul>
       <ul>
         <li class="title">
-          Example
+          About Us
         </li>
-        <li class="m">
+        <!-- <li class="m">
+          <router-link to="/disclaimer">
+          Disclaimer
+          </router-link>
+        </li> -->
+        <!-- <li class="m">
           <a>Example</a>
         </li>
         <li class="m">
@@ -26,11 +31,8 @@
         </li>
         <li class="m">
           <a>Example</a>
-        </li>
-        <li class="m">
-          <a>Example</a>
-        </li>
-      </ul>
+        </li> -->
+      <!-- </ul>
       <ul>
         <li class="title">
           Example
@@ -46,7 +48,7 @@
         </li>
         <li class="m">
           <a>Example</a>
-        </li>
+        </li> -->
       </ul>
       <ul class="contact">
         <li class="title">
@@ -56,14 +58,17 @@
         <li class="m" v-text="`Business: ${contactus.business}`" />
         <li class="m">
           Facebook:
-          <a :href="contactus.facebook" target="_blank">Hữu Hà</a>
+          <!-- <a :href="contactus.facebook" target="_blank">XUM exchange</a> -->
+          XUM Exchange
         </li>
       </ul>
     </div>
     <div class="bottom-footer">
-      &copy; 2019-2021
+      &copy; 2022-2024
       <a :href="copyright.link" target="_blank" v-text="copyright.name" />. All
-      rights reserved.
+      rights reserved. <router-link to="/disclaimer">
+          Disclaimer
+          </router-link>
     </div>
   </div>
 </template>
@@ -74,14 +79,14 @@ import { Vue, Component } from "vue-property-decorator";
 @Component
 export default class App extends Vue {
   public contactus = {
-    service: "business@zsmart.tech",
-    business: "business@zsmart.tech",
-    facebook: "https://fb.com/huuhait"
+     service: "service@xumexchange.com",
+    business: "business@xumexchange.com",
+    facebook: "https://fb.com/xumexchange"
   };
 
   public copyright = {
-    name: "ZSmart",
-    link: "https://www.zsmart.tech/"
+    name: "XUM Exchange",
+    link: "https://www.xumexchange.com/"
   };
 }
 </script>

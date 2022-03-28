@@ -103,19 +103,19 @@ export default class PageExchangePro extends Mixins(ExchangeBaseMixin) {
     padding: 4px;
     gap: 4px;
     grid-template-columns: minmax(253px, 320px) 1fr minmax(253px, 320px) minmax(253px, 320px);
-    grid-template-rows: 64px 1fr auto 260px;
+    grid-template-rows: 64px auto 1fr 260px;
     grid-template-areas:
-        "trade-pairs ticker orderbook trades"
-        "trade-pairs chart orderbook trades"
+        "trade-pairs ticker trade-action trade-action"
         "trade-pairs chart trade-action trade-action"
-        "trade-pairs mine-control trade-action trade-action";
+        "trade-pairs chart orderbook trades"
+        "trade-pairs mine-control orderbook trades";
 
     &.hide-pairs-table {
       grid-template-areas:
-        "ticker ticker orderbook trades"
-        "chart chart orderbook trades"
+        "ticker ticker trade-action trade-action"
         "chart chart trade-action trade-action"
-        "mine-control mine-control trade-action trade-action";
+        "chart chart orderbook trades"
+        "mine-control mine-control orderbook trades";
     }
   }
 }

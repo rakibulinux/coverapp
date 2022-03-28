@@ -65,13 +65,13 @@
     <modal-totp ref="totp" @submit="onSubmitTotp" @close="modalClose" />
   </div>
 </template>
-
+ 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
 import * as helpers from "@zsmartex/z-helpers";
 import Helpers from "./helpers";
 import store from "@/store";
-
+ 
 @Component({
   components: {
     "modal-2fa": () => import("@/layouts/desktop/account/_modal_2fa.vue"),
@@ -87,15 +87,15 @@ export default class ApiKeyPage extends Mixins(Helpers) {
     modal: string;
     action: string;
   };
-
+ 
   get api_keys() {
     return store.state.user.api_keys;
   }
-
+ 
   get isLoading() {
     return this.api_keys.loading;
   }
-
+ 
   mounted() {
     if (!this.api_keys.loading)
       this.$store.dispatch("user/GET_API_KEYS", {
@@ -103,7 +103,7 @@ export default class ApiKeyPage extends Mixins(Helpers) {
         limit: 25
       });
   }
-
+ 
   modalClose() {
     const { kid } = this.payload_modal;
     const index = this.getIndexApiKey(kid);
@@ -117,7 +117,7 @@ export default class ApiKeyPage extends Mixins(Helpers) {
     this.onClick(modal);
     this.api_keys.array[index].loading = true;
   }
-
+ 
   getIndexApiKey(kid) {
     return this.api_keys.array.findIndex(e => e.kid == kid);
   }
@@ -156,29 +156,30 @@ export default class ApiKeyPage extends Mixins(Helpers) {
       return error;
     }
   }
-
+ 
   onNewApiKeyCreated() {
     this.$store.dispatch("user/GET_API_KEYS", {
       page: this.page,
       limit: 25
     });
   }
-
+ 
   onPageChange($page) {
     this.page = $page;
-
+ 
     this.$store.dispatch("user/GET_API_KEYS", {
       page: this.page,
       limit: 25
     });
   }
-
+ 
   getDate(date) {
     return helpers.getDate(date, true);
   }
-
+ 
   translation(message: string, data?: {}) {
     return helpers.translation("page.account.api." + message, data);
   }
 }
 </script>
+ 

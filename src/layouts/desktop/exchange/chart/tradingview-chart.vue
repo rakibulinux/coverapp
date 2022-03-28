@@ -177,8 +177,10 @@ export default class TradingViewChart extends Vue {
       { title: "15min", resolution: "15", chartType: 1 },
       { title: "30min", resolution: "30", chartType: 1 },
       { title: "1hour", resolution: "60", chartType: 1 },
+      { title: "4hour", resolution: "240", chartType: 1 },
       { title: "1day", resolution: "1D", chartType: 1 },
-      { title: "1week", resolution: "1W", chartType: 1 }
+      { title: "1week", resolution: "1W", chartType: 1 },
+      { title: "1month", resolution: "1M", chartType: 1 }
     ];
 
     this.tvWidget.onChartReady(() => {

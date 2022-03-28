@@ -1,7 +1,7 @@
 <template>
   <div class="preview">
     <div class="fixed">
-      <h3>[NAME] - Your Great Choice</h3>
+      <h3>Welcome to XUM exchange</h3>
       <div class="banners">
         <swiper class="slide_viewer" :options="swiperOption">
           <swiper-slide v-for="(banner, index) in banners" :key="index">
@@ -25,7 +25,11 @@
 import Broadcasts from "./Broadcasts.vue";
 import { canvas } from "@/assets/js";
 import { Vue, Component } from "vue-property-decorator";
-import { PublicController } from "@/controllers";
+// import { PublicController } from "@/controllers";
+import Banner1 from "@/assets/img/banner/banner_1.jpg"
+import Banner2 from "@/assets/img/banner/banner_2.jpg"
+import Banner3 from "@/assets/img/banner/banner_3.jpg"
+import Banner4 from "@/assets/img/banner/banner_4.jpg"
 
 @Component({
   components: {
@@ -44,7 +48,25 @@ export default class Preview extends Vue {
   }
 
   get banners() {
-    return PublicController.banners;
+    const data = [
+      {
+        uuid:"banner-1",             
+        image:Banner1
+      },
+      {
+        uuid:"banner-2",             
+        image:Banner2
+      },
+      {
+        uuid:"banner-3",             
+        image:Banner3
+      },
+      {
+        uuid:"banner-4",             
+        image:Banner4
+      }
+    ]
+    return data;
   }
 
   mounted() {
