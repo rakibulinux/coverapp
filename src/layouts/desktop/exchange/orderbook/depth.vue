@@ -146,7 +146,7 @@ export default class MarketDepth extends Vue {
     if (this.side === "bids") {
       return orders.slice(0, index + 1).filter(row => !row.fake).filter(row => !row.fake);
     } else {
-      return orders.slice(index - 1, orders.length).filter(row => !row.fake);
+      return orders.slice(index, orders.length).filter(row => !row.fake);
     }
   }
 
