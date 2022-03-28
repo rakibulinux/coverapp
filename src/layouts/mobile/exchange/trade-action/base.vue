@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { Picker } from "cube-ui";
 import { Vue, Component } from "vue-property-decorator";
 

@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import UserController from "@/controllers/user";
 
 @Component

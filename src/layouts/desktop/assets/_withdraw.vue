@@ -184,7 +184,7 @@
 
 <script lang="ts">
 import { runNotice } from "@/mixins";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
 import modal_create_withdrawal from "@/layouts/desktop/modal/modal-create-withdrawal.vue";
 import modal_confirm_beneficiary from "@/layouts/desktop/modal/modal-confirm-beneficiary.vue";

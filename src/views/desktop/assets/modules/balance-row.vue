@@ -56,8 +56,8 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import * as helpers from "@/library/z-helpers";
+import ZSmartModel from "@/library/z-eventbus";
 import _deposit from "@/layouts/desktop/assets/_deposit.vue";
 import _withdraw from "@/layouts/desktop/assets/_withdraw.vue";
 import { Vue, Component, Prop } from "vue-property-decorator";

@@ -1,4 +1,4 @@
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import UserController from '@/controllers/user';
 import { PublicController, TradeController } from '@/controllers';
 import config from "@/config";

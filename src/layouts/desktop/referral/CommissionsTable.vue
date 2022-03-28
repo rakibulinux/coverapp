@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import ApiClient from '@zsmartex/z-apiclient';
+import ApiClient from '@/library/z-apiclient';
 import moment from 'moment';
 import { Vue, Component } from 'vue-property-decorator'
 

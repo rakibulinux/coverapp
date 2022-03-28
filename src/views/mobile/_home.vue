@@ -21,7 +21,7 @@ import HeadBar from "@/layouts/mobile/home/head-bar.vue";
 import Preview from "@/layouts/mobile/home/preview.vue";
 import FeatureMarkets from "@/layouts/mobile/home/feature-markets";
 import TrendTop from "@/layouts/mobile/home/trend-top.vue";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 

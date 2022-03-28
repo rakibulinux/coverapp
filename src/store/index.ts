@@ -1,8 +1,10 @@
-import ZSmartStore from "@zsmartex/z-store";
+import Custom from "./custom";
 import Vue from "vue";
 import Vuex from "vuex";
 import modules from "./modules";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store<RootState>(ZSmartStore);
+export default new Vuex.Store<RootState>({
+  modules: Custom
+});

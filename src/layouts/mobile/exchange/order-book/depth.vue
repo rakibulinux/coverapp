@@ -35,8 +35,8 @@
 <script lang="ts">
 import { TradeController } from "@/controllers";
 import { Component, Prop, Mixins } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import * as helpers from "@/library/z-helpers";
+import ZSmartModel from "@/library/z-eventbus";
 import { MarketMixin } from "@/mixins/mobile";
 
 @Component({

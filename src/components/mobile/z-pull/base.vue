@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts">
-import { getDate } from "@zsmartex/z-helpers";
+import { getDate } from "@/library/z-helpers";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 
 @Component

@@ -1,5 +1,5 @@
 import colors from "@/colors";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { Store } from './store';
 
 export default class GettersSetters {

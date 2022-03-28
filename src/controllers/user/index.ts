@@ -1,10 +1,10 @@
 import router from "@/router";
-import ApiClient from "@zsmartex/z-apiclient";
+import ApiClient from "@/library/z-apiclient";
 import Vue from "vue";
 import store from "./store";
 import GettersSetters from "./getters_setters";
 import { applyMixins } from '../mixins';
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { IsMobile, runNotice } from "@/mixins";
 import { TradeController } from "..";
 

@@ -43,7 +43,7 @@
 <script lang="ts">
 import TradeController from "@/controllers/trade";
 import { Vue, Component } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import book_asks_svg from "@/assets/img/book_asks.svg";
 import book_avg_svg from "@/assets/img/book_avg.svg";
 import book_bids_svg from "@/assets/img/book_bids.svg";

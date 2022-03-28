@@ -62,8 +62,8 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import * as helpers from "@/library/z-helpers";
+import ZSmartModel from "@/library/z-eventbus";
 import { PublicController } from "@/controllers";
 import { Vue, Component, Prop } from "vue-property-decorator";
 

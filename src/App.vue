@@ -26,7 +26,7 @@
 <script lang="ts">
 import config from "@/config";
 import setTheme from "@/library/setTheme";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { Vue, Component } from "vue-property-decorator";
 import colors from "@/colors";
 import { PublicController } from "./controllers";

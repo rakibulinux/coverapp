@@ -105,9 +105,9 @@
 
 <script lang="ts">
 import { runNotice } from "@/mixins";
-import ApiClient from "@zsmartex/z-apiclient";
+import ApiClient from "@/library/z-apiclient";
 import { Vue, Component, Prop } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 
 @Component({
   components: {

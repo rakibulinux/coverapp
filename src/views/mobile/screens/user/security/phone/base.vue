@@ -56,7 +56,7 @@
 <script lang="ts">
 import { ConfirmationMixin, runNotice } from "@/mixins";
 import { ScreenMixin } from "@/mixins/mobile";
-import ApiClient from "@zsmartex/z-apiclient";
+import ApiClient from "@/library/z-apiclient";
 import { Component, Mixins } from "vue-property-decorator";
 import phone from "phone";
 

@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { SearchScreenMixin, MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
 

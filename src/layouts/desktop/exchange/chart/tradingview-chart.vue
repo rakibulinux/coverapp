@@ -6,7 +6,7 @@
 import uuid from "uuid/v4";
 import TradingViewDataFeed from "@/library/tradingview_datafeed";
 import config from "@/config";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { Vue, Component } from "vue-property-decorator";
 import { TradeController } from "@/controllers";
 import colors from "@/colors";

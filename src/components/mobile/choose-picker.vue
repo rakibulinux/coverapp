@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 
 export default {
   props: {

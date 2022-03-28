@@ -90,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { Mixins, Component } from "vue-property-decorator";
 import { DocumentMixins } from "@/mixins/kyc";
 

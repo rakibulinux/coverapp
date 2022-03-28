@@ -42,8 +42,8 @@
 </template>
 
 <script lang="ts">
-import ZSmartModel from "@zsmartex/z-eventbus";
-import { copyText } from "@zsmartex/z-helpers";
+import ZSmartModel from "@/library/z-eventbus";
+import { copyText } from "@/library/z-helpers";
 import { EncryptEmail, runNotice } from '@/mixins';
 import { ScreenMixin } from '@/mixins/mobile';
 import { Mixins, Component } from 'vue-property-decorator'

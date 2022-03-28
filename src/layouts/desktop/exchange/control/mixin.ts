@@ -1,5 +1,5 @@
 import { TradeController, UserController } from "@/controllers";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component

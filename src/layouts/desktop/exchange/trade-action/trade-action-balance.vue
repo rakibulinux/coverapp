@@ -13,7 +13,7 @@
 
 <script>
 import { UserController } from "@/controllers";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 
 export default {
   props: {

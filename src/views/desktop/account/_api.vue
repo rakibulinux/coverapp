@@ -68,7 +68,7 @@
  
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import Helpers from "./helpers";
 import store from "@/store";
  

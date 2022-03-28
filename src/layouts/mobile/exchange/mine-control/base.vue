@@ -20,7 +20,7 @@
 <script lang="ts">
 import { UserController } from "@/controllers";
 import TradeController from "@/controllers/trade";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({

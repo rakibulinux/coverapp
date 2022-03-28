@@ -27,7 +27,7 @@ import uuid from "uuid/v4";
 import TradeController from "@/controllers/trade";
 import DepthOverLay from "./depth-overlay.vue";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import OrderBookTable from "@/library/orderbook-table";
 import colors from "@/colors";
 

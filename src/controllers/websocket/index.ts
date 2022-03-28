@@ -1,6 +1,6 @@
 import config from "@/config";
 import ZSocket from "@/library/ZSocket";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 
 const RESOLUTION_STREAM = {
   "1": "1m",

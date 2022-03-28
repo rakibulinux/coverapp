@@ -63,7 +63,7 @@
 import { AuthMixin } from "@/mixins";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 
 @Component({
   components: {

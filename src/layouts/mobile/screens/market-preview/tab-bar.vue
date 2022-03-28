@@ -13,7 +13,7 @@
 import store from "@/store";
 import { MarketMixin } from "@/mixins/mobile";
 import { Vue, Component, Prop, Mixins } from "vue-property-decorator";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { PublicController, TradeController } from "@/controllers";
 
 @Component

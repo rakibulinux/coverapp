@@ -47,7 +47,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { PublicController, TradeController } from "@/controllers";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 
 @Component
 export default class MarketListRow extends Vue {

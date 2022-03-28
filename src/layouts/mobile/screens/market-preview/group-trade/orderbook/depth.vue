@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { TradeController } from "@/controllers";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { MarketMixin } from "@/mixins/mobile";
 import { Mixins, Component, Prop } from "vue-property-decorator";
 

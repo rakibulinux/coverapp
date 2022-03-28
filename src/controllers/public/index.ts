@@ -1,4 +1,4 @@
-import ApiClient from "@zsmartex/z-apiclient";
+import ApiClient from "@/library/z-apiclient";
 import { applyMixins } from "../mixins";
 import store from "./store";
 import Helpers from "./helpers";

@@ -4,9 +4,9 @@
 
 <script lang="ts">
 import colors from "@/colors";
-import ApiClient from "@zsmartex/z-apiclient";
+import ApiClient from "@/library/z-apiclient";
 import uuid from "uuid/v4";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { init, Chart, KLineData } from "klinecharts";
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 

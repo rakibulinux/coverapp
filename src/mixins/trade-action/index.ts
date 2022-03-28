@@ -1,8 +1,8 @@
 import { PublicController, UserController, TradeController } from '@/controllers';
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { IsMobile } from "@/mixins";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 
 @Component
 export class TradeActionMixin extends Vue {

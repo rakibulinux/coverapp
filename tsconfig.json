@@ -14,16 +14,10 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "typeRoots": [
-      "node_modules/@zsmartex",
-      "node_modules/@types"
-    ] /* List of folders to include type definitions from. */,
     "types": [
       "./types",
       "./public/charting_library",
       "@types/node",
-      "@zsmartex/z-types",
-      "@zsmartex/z-store",
       "webpack-env"
     ],
     "paths": {

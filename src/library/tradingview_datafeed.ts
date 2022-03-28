@@ -1,6 +1,6 @@
 import { TradeController } from '@/controllers';
-import ApiClient from "@zsmartex/z-apiclient";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ApiClient from "@/library/z-apiclient";
+import ZSmartModel from "@/library/z-eventbus";
 import DatafeedApi from "../../public/charting_library/datafeed-api";
 import TradingView from "../../public/charting_library/charting_library";
 

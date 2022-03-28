@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import { PullMixin } from "@/mixins/mobile";
 import { Mixins, Component } from "vue-property-decorator";
 

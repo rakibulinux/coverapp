@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { copyText, getDate } from "@zsmartex/z-helpers";
+import { copyText, getDate } from "@/library/z-helpers";
 import { PublicController } from "@/controllers";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";

@@ -6,7 +6,7 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import colors from "@/colors";
 import sparkline from "@/library/sparkline";
-import ApiClient from "@zsmartex/z-apiclient";
+import ApiClient from "@/library/z-apiclient";
 
 @Component
 export default class Sparkline extends Vue {

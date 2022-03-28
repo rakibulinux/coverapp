@@ -1,5 +1,5 @@
-import ZSmartModel from "@zsmartex/z-eventbus";
-import ApiClient from "@zsmartex/z-apiclient";
+import ZSmartModel from "@/library/z-eventbus";
+import ApiClient from "@/library/z-apiclient";
 import { applyMixins } from "../mixins";
 import MineControl from "./mine_control";
 import OrdersController from "./orders";

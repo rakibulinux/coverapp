@@ -1,7 +1,7 @@
 import config from "@/config";
 import store from "@/store";
-import ZSmartModel from "@zsmartex/z-eventbus";
-import * as helpers from "@zsmartex/z-helpers";
+import ZSmartModel from "@/library/z-eventbus";
+import * as helpers from "@/library/z-helpers";
 import Vue from "vue";
 import Router from "vue-router";
 import routes from "./routes";

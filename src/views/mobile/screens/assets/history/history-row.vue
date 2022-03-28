@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { getDate } from "@zsmartex/z-helpers";
+import { getDate } from "@/library/z-helpers";
 import { assets_state_color } from "@/mixins";
 import { Vue, Component, Prop } from "vue-property-decorator";
 

@@ -38,9 +38,9 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { UserController } from '@/controllers';
-import ApiClient from '@zsmartex/z-apiclient';
+import ApiClient from '@/library/z-apiclient';
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import { runNotice, SelectTextInElement } from "@/mixins";
 

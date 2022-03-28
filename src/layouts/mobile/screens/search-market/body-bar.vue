@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { MarketMixin } from "@/mixins/mobile";
 import { Component, Mixins, Prop } from "vue-property-decorator";
 

@@ -86,8 +86,8 @@
 
 <script lang="ts">
 import { Component, Mixins } from "vue-property-decorator";
-import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
+import ApiClient from "@/library/z-apiclient";
+import * as helpers from "@/library/z-helpers";
 import Helpers from "./helpers";
 import phone from "phone";
 import { UserController } from "@/controllers";

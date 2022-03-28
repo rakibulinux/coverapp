@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import { runNotice } from "@/mixins";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component({

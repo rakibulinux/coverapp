@@ -96,7 +96,7 @@
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins, Watch } from "vue-property-decorator";
 import { PublicController, TradeController } from "@/controllers";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { ConfirmationMixin } from "@/mixins";
 
 @Component({

@@ -1,5 +1,5 @@
 import { runNotice } from "@/mixins";
-import ApiClient from "@zsmartex/z-apiclient";
+import ApiClient from "@/library/z-apiclient";
 import config from "@/config";
 
 export default abstract class OrdersController {

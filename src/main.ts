@@ -14,6 +14,15 @@ import * as helpers from "@/mixins/helpers";
 import moment from "moment";
 import config from "./config";
 
+Number.prototype.toFixedNumber = function (digits: number, base?: number) {
+  const pow = Math.pow(base || 10, digits);
+  return Math.round((this as number) * pow) / pow;
+};
+
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1)
+}
+
 Vue.use(Fragment.Plugin)
 Vue.use(Vue2TouchEvents);
 Vue.use(vClickOutside);

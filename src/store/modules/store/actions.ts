@@ -1,5 +1,5 @@
-import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
+import ApiClient from "@/library/z-apiclient";
+import * as helpers from "@/library/z-helpers";
 import { ActionTree } from "vuex";
 
 const actions: ActionTree<any, RootState> = {

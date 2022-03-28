@@ -1,6 +1,6 @@
 import { Vue, Component } from "vue-property-decorator";
 import { MarketChannels } from "@/mixins";
-import ZSmartModel from "@zsmartex/z-eventbus";
+import ZSmartModel from "@/library/z-eventbus";
 import config from "@/config";
 
 @Component

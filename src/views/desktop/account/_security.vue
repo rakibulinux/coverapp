@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import ModalTOTP from "@/layouts/desktop/modal/_modal_totp.vue";
 import _modal_2fa from "@/layouts/desktop/account/_modal_2fa.vue";
 import _modal_password from "@/layouts/desktop/account/_modal_password.vue";

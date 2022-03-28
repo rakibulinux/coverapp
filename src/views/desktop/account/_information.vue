@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 import _modal_phone from "@/layouts/desktop/account/_modal_phone.vue";
 import Helpers from "./helpers";

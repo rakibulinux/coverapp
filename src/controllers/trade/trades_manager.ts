@@ -1,4 +1,4 @@
-import ApiClient from "@zsmartex/z-apiclient";
+import ApiClient from "@/library/z-apiclient";
 import Vue from "vue";
 import TradeController from "@/controllers/trade";
 import VueCompositionAPI, { reactive } from "@vue/composition-api";

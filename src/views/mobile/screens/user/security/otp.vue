@@ -85,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import UserController from "@/controllers/user";
 import { ScreenMixin } from "@/mixins/mobile";
 import { Component, Mixins } from "vue-property-decorator";

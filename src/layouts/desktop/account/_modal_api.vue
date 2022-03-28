@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import { UserController } from "@/controllers";
 import { Component, Mixins } from "vue-property-decorator";
 import Helpers from "./helpers";

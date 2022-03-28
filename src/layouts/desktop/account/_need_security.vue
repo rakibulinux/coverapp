@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import * as helpers from "@zsmartex/z-helpers";
+import * as helpers from "@/library/z-helpers";
 import example_action_logo from "@/assets/img/example_modal_logo.jpg";
 import { Vue, Component } from "vue-property-decorator";
 

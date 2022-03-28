@@ -71,8 +71,8 @@
 </template>
 
 <script lang="ts">
-import ApiClient from "@zsmartex/z-apiclient";
-import * as helpers from "@zsmartex/z-helpers";
+import ApiClient from "@/library/z-apiclient";
+import * as helpers from "@/library/z-helpers";
 import { Vue, Component } from "vue-property-decorator";
 
 @Component({

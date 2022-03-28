@@ -85,7 +85,7 @@ const configWebPack = {
   devServer: {
     proxy: {
       "^/api": {
-        target: "https://exchange.smartchainers.in/",
+        target: "https://www.xumexchange.com/",
         secure: false,
         ws: true,
         changeOrigin: true,
