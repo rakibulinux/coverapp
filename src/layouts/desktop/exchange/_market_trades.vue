@@ -88,8 +88,12 @@ export default class MarketTrades extends Vue {
     return Number(amount).toFixed(this.amount_precision);
   }
 
-  getDate(created_at: number) {
-    return moment.unix(created_at).format("hh:mm:ss")
+  getDate(created_at: string | number) {
+    if (typeof created_at == "Number") {
+      return moment.unix(created_at).format("hh:mm:ss")
+    }
+
+    return moment(created_at).format("hh:mm:ss")
   }
 }
 </script>
