@@ -12,11 +12,13 @@ COPY .npmrc .npmrc
 
 COPY package.json ./
 
-RUN yarn install
+RUN npm install -g pnpm@next-7
+
+RUN pnpm install
 
 COPY . .
 
-RUN yarn run build
+RUN pnpm run build
 
 # production stage
 FROM nginx:stable-alpine as production-stage
