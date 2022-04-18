@@ -4,11 +4,7 @@ FROM node:14.17.4-alpine3.14 as build-stage
 
 WORKDIR /app
 
-RUN apk update && apk add yarn python3 py3-pip g++ make
-
-ARG NPM_TOKEN
-
-COPY .npmrc .npmrc
+RUN apk update && apk add python3 py3-pip g++ make
 
 COPY package.json ./
 
