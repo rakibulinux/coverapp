@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.0.0-experimental
 
-FROM node:14.17.4-alpine3.14 as build-stage
+FROM node:14.19.1-alpine3.14 as build-stage
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ RUN apk update && apk add python3 py3-pip g++ make
 
 COPY package.json ./
 
-RUN npm install -g pnpm@next-7
+RUN npm install -g pnpm
 
 RUN pnpm install
 
