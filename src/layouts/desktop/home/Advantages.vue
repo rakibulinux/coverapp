@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import config from "@/config";
 import advantage_example from "@/assets/img/advantage_example.jpeg";
 import risk from "@/assets/img/risk.jpeg"
 import team from "@/assets/img/team.jpeg"
@@ -33,7 +32,7 @@ import globalResource from "@/assets/img/global.jpeg"
 
 export default {
   data: () => ({
-    title: "The Advantages of XUM Exchange",
+    title: "The Advantages of ZSmartex Exchange",
     contentOne: [
       {
         img: advantage_example,
