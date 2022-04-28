@@ -161,7 +161,7 @@ export default class App extends Mixins(Helpers, ConfirmationMixin) {
   async reSendCode() {
     this.loading_resend = true;
     try {
-      await new ApiClient("auth").post("resource/phones/send_code");
+      await new ApiClient("auth").post("resource/phones");
       runNotice("success", "phone.verification.send");
       this.start_cooldown();
     } catch (error) {
