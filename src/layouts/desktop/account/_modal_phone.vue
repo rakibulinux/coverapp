@@ -128,7 +128,7 @@ export default class App extends Mixins(Helpers, ConfirmationMixin) {
     } else {
       const { verification_code } = this;
 
-      const rule_1 = verification_code.length === 5;
+      const rule_1 = verification_code.length === 6;
       const allow = rule_1;
 
       return !allow;
