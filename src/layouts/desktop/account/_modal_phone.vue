@@ -60,7 +60,7 @@
           placeholder="Verification code"
           :placeholder-need="true"
           type="number"
-          maxlength="5"
+          maxlength="6"
         >
           <template slot="right-action">
             <button
