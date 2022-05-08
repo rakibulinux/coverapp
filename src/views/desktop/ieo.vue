@@ -338,6 +338,7 @@ export default class PageIEO extends Vue {
 
     .title {
       color: var(--color-gray);
+      font-size: 16px;
     }
 
     .distributors {
