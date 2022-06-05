@@ -497,6 +497,7 @@ export default class PageIEO extends Vue {
     height: 20px;
     border-radius: 50%;
     margin-right: 8px;
+    display: initial;
   }
 
   .z-auth-input-right-action {
