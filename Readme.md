@@ -8,4 +8,4 @@ Star and watch to get coverapp whenever i free it
 
 
 31/08/2022
-Let wait
+Let's wait
