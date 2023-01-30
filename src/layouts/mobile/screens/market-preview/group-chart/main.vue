@@ -139,7 +139,7 @@ export default class GroupChart extends Mixins(MarketMixin) {
     },
     "1W": {
       title: "1W",
-      value: 10_080
+      value: 10080
     }
   };
 

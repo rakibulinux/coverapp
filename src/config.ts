@@ -2,12 +2,12 @@ import getUrl from "@/getUrl";
 import en from "@/plugins/locales/en";
 import vn from "@/plugins/locales/vn";
 
-const nameEX = "ZSmartex";
+const nameEX = "SiamChain";
 
 export default {
   nameEX,
-  "default_market": "xumusdt",
-  "feature_markets": ["xumusdt", "xumeth", "xumbtc"],
+  "default_market": "ethusdt",
+  "feature_markets": [],
   "list_bid": ["ETH", "BTC", "USDT"],
   "messages": {
     en
@@ -28,12 +28,12 @@ export default {
   "timeZone": Intl.DateTimeFormat().resolvedOptions().timeZone,
   "SESSION_KEY": "ALLOW-ALL", // For use on exchange
   /** default **/
-  "titlePage.default": `ZSmartex Exchange | Cryptocurrency Exchange | ${nameEX}`,
+  "titlePage.default": `SiamChain Exchange | Cryptocurrency Exchange | ${nameEX}`,
   /** 404 **/
   "titlePage.404": `404`,
   /**  public **/
-  "titlePage.main": `ZSmartex Exchange | Cryptocurrency Exchange | ${nameEX}`,
-  "titlePage.exchange": `ZSmartex Exchange | Cryptocurrency Exchange | ${nameEX}`,
+  "titlePage.main": `SiamChain Exchange | Cryptocurrency Exchange | ${nameEX}`,
+  "titlePage.exchange": `SiamChain Exchange | Cryptocurrency Exchange | ${nameEX}`,
   /**  unauth **/
   "titlePage.signin": `Log In - ${nameEX}`,
   "titlePage.signup": `Sign Up - ${nameEX}`,
