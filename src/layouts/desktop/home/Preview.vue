@@ -1,7 +1,7 @@
 <template>
   <div class="preview">
     <div class="fixed">
-      <h3>Welcome to ZSmartex exchange</h3>
+      <h3>Welcome to SiamChain Exchange</h3>
       <div class="banners">
         <swiper class="slide_viewer" :options="swiperOption">
           <swiper-slide v-for="(banner, index) in banners" :key="index">

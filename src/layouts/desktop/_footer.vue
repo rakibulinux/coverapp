@@ -57,7 +57,7 @@
         <li class="m" v-text="`Service: ${contactus.service}`" />
         <li class="m" v-text="`Business: ${contactus.business}`" />
         <li class="m">
-          Facebook: <a href="#">ZSmartex Exchange</a>
+          Facebook: <a href="#">SiamChain Exchange</a>
         </li>
       </ul>
     </div>
@@ -77,14 +77,14 @@ import { Vue, Component } from "vue-property-decorator";
 @Component
 export default class App extends Vue {
   public contactus = {
-     service: "service@zsmartex.tech",
-    business: "business@zsmartex.tech",
-    facebook: "https://fb.com/zsmartex"
+     service: "rakibulinux@gmail.com",
+    business: "rakibulinux@gmail.com",
+    facebook: "https://fb.com/rakibulinux"
   };
 
   public copyright = {
-    name: "ZSmartex Exchange",
-    link: "https://www.zsmartex.tech/"
+    name: "SiamChain Exchange",
+    link: "https://www.rakibulinux.com/"
   };
 }
 </script>

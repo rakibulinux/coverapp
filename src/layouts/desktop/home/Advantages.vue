@@ -32,7 +32,7 @@ import globalResource from "@/assets/img/global.jpeg"
 
 export default {
   data: () => ({
-    title: "The Advantages of ZSmartex Exchange",
+    title: "The Advantages of SiamChain Exchange",
     contentOne: [
       {
         img: advantage_example,
